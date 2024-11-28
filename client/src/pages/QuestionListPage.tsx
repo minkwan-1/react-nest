@@ -1,7 +1,7 @@
-import { TextField, Button, Box, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 
 import { PageContainer, ComponentWrapper } from "../components/layout/common";
-import { QuestionCard } from "../components/question";
+import { QuestionCard, QuestionToolbar } from "../components/question";
 
 const mockQuestions = [
   {
@@ -111,28 +111,7 @@ export default function QuestionsPage() {
     <PageContainer>
       <ComponentWrapper>
         <Box sx={{ minWidth: "370px", padding: "20px" }}>
-          <Typography variant="h3" fontWeight="bold" gutterBottom>
-            Top Questions
-          </Typography>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              mb: 3,
-            }}
-          >
-            <TextField
-              variant="outlined"
-              placeholder="Search..."
-              sx={{ flex: 1, mr: 2 }}
-            />
-            <Button
-              sx={{ background: "black", color: "white", minHeight: "55px" }}
-            >
-              Ask Question
-            </Button>
-          </Box>
+          <QuestionToolbar />
           <Box>
             {mockQuestions.map((question) => (
               <QuestionCard key={question.id} {...question} />
