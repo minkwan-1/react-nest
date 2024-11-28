@@ -1,5 +1,5 @@
 const PhoneVerificationPage = () => {
-  return <div>phone verification page</div>;
+  return <div>휴대폰 인증</div>;
 };
 
 export default PhoneVerificationPage;
