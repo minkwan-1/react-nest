@@ -1,7 +1,7 @@
 import { TextField, Button, Box, Typography } from "@mui/material";
 
 import { PageContainer, ComponentWrapper } from "../components/layout/common";
-import { QuestionCard } from "../components/question/QuestionCard";
+import { QuestionCard } from "../components/question";
 
 const mockQuestions = [
   {
