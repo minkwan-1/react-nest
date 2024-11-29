@@ -1,5 +1,5 @@
 import React, { Suspense, lazy, useState } from "react";
-import { Box, Button, Typography, TextField } from "@mui/material";
+import { Box, Button, Typography, TextField, useTheme } from "@mui/material";
 
 import { PageContainer, ComponentWrapper } from "../components/layout/common";
 
@@ -9,6 +9,8 @@ export default function QuestionEditPage() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [previewMode, setPreviewMode] = useState(false);
+
+  const theme = useTheme(); // Access the current theme
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -48,6 +50,11 @@ export default function QuestionEditPage() {
                   onChange={(value = "") => setContent(value)}
                   preview={previewMode ? "preview" : "edit"}
                   height={300}
+                  style={{
+                    backgroundColor:
+                      theme.palette.mode === "dark" ? "#333" : "#fff", // Conditional background color
+                    color: theme.palette.mode === "dark" ? "#fff" : "#000", // Text color
+                  }}
                 />
               </Suspense>
             </Box>

@@ -2,17 +2,6 @@ import { Box, Container, Typography } from "@mui/material";
 import { Code } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-// borderBottom: (theme) => {
-//   return {
-//     ...theme.applyStyles("light", {
-//       borderBottom: "1px solid red",
-//     }),
-//     ...theme.applyStyles("dark", {
-//       borderBottom: "1px solid #30363d",
-//     }),
-//   };
-// },
-
 export default function Footer() {
   const navigate = useNavigate();
 
@@ -96,7 +85,7 @@ export default function Footer() {
               }}
               onClick={() => navigate("#features")}
             >
-              특징
+              Features
             </Typography>
             <Typography
               variant="body2"
@@ -108,7 +97,7 @@ export default function Footer() {
               }}
               onClick={() => navigate("#process")}
             >
-              프로세스
+              Process
             </Typography>
             <Typography
               variant="body2"
@@ -120,9 +109,48 @@ export default function Footer() {
               }}
               onClick={() => navigate("#contact")}
             >
-              문의하기
+              Contact
             </Typography>
           </Box>
+        </Box>
+
+        {/* Add Business Registration Information */}
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            textAlign: "center",
+            mt: 4,
+            color: "gray.400",
+          }}
+        >
+          <Typography variant="body2" sx={{ mb: 1 }}>
+            RealCode, Inc.
+          </Typography>
+          <Typography variant="body2" sx={{ mb: 1 }}>
+            EIN: 12-3456789 | CEO: 원민관
+          </Typography>
+          <Typography variant="body2" sx={{ mb: 1 }}>
+            Hosting by: RealCode Corporation | Business License No:
+            2024-CA-11111
+          </Typography>
+          <Typography variant="body2" sx={{ mb: 1 }}>
+            Business Information
+          </Typography>
+          <Typography variant="body2" sx={{ mb: 1 }}>
+            1234 South Sunset Blvd, Los Angeles, CA 90028, USA
+          </Typography>
+          <Typography variant="body2" sx={{ mb: 1 }}>
+            Customer Support: 1-800-REALCODE
+          </Typography>
+        </Box>
+
+        <Box sx={{ mt: 8, textAlign: "center", color: "gray.400" }}>
+          <Typography variant="body2">
+            &copy; {new Date().getFullYear()} RealCode, Inc. All rights
+            reserved.
+          </Typography>
         </Box>
 
         <Box sx={{ mt: 8, textAlign: "center", color: "gray.400" }}>
