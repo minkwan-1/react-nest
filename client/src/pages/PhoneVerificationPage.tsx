@@ -45,9 +45,8 @@ const PhoneVerificationPage: React.FC = () => {
         throw new Error("인증번호 전송에 실패했습니다.");
       }
     } catch (error: unknown) {
-      // error는 unknown으로 설정
       if (error instanceof Error) {
-        setErrorMessage(error.message); // error가 Error 인스턴스일 경우에만 message에 접근
+        setErrorMessage(error.message);
       } else {
         setErrorMessage("알 수 없는 오류가 발생했습니다.");
       }
