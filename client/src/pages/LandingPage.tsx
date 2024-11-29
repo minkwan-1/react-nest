@@ -1,6 +1,6 @@
 import { Box, Typography } from "@mui/material";
 import { PageContainer, ComponentWrapper } from "../components/layout/common";
-import DescriptionSection from "../components/landing/DescriptionSection";
+import { DescriptionSection } from "../components/landing";
 
 const LandingPage = () => {
   return (
