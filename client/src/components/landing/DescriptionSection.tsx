@@ -1,6 +1,17 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, BoxProps } from "@mui/material";
 
-const DescriptionSection = () => {
+interface DescriptionSectionProps extends BoxProps {
+  title: string;
+  description: string;
+  children?: React.ReactNode;
+}
+
+const DescriptionSection = ({
+  title,
+  description,
+  children,
+  ...boxProps
+}: DescriptionSectionProps) => {
   return (
     <Box
       sx={{
@@ -11,17 +22,17 @@ const DescriptionSection = () => {
         alignItems: "center",
         minHeight: "50vh",
         borderTop: "1px solid #e0e0e0",
+        ...boxProps.sx,
       }}
+      {...boxProps}
     >
       <Typography variant="h5" component="h2" gutterBottom>
-        함께 성장하는 커뮤니티
+        {title}
       </Typography>
       <Typography variant="body1" color="text.secondary" gutterBottom>
-        RealCode_는 개발자들이 서로의 질문에 답변하고, 경험을 나누는 공간입니다.
+        {description}
       </Typography>
-      <Typography variant="body1" color="text.secondary">
-        지금 참여하여 더 많은 지식을 얻고, 다른 개발자와 소통해보세요!
-      </Typography>
+      {children && <Box>{children}</Box>}
     </Box>
   );
 };
