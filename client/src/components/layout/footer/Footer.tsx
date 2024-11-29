@@ -1,107 +1,136 @@
-import {
-  Box,
-  Container,
-  Typography,
-  Link,
-  TextField,
-  Button,
-} from "@mui/material";
-import { Facebook, Twitter, Instagram, LinkedIn } from "@mui/icons-material";
+import { Box, Container, Typography } from "@mui/material";
+import { Code } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
-function Footer() {
+// borderBottom: (theme) => {
+//   return {
+//     ...theme.applyStyles("light", {
+//       borderBottom: "1px solid red",
+//     }),
+//     ...theme.applyStyles("dark", {
+//       borderBottom: "1px solid #30363d",
+//     }),
+//   };
+// },
+
+export default function Footer() {
+  const navigate = useNavigate();
+
   return (
     <Box
       sx={{
-        width: "100%",
-        height: "auto",
-        borderTop: "1px solid #333",
-        bgcolor: "#000",
-        py: 4,
+        bgcolor: (theme) => {
+          return {
+            ...theme.applyStyles("light", {
+              bgcolor: "white",
+            }),
+            ...theme.applyStyles("dark", {
+              bgcolor: "black",
+            }),
+          };
+        },
+        color: (theme) => {
+          return {
+            ...theme.applyStyles("light", {
+              color: "black",
+            }),
+            ...theme.applyStyles("dark", {
+              color: "white",
+            }),
+          };
+        },
+        py: 8,
       }}
     >
       <Container
-        maxWidth="md"
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          gap: 3,
-        }}
+        sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}
       >
-        <Typography variant="body2" sx={{ color: "#aaa", mb: 1 }}>
-          © 2024 RealCode_. All rights reserved.
-        </Typography>
-
-        <Box sx={{ display: "flex", gap: 2 }}>
-          <Link href="#" color="#fff" underline="hover">
-            서비스 이용약관
-          </Link>
-          <Link href="#" color="#fff" underline="hover">
-            개인정보 처리방침
-          </Link>
-          <Link href="#" color="#fff" underline="hover">
-            문의하기
-          </Link>
-        </Box>
-
-        {/* 소셜 미디어 링크 */}
-        <Box sx={{ display: "flex", gap: 2 }}>
-          <Link href="#" color="#fff">
-            <Facebook />
-          </Link>
-          <Link href="#" color="#fff">
-            <Twitter />
-          </Link>
-          <Link href="#" color="#fff">
-            <Instagram />
-          </Link>
-          <Link href="#" color="#fff">
-            <LinkedIn />
-          </Link>
-        </Box>
-
-        {/* 뉴스레터 구독 섹션 */}
         <Box
           sx={{
             display: "flex",
-            flexDirection: "column",
             alignItems: "center",
-            gap: 1,
-            bgcolor: "#222",
-            padding: "10px 20px",
-            borderRadius: "8px",
+            mb: 4,
+            flexDirection: { xs: "column", md: "row" },
+            justifyContent: "space-between",
             width: "100%",
           }}
         >
-          <Typography variant="h6" sx={{ color: "#fff" }}>
-            뉴스레터 구독하기
-          </Typography>
-          <Typography variant="body2" sx={{ color: "#aaa" }}>
-            RealCode_의 최신 소식을 받아보세요!
-          </Typography>
-          <Box sx={{ display: "flex", gap: 1 }}>
-            <TextField
-              variant="outlined"
-              size="small"
-              placeholder="Your email"
-              sx={{ bgcolor: "#fff", borderRadius: "4px" }}
-            />
-            <Button
-              variant="contained"
+          <Box
+            sx={{ display: "flex", alignItems: "center", mb: { xs: 2, md: 0 } }}
+          >
+            <Code size={24} />
+            <Typography
+              variant="h6"
               sx={{
-                bgcolor: "#444",
-                color: "#fff",
-                "&:hover": { bgcolor: "#666" },
+                fontWeight: "bold",
+                marginLeft: 1,
+                color: (theme) => {
+                  return {
+                    ...theme.applyStyles("light", {
+                      color: "black",
+                    }),
+                    ...theme.applyStyles("dark", {
+                      color: "white",
+                    }),
+                  };
+                },
               }}
             >
-              구독하기
-            </Button>
+              RealCode_
+            </Typography>
           </Box>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: { xs: "column", md: "row" },
+              gap: 4,
+            }}
+          >
+            <Typography
+              variant="body2"
+              sx={{
+                cursor: "pointer",
+                "&:hover": {
+                  color: "primary.main",
+                },
+              }}
+              onClick={() => navigate("#features")}
+            >
+              특징
+            </Typography>
+            <Typography
+              variant="body2"
+              sx={{
+                cursor: "pointer",
+                "&:hover": {
+                  color: "primary.main",
+                },
+              }}
+              onClick={() => navigate("#process")}
+            >
+              프로세스
+            </Typography>
+            <Typography
+              variant="body2"
+              sx={{
+                cursor: "pointer",
+                "&:hover": {
+                  color: "primary.main",
+                },
+              }}
+              onClick={() => navigate("#contact")}
+            >
+              문의하기
+            </Typography>
+          </Box>
+        </Box>
+
+        <Box sx={{ mt: 8, textAlign: "center", color: "gray.400" }}>
+          <Typography variant="body2">
+            &copy; {new Date().getFullYear()} RealCode_. All rights reserved.
+          </Typography>
         </Box>
       </Container>
     </Box>
   );
 }
-
-export default Footer;

@@ -8,13 +8,11 @@ const theme = createTheme({
   },
 });
 
-interface ThemeProviderWrapperProps {
+interface ThemeProviderProps {
   children: ReactNode;
 }
 
-const ThemeProviderWrapper: React.FC<ThemeProviderWrapperProps> = ({
-  children,
-}) => (
+const ThemeProviderWrapper: React.FC<ThemeProviderProps> = ({ children }) => (
   <ThemeProvider theme={theme} defaultMode="light">
     {children}
   </ThemeProvider>

@@ -1,3 +1,4 @@
-import ThemeProviderWrapper from "./ThemeProviderWrapper";
+import ThemeProviderWrapper from "./ThemeProvider";
+import RouterProvider from "./RouterProvider";
 
-export { ThemeProviderWrapper };
+export { ThemeProviderWrapper, RouterProvider };
