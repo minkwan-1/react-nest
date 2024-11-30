@@ -152,12 +152,6 @@ export default function Footer() {
             reserved.
           </Typography>
         </Box>
-
-        <Box sx={{ mt: 8, textAlign: "center", color: "gray.400" }}>
-          <Typography variant="body2">
-            &copy; {new Date().getFullYear()} RealCode_. All rights reserved.
-          </Typography>
-        </Box>
       </Container>
     </Box>
   );
