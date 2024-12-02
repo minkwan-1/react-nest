@@ -1,25 +1,22 @@
-import React, { Suspense, lazy, useState } from "react";
+import React, { useState } from "react";
 import axios from "axios";
-import {
-  Box,
-  Button,
-  Typography,
-  TextField,
-  useTheme,
-  Chip,
-} from "@mui/material";
+import { Box, Typography } from "@mui/material";
 
 import { PageContainer, ComponentWrapper } from "../components/layout/common";
 
-const MDEditor = lazy(() => import("@uiw/react-md-editor"));
+import {
+  TitleField,
+  ContentField,
+  TagsField,
+  PreviewButton,
+  SubmitButton,
+} from "../components/edit";
 
 export default function QuestionEditPage() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [tags, setTags] = useState<string[]>([]);
   const [previewMode, setPreviewMode] = useState(false);
-
-  const theme = useTheme();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -56,60 +53,22 @@ export default function QuestionEditPage() {
             Edit Question
           </Typography>
           <form onSubmit={handleSubmit}>
-            <Box mb={2}>
-              <TextField
-                label="Title"
-                fullWidth
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                required
-              />
-            </Box>
-            <Box mb={2}>
-              <Typography variant="h6">Content</Typography>
-              <Suspense fallback={<div>Loading editor...</div>}>
-                <MDEditor
-                  value={content}
-                  onChange={(value = "") => setContent(value)}
-                  preview={previewMode ? "preview" : "edit"}
-                  height={300}
-                  style={{
-                    backgroundColor:
-                      theme.palette.mode === "dark" ? "#333" : "#fff",
-                    color: theme.palette.mode === "dark" ? "#fff" : "#000",
-                  }}
-                />
-              </Suspense>
-            </Box>
-            <Box mb={2}>
-              <Typography variant="h6">Tags</Typography>
-              <TextField
-                label="Tags (comma separated)"
-                fullWidth
-                value={tags.join(", ")}
-                onChange={handleTagsChange}
-                helperText="Enter tags separated by commas"
-              />
+            <TitleField title={title} setTitle={setTitle} />
 
-              <Box mt={1}>
-                {tags.map((tag, index) => (
-                  <Chip key={index} label={tag} sx={{ margin: "0 4px" }} />
-                ))}
-              </Box>
-            </Box>
-            <Box display="flex" justifyContent="flex-end" mb={2}>
-              <Button
-                variant="outlined"
-                onClick={() => setPreviewMode(!previewMode)}
-              >
-                {previewMode ? "Edit" : "Preview"}
-              </Button>
-            </Box>
-            <Box>
-              <Button type="submit" variant="contained" color="primary">
-                Submit Question
-              </Button>
-            </Box>
+            <ContentField
+              content={content}
+              setContent={setContent}
+              previewMode={previewMode}
+            />
+
+            <TagsField tags={tags} handleTagsChange={handleTagsChange} />
+
+            <PreviewButton
+              previewMode={previewMode}
+              setPreviewMode={setPreviewMode}
+            />
+
+            <SubmitButton />
           </form>
         </Box>
       </ComponentWrapper>
