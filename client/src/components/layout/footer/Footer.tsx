@@ -50,8 +50,10 @@ export default function Footer() {
             <Code size={24} />
             <Typography
               variant="h6"
+              onClick={() => navigate("/")}
               sx={{
                 fontWeight: "bold",
+                cursor: "pointer",
                 marginLeft: 1,
                 color: (theme) => {
                   return {

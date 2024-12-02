@@ -70,7 +70,11 @@ function Appbar() {
           <IconButton onClick={toggleMode} color="inherit">
             {mode === "dark" ? <LightModeIcon /> : <DarkModeIcon />}
           </IconButton>
-          <IconButton color="inherit" onClick={() => navigate("/edit")}>
+          <IconButton
+            color="inherit"
+            onClick={() => navigate("/edit")}
+            sx={{ cursor: "pointer" }}
+          >
             <EditIcon />
           </IconButton>
         </Box>

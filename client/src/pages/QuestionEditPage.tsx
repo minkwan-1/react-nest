@@ -1,5 +1,13 @@
 import React, { Suspense, lazy, useState } from "react";
-import { Box, Button, Typography, TextField, useTheme } from "@mui/material";
+import axios from "axios";
+import {
+  Box,
+  Button,
+  Typography,
+  TextField,
+  useTheme,
+  Chip,
+} from "@mui/material";
 
 import { PageContainer, ComponentWrapper } from "../components/layout/common";
 
@@ -8,21 +16,36 @@ const MDEditor = lazy(() => import("@uiw/react-md-editor"));
 export default function QuestionEditPage() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [tags, setTags] = useState<string[]>([]);
   const [previewMode, setPreviewMode] = useState(false);
 
-  const theme = useTheme(); // Access the current theme
+  const theme = useTheme();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log({
-      title,
-      content,
-      // tags: tags.split(",").map((tag) => tag.trim()),
-    });
-    alert("Question submitted successfully!");
-    setTitle("");
-    setContent("");
-    // setTags("");
+
+    try {
+      const response = await axios.post("http://localhost:3000/questions", {
+        title,
+        content,
+        tags,
+      });
+
+      console.log("Question submitted:", response.data);
+      alert("Question submitted successfully!");
+
+      setTitle("");
+      setContent("");
+      setTags([]);
+    } catch (error) {
+      console.error("Error submitting question:", error);
+      alert("Failed to submit the question.");
+    }
+  };
+
+  const handleTagsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const input = e.target.value;
+    setTags(input.split(",").map((tag) => tag.trim()));
   };
 
   return (
@@ -52,11 +75,27 @@ export default function QuestionEditPage() {
                   height={300}
                   style={{
                     backgroundColor:
-                      theme.palette.mode === "dark" ? "#333" : "#fff", // Conditional background color
-                    color: theme.palette.mode === "dark" ? "#fff" : "#000", // Text color
+                      theme.palette.mode === "dark" ? "#333" : "#fff",
+                    color: theme.palette.mode === "dark" ? "#fff" : "#000",
                   }}
                 />
               </Suspense>
+            </Box>
+            <Box mb={2}>
+              <Typography variant="h6">Tags</Typography>
+              <TextField
+                label="Tags (comma separated)"
+                fullWidth
+                value={tags.join(", ")}
+                onChange={handleTagsChange}
+                helperText="Enter tags separated by commas"
+              />
+
+              <Box mt={1}>
+                {tags.map((tag, index) => (
+                  <Chip key={index} label={tag} sx={{ margin: "0 4px" }} />
+                ))}
+              </Box>
             </Box>
             <Box display="flex" justifyContent="flex-end" mb={2}>
               <Button
