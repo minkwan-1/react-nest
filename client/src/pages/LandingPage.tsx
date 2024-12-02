@@ -1,8 +1,10 @@
+import { useNavigate } from "react-router-dom";
 import { Box, Typography, Button, Paper } from "@mui/material";
 import { CheckCircle, Target, Zap, Code } from "lucide-react";
 import { PageContainer, ComponentWrapper } from "../components/layout/common";
 
 const LandingPage = () => {
+  const navigate = useNavigate();
   const features = [
     {
       icon: <Target className="h-8 w-8 text-primary" />,
@@ -78,6 +80,7 @@ const LandingPage = () => {
               width: "250px",
               height: "50px",
             }}
+            onClick={() => navigate("/auth")}
           >
             지금 시작하기
           </Button>
@@ -240,6 +243,7 @@ const LandingPage = () => {
             variant="contained"
             size="large"
             href="#contact"
+            onClick={() => navigate("/auth")}
             sx={{
               fontWeight: 700,
               textTransform: "none",

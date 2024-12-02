@@ -3,6 +3,7 @@ import {
   LandingPage,
   QuestionListPage,
   MyPage,
+  AuthPage,
   PhoneVerificationPage,
   NotFoundPage,
   TermsAndPrivacyPage,
@@ -15,6 +16,7 @@ const App = () => {
       <Route path="/" element={<LandingPage />} />
       <Route path="/question" element={<QuestionListPage />} />
       <Route path="/my" element={<MyPage />} />
+      <Route path="/auth" element={<AuthPage />} />
       <Route path="/phone" element={<PhoneVerificationPage />} />
       <Route path="/not-found" element={<NotFoundPage />} />
       <Route path="/privacy" element={<TermsAndPrivacyPage />} />
