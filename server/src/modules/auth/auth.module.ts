@@ -1,19 +1,11 @@
 import { Module } from '@nestjs/common';
-import { GoogleAuthService } from './google/google.auth.service';
-import { NaverAuthService } from './naver/naver.auth.service';
-import { KakaoAuthService } from './kakao/kakao.auth.service';
-import { GoogleStrategy } from './google/google.strategy';
-import { NaverStrategy } from './naver/naver.strategy';
-import { KakaoStrategy } from './kakao/kakao.strategy';
+import { HttpModule } from '@nestjs/axios';
+import { KakaoAuthController } from './kakao/kakao.auth.controller';
+import { NaverAuthController } from './naver/naver.auth.controller';
 
 @Module({
-  providers: [
-    GoogleAuthService,
-    NaverAuthService,
-    KakaoAuthService,
-    GoogleStrategy,
-    NaverStrategy,
-    KakaoStrategy,
-  ],
+  imports: [HttpModule],
+  controllers: [KakaoAuthController, NaverAuthController],
+  providers: [],
 })
 export class AuthModule {}

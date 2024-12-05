@@ -25,8 +25,19 @@ const NotFoundPage = () => {
           <Typography
             variant="h1"
             fontWeight="bold"
-            color="black"
-            sx={{ mb: 2 }}
+            sx={{
+              mb: 2,
+              color: (theme) => {
+                return {
+                  ...theme.applyStyles("light", {
+                    color: "black",
+                  }),
+                  ...theme.applyStyles("dark", {
+                    color: "white",
+                  }),
+                };
+              },
+            }}
           >
             404
           </Typography>

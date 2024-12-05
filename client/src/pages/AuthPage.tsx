@@ -1,10 +1,17 @@
 import { Box, TextField, Typography, Button } from "@mui/material";
 import { PageContainer, ComponentWrapper } from "../components/layout/common";
 
-// Import image assets
 import { google, kakao, naver } from "../images/index";
 
 const AuthPage = () => {
+  const handleKakaoLogin = () => {
+    window.location.href = "http://localhost:3000/auth/kakao/login";
+  };
+
+  const handleNaverLogin = () => {
+    window.location.href = "http://localhost:3000/auth/naver/login";
+  };
+
   return (
     <PageContainer>
       <ComponentWrapper sx={{ maxWidth: "600px" }}>
@@ -50,9 +57,27 @@ const AuthPage = () => {
             <Button
               sx={{
                 width: "70%",
-                border: "none",
-                color: "white",
-                bgcolor: "black",
+                border: (theme) => {
+                  return {
+                    ...theme.applyStyles("light", {
+                      border: "1px solid black",
+                    }),
+                    ...theme.applyStyles("dark", {
+                      border: "1px solid white",
+                    }),
+                  };
+                },
+                textAlign: "center",
+                color: (theme) => {
+                  return {
+                    ...theme.applyStyles("light", {
+                      color: "black",
+                    }),
+                    ...theme.applyStyles("dark", {
+                      color: "white",
+                    }),
+                  };
+                },
               }}
             >
               로그인 하기
@@ -68,29 +93,27 @@ const AuthPage = () => {
                 marginTop: "20px",
               }}
             >
-              <Typography sx={{ fontWeight: "bold" }}>
-                SNS 간편 로그인
-              </Typography>
+              <Typography sx={{ fontSize: "14px" }}>SNS 간편 로그인</Typography>
 
               {/* Social login image buttons */}
               <Box sx={{ display: "flex" }}>
-                <Button sx={{ padding: "0" }}>
+                <Button sx={{ padding: "0" }} onClick={handleKakaoLogin}>
                   <img
                     src={kakao}
                     alt="Kakao Login"
                     style={{
-                      width: "30px",
-                      height: "30px",
+                      width: "40px",
+                      height: "40px",
                     }}
                   />
                 </Button>
-                <Button sx={{ padding: "0" }}>
+                <Button sx={{ padding: "0" }} onClick={handleNaverLogin}>
                   <img
                     src={naver}
                     alt="Naver Login"
                     style={{
-                      width: "30px",
-                      height: "30px",
+                      width: "40px",
+                      height: "40px",
                     }}
                   />
                 </Button>
@@ -99,8 +122,8 @@ const AuthPage = () => {
                     src={google}
                     alt="Google Login"
                     style={{
-                      width: "30px",
-                      height: "30px",
+                      width: "40px",
+                      height: "40px",
                     }}
                   />
                 </Button>

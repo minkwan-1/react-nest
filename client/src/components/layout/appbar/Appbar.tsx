@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Box, Container, IconButton, Typography } from "@mui/material";
 import { Code } from "lucide-react";
 import SearchIcon from "@mui/icons-material/Search";
@@ -11,9 +12,30 @@ function Appbar() {
   const { mode, setMode } = useColorScheme();
   const navigate = useNavigate();
 
+  const [nickname, setNickname] = useState("");
+
   const toggleMode = () => {
     setMode(mode === "light" ? "dark" : "light");
   };
+
+  useEffect(() => {
+    // localStorage에서 닉네임 가져오기 또는 URL에서 가져오기
+    const storedNickname = new URLSearchParams(window.location.search).get(
+      "nickname"
+    );
+
+    // URL에서 가져온 닉네임을 localStorage에 저장
+    if (storedNickname) {
+      localStorage.setItem("nickname", storedNickname);
+      setNickname(storedNickname);
+    } else {
+      // localStorage에서 닉네임 가져오기
+      const localStorageNickname = localStorage.getItem("nickname");
+      if (localStorageNickname) {
+        setNickname(localStorageNickname);
+      }
+    }
+  }, []);
 
   return (
     <Box
@@ -60,6 +82,14 @@ function Appbar() {
         </Box>
 
         <Box sx={{ display: "flex", alignItems: "center" }}>
+          {nickname && (
+            <Typography
+              sx={{ marginRight: "16px", fontWeight: "bold" }}
+              variant="body1"
+            >
+              {nickname}님
+            </Typography>
+          )}
           <IconButton
             sx={{ cursor: "pointer", marginLeft: "10px" }}
             color="inherit"
