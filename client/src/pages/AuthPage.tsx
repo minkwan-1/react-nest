@@ -12,6 +12,10 @@ const AuthPage = () => {
     window.location.href = "http://localhost:3000/auth/naver/login";
   };
 
+  const handleGoogleLogin = () => {
+    window.location.href = "http://localhost:3000/auth/google/login";
+  };
+
   return (
     <PageContainer>
       <ComponentWrapper sx={{ maxWidth: "600px" }}>
@@ -117,7 +121,7 @@ const AuthPage = () => {
                     }}
                   />
                 </Button>
-                <Button sx={{ padding: "0" }}>
+                <Button sx={{ padding: "0" }} onClick={handleGoogleLogin}>
                   <img
                     src={google}
                     alt="Google Login"
