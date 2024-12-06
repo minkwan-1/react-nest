@@ -1,19 +1,20 @@
 import { Module } from '@nestjs/common';
+
 import { HttpModule } from '@nestjs/axios';
-
-import { LocalAuthController } from './local/local.auth.controller';
-import { LocalAuthService } from './local/local.auth.service';
-
+import { LocalAuthModule } from './local/local.auth.module';
 import { KakaoAuthModule } from './kakao/kakao.auth.module';
-
-import { NaverAuthController } from './naver/naver.auth.controller';
-import { NaverAuthService } from './naver/naver.auth.service';
-
+import { NaverAuthModule } from './naver/naver.auth.module';
 import { GoogleAuthModule } from './google/google.auth.module';
 
 @Module({
-  imports: [HttpModule, GoogleAuthModule, KakaoAuthModule],
-  controllers: [LocalAuthController, NaverAuthController],
-  providers: [LocalAuthService, NaverAuthService],
+  imports: [
+    HttpModule,
+    LocalAuthModule,
+    KakaoAuthModule,
+    NaverAuthModule,
+    GoogleAuthModule,
+  ],
+  controllers: [],
+  providers: [],
 })
 export class AuthModule {}
