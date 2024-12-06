@@ -10,7 +10,7 @@ export class KakaoAuthController {
   @Redirect()
   async login() {
     const kakaoAuthUrl = this.kakaoAuthService.getKakaoAuthUrl();
-    console.log('Kakao Auth URL:', kakaoAuthUrl); // 로그인 URL 로그
+    console.log('Kakao Auth URL:', kakaoAuthUrl);
     return { url: kakaoAuthUrl };
   }
 
@@ -18,15 +18,15 @@ export class KakaoAuthController {
   @Get('redirect')
   @Redirect('http://localhost:5173/', 302)
   async redirect(@Query('code') code: string) {
-    console.log('Received authorization code:', code); // 전달받은 인가 코드 확인
+    console.log('Received authorization code:', code);
 
     // 3. 토큰 발급
     const tokens = await this.kakaoAuthService.getToken(code);
-    console.log('Token response:', tokens); // 토큰 발급 응답 확인
+    console.log('Token response:', tokens);
 
     // 4. 사용자 정보 가져오기
     const user = await this.kakaoAuthService.getUserInfo(tokens.access_token);
-    console.log('User info:', user); // 사용자 정보 확인
+    console.log('User info:', user);
 
     // 5. 회원 확인 또는 신규 회원 추가
     const userInfo = this.kakaoAuthService.registerOrFindUser(user);
