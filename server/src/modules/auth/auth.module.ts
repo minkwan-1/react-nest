@@ -1,7 +1,8 @@
 import { Module } from '@nestjs/common';
 import { HttpModule } from '@nestjs/axios';
 
-import { AuthController } from './local/local.auth.controller';
+import { LocalAuthController } from './local/local.auth.controller';
+import { LocalAuthService } from './local/local.auth.service';
 
 import { KakaoAuthController } from './kakao/kakao.auth.controller';
 import { KakaoAuthService } from './kakao/kakao.auth.service';
@@ -15,11 +16,16 @@ import { GoogleAuthService } from './google/google.auth.service';
 @Module({
   imports: [HttpModule],
   controllers: [
-    AuthController,
+    LocalAuthController,
     KakaoAuthController,
     NaverAuthController,
     GoogleAuthController,
   ],
-  providers: [KakaoAuthService, NaverAuthService, GoogleAuthService],
+  providers: [
+    LocalAuthService,
+    KakaoAuthService,
+    NaverAuthService,
+    GoogleAuthService,
+  ],
 })
 export class AuthModule {}
