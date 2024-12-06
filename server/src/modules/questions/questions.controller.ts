@@ -5,7 +5,6 @@ import { QuestionsService } from './questions.service';
 // http://localhost:3000/questions
 @Controller('questions')
 export class QuestionsController {
-  // QuestionsService를 주입받아 사용
   constructor(private readonly questionsService: QuestionsService) {}
 
   @Post()

@@ -12,16 +12,8 @@ const AuthPage = () => {
   //   window.location.href = "http://localhost:3000/auth/signup";
   // };
 
-  const handleKakaoLogin = () => {
-    window.location.href = "http://localhost:3000/auth/kakao/login";
-  };
-
-  const handleNaverLogin = () => {
-    window.location.href = "http://localhost:3000/auth/naver/login";
-  };
-
-  const handleGoogleLogin = () => {
-    window.location.href = "http://localhost:3000/auth/google/login";
+  const handleOAuthLogin = (provider: string) => {
+    window.location.href = `http://localhost:3000/auth/${provider}/login`;
   };
 
   return (
@@ -109,7 +101,10 @@ const AuthPage = () => {
 
               {/* Social login image buttons */}
               <Box sx={{ display: "flex" }}>
-                <Button sx={{ padding: "0" }} onClick={handleKakaoLogin}>
+                <Button
+                  sx={{ padding: "0" }}
+                  onClick={() => handleOAuthLogin("kakao")}
+                >
                   <img
                     src={kakao}
                     alt="Kakao Login"
@@ -119,7 +114,10 @@ const AuthPage = () => {
                     }}
                   />
                 </Button>
-                <Button sx={{ padding: "0" }} onClick={handleNaverLogin}>
+                <Button
+                  sx={{ padding: "0" }}
+                  onClick={() => handleOAuthLogin("naver")}
+                >
                   <img
                     src={naver}
                     alt="Naver Login"
@@ -129,7 +127,10 @@ const AuthPage = () => {
                     }}
                   />
                 </Button>
-                <Button sx={{ padding: "0" }} onClick={handleGoogleLogin}>
+                <Button
+                  sx={{ padding: "0" }}
+                  onClick={() => handleOAuthLogin("google")}
+                >
                   <img
                     src={google}
                     alt="Google Login"
