@@ -10,22 +10,11 @@ import { KakaoAuthService } from './kakao/kakao.auth.service';
 import { NaverAuthController } from './naver/naver.auth.controller';
 import { NaverAuthService } from './naver/naver.auth.service';
 
-import { GoogleAuthController } from './google/google.auth.controller';
-import { GoogleAuthService } from './google/google.auth.service';
+import { GoogleAuthModule } from './google/google.auth.module';
 
 @Module({
-  imports: [HttpModule],
-  controllers: [
-    LocalAuthController,
-    KakaoAuthController,
-    NaverAuthController,
-    GoogleAuthController,
-  ],
-  providers: [
-    LocalAuthService,
-    KakaoAuthService,
-    NaverAuthService,
-    GoogleAuthService,
-  ],
+  imports: [HttpModule, GoogleAuthModule],
+  controllers: [LocalAuthController, KakaoAuthController, NaverAuthController],
+  providers: [LocalAuthService, KakaoAuthService, NaverAuthService],
 })
 export class AuthModule {}
