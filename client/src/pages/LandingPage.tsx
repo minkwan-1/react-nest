@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { Box, Typography, Button, Paper } from "@mui/material";
 import { CheckCircle, Target, Zap, Code } from "lucide-react";
 import { PageContainer, ComponentWrapper } from "../components/layout/common";
+import { useEffect } from "react";
 
 const LandingPage = () => {
   const navigate = useNavigate();
@@ -51,6 +52,13 @@ const LandingPage = () => {
       description: "다른 사용자에게 피드백을 제공하여 커뮤니티에 기여합니다.",
     },
   ];
+  async function example() {
+    return "Hello";
+  }
+
+  useEffect(() => {
+    console.log(example());
+  }, []);
 
   return (
     <PageContainer>

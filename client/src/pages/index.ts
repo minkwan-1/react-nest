@@ -6,6 +6,8 @@ import PhoneVerificationPage from "./PhoneVerificationPage";
 import NotFoundPage from "./NotFoundPage";
 import TermsAndPrivacyPage from "./TermsAndPrivacyPage";
 import QuestionEditPage from "./QuestionEditPage";
+import QuestionDetailPage from "./QuestionDetailPage";
+import TestPage from "./TestPage";
 
 export {
   LandingPage,
@@ -16,4 +18,6 @@ export {
   NotFoundPage,
   TermsAndPrivacyPage,
   QuestionEditPage,
+  QuestionDetailPage,
+  TestPage,
 };

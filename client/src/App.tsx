@@ -8,6 +8,7 @@ import {
   NotFoundPage,
   TermsAndPrivacyPage,
   QuestionEditPage,
+  TestPage,
 } from "./pages";
 
 const App = () => {
@@ -18,9 +19,10 @@ const App = () => {
       <Route path="/my" element={<MyPage />} />
       <Route path="/auth" element={<AuthPage />} />
       <Route path="/phone" element={<PhoneVerificationPage />} />
-      <Route path="/not-found" element={<NotFoundPage />} />
       <Route path="/privacy" element={<TermsAndPrivacyPage />} />
       <Route path="/edit" element={<QuestionEditPage />} />
+      <Route path="*" element={<NotFoundPage />} />
+      <Route path="/test" element={<TestPage />} />
     </Routes>
   );
 };

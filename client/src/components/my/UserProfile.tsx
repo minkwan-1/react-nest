@@ -34,7 +34,7 @@ const UserProfile: React.FC<UserProfileProps> = ({
       {/* Profile Section */}
       <Box
         display="flex"
-        flexDirection={{ xs: "column", md: "row" }}
+        flexDirection={{ xs: "column", sm: "row" }} // Adjusts layout at 600px width
         alignItems="center"
         gap={3}
       >
@@ -42,7 +42,7 @@ const UserProfile: React.FC<UserProfileProps> = ({
           display="flex"
           justifyContent="center"
           alignItems="center"
-          sx={{ flexBasis: "33%" }}
+          sx={{ flexBasis: { xs: "100%", sm: "33%" } }} // Full width on small screens
         >
           <Avatar
             alt={username}
@@ -50,7 +50,9 @@ const UserProfile: React.FC<UserProfileProps> = ({
             sx={{ width: 150, height: 150 }}
           />
         </Box>
-        <Box sx={{ flexBasis: "66%" }}>
+        <Box sx={{ flexBasis: { xs: "100%", sm: "66%" } }}>
+          {" "}
+          {/* Full width on small screens */}
           <Typography variant="h4">{username}</Typography>
           <Typography variant="body2" color="text.secondary">
             Reputation: {reputation}
@@ -76,20 +78,20 @@ const UserProfile: React.FC<UserProfileProps> = ({
       <Divider sx={{ marginTop: 4, marginBottom: 4 }} />
 
       {/* Stats Section */}
-      <Box display="flex" gap={3}>
-        <Box sx={{ flexBasis: "33%" }}>
+      <Box display="flex" gap={3} flexDirection={{ xs: "column", sm: "row" }}>
+        <Box sx={{ flexBasis: { xs: "100%", sm: "33%" } }}>
           <Paper sx={{ padding: 2, textAlign: "center" }}>
             <Typography variant="h6">Questions Answered</Typography>
             <Typography variant="h4">{questionsAnswered}</Typography>
           </Paper>
         </Box>
-        <Box sx={{ flexBasis: "33%" }}>
+        <Box sx={{ flexBasis: { xs: "100%", sm: "33%" } }}>
           <Paper sx={{ padding: 2, textAlign: "center" }}>
             <Typography variant="h6">Questions Asked</Typography>
             <Typography variant="h4">{questionsAsked}</Typography>
           </Paper>
         </Box>
-        <Box sx={{ flexBasis: "33%" }}>
+        <Box sx={{ flexBasis: { xs: "100%", sm: "33%" } }}>
           <Paper sx={{ padding: 2, textAlign: "center" }}>
             <Typography variant="h6">Bio</Typography>
             <Typography variant="body2">{bio}</Typography>
@@ -104,8 +106,8 @@ const UserProfile: React.FC<UserProfileProps> = ({
         Recent Activities
       </Typography>
 
-      <Box display="flex" gap={3} flexDirection={{ xs: "column", md: "row" }}>
-        <Box sx={{ flexBasis: "50%" }}>
+      <Box display="flex" gap={3} flexDirection={{ xs: "column", sm: "row" }}>
+        <Box sx={{ flexBasis: { xs: "100%", sm: "50%" } }}>
           <Card sx={{ maxWidth: 345 }}>
             <CardContent>
               <Typography variant="h6">
@@ -117,7 +119,7 @@ const UserProfile: React.FC<UserProfileProps> = ({
             </CardContent>
           </Card>
         </Box>
-        <Box sx={{ flexBasis: "50%" }}>
+        <Box sx={{ flexBasis: { xs: "100%", sm: "50%" } }}>
           <Card sx={{ maxWidth: 345 }}>
             <CardContent>
               <Typography variant="h6">
@@ -129,7 +131,7 @@ const UserProfile: React.FC<UserProfileProps> = ({
             </CardContent>
           </Card>
         </Box>
-        <Box sx={{ flexBasis: "50%" }}>
+        <Box sx={{ flexBasis: { xs: "100%", sm: "50%" } }}>
           <Card sx={{ maxWidth: 345 }}>
             <CardContent>
               <Typography variant="h6">
@@ -141,7 +143,7 @@ const UserProfile: React.FC<UserProfileProps> = ({
             </CardContent>
           </Card>
         </Box>
-        <Box sx={{ flexBasis: "50%" }}>
+        <Box sx={{ flexBasis: { xs: "100%", sm: "50%" } }}>
           <Card sx={{ maxWidth: 345 }}>
             <CardContent>
               <Typography variant="h6">
@@ -153,7 +155,7 @@ const UserProfile: React.FC<UserProfileProps> = ({
             </CardContent>
           </Card>
         </Box>
-        <Box sx={{ flexBasis: "50%" }}>
+        <Box sx={{ flexBasis: { xs: "100%", sm: "50%" } }}>
           <Card sx={{ maxWidth: 345 }}>
             <CardContent>
               <Typography variant="h6">

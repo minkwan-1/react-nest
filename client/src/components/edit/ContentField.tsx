@@ -1,35 +1,48 @@
-import { Box, Typography, useTheme } from "@mui/material";
-import { Suspense, lazy } from "react";
-
-const MDEditor = lazy(() => import("@uiw/react-md-editor"));
+import React, { useMemo, Suspense } from "react";
+import { Box, Typography } from "@mui/material";
+import DOMPurify from "dompurify";
+import QuillEditor from "./QuillEditor";
 
 interface ContentFieldProps {
   content: string;
   setContent: React.Dispatch<React.SetStateAction<string>>;
-  previewMode: boolean;
 }
 
-const ContentField = ({
-  content,
-  setContent,
-  previewMode,
-}: ContentFieldProps) => {
-  const theme = useTheme();
+const ContentField: React.FC<ContentFieldProps> = ({ content, setContent }) => {
+  const Quill_Editor = useMemo(
+    () => <QuillEditor value={content} onChange={setContent} />,
+    [content, setContent]
+  );
+
   return (
     <Box mb={2}>
       <Typography variant="h6">Content</Typography>
       <Suspense fallback={<div>Loading editor...</div>}>
-        <MDEditor
-          value={content}
-          onChange={(value = "") => setContent(value)}
-          preview={previewMode ? "preview" : "edit"}
-          height={300}
+        {Quill_Editor}
+      </Suspense>
+
+      {/* Preview Section */}
+      <Box
+        mt={4}
+        p={2}
+        border="1px solid #ccc"
+        borderRadius="4px"
+        style={{ backgroundColor: "#f9f9f9" }}
+      >
+        <Typography variant="subtitle1" gutterBottom>
+          Preview
+        </Typography>
+        <div
+          className="ql-editor"
+          dangerouslySetInnerHTML={{
+            __html: DOMPurify.sanitize(content),
+          }}
           style={{
-            backgroundColor: theme.palette.mode === "dark" ? "#333" : "#fff",
-            color: theme.palette.mode === "dark" ? "#fff" : "#000",
+            overflow: "hidden",
+            whiteSpace: "pre-wrap",
           }}
         />
-      </Suspense>
+      </Box>
     </Box>
   );
 };

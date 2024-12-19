@@ -3,7 +3,6 @@ import axios from "axios";
 import { Box, Typography } from "@mui/material";
 
 import { PageContainer, ComponentWrapper } from "../components/layout/common";
-
 import {
   TitleField,
   ContentField,
@@ -55,11 +54,7 @@ export default function QuestionEditPage() {
           <form onSubmit={handleSubmit}>
             <TitleField title={title} setTitle={setTitle} />
 
-            <ContentField
-              content={content}
-              setContent={setContent}
-              previewMode={previewMode}
-            />
+            <ContentField content={content} setContent={setContent} />
 
             <TagsField tags={tags} handleTagsChange={handleTagsChange} />
 
