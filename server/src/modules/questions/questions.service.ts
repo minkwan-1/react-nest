@@ -1,33 +1,45 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { Question } from './questions.entity';
 
 @Injectable()
 export class QuestionsService {
-  private questions: Question[] = [];
+  constructor(
+    @InjectRepository(Question)
+    private questionsRepository: Repository<Question>,
+  ) {}
 
-  create(title: string, content: string, tags: string[]): Question {
-    const newQuestion = new Question();
-    newQuestion.id = this.questions.length + 1;
-    newQuestion.title = title;
-    newQuestion.content = content;
-    newQuestion.tags = tags;
-    newQuestion.askedBy = 'Anonymous';
-    newQuestion.createdAt = new Date();
-    newQuestion.updatedAt = new Date();
-    newQuestion.upVoteCount = 0;
-    newQuestion.downVoteCount = 0;
-    newQuestion.answerCount = 0;
-    newQuestion.viewCount = 0;
+  async create(
+    title: string,
+    content: string,
+    tags: string[],
+  ): Promise<Question> {
+    const newQuestion = this.questionsRepository.create({
+      title,
+      content,
+      tags,
+      askedBy: 'Anonymous',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      upVoteCount: 0,
+      downVoteCount: 0,
+      answerCount: 0,
+      viewCount: 0,
+    });
 
-    this.questions.push(newQuestion);
-    return newQuestion;
+    return await this.questionsRepository.save(newQuestion);
   }
 
-  findAll(): Question[] {
-    return this.questions;
+  async findAll(): Promise<Question[]> {
+    return await this.questionsRepository.find();
   }
 
-  findOne(id: number): Question | undefined {
-    return this.questions.find((question) => question.id === id);
+  async findOne(id: number): Promise<Question | null> {
+    return await this.questionsRepository.findOne({ where: { id } });
+  }
+
+  async remove(id: number): Promise<void> {
+    await this.questionsRepository.delete(id);
   }
 }

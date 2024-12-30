@@ -1,23 +1,40 @@
-// edit page에서 question을 submit 할 때의 entity
+import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
+@Entity()
 export class Question {
-  // id: 개별 question에 대한 고유 식별값
+  @PrimaryGeneratedColumn()
   id: number;
-  // title: 개별 question의 제목
+
+  @Column()
   title: string;
-  // tags: 여러 question cards를 필터링하기 위한 요소, 배열로 설정하여 다양한 태그 수용
-  tags: string[];
-  // content: 개별 question의 실질적인 내용
+
+  @Column('text')
   content: string;
-  // askedBy: 질문자 닉네임, 향후 auth와 연동
+
+  @Column('simple-array')
+  tags: string[];
+
+  @Column()
   askedBy: string;
-  // createdAt/updatedAt: 생성 및 수정 날짜
+
+  @Column()
   createdAt: Date;
+
+  @Column()
   updatedAt: Date;
-  // upVote/downVote: 추천순 필터링을 위한 데이터
+
+  @Column()
   upVoteCount: number;
+
+  @Column()
   downVoteCount: number;
-  // answerCount/viewCount: 질문에 대한 답변 및 조회수 관리를 위한 데이터
+
+  @Column()
   answerCount: number;
+
+  @Column()
   viewCount: number;
+
+  // @Column('simple-array', { nullable: true })
+  // images: string[]; // 이미지 URL 배열 추가
 }

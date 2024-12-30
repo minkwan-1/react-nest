@@ -9,6 +9,7 @@ import {
   TermsAndPrivacyPage,
   QuestionEditPage,
   TestPage,
+  QuestionDetailPage,
 } from "./pages";
 
 const App = () => {
@@ -16,6 +17,7 @@ const App = () => {
     <Routes>
       <Route path="/" element={<LandingPage />} />
       <Route path="/question" element={<QuestionListPage />} />
+      <Route path="/questions/:id" element={<QuestionDetailPage />} />
       <Route path="/my" element={<MyPage />} />
       <Route path="/auth" element={<AuthPage />} />
       <Route path="/phone" element={<PhoneVerificationPage />} />

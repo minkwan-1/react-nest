@@ -1,8 +1,7 @@
-import { Controller, Post, Body, Get, Param } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param, Delete } from '@nestjs/common';
 import { Question } from './questions.entity';
 import { QuestionsService } from './questions.service';
 
-// http://localhost:3000/questions
 @Controller('questions')
 export class QuestionsController {
   constructor(private readonly questionsService: QuestionsService) {}
@@ -23,10 +22,21 @@ export class QuestionsController {
 
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<Question | string> {
-    const question = this.questionsService.findOne(+id);
+    const question = await this.questionsService.findOne(+id);
     if (!question) {
       return `Question with id ${id} not found`;
     }
     return question;
+  }
+
+  @Delete(':id') // DELETE endpoint to remove a question by its ID
+  async remove(@Param('id') id: string): Promise<string> {
+    const question = await this.questionsService.findOne(+id);
+    if (!question) {
+      return `Question with id ${id} not found`;
+    }
+
+    await this.questionsService.remove(+id);
+    return `Question with id ${id} has been deleted successfully`;
   }
 }
