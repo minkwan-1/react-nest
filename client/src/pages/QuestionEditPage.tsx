@@ -27,19 +27,67 @@ export default function QuestionEditPage() {
   const s3 = new AWS.S3();
 
   // base64 데이터를 파일로 변환하는 함수
-  const convertBase64ToFile = async (src: string) => {
-    const res = await fetch(src);
-    const blob = await res.blob();
-    return new File([blob], `image-${Date.now()}.jpg`, { type: "image/jpeg" });
+  const convertBase64ToOriginal = async (src: string) => {
+    const base = atob(src.split(",")[1]);
+    const blob = Uint8Array.from(base, (char) => char.charCodeAt(0));
+    console.log({ base, blob });
+    return new File([blob], `image-${Date.now()}.jpeg`, { type: "image/jpeg" });
+  };
+
+  const convertBase64ToWebPFileWithFallback = async (
+    base64: string
+  ): Promise<File> => {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.src = base64;
+
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        canvas.width = img.width;
+        canvas.height = img.height;
+
+        const ctx = canvas.getContext("2d");
+        if (!ctx) {
+          console.error("Canvas context is not available.");
+          resolve(convertBase64ToOriginal(base64)); // Fallback to original image
+          return;
+        }
+
+        ctx.drawImage(img, 0, 0);
+
+        // Attempt WebP conversion
+        canvas.toBlob(
+          (blob) => {
+            if (blob) {
+              // Successfully converted to WebP
+              const webpFile = new File([blob], `image-${Date.now()}.webp`, {
+                type: "image/webp",
+              });
+              resolve(webpFile);
+            } else {
+              console.warn("WebP conversion failed. Returning original image.");
+              resolve(convertBase64ToOriginal(base64)); // Fallback to original image
+            }
+          },
+          "image/webp",
+          0.8 // Set quality (0.8 = 80%)
+        );
+      };
+
+      img.onerror = (err) => {
+        console.error("Image loading failed:", err);
+        resolve(convertBase64ToOriginal(base64)); // Fallback to original image
+      };
+    });
   };
 
   // 파일을 S3에 업로드하는 함수
   const uploadFileToS3 = async (file: File) => {
     const params = {
-      Bucket: import.meta.env.VITE_AWS_BUCKET_NAME, // S3 버킷 이름
-      Key: `images/${file.name}`, // 업로드할 파일의 키 (경로)
-      Body: file, // 업로드할 파일
-      ContentType: file.type, // 파일 타입 설정
+      Bucket: import.meta.env.VITE_AWS_BUCKET_NAME,
+      Key: `images/${file.name}`,
+      Body: file,
+      ContentType: file.type,
     };
 
     return new Promise<string>((resolve, reject) => {
@@ -54,7 +102,7 @@ export default function QuestionEditPage() {
             reject(err);
           } else {
             console.log("File uploaded successfully:", data);
-            resolve(data?.Location || ""); // 업로드된 파일의 URL 반환
+            resolve(data?.Location || "");
           }
         }
       );
@@ -68,14 +116,15 @@ export default function QuestionEditPage() {
     const doc = parser.parseFromString(content, "text/html");
     const images = doc.querySelectorAll("img");
 
+    console.log(doc);
     // 이미지가 하나씩 처리
     for (const img of images) {
       if (img.src.startsWith("data:image")) {
         try {
-          // base64 이미지를 파일로 변환
-          const file = await convertBase64ToFile(img.src);
+          // convertBase64ToFile()
+          const file = await convertBase64ToWebPFileWithFallback(img.src);
 
-          // 파일을 S3에 업로드하고 URL을 가져옴
+          // uploadFileToS3()
           const uploadURL = await uploadFileToS3(file);
           img.src = uploadURL;
         } catch (error) {
