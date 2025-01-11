@@ -131,9 +131,6 @@ export default function Footer() {
             RealCode, Inc.
           </Typography>
           <Typography variant="body2" sx={{ mb: 1 }}>
-            EIN: 12-3456789 | CEO: 원민관
-          </Typography>
-          <Typography variant="body2" sx={{ mb: 1 }}>
             Hosting by: RealCode Corporation | Business License No:
             2024-CA-11111
           </Typography>

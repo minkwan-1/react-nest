@@ -38,45 +38,54 @@ export default function QuestionEditPage() {
     base64: string
   ): Promise<File> => {
     return new Promise((resolve) => {
+      // 1. Image 객체 생성 및 base64 설정
       const img = new Image();
       img.src = base64;
 
+      // 2. 이미지 로드 성공 시 처리
       img.onload = () => {
+        // 2-1. 캔버스 생성 및 크기 설정
         const canvas = document.createElement("canvas");
         canvas.width = img.width;
         canvas.height = img.height;
 
+        // 2-2. 캔버스 컨텍스트 가져오기
         const ctx = canvas.getContext("2d");
         if (!ctx) {
           console.error("Canvas context is not available.");
-          resolve(convertBase64ToOriginal(base64)); // Fallback to original image
+          // 캔버스 컨텍스트를 사용할 수 없는 경우 원본 이미지로 반환
+          resolve(convertBase64ToOriginal(base64)); // 폴백: 원본 이미지 반환
           return;
         }
 
+        // 2-3. 이미지 캔버스에 그리기
         ctx.drawImage(img, 0, 0);
 
-        // Attempt WebP conversion
+        // 2-4. WebP 변환 시도
         canvas.toBlob(
           (blob) => {
             if (blob) {
-              // Successfully converted to WebP
+              // WebP 변환 성공
               const webpFile = new File([blob], `image-${Date.now()}.webp`, {
                 type: "image/webp",
               });
               resolve(webpFile);
             } else {
               console.warn("WebP conversion failed. Returning original image.");
-              resolve(convertBase64ToOriginal(base64)); // Fallback to original image
+              // WebP 변환 실패 시 원본 이미지 반환
+              resolve(convertBase64ToOriginal(base64)); // 폴백: 원본 이미지 반환
             }
           },
           "image/webp",
-          0.8 // Set quality (0.8 = 80%)
+          0.8 // 품질 설정 (0.8 = 80%)
         );
       };
 
+      // 3. 이미지 로드 실패 시 처리
       img.onerror = (err) => {
         console.error("Image loading failed:", err);
-        resolve(convertBase64ToOriginal(base64)); // Fallback to original image
+        // 이미지 로드 실패 시 원본 이미지 반환
+        resolve(convertBase64ToOriginal(base64)); // 폴백: 원본 이미지 반환
       };
     });
   };
@@ -116,12 +125,10 @@ export default function QuestionEditPage() {
     const doc = parser.parseFromString(content, "text/html");
     const images = doc.querySelectorAll("img");
 
-    console.log(doc);
-    // 이미지가 하나씩 처리
     for (const img of images) {
       if (img.src.startsWith("data:image")) {
         try {
-          // convertBase64ToFile()
+          // convertBase64ToWebPFileWithFallback()
           const file = await convertBase64ToWebPFileWithFallback(img.src);
 
           // uploadFileToS3()

@@ -10,6 +10,7 @@ import {
   QuestionEditPage,
   TestPage,
   QuestionDetailPage,
+  RedirectPage,
 } from "./pages";
 
 const App = () => {
@@ -25,6 +26,7 @@ const App = () => {
       <Route path="/edit" element={<QuestionEditPage />} />
       <Route path="*" element={<NotFoundPage />} />
       <Route path="/test" element={<TestPage />} />
+      <Route path="/redirect" element={<RedirectPage />} />
     </Routes>
   );
 };

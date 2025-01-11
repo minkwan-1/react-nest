@@ -8,6 +8,7 @@ import TermsAndPrivacyPage from "./TermsAndPrivacyPage";
 import QuestionEditPage from "./QuestionEditPage";
 import QuestionDetailPage from "./QuestionDetailPage";
 import TestPage from "./TestPage";
+import RedirectPage from "./RedirectPage";
 
 export {
   LandingPage,
@@ -20,4 +21,5 @@ export {
   QuestionEditPage,
   QuestionDetailPage,
   TestPage,
+  RedirectPage,
 };

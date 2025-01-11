@@ -4,14 +4,6 @@ import { PageContainer, ComponentWrapper } from "../components/layout/common";
 import { google, kakao, naver } from "../images/index";
 
 const AuthPage = () => {
-  // const handleLocalLogin = () => {
-  //   window.location.href = "http://localhost:3000/auth/login";
-  // };
-
-  // const handleLocalSignup = () => {
-  //   window.location.href = "http://localhost:3000/auth/signup";
-  // };
-
   const handleOAuthLogin = (provider: string) => {
     window.location.href = `http://localhost:3000/auth/${provider}/login`;
   };

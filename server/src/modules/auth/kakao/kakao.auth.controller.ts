@@ -1,4 +1,4 @@
-import { Controller, Get, Query, Redirect } from '@nestjs/common';
+import { Controller, Get, Body, Redirect, Post } from '@nestjs/common';
 import { KakaoAuthService } from './kakao.auth.service';
 
 @Controller('auth/kakao')
@@ -15,9 +15,8 @@ export class KakaoAuthController {
   }
 
   // 2. 카카오 리다이렉트 URI로 리다이렉션 후 인가 코드 받기
-  @Get('redirect')
-  @Redirect('http://localhost:5173/', 302)
-  async redirect(@Query('code') code: string) {
+  @Post('user')
+  async redirect(@Body('code') code: string) {
     console.log('Received authorization code:', code);
 
     // 3. 토큰 발급
