@@ -1,0 +1,294 @@
+{
+  "text": "server",
+  "children": [
+    {
+      "text": ".eslintrc.js"
+    },
+    {
+      "text": ".gitignore"
+    },
+    {
+      "text": ".prettierrc"
+    },
+    {
+      "text": "README.md"
+    },
+    {
+      "text": "nest-cli.json"
+    },
+    {
+      "text": "package.json"
+    },
+    {
+      "text": "public"
+    },
+    {
+      "text": "scripts",
+      "children": [
+        {
+          "text": "generate-structure.ts"
+        }
+      ]
+    },
+    {
+      "text": "src",
+      "children": [
+        {
+          "text": "app.module.ts"
+        },
+        {
+          "text": "configs",
+          "children": [
+            {
+              "text": "typeorm.config.ts"
+            }
+          ]
+        },
+        {
+          "text": "main.ts"
+        },
+        {
+          "text": "modules",
+          "children": [
+            {
+              "text": "answers",
+              "children": [
+                {
+                  "text": "answers.controller.ts"
+                },
+                {
+                  "text": "answers.module.ts"
+                },
+                {
+                  "text": "answers.service.ts"
+                }
+              ]
+            },
+            {
+              "text": "auth",
+              "children": [
+                {
+                  "text": "auth.controller.ts"
+                },
+                {
+                  "text": "auth.guard.ts"
+                },
+                {
+                  "text": "auth.module.ts"
+                },
+                {
+                  "text": "auth.service.ts"
+                },
+                {
+                  "text": "google",
+                  "children": [
+                    {
+                      "text": "google.auth.controller.ts"
+                    },
+                    {
+                      "text": "google.auth.module.ts"
+                    },
+                    {
+                      "text": "google.auth.service.ts"
+                    }
+                  ]
+                },
+                {
+                  "text": "kakao",
+                  "children": [
+                    {
+                      "text": "kakao.auth.controller.ts"
+                    },
+                    {
+                      "text": "kakao.auth.module.ts"
+                    },
+                    {
+                      "text": "kakao.auth.service.ts"
+                    }
+                  ]
+                },
+                {
+                  "text": "local",
+                  "children": [
+                    {
+                      "text": "local.auth.controller.ts"
+                    },
+                    {
+                      "text": "local.auth.module.ts"
+                    },
+                    {
+                      "text": "local.auth.service.ts"
+                    }
+                  ]
+                },
+                {
+                  "text": "naver",
+                  "children": [
+                    {
+                      "text": "naver.auth.controller.ts"
+                    },
+                    {
+                      "text": "naver.auth.module.ts"
+                    },
+                    {
+                      "text": "naver.auth.service.ts"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "text": "comments",
+              "children": [
+                {
+                  "text": "comments.controller.ts"
+                },
+                {
+                  "text": "comments.module.ts"
+                },
+                {
+                  "text": "comments.service.ts"
+                }
+              ]
+            },
+            {
+              "text": "notifications",
+              "children": [
+                {
+                  "text": "notifications.controller.ts"
+                },
+                {
+                  "text": "notifications.module.ts"
+                },
+                {
+                  "text": "notifications.service.ts"
+                }
+              ]
+            },
+            {
+              "text": "phone",
+              "children": [
+                {
+                  "text": "phone-verification.controller.ts"
+                },
+                {
+                  "text": "phone-verification.module.ts"
+                },
+                {
+                  "text": "phone-verification.service.ts"
+                }
+              ]
+            },
+            {
+              "text": "questions",
+              "children": [
+                {
+                  "text": "questions.controller.ts"
+                },
+                {
+                  "text": "questions.dto.ts"
+                },
+                {
+                  "text": "questions.entity.ts"
+                },
+                {
+                  "text": "questions.module.ts"
+                },
+                {
+                  "text": "questions.service.ts"
+                }
+              ]
+            },
+            {
+              "text": "search",
+              "children": [
+                {
+                  "text": "search.controller.ts"
+                },
+                {
+                  "text": "search.module.ts"
+                },
+                {
+                  "text": "search.service.ts"
+                }
+              ]
+            },
+            {
+              "text": "tags",
+              "children": [
+                {
+                  "text": "tags.controller.ts"
+                },
+                {
+                  "text": "tags.module.ts"
+                },
+                {
+                  "text": "tags.service.ts"
+                }
+              ]
+            },
+            {
+              "text": "users",
+              "children": [
+                {
+                  "text": "user.entity.ts"
+                },
+                {
+                  "text": "users.controller.ts"
+                },
+                {
+                  "text": "users.module.ts"
+                },
+                {
+                  "text": "users.service.ts"
+                }
+              ]
+            },
+            {
+              "text": "votes",
+              "children": [
+                {
+                  "text": "votes.controller.ts"
+                },
+                {
+                  "text": "votes.module.ts"
+                },
+                {
+                  "text": "votes.service.ts"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "text": "types",
+          "children": [
+            {
+              "text": "multer.d.ts"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "text": "test",
+      "children": [
+        {
+          "text": "app.e2e-spec.ts"
+        },
+        {
+          "text": "jest-e2e.json"
+        }
+      ]
+    },
+    {
+      "text": "tsconfig.build.json"
+    },
+    {
+      "text": "tsconfig.json"
+    },
+    {
+      "text": "yarn.lock"
+    }
+  ]
+}
