@@ -1,8 +1,4 @@
-"use client";
-
-import React from "react";
-
-import packageJson from "@/package.json";
+import packageJson from "./package.json";
 
 interface MindMapNode {
   text: string;
