@@ -1,142 +1,126 @@
-import React, { useState } from "react";
-import { PageContainer, ComponentWrapper } from "../components/layout/common";
+import { useState } from "react";
 import {
   Box,
-  TextField,
   Button,
+  TextField,
   Typography,
   CircularProgress,
 } from "@mui/material";
+import { PageContainer, ComponentWrapper } from "../components/layout/common";
+import axios from "axios";
 
-const PhoneVerificationPage: React.FC = () => {
-  const [phoneNumber, setPhoneNumber] = useState<string>("");
-  const [verificationCode, setVerificationCode] = useState<string>("");
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [errorMessage, setErrorMessage] = useState<string>("");
-
-  const handlePhoneNumberChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setPhoneNumber(event.target.value);
+// Define a custom error interface
+interface ApiError {
+  response?: {
+    data: {
+      message: string;
+    };
   };
+}
 
-  const handleVerificationCodeChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setVerificationCode(event.target.value);
-  };
+const PhoneVerificationPage = () => {
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [verificationCode, setVerificationCode] = useState("");
+  const [isSending, setIsSending] = useState(false);
+  const [isVerifying, setIsVerifying] = useState(false);
+  const [message, setMessage] = useState("");
 
-  const sendVerificationCode = async () => {
-    setIsLoading(true);
-    setErrorMessage("");
-
+  // 전화번호 인증 코드 발송 처리 함수
+  const handleSendCode = async () => {
+    console.log("Sending verification code for phone number:", phoneNumber);
+    setIsSending(true);
     try {
-      const response = await fetch("/api/sendVerificationCode", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ phoneNumber }),
+      const response = await axios.post("http://localhost:3000/api/send-code", {
+        phoneNumber,
       });
-
-      if (response.ok) {
-        alert("인증번호가 전송되었습니다.");
-      } else {
-        throw new Error("인증번호 전송에 실패했습니다.");
-      }
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        setErrorMessage(error.message);
-      } else {
-        setErrorMessage("알 수 없는 오류가 발생했습니다.");
-      }
+      console.log("Response from send-code:", response.data);
+      setMessage(response.data.message || "Verification code sent!");
+    } catch (error) {
+      const apiError = error as ApiError;
+      console.error("Error sending verification code:", apiError);
+      setMessage(
+        apiError.response?.data?.message || "Failed to send verification code."
+      );
     } finally {
-      setIsLoading(false);
+      setIsSending(false);
     }
   };
 
-  const verifyCode = async () => {
-    setIsLoading(true);
-    setErrorMessage("");
-
+  // 인증 코드 확인 처리 함수
+  const handleVerifyCode = async () => {
+    console.log(
+      "Verifying code for phone number:",
+      phoneNumber,
+      "with code:",
+      verificationCode
+    );
+    setIsVerifying(true);
     try {
-      const response = await fetch("/api/verifyCode", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ phoneNumber, verificationCode }),
-      });
-
-      if (response.ok) {
-        alert("전화번호 인증이 완료되었습니다.");
-      } else {
-        throw new Error("인증번호가 일치하지 않습니다.");
-      }
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        setErrorMessage(error.message);
-      } else {
-        setErrorMessage("알 수 없는 오류가 발생했습니다.");
-      }
+      const response = await axios.post(
+        "http://localhost:3000/api/verify-code",
+        {
+          phoneNumber,
+          verificationCode,
+        }
+      );
+      console.log("Response from verify-code:", response.data);
+      setMessage(response.data.message || "Phone number verified!");
+    } catch (error) {
+      const apiError = error as ApiError;
+      console.error("Error verifying verification code:", apiError);
+      setMessage(apiError.response?.data?.message || "Verification failed.");
     } finally {
-      setIsLoading(false);
+      setIsVerifying(false);
     }
   };
 
   return (
     <PageContainer>
-      <ComponentWrapper>
-        <Box
-          sx={{ maxWidth: 600, minHeight: "80vh", margin: "auto", padding: 3 }}
-        >
-          <Typography variant="h5" sx={{ marginBottom: 2 }}>
-            휴대폰 인증
-          </Typography>
-
+      <ComponentWrapper sx={{ maxWidth: "400px", textAlign: "center" }}>
+        <Typography variant="h5" gutterBottom>
+          Phone Verification
+        </Typography>
+        <Box mb={2}>
           <TextField
-            label="전화번호"
-            variant="outlined"
             fullWidth
+            label="Phone Number"
+            placeholder="+821012345678"
             value={phoneNumber}
-            onChange={handlePhoneNumberChange}
-            sx={{ marginBottom: 2 }}
+            onChange={(e) => setPhoneNumber(e.target.value)}
           />
-          <Button
-            variant="contained"
-            color="primary"
-            fullWidth
-            onClick={sendVerificationCode}
-            disabled={isLoading}
-            sx={{ marginBottom: 2 }}
-          >
-            {isLoading ? <CircularProgress size={24} /> : "인증번호 전송"}
-          </Button>
-
-          <TextField
-            label="인증번호"
-            variant="outlined"
-            fullWidth
-            value={verificationCode}
-            onChange={handleVerificationCodeChange}
-            sx={{ marginBottom: 2 }}
-          />
-          <Button
-            variant="contained"
-            color="primary"
-            fullWidth
-            onClick={verifyCode}
-            disabled={isLoading}
-          >
-            {isLoading ? <CircularProgress size={24} /> : "인증번호 확인"}
-          </Button>
-
-          {errorMessage && (
-            <Typography color="error" sx={{ marginTop: 2 }}>
-              {errorMessage}
-            </Typography>
-          )}
         </Box>
+        <Box mb={2}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleSendCode}
+            disabled={isSending || !phoneNumber}
+            fullWidth
+          >
+            {isSending ? <CircularProgress size={24} /> : "Send Code"}
+          </Button>
+        </Box>
+        <Box mb={2}>
+          <TextField
+            fullWidth
+            label="Verification Code"
+            placeholder="Enter the code"
+            value={verificationCode}
+            onChange={(e) => setVerificationCode(e.target.value)}
+          />
+        </Box>
+        <Box mb={2}>
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={handleVerifyCode}
+            disabled={isVerifying || !verificationCode}
+            fullWidth
+          >
+            {isVerifying ? <CircularProgress size={24} /> : "Verify Code"}
+          </Button>
+        </Box>
+        {message && <Typography color="error">{message}</Typography>}
       </ComponentWrapper>
     </PageContainer>
   );

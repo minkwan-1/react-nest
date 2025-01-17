@@ -4,6 +4,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { QuestionsModule } from './modules/questions/questions.module';
 import { typeORMConfig } from './configs/typeorm.config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { PhoneVerificationModule } from './modules/phone/phone-verification.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     }),
     AuthModule,
     QuestionsModule,
+    PhoneVerificationModule,
   ],
 })
 export class AppModule {}
