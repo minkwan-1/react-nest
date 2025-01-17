@@ -1,0 +1,315 @@
+{
+  "text": "client",
+  "children": [
+    {
+      "text": ".gitignore"
+    },
+    {
+      "text": "README.md"
+    },
+    {
+      "text": "eslint.config.js"
+    },
+    {
+      "text": "index.html"
+    },
+    {
+      "text": "package.json"
+    },
+    {
+      "text": "page.tsx"
+    },
+    {
+      "text": "projectStructureViewer.tsx"
+    },
+    {
+      "text": "public",
+      "children": [
+        {
+          "text": "project-structure.json"
+        },
+        {
+          "text": "test.txt"
+        },
+        {
+          "text": "vite.svg"
+        }
+      ]
+    },
+    {
+      "text": "scripts",
+      "children": [
+        {
+          "text": "generate-structure.ts"
+        }
+      ]
+    },
+    {
+      "text": "src",
+      "children": [
+        {
+          "text": "App.tsx"
+        },
+        {
+          "text": "components",
+          "children": [
+            {
+              "text": "edit",
+              "children": [
+                {
+                  "text": "ContentField.tsx"
+                },
+                {
+                  "text": "PreviewButton.tsx"
+                },
+                {
+                  "text": "QuillEditor.tsx"
+                },
+                {
+                  "text": "SubmitButton.tsx"
+                },
+                {
+                  "text": "TagsField.tsx"
+                },
+                {
+                  "text": "TitleField.tsx"
+                },
+                {
+                  "text": "index.ts"
+                }
+              ]
+            },
+            {
+              "text": "landing",
+              "children": [
+                {
+                  "text": "DescriptionSection.tsx"
+                },
+                {
+                  "text": "index.ts"
+                }
+              ]
+            },
+            {
+              "text": "layout",
+              "children": [
+                {
+                  "text": "appbar",
+                  "children": [
+                    {
+                      "text": "Appbar.tsx"
+                    }
+                  ]
+                },
+                {
+                  "text": "common",
+                  "children": [
+                    {
+                      "text": "ComponentWrapper.tsx"
+                    },
+                    {
+                      "text": "PageContainer.tsx"
+                    },
+                    {
+                      "text": "ScrollToTop.tsx"
+                    },
+                    {
+                      "text": "index.ts"
+                    }
+                  ]
+                },
+                {
+                  "text": "footer",
+                  "children": [
+                    {
+                      "text": "Footer.tsx"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "text": "my",
+              "children": [
+                {
+                  "text": "UserProfile.tsx"
+                },
+                {
+                  "text": "index.ts"
+                }
+              ]
+            },
+            {
+              "text": "not-found",
+              "children": [
+                {
+                  "text": "index.ts"
+                }
+              ]
+            },
+            {
+              "text": "phone",
+              "children": [
+                {
+                  "text": "index.ts"
+                }
+              ]
+            },
+            {
+              "text": "privacy",
+              "children": [
+                {
+                  "text": "CheckAgreeSection.tsx"
+                },
+                {
+                  "text": "TermSection.tsx"
+                },
+                {
+                  "text": "index.ts"
+                }
+              ]
+            },
+            {
+              "text": "question",
+              "children": [
+                {
+                  "text": "QuestionCard.tsx"
+                },
+                {
+                  "text": "QuestionToolbar.tsx"
+                },
+                {
+                  "text": "index.ts"
+                }
+              ]
+            },
+            {
+              "text": "tag",
+              "children": [
+                {
+                  "text": "index.ts"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "text": "images",
+          "children": [
+            {
+              "text": "google-login.svg"
+            },
+            {
+              "text": "index.ts"
+            },
+            {
+              "text": "kakao-login.svg"
+            },
+            {
+              "text": "naver-login.svg"
+            }
+          ]
+        },
+        {
+          "text": "main.tsx"
+        },
+        {
+          "text": "mock",
+          "children": [
+            {
+              "text": "index.ts"
+            },
+            {
+              "text": "mockQuestions.ts"
+            },
+            {
+              "text": "mockUser.ts"
+            },
+            {
+              "text": "termsData.ts"
+            }
+          ]
+        },
+        {
+          "text": "pages",
+          "children": [
+            {
+              "text": "AuthPage.tsx"
+            },
+            {
+              "text": "LandingPage.tsx"
+            },
+            {
+              "text": "MyPage.tsx"
+            },
+            {
+              "text": "NotFoundPage.tsx"
+            },
+            {
+              "text": "PhoneVerificationPage.tsx"
+            },
+            {
+              "text": "QuestionDetailPage.tsx"
+            },
+            {
+              "text": "QuestionEditPage.tsx"
+            },
+            {
+              "text": "QuestionListPage.tsx"
+            },
+            {
+              "text": "RedirectPage.tsx"
+            },
+            {
+              "text": "TermsAndPrivacyPage.tsx"
+            },
+            {
+              "text": "TestPage.tsx"
+            },
+            {
+              "text": "index.ts"
+            }
+          ]
+        },
+        {
+          "text": "providers",
+          "children": [
+            {
+              "text": "ContextProvider.tsx"
+            },
+            {
+              "text": "RouterProvider.tsx"
+            },
+            {
+              "text": "ThemeProvider.tsx"
+            },
+            {
+              "text": "index.ts"
+            }
+          ]
+        },
+        {
+          "text": "reset.css"
+        },
+        {
+          "text": "vite-env.d.ts"
+        }
+      ]
+    },
+    {
+      "text": "tsconfig.app.json"
+    },
+    {
+      "text": "tsconfig.json"
+    },
+    {
+      "text": "tsconfig.node.json"
+    },
+    {
+      "text": "vite.config.ts"
+    },
+    {
+      "text": "yarn.lock"
+    }
+  ]
+}

@@ -1,31 +1,29 @@
-// 서버 컴포넌트에서 fs, path를 사용해서 구조 추출해야 함
-// import packageJson from "../package.json";
-import fs from "fs";
-import path from "path";
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-export interface MindMapNode {
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+interface MindMapNode {
   text: string;
   children?: MindMapNode[];
 }
 
-export async function extractProjectStructure(
+async function extractProjectStructure(
   rootPath: string,
   ignore: string[] = [
-    ".git",
-    "node_modules",
-    "dist",
-    "build",
-    ".DS_Store",
-    ".next",
-    "coverage",
+    '.git',
+    'node_modules',
+    'dist',
+    'build',
+    '.DS_Store',
+    'coverage',
   ]
 ): Promise<MindMapNode> {
   const stats = await fs.promises.stat(rootPath);
-
   const name = path.basename(rootPath);
-  console.log("rootPath", rootPath);
-  console.log("stats", stats);
-  console.log("name", name);
+
   const node: MindMapNode = {
     text: name,
   };
@@ -49,20 +47,19 @@ export async function extractProjectStructure(
     }
   }
 
-  fs.writeFileSync(
-    "./public/project-structure.json",
-    JSON.stringify(node, null, 2)
-  );
-
   return node;
 }
 
-extractProjectStructure("./src", [
-  ".git",
-  "node_modules",
-  "dist",
-  "build",
-  ".DS_Store",
-  ".next",
-  "coverage",
-]);
+// 프로젝트 루트 경로 계산
+const projectRoot = path.resolve(__dirname, '..');
+
+// 구조 추출 실행
+const structure = await extractProjectStructure(projectRoot);
+
+// 결과를 public 폴더에 저장
+fs.writeFileSync(
+  path.join(projectRoot, 'public', 'project-structure.json'),
+  JSON.stringify(structure, null, 2)
+);
+
+console.log('프로젝트 구조가 생성되었습니다.');
