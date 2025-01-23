@@ -115,7 +115,7 @@ const RightSidebar = () => {
                   alignItems: "center",
                   p: 1.5,
                   bgcolor: "grey.100",
-                  border: "1px solid #18ffb6",
+                  border: "1px solid #03cb84",
                   borderRadius: 1,
                 }}
               >

@@ -1,3 +1,4 @@
+// ComponentWrapper.tsx
 import { Box, BoxProps } from "@mui/material";
 import { ReactNode } from "react";
 
@@ -13,11 +14,9 @@ const ComponentWrapper = ({
   return (
     <Box
       sx={{
-        maxWidth: "1200px",
-        minHeight: "100vh",
-        display: "flex",
-        flexDirection: "column",
+        maxWidth: "800px",
         margin: "0 auto",
+        flexGrow: 1,
         ...sx,
       }}
       {...props}

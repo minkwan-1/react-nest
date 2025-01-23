@@ -67,7 +67,7 @@ function Appbar({ sx }: AppbarProps) {
         bgcolor: mode === "dark" ? "grey.900" : "white",
         color: mode === "dark" ? "white" : "black",
         boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
-        ...sx, // 전달된 sx 스타일 적용
+        ...sx,
       }}
     >
       <Container
@@ -86,7 +86,11 @@ function Appbar({ sx }: AppbarProps) {
           }}
           onClick={() => navigate("/")}
         >
-          <Code size={24} className="text-primary" />
+          <Code
+            size={24}
+            className="text-primary"
+            style={{ color: "03cb84" }}
+          />
           <Typography
             variant="h6"
             sx={{
@@ -95,7 +99,7 @@ function Appbar({ sx }: AppbarProps) {
               color: mode === "dark" ? "white" : "black",
             }}
           >
-            RealCode_
+            Pullim
           </Typography>
         </Box>
 
@@ -151,12 +155,12 @@ function Appbar({ sx }: AppbarProps) {
               {nickname}님
             </Typography>
           )}
-          <IconButton onClick={toggleMode} sx={{ color: "#18ffb6" }}>
+          <IconButton onClick={toggleMode} sx={{ color: "#03cb84" }}>
             {mode === "dark" ? <LightModeIcon /> : <DarkModeIcon />}
           </IconButton>
           <IconButton
             onClick={() => navigate("/edit")}
-            sx={{ cursor: "pointer", color: "#18ffb6" }}
+            sx={{ cursor: "pointer", color: "#03cb84" }}
           >
             <EditIcon />
           </IconButton>

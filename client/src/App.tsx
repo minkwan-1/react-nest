@@ -1,6 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import {
-  LandingPage,
+  HomePage,
   QuestionListPage,
   MyPage,
   AuthPage,
@@ -8,15 +8,18 @@ import {
   NotFoundPage,
   TermsAndPrivacyPage,
   QuestionEditPage,
-  TestPage,
+  // TestPage,
   QuestionDetailPage,
   RedirectPage,
+  LandingPage,
+  CommunityPage,
 } from "./pages";
 
 const App = () => {
   return (
     <Routes>
       <Route path="/" element={<LandingPage />} />
+      <Route path="/home" element={<HomePage />} />
       <Route path="/question" element={<QuestionListPage />} />
       <Route path="/questions/:id" element={<QuestionDetailPage />} />
       <Route path="/my" element={<MyPage />} />
@@ -25,8 +28,9 @@ const App = () => {
       <Route path="/privacy" element={<TermsAndPrivacyPage />} />
       <Route path="/edit" element={<QuestionEditPage />} />
       <Route path="*" element={<NotFoundPage />} />
-      <Route path="/test" element={<TestPage />} />
+      {/* <Route path="/test" element={<TestPage />} /> */}
       <Route path="/redirect" element={<RedirectPage />} />
+      <Route path="/community" element={<CommunityPage />} />
     </Routes>
   );
 };

@@ -1,3 +1,4 @@
+// PageContainer.tsx
 import { ReactNode } from "react";
 import { Box } from "@mui/material";
 import Appbar from "../appbar/Appbar";
@@ -35,12 +36,11 @@ const PageContainer = ({ children }: LayoutProps) => {
 
         {/* Main Content */}
         <Box
-          component="main"
           sx={{
             flexGrow: 1,
             overflowY: "auto",
-            p: 3,
             bgcolor: "background.default",
+            p: 3,
           }}
         >
           {children}

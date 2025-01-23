@@ -102,13 +102,13 @@ const LeftSidebar = () => {
                   component={Link}
                   to={route}
                   sx={{
-                    bgcolor: isActive ? "primary.main" : "transparent",
+                    bgcolor: isActive ? "#03cb84" : "transparent",
                     color: isActive ? "white" : "text.primary",
                     borderRadius: 1,
                     px: 2,
                     py: 1.5,
                     "&:hover": {
-                      bgcolor: "#18ffb6",
+                      bgcolor: "#03cb84",
                     },
                   }}
                 >
@@ -152,7 +152,7 @@ const LeftSidebar = () => {
             sx={{
               bgcolor: "grey.100",
               color: "black",
-              border: "1px solid #18ffb6",
+              border: "1px solid #03cb84",
               borderRadius: 1,
             }}
             fullWidth
@@ -171,7 +171,7 @@ const LeftSidebar = () => {
             sx={{
               bgcolor: "grey.100",
               color: "black",
-              border: "1px solid #18ffb6",
+              border: "1px solid #03cb84",
               borderRadius: 1,
             }}
           >

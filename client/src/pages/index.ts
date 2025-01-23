@@ -1,4 +1,4 @@
-import LandingPage from "./LandingPage";
+import HomePage from "./HomePage";
 import QuestionListPage from "./QuestionListPage";
 import MyPage from "./MyPage";
 import AuthPage from "./AuthPage";
@@ -7,11 +7,13 @@ import NotFoundPage from "./NotFoundPage";
 import TermsAndPrivacyPage from "./TermsAndPrivacyPage";
 import QuestionEditPage from "./QuestionEditPage";
 import QuestionDetailPage from "./QuestionDetailPage";
-import TestPage from "./TestPage";
+import LandingPage from "./LandingPage";
+// import TestPage from "./TestPage";
 import RedirectPage from "./RedirectPage";
+import CommunityPage from "./CommunityPage";
 
 export {
-  LandingPage,
+  HomePage,
   QuestionListPage,
   MyPage,
   AuthPage,
@@ -20,6 +22,8 @@ export {
   TermsAndPrivacyPage,
   QuestionEditPage,
   QuestionDetailPage,
-  TestPage,
+  LandingPage,
+  // TestPage,
   RedirectPage,
+  CommunityPage,
 };

@@ -15,7 +15,7 @@ async function extractProjectStructure(
     'build',
     '.DS_Store',
     'coverage',
-  ]
+  ],
 ): Promise<MindMapNode> {
   const stats = await fs.promises.stat(rootPath);
   const name = path.basename(rootPath);
@@ -56,7 +56,7 @@ async function main() {
   // 결과를 public 폴더에 저장
   fs.writeFileSync(
     path.join(projectRoot, 'public', 'project-structure.json'),
-    JSON.stringify(structure, null, 2)
+    JSON.stringify(structure, null, 2),
   );
 
   console.log('프로젝트 구조가 생성되었습니다.');
