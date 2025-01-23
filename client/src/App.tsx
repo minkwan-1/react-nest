@@ -13,6 +13,7 @@ import {
   RedirectPage,
   LandingPage,
   CommunityPage,
+  CollectionPage,
 } from "./pages";
 
 const App = () => {
@@ -31,6 +32,7 @@ const App = () => {
       {/* <Route path="/test" element={<TestPage />} /> */}
       <Route path="/redirect" element={<RedirectPage />} />
       <Route path="/community" element={<CommunityPage />} />
+      <Route path="/collection" element={<CollectionPage />} />
     </Routes>
   );
 };

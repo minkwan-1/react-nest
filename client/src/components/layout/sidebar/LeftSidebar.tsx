@@ -31,7 +31,7 @@ const sidebarLinks = [
     Icon: GroupIcon,
   },
   {
-    route: "/collections",
+    route: "/collection",
     label: "컬렉션",
     Icon: CollectionsIcon,
   },
