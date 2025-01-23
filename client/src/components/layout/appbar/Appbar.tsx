@@ -1,5 +1,13 @@
 import { useEffect, useState } from "react";
-import { Box, Container, IconButton, Typography } from "@mui/material";
+import {
+  Box,
+  Container,
+  IconButton,
+  Typography,
+  SxProps,
+  TextField,
+  Theme,
+} from "@mui/material";
 import { Code } from "lucide-react";
 import SearchIcon from "@mui/icons-material/Search";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
@@ -8,34 +16,42 @@ import EditIcon from "@mui/icons-material/Edit";
 import { useColorScheme } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
 
-function Appbar() {
+type AppbarProps = {
+  sx?: SxProps<Theme>;
+};
+
+function Appbar({ sx }: AppbarProps) {
   const { mode, setMode } = useColorScheme();
   const navigate = useNavigate();
 
   const [nickname, setNickname] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
 
   const toggleMode = () => {
     setMode(mode === "light" ? "dark" : "light");
   };
 
   useEffect(() => {
-    // localStorage에서 닉네임 가져오기 또는 URL에서 가져오기
     const storedNickname = new URLSearchParams(window.location.search).get(
       "nickname"
     );
 
-    // URL에서 가져온 닉네임을 localStorage에 저장
     if (storedNickname) {
       localStorage.setItem("nickname", storedNickname);
       setNickname(storedNickname);
     } else {
-      // localStorage에서 닉네임 가져오기
       const localStorageNickname = localStorage.getItem("nickname");
       if (localStorageNickname) {
         setNickname(localStorageNickname);
       }
     }
   }, []);
+
+  const handleSearch = () => {
+    if (searchQuery.trim()) {
+      navigate(`/search?query=${searchQuery}`);
+    }
+  };
 
   return (
     <Box
@@ -51,6 +67,7 @@ function Appbar() {
         bgcolor: mode === "dark" ? "grey.900" : "white",
         color: mode === "dark" ? "white" : "black",
         boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
+        ...sx, // 전달된 sx 스타일 적용
       }}
     >
       <Container
@@ -60,6 +77,7 @@ function Appbar() {
           justifyContent: "space-between",
         }}
       >
+        {/* 로고 */}
         <Box
           sx={{
             display: "flex",
@@ -81,6 +99,49 @@ function Appbar() {
           </Typography>
         </Box>
 
+        {/* 중앙에 서치바 */}
+        <Box
+          sx={{
+            flex: 1,
+            display: "flex",
+            justifyContent: "center",
+            marginLeft: "16px",
+            marginRight: "16px",
+          }}
+        >
+          <TextField
+            variant="outlined"
+            size="small"
+            placeholder="검색어를 입력하세요"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            sx={{
+              width: "100%",
+              maxWidth: "400px",
+              "& .MuiOutlinedInput-root": {
+                backgroundColor: "#f5f7fb", // 내부 배경색 적용
+                "& fieldset": {
+                  borderColor: mode === "dark" ? "grey.700" : "grey.300",
+                },
+                "&:hover fieldset": {
+                  borderColor: mode === "dark" ? "grey.500" : "black",
+                },
+                "&.Mui-focused fieldset": {
+                  borderColor: mode === "dark" ? "grey.400" : "primary.main",
+                },
+              },
+            }}
+            InputProps={{
+              endAdornment: (
+                <IconButton onClick={handleSearch}>
+                  <SearchIcon />
+                </IconButton>
+              ),
+            }}
+          />
+        </Box>
+
+        {/* 우측 아이콘들 */}
         <Box sx={{ display: "flex", alignItems: "center" }}>
           {nickname && (
             <Typography
@@ -90,20 +151,12 @@ function Appbar() {
               {nickname}님
             </Typography>
           )}
-          <IconButton
-            sx={{ cursor: "pointer", marginLeft: "10px" }}
-            color="inherit"
-          >
-            <SearchIcon />
-          </IconButton>
-
-          <IconButton onClick={toggleMode} color="inherit">
+          <IconButton onClick={toggleMode} sx={{ color: "#18ffb6" }}>
             {mode === "dark" ? <LightModeIcon /> : <DarkModeIcon />}
           </IconButton>
           <IconButton
-            color="inherit"
             onClick={() => navigate("/edit")}
-            sx={{ cursor: "pointer" }}
+            sx={{ cursor: "pointer", color: "#18ffb6" }}
           >
             <EditIcon />
           </IconButton>

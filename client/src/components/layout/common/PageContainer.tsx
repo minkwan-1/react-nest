@@ -1,28 +1,54 @@
 import { ReactNode } from "react";
-import { Box, SxProps, Theme } from "@mui/material";
-
+import { Box } from "@mui/material";
 import Appbar from "../appbar/Appbar";
-import Footer from "../footer/Footer";
+import LeftSidebar from "../sidebar/LeftSidebar";
+import RightSidebar from "../sidebar/RightSidebar";
 
-interface PageContainerProps {
+type LayoutProps = {
   children: ReactNode;
-  sx?: SxProps<Theme>;
-}
+};
 
-const PageContainer = ({ children, sx }: PageContainerProps) => {
+const PageContainer = ({ children }: LayoutProps) => {
   return (
-    <Box
-      sx={{
-        minHeight: "100vh",
-        width: "100%",
-        display: "flex",
-        flexDirection: "column",
-        ...sx,
-      }}
-    >
-      <Appbar />
-      <Box sx={{ flexGrow: 1 }}>{children}</Box>
-      <Footer />
+    <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
+      {/* AppBar */}
+      <Appbar
+        sx={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: (theme) => theme.zIndex.drawer + 1,
+        }}
+      />
+
+      {/* Main Content Layout */}
+      <Box
+        sx={{
+          display: "flex",
+          flexGrow: 1,
+          mt: "80px",
+        }}
+      >
+        {/* Left Sidebar */}
+        <LeftSidebar />
+
+        {/* Main Content */}
+        <Box
+          component="main"
+          sx={{
+            flexGrow: 1,
+            overflowY: "auto",
+            p: 3,
+            bgcolor: "background.default",
+          }}
+        >
+          {children}
+        </Box>
+
+        {/* Right Sidebar */}
+        <RightSidebar />
+      </Box>
     </Box>
   );
 };
