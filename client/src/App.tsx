@@ -14,6 +14,8 @@ import {
   LandingPage,
   CommunityPage,
   CollectionPage,
+  TagPage,
+  AskAIPage,
 } from "./pages";
 
 const App = () => {
@@ -33,6 +35,8 @@ const App = () => {
       <Route path="/redirect" element={<RedirectPage />} />
       <Route path="/community" element={<CommunityPage />} />
       <Route path="/collection" element={<CollectionPage />} />
+      <Route path="/tag" element={<TagPage />} />
+      <Route path="/ask-ai" element={<AskAIPage />} />
     </Routes>
   );
 };

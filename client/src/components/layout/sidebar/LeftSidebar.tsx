@@ -36,7 +36,7 @@ const sidebarLinks = [
     Icon: CollectionsIcon,
   },
   {
-    route: "/tags",
+    route: "/tag",
     label: "태그",
     Icon: TagIcon,
   },

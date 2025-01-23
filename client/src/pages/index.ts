@@ -12,6 +12,8 @@ import LandingPage from "./LandingPage";
 import RedirectPage from "./RedirectPage";
 import CommunityPage from "./CommunityPage";
 import CollectionPage from "./CollectionPage";
+import TagPage from "./TagPage";
+import AskAIPage from "./AskAIPage";
 export {
   HomePage,
   QuestionListPage,
@@ -27,4 +29,6 @@ export {
   RedirectPage,
   CommunityPage,
   CollectionPage,
+  TagPage,
+  AskAIPage,
 };
