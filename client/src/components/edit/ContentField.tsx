@@ -27,7 +27,7 @@ const ContentField: React.FC<ContentFieldProps> = ({ content, setContent }) => {
         p={2}
         border="1px solid #ccc"
         borderRadius="4px"
-        style={{ backgroundColor: "#f9f9f9" }}
+        // style={{ backgroundColor: "#f9f9f9" }}
       >
         <Typography variant="subtitle1" gutterBottom>
           Preview

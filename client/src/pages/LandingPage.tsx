@@ -1,7 +1,5 @@
-import { PageContainer } from "../components/layout/common";
-
 const LandingPage = () => {
-  return <PageContainer>랜딩</PageContainer>;
+  return <div>랜딩</div>;
 };
 
 export default LandingPage;

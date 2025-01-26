@@ -169,8 +169,26 @@ export default function QuestionEditPage() {
     <PageContainer>
       <ComponentWrapper>
         <Box sx={{ padding: 3 }}>
-          <Typography variant="h4" gutterBottom>
-            Edit Question
+          <Typography
+            variant="h4"
+            gutterBottom
+            sx={{
+              color: (theme) => {
+                return {
+                  ...theme.applyStyles("light", {
+                    color: "black",
+                  }),
+                  ...theme.applyStyles("dark", {
+                    color: "white",
+                  }),
+                };
+              },
+              fontSize: "36px",
+              fontWeight: "bold",
+              marginBottom: 2,
+            }}
+          >
+            질문 등록하기
           </Typography>
           <form onSubmit={handleSubmit}>
             <TitleField title={title} setTitle={setTitle} />

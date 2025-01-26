@@ -122,11 +122,36 @@ const RightSidebar = () => {
                 <Typography
                   variant="body2"
                   fontWeight="bold"
-                  color="text.primary"
+                  sx={{
+                    color: (theme) => {
+                      return {
+                        ...theme.applyStyles("light", {
+                          color: "black",
+                        }),
+                        ...theme.applyStyles("dark", {
+                          color: "black",
+                        }),
+                      };
+                    },
+                  }}
                 >
                   {tag.name}
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
+                <Typography
+                  variant="body2"
+                  sx={{
+                    color: (theme) => {
+                      return {
+                        ...theme.applyStyles("light", {
+                          color: "black",
+                        }),
+                        ...theme.applyStyles("dark", {
+                          color: "black",
+                        }),
+                      };
+                    },
+                  }}
+                >
                   {tag.totalQuestions}개의 질문
                 </Typography>
               </Box>

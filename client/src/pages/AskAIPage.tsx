@@ -1,20 +1,50 @@
-import { Box, Typography, TextField, Button, Paper } from "@mui/material";
+import { useState } from "react";
+import {
+  Box,
+  Button,
+  TextField,
+  Typography,
+  Card,
+  CardContent,
+  CardActions,
+} from "@mui/material";
 import { PageContainer, ComponentWrapper } from "../components/layout/common";
 import SearchIcon from "@mui/icons-material/Search";
-import { useState } from "react";
+import { marked } from "marked";
 
 const AskAIPage = () => {
-  const [search, setSearch] = useState("");
-  const [responses, setResponses] = useState<string[]>([]);
+  const [prompt, setPrompt] = useState("");
+  const [response, setResponse] = useState<string>("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearch(event.target.value);
-  };
+  const handleSubmit = async () => {
+    if (!prompt.trim()) return;
 
-  const handleSearchSubmit = () => {
-    // AI의 응답을 시뮬레이션 (실제 API 요청 로직으로 교체 가능)
-    setResponses([...responses, search]);
-    setSearch("");
+    setLoading(true);
+    setError("");
+
+    try {
+      const res = await fetch("http://localhost:3000/api/ask-ai", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ prompt }),
+      });
+
+      if (!res.ok) {
+        throw new Error("Server error");
+      }
+
+      const data = await res.json();
+      setResponse(data.result);
+    } catch (err) {
+      console.log(err);
+      setError("Failed to fetch AI response. Try again later.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -25,49 +55,17 @@ const AskAIPage = () => {
             color: "black",
             fontSize: "36px",
             fontWeight: "bold",
-            marginBottom: 3,
-            textAlign: "center",
+            marginBottom: 2,
           }}
         >
-          무엇을 도와드릴까요?
+          Ask AI
         </Typography>
 
-        {/* 채팅 UI */}
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            gap: 2,
-            marginBottom: 3,
-            maxHeight: "400px",
-            overflowY: "auto",
-          }}
-        >
-          {responses.map((response, index) => (
-            <Paper
-              key={index}
-              sx={{
-                padding: 2,
-                backgroundColor: index % 2 === 0 ? "#f1f1f1" : "#03cb84",
-                color: index % 2 === 0 ? "black" : "white",
-                borderRadius: 2,
-                maxWidth: "80%",
-                alignSelf: index % 2 === 0 ? "flex-start" : "flex-end",
-              }}
-            >
-              {response}
-            </Paper>
-          ))}
-        </Box>
-
-        {/* 검색 필드 */}
-        <Box sx={{ display: "flex", gap: 2 }}>
+        {/* 검색바 */}
+        <Box sx={{ display: "flex", gap: 2, marginBottom: 3 }}>
           <TextField
             variant="outlined"
-            placeholder="Pullim에서 배운 지식을 AI에게 질문해보세요."
-            value={search}
-            onChange={handleSearchChange}
-            onKeyPress={(e) => e.key === "Enter" && handleSearchSubmit()}
+            placeholder="Enter your prompt"
             sx={{
               flexGrow: 1,
               "& .MuiOutlinedInput-root": {
@@ -82,20 +80,52 @@ const AskAIPage = () => {
             InputProps={{
               startAdornment: <SearchIcon />,
             }}
+            value={prompt}
+            onChange={(e) => setPrompt(e.target.value)}
           />
           <Button
             variant="contained"
             sx={{
               bgcolor: "#03cb84",
               "&:hover": {
-                bgcolor: "#02b97b",
+                bgcolor: "#028a66",
               },
             }}
-            onClick={handleSearchSubmit}
+            onClick={handleSubmit}
+            disabled={loading}
           >
-            물어보기
+            Submit
           </Button>
         </Box>
+
+        {/* 결과 표시 */}
+        <Card sx={{ width: "100%", display: "flex", flexDirection: "column" }}>
+          <CardContent sx={{ flex: 1 }}>
+            {loading && <Typography>Loading...</Typography>}
+            {error && <Typography color="error">{error}</Typography>}
+            {response && (
+              <Typography
+                variant="body1"
+                sx={{
+                  whiteSpace: "pre-wrap",
+                  fontFamily: "monospace",
+                }}
+                dangerouslySetInnerHTML={{
+                  __html: marked(response),
+                }}
+              />
+            )}
+          </CardContent>
+          <CardActions sx={{ justifyContent: "center", padding: 2 }}>
+            <Button
+              size="small"
+              sx={{ color: "#03cb84" }}
+              onClick={() => setPrompt("")}
+            >
+              Clear
+            </Button>
+          </CardActions>
+        </Card>
       </ComponentWrapper>
     </PageContainer>
   );
