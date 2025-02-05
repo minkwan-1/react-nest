@@ -1,4 +1,4 @@
-import { Controller, Get, Query, Redirect } from '@nestjs/common';
+import { Controller, Get, Redirect, Post, Body } from '@nestjs/common';
 import { GoogleAuthService } from './google.auth.service';
 
 @Controller('auth/google')
@@ -16,23 +16,22 @@ export class GoogleAuthController {
     return { url: googleAuthUrl };
   }
 
-  @Get('redirect')
-  @Redirect('http://localhost:5173/', 302)
-  async redirect(@Query('code') code: string) {
+  @Post('user')
+  async redirect(@Body('code') code: string) {
     console.log('Received authorization code:', code);
 
-    // 3. 인가 코드를 통해 토큰 발급 요청
+    // 3. 토큰 발급 요청
     const tokens = await this.googleAuthService.getToken(code);
-    console.log(tokens);
+    console.log('Token response:', tokens);
 
-    // 4. 토큰을 사용하여 사용자 정보 가져오기
+    // 4. 사용자 정보 가져오기
     const user = await this.googleAuthService.getUserInfo(tokens.access_token);
-    console.log('user info:', user);
+    console.log('User info:', user);
 
-    // 5. 회원 확인 또는 신규 회원 등록 (메모리 저장)
+    // 5. 회원 확인 또는 신규 회원 등록
     const userInfo = this.googleAuthService.registerOrFindUser(user);
 
-    // 6. 로그인 완료 후 프론트엔드로 리다이렉션
+    // 6. 결과 반환
     return {
       message: '로그인 성공',
       user: userInfo,
