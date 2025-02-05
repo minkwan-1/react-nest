@@ -1,6 +1,5 @@
-// PageContainer.tsx
-import { ReactNode } from "react";
-import { Box } from "@mui/material";
+import { ReactNode, useState, useEffect } from "react";
+import { Box, useMediaQuery, useTheme } from "@mui/material";
 import Appbar from "../appbar/Appbar";
 import LeftSidebar from "../sidebar/LeftSidebar";
 import RightSidebar from "../sidebar/RightSidebar";
@@ -10,6 +9,18 @@ type LayoutProps = {
 };
 
 const PageContainer = ({ children }: LayoutProps) => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const [mobileSidebarVisible, setMobileSidebarVisible] = useState(false);
+
+  useEffect(() => {
+    if (isMobile) {
+      setMobileSidebarVisible(true);
+    } else {
+      setMobileSidebarVisible(false);
+    }
+  }, [isMobile]);
+
   return (
     <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
       {/* AppBar */}
@@ -32,7 +43,7 @@ const PageContainer = ({ children }: LayoutProps) => {
         }}
       >
         {/* Left Sidebar */}
-        <LeftSidebar />
+        <LeftSidebar setMobileSidebarVisible={setMobileSidebarVisible} />
 
         {/* Main Content */}
         <Box
@@ -41,13 +52,14 @@ const PageContainer = ({ children }: LayoutProps) => {
             overflowY: "auto",
             bgcolor: "background.default",
             p: 3,
+            pt: isMobile && mobileSidebarVisible ? "120px" : "80px",
           }}
         >
           {children}
         </Box>
 
         {/* Right Sidebar */}
-        <RightSidebar />
+        {!isMobile && <RightSidebar />}
       </Box>
     </Box>
   );

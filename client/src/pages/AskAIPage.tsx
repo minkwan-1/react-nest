@@ -67,7 +67,7 @@ const AskAIPage = () => {
             marginBottom: 2,
           }}
         >
-          Ask AI
+          AI에게 질문하기
         </Typography>
 
         {/* 검색바 */}

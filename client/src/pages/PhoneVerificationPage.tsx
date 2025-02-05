@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Box,
   Button,
@@ -19,6 +20,7 @@ interface ApiError {
 }
 
 const PhoneVerificationPage = () => {
+  const navigate = useNavigate();
   const [phoneNumber, setPhoneNumber] = useState("");
   const [verificationCode, setVerificationCode] = useState("");
   const [isSending, setIsSending] = useState(false);
@@ -65,6 +67,9 @@ const PhoneVerificationPage = () => {
       );
       console.log("Response from verify-code:", response.data);
       setMessage(response.data.message || "Phone number verified!");
+      if (response.data) {
+        navigate("/home");
+      }
     } catch (error) {
       const apiError = error as ApiError;
       console.error("Error verifying verification code:", apiError);
