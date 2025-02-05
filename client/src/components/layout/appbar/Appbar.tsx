@@ -52,6 +52,10 @@ function Appbar({ sx }: AppbarProps) {
     }
   };
 
+  const handleOAuthLogin = (provider: string) => {
+    window.location.href = `http://localhost:3000/auth/${provider}/login`;
+  };
+
   return (
     <Box
       sx={{
@@ -135,16 +139,19 @@ function Appbar({ sx }: AppbarProps) {
               src={google}
               alt="Google 로그인"
               style={{ width: "32px", height: "32px", cursor: "pointer" }}
+              onClick={() => handleOAuthLogin("google")}
             />
             <img
               src={kakao}
               alt="Kakao 로그인"
               style={{ width: "32px", height: "32px", cursor: "pointer" }}
+              onClick={() => handleOAuthLogin("kakao")}
             />
             <img
               src={naver}
               alt="Naver 로그인"
               style={{ width: "32px", height: "32px", cursor: "pointer" }}
+              onClick={() => handleOAuthLogin("naver")}
             />
           </Box>
           {/* <IconButton

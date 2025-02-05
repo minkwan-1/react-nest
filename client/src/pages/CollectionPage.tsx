@@ -70,7 +70,16 @@ const CollectionPage = () => {
       <ComponentWrapper sx={{ padding: 2 }}>
         <Typography
           sx={{
-            color: "black",
+            color: (theme) => {
+              return {
+                ...theme.applyStyles("light", {
+                  color: "black",
+                }),
+                ...theme.applyStyles("dark", {
+                  color: "white",
+                }),
+              };
+            },
             fontSize: "36px",
             fontWeight: "bold",
             marginBottom: 2,
