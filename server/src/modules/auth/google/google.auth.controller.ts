@@ -5,8 +5,6 @@ import { GoogleAuthService } from './google.auth.service';
 export class GoogleAuthController {
   constructor(private readonly googleAuthService: GoogleAuthService) {}
 
-  private users: any[] = [];
-
   // 1. 구글 로그인 URL로 리다이렉트
   @Get('login')
   @Redirect()

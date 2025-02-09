@@ -1,6 +1,7 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { Question } from 'src/modules/questions/questions.entity';
 import { KakaoUser } from 'src/modules/auth/kakao/kakao.auth.entity';
+import { GoogleUser } from 'src/modules/auth/google/google.auth.entity';
 
 export const typeORMConfig: TypeOrmModuleOptions = {
   type: 'postgres',
@@ -9,6 +10,6 @@ export const typeORMConfig: TypeOrmModuleOptions = {
   username: 'postgres',
   password: 'postgres',
   database: 'react-nest',
-  entities: [Question, KakaoUser],
+  entities: [Question, KakaoUser, GoogleUser],
   synchronize: true, // 개발 환경에서만 true (프로덕션에서는 false로 설정)
 };

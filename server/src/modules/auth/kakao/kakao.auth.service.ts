@@ -11,14 +11,16 @@ export class KakaoAuthService {
 
   constructor(private readonly kakaoAuthRepository: KakaoAuthRepository) {}
 
-  // 카카오 로그인 URL 생성
+  // 1. 카카오 로그인 URL 생성
   getKakaoAuthUrl(): string {
     return `https://kauth.kakao.com/oauth/authorize?client_id=${this.kakaoClientId}&redirect_uri=${this.kakaoCallbackUrl}&response_type=code`;
   }
 
-  // 인가 코드를 사용하여 토큰 발급 요청
+  // 2. 인가 코드를 사용하여 토큰 발급 요청
   async getToken(code: string): Promise<any> {
     const tokenUrl = 'https://kauth.kakao.com/oauth/token';
+
+    // 카카오 서버에 인가 코드로 토큰을 요청
     const response = await axios.post(tokenUrl, null, {
       params: {
         grant_type: 'authorization_code',
@@ -28,24 +30,30 @@ export class KakaoAuthService {
         code,
       },
     });
+
+    // 받은 토큰을 반환
     return response.data;
   }
 
-  // 액세스 토큰을 사용하여 사용자 정보 요청
+  // 3. 액세스 토큰을 사용하여 사용자 정보 요청
   async getUserInfo(accessToken: string): Promise<any> {
     const userInfoUrl = 'https://kapi.kakao.com/v2/user/me';
+
+    // 사용자 정보 요청 (액세스 토큰을 헤더에 포함)
     const response = await axios.get(userInfoUrl, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
     });
-    console.log('Kakao User Info:', response.data);
+
+    // 응답받은 사용자 정보를 로그로 출력 후 반환
+    console.log('Kakao 사용자 정보 확인 로그:', response.data);
     return response.data;
   }
 
-  // 회원 확인 또는 신규 회원 추가
+  // 4. 회원 확인 또는 신규 회원 추가
   async registerOrFindUser(user: any): Promise<KakaoUser> {
-    // user에서 nickname, profileImage, thumbnailImage 등을 가져올 때 올바른 속성 사용
+    // 4.1. user 객체에서 필요한 속성들 추출
     const nickname = user?.kakao_account?.profile?.nickname || '익명';
     const profileImage = user?.kakao_account?.profile?.profile_image_url || '';
     const thumbnailImage =
@@ -53,6 +61,7 @@ export class KakaoAuthService {
     const isDefaultImage =
       user?.kakao_account?.profile?.is_default_image || false;
 
+    // 4.2. 새로운 유저를 생성하거나, 기존 유저를 업데이트
     return this.kakaoAuthRepository.findOrCreateUser({
       id: user.id,
       connectedAt: new Date(user.connected_at),
