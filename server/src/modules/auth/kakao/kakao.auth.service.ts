@@ -1,4 +1,4 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import axios from 'axios';
 import { KakaoAuthRepository } from './kakao.auth.repository';
 import { KakaoUser } from './kakao.auth.entity';
@@ -14,7 +14,7 @@ export class KakaoAuthService {
 
   // 1. 카카오 로그인 URL 생성
   getKakaoAuthUrl(): string {
-    return `https://kauth.kakao.com/oauth/authorize?client_id=${this.kakaoClientId}&redirect_uri=${this.kakaoCallbackUrl}&response_type=code&state=kakao`;
+    return `https://kauth.kakao.com/oauth/authorize?client_id=${this.kakaoClientId}&redirect_uri=${this.kakaoCallbackUrl}&response_type=code`;
   }
 
   // 2. 인가 코드를 사용하여 토큰 발급 요청
@@ -53,7 +53,9 @@ export class KakaoAuthService {
   }
 
   // 4. 회원 확인 또는 신규 회원 처리
-  async registerOrFindUser(user: any): Promise<KakaoUser> {
+  async registerOrFindUser(
+    user: any,
+  ): Promise<{ message: string; user: KakaoUser }> {
     // 4.1. user 객체에서 필요한 속성들 추출
     let kakaoAccountId = user.id;
     if (!this.isValidUUID(kakaoAccountId)) {
@@ -71,14 +73,11 @@ export class KakaoAuthService {
     const existingUser =
       await this.kakaoAuthRepository.findUserByAccountId(kakaoAccountId);
     if (existingUser) {
-      // 기존 유저면 200 상태 코드와 함께 유저 정보 반환
-      throw new HttpException(
-        {
-          message: '로그인 성공',
-          user: existingUser,
-        },
-        HttpStatus.OK,
-      );
+      // 기존 유저면 성공 메시지와 함께 유저 정보 반환
+      return {
+        message: '로그인 성공',
+        user: existingUser,
+      };
     }
 
     // 4.3. 신규 회원 처리
@@ -91,14 +90,10 @@ export class KakaoAuthService {
       isDefaultImage,
     });
 
-    // 신규 유저인 경우 400 응답과 함께 유저 정보 전달
-    throw new HttpException(
-      {
-        message: '신규 회원입니다. 전화번호 인증이 필요합니다.',
-        user: newUser,
-      },
-      HttpStatus.BAD_REQUEST,
-    );
+    return {
+      message: '신규 회원입니다. 전화번호 인증이 필요합니다.',
+      user: newUser,
+    };
   }
 
   // 유효한 UUID인지 체크하는 함수

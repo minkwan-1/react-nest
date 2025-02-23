@@ -6,11 +6,9 @@ const RedirectPage = () => {
   const [query] = useSearchParams();
   const navigate = useNavigate();
   const code = query.get("code");
-  const provider = query.get("state");
+  const provider = query.get("provider");
 
   console.log({ data, provider, code });
-
-  console.log("ㅍ프프프프프프프류ㅗ로로로바바바이ㅣ이이이더:", provider);
 
   useEffect(() => {
     const postFn = async () => {

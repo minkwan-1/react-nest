@@ -32,8 +32,8 @@ export class KakaoAuthController {
 
     // 6. 로그인 완료 후 프론트엔드로 리다이렉션
     return {
-      message: '로그인 성공',
-      user: userInfo,
+      message: userInfo.message,
+      user: userInfo.user,
     };
   }
 }

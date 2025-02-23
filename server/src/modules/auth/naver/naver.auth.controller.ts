@@ -5,8 +5,6 @@ import { NaverAuthService } from './naver.auth.service';
 export class NaverAuthController {
   constructor(private readonly naverAuthService: NaverAuthService) {}
 
-  private users: any[] = [];
-
   // 1. 네이버 로그인 URL로 리다이렉트
   @Get('login')
   @Redirect()
@@ -30,12 +28,9 @@ export class NaverAuthController {
     console.log('User info:', user);
 
     // 5. 회원 확인 또는 신규 회원 등록
-    const userInfo = this.naverAuthService.registerOrFindUser(user);
+    const userInfo = await this.naverAuthService.registerOrFindUser(user);
 
     // 6. 결과 반환
-    return {
-      message: '로그인 성공',
-      user: userInfo,
-    };
+    return userInfo;
   }
 }
