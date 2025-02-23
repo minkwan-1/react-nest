@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import * as twilio from 'twilio';
+import { KakaoAuthRepository } from '../auth/kakao/kakao.auth.repository';
 
 @Injectable()
 export class PhoneVerificationService {
@@ -8,6 +9,11 @@ export class PhoneVerificationService {
     process.env.TWILIO_AUTH_TOKEN,
   );
   private readonly twilioPhoneNumber = process.env.TWILIO_PHONE_NUMBER;
+  private readonly kakaoAuthRepository: KakaoAuthRepository;
+
+  constructor(kakaoAuthRepository: KakaoAuthRepository) {
+    this.kakaoAuthRepository = kakaoAuthRepository;
+  }
 
   async sendVerificationCode(phoneNumber: string): Promise<string> {
     console.log(`Sending verification code to ${phoneNumber}...`);
@@ -34,7 +40,15 @@ export class PhoneVerificationService {
     );
     if (verificationCode === '123456') {
       console.log('Verification code is correct');
-      return 'Phone number verified!';
+
+      // 인증이 완료되었으면 DB에 유저 정보 저장
+      const newUser = await this.kakaoAuthRepository.createNewUser({
+        phoneNumber,
+        verifiedAt: new Date(),
+      });
+
+      console.log('User successfully registered in DB:', newUser);
+      return 'Phone number verified and user registered!';
     } else {
       console.error('Verification failed');
       throw new Error('Invalid verification code');

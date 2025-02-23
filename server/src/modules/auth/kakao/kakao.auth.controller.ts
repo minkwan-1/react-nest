@@ -28,7 +28,7 @@ export class KakaoAuthController {
     console.log('User info:', user);
 
     // 5. 회원 확인 또는 신규 회원 추가
-    const userInfo = this.kakaoAuthService.registerOrFindUser(user);
+    const userInfo = await this.kakaoAuthService.registerOrFindUser(user);
 
     // 6. 로그인 완료 후 프론트엔드로 리다이렉션
     return {

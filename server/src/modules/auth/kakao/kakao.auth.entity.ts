@@ -1,15 +1,15 @@
 import {
   Entity,
   Column,
-  PrimaryColumn,
+  PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
 @Entity('kakao_user')
 export class KakaoUser {
-  @PrimaryColumn({ type: 'bigint' })
-  id: number;
+  @PrimaryGeneratedColumn('uuid') // 자동 생성되는 UUID 값
+  id: string;
 
   @Column({ type: 'timestamptz' })
   connectedAt: Date;

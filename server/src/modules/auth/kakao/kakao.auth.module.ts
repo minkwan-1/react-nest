@@ -9,6 +9,6 @@ import { KakaoAuthController } from './kakao.auth.controller';
   imports: [TypeOrmModule.forFeature([KakaoUser])],
   controllers: [KakaoAuthController],
   providers: [KakaoAuthService, KakaoAuthRepository],
-  exports: [KakaoAuthService],
+  exports: [KakaoAuthService, KakaoAuthRepository],
 })
 export class KakaoAuthModule {}

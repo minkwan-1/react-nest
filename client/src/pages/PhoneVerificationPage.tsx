@@ -67,7 +67,9 @@ const PhoneVerificationPage = () => {
       );
       console.log("Response from verify-code:", response.data);
       setMessage(response.data.message || "Phone number verified!");
-      if (response.data) {
+      if (
+        response.data.message === "Phone number verified and user registered!"
+      ) {
         navigate("/home");
       }
     } catch (error) {

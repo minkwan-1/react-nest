@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import axios from 'axios';
 import { KakaoAuthRepository } from './kakao.auth.repository';
 import { KakaoUser } from './kakao.auth.entity';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class KakaoAuthService {
@@ -13,7 +14,7 @@ export class KakaoAuthService {
 
   // 1. 카카오 로그인 URL 생성
   getKakaoAuthUrl(): string {
-    return `https://kauth.kakao.com/oauth/authorize?client_id=${this.kakaoClientId}&redirect_uri=${this.kakaoCallbackUrl}&response_type=code`;
+    return `https://kauth.kakao.com/oauth/authorize?client_id=${this.kakaoClientId}&redirect_uri=${this.kakaoCallbackUrl}&response_type=code&state=kakao`;
   }
 
   // 2. 인가 코드를 사용하여 토큰 발급 요청
@@ -51,9 +52,14 @@ export class KakaoAuthService {
     return response.data;
   }
 
-  // 4. 회원 확인 또는 신규 회원 추가
+  // 4. 회원 확인 또는 신규 회원 처리
   async registerOrFindUser(user: any): Promise<KakaoUser> {
     // 4.1. user 객체에서 필요한 속성들 추출
+    let kakaoAccountId = user.id;
+    if (!this.isValidUUID(kakaoAccountId)) {
+      // 만약 kakaoAccountId가 숫자라면, uuid로 변환 (또는 숫자를 적절히 변환)
+      kakaoAccountId = uuidv4(); // 임시로 UUID로 변환하는 방식 사용
+    }
     const nickname = user?.kakao_account?.profile?.nickname || '익명';
     const profileImage = user?.kakao_account?.profile?.profile_image_url || '';
     const thumbnailImage =
@@ -61,14 +67,44 @@ export class KakaoAuthService {
     const isDefaultImage =
       user?.kakao_account?.profile?.is_default_image || false;
 
-    // 4.2. 새로운 유저를 생성하거나, 기존 유저를 업데이트
-    return this.kakaoAuthRepository.findOrCreateUser({
-      id: user.id,
+    // 4.2. 기존 유저 확인
+    const existingUser =
+      await this.kakaoAuthRepository.findUserByAccountId(kakaoAccountId);
+    if (existingUser) {
+      // 기존 유저면 200 상태 코드와 함께 유저 정보 반환
+      throw new HttpException(
+        {
+          message: '로그인 성공',
+          user: existingUser,
+        },
+        HttpStatus.OK,
+      );
+    }
+
+    // 4.3. 신규 회원 처리
+    const newUser = await this.kakaoAuthRepository.createNewUser({
+      id: kakaoAccountId,
       connectedAt: new Date(user.connected_at),
       nickname,
       profileImage,
       thumbnailImage,
       isDefaultImage,
     });
+
+    // 신규 유저인 경우 400 응답과 함께 유저 정보 전달
+    throw new HttpException(
+      {
+        message: '신규 회원입니다. 전화번호 인증이 필요합니다.',
+        user: newUser,
+      },
+      HttpStatus.BAD_REQUEST,
+    );
+  }
+
+  // 유효한 UUID인지 체크하는 함수
+  private isValidUUID(id: string): boolean {
+    const regex =
+      /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
+    return regex.test(id);
   }
 }
