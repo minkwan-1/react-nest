@@ -1,9 +1,13 @@
 import { Controller, Get, Post, Redirect, Body } from '@nestjs/common';
 import { NaverAuthService } from './naver.auth.service';
+import { AuthService } from '../auth.service';
 
 @Controller('auth/naver')
 export class NaverAuthController {
-  constructor(private readonly naverAuthService: NaverAuthService) {}
+  constructor(
+    private readonly naverAuthService: NaverAuthService,
+    private readonly authService: AuthService,
+  ) {}
 
   // 1. 네이버 로그인 URL로 리다이렉트
   @Get('login')
@@ -30,7 +34,15 @@ export class NaverAuthController {
     // 5. 회원 확인 또는 신규 회원 등록
     const userInfo = await this.naverAuthService.registerOrFindUser(user);
 
-    // 6. 결과 반환
-    return userInfo;
+    // 6. JWT 토큰 생성
+    const jwtTokens = this.authService.generateToken(userInfo.user, 'naver');
+    console.log('JWT 토큰 생성됨:', jwtTokens);
+
+    // 7. 결과 반환 (JWT 토큰 포함)
+    return {
+      message: userInfo.message,
+      user: userInfo.user,
+      tokens: jwtTokens,
+    };
   }
 }
