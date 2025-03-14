@@ -79,17 +79,11 @@ export const useSocialLogin = (
 
   // OAuth login handler function
   const handleOAuthLogin = (provider: SocialPlatform) => {
-    if (provider === "google") {
-      // Google uses a popup method for login
-      setShowGoogleLogin(!showGoogleLogin);
-    } else {
-      // Kakao and Naver use a redirect method
-      // Set up the callback URL (the URL to redirect after social login)
-      const redirectUrl = `${window.location.origin}/social-callback`;
-      // Redirect to the social login page
-      window.location.href = `http://localhost:3000/auth/${provider}/login?redirectUrl=${encodeURIComponent(
-        redirectUrl
-      )}`;
+    if (provider) {
+      console.log("로그인 버튼 클림 됨!!!!!!!!!!!!!!!!!!!!!!!!!!");
+      console.log(provider);
+      window.location.href = `http://localhost:3000/auth/${provider}/login`;
+      // setShowGoogleLogin(!showGoogleLogin);
     }
   };
 
