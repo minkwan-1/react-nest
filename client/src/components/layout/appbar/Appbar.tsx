@@ -1,60 +1,40 @@
-import { useEffect, useState } from "react";
-import {
-  Box,
-  Container,
-  IconButton,
-  Typography,
-  SxProps,
-  Theme,
-} from "@mui/material";
-import { Code } from "lucide-react";
-import DarkModeIcon from "@mui/icons-material/DarkMode";
-import LightModeIcon from "@mui/icons-material/LightMode";
-
+import { Box, Container, SxProps, Theme } from "@mui/material";
 import { useColorScheme } from "@mui/material/styles";
-import { useNavigate } from "react-router-dom";
 import { google, naver, kakao } from "../../../images";
 
-type AppbarProps = {
+// Components
+import AppbarLogo from "./AppbarLogo";
+import UserInfo from "./UserInfo";
+import SocialLoginButtons from "./SocialLoginButtons";
+import ErrorDialog from "./ErrorDialog";
+
+// Custom Hooks
+import useAuth from "./hooks/useAuth";
+import useSocialLogin from "./hooks/useSocialLogin";
+
+// Interface for Appbar Props
+interface AppbarProps {
   sx?: SxProps<Theme>;
-};
+}
 
 function Appbar({ sx }: AppbarProps) {
-  const { mode, setMode } = useColorScheme();
-  const navigate = useNavigate();
+  const { mode } = useColorScheme();
 
-  const [nickname, setNickname] = useState("");
-  const [searchQuery, setSearchQuery] = useState("");
+  // Authentication states and functions
+  const { user, nickname, logout, setUser, setNickname } = useAuth();
 
-  const toggleMode = () => {
-    setMode(mode === "light" ? "dark" : "light");
-  };
+  // Social login states and functions
+  const {
+    showGoogleLogin,
+    loginError,
+    showErrorDialog,
+    handleOAuthLogin,
+    handleGoogleSuccess,
+    handleGoogleError,
+    closeErrorDialog,
+  } = useSocialLogin(setUser, setNickname);
 
-  useEffect(() => {
-    const storedNickname = new URLSearchParams(window.location.search).get(
-      "nickname"
-    );
-
-    if (storedNickname) {
-      localStorage.setItem("nickname", storedNickname);
-      setNickname(storedNickname);
-    } else {
-      const localStorageNickname = localStorage.getItem("nickname");
-      if (localStorageNickname) {
-        setNickname(localStorageNickname);
-      }
-    }
-  }, []);
-
-  const handleSearch = () => {
-    if (searchQuery.trim()) {
-      navigate(`/search?query=${searchQuery}`);
-    }
-  };
-
-  const handleOAuthLogin = (provider: string) => {
-    window.location.href = `http://localhost:3000/auth/${provider}/login`;
-  };
+  console.log(user);
 
   return (
     <Box
@@ -80,88 +60,34 @@ function Appbar({ sx }: AppbarProps) {
           justifyContent: "space-between",
         }}
       >
-        {/* 로고 */}
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            cursor: "pointer",
-          }}
-          onClick={() => navigate("/")}
-        >
-          <Code
-            size={24}
-            className="text-primary"
-            style={{ color: "03cb84" }}
-          />
-          <Typography
-            variant="h6"
-            sx={{
-              fontWeight: "bold",
-              marginLeft: "8px",
-              color: mode === "dark" ? "white" : "black",
-            }}
-          >
-            Pullim
-          </Typography>
-        </Box>
+        {/* AppbarLogo Component */}
+        <AppbarLogo />
 
-        {/* 우측 아이콘들 */}
         <Box sx={{ display: "flex", alignItems: "center" }}>
-          {nickname && (
-            <Typography
-              sx={{ marginRight: "16px", fontWeight: "bold" }}
-              variant="body1"
-            >
-              {nickname}님
-            </Typography>
+          {nickname ? (
+            // UserInfo Component
+            <UserInfo nickname={nickname} onLogout={logout} />
+          ) : (
+            // SocialLoginButtons Components
+            <SocialLoginButtons
+              googleImage={google}
+              kakaoImage={kakao}
+              naverImage={naver}
+              showGoogleLogin={showGoogleLogin}
+              onOAuthLogin={handleOAuthLogin}
+              onGoogleSuccess={handleGoogleSuccess}
+              onGoogleError={handleGoogleError}
+            />
           )}
-
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              gap: 1,
-            }}
-          >
-            <IconButton
-              onClick={toggleMode}
-              sx={{
-                color: "#03cb84",
-                border: "1px solid #adb5be",
-                width: "32px",
-                height: "32px",
-              }}
-            >
-              {mode === "dark" ? <LightModeIcon /> : <DarkModeIcon />}
-            </IconButton>
-            <img
-              src={google}
-              alt="Google 로그인"
-              style={{ width: "32px", height: "32px", cursor: "pointer" }}
-              onClick={() => handleOAuthLogin("google")}
-            />
-            <img
-              src={kakao}
-              alt="Kakao 로그인"
-              style={{ width: "32px", height: "32px", cursor: "pointer" }}
-              onClick={() => handleOAuthLogin("kakao")}
-            />
-            <img
-              src={naver}
-              alt="Naver 로그인"
-              style={{ width: "32px", height: "32px", cursor: "pointer" }}
-              onClick={() => handleOAuthLogin("naver")}
-            />
-          </Box>
-          {/* <IconButton
-            onClick={() => navigate("/edit")}
-            sx={{ cursor: "pointer", color: "#03cb84" }}
-          >
-            <EditIcon />
-          </IconButton> */}
         </Box>
       </Container>
+
+      {/* ErrorDialog Component */}
+      <ErrorDialog
+        open={showErrorDialog}
+        message={loginError}
+        onClose={closeErrorDialog}
+      />
     </Box>
   );
 }
