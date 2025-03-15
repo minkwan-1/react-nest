@@ -2,9 +2,18 @@ import { Box, Button, Typography, Divider } from "@mui/material";
 import GoogleIcon from "@mui/icons-material/Google";
 import { NaverIcon, KakaoIcon } from "./SocialIcons";
 
-const SignUpSocialButtons = () => {
+const handleOAuthLogin = (provider: string): void => {
+  if (provider) {
+    console.log("회원가입 버튼 클릭 확인 콘솔");
+    console.log("회원가입 처리 프로바이더 확인용 콘솔:", provider);
+    window.location.href = `http://localhost:3000/auth/${provider}/login`;
+  }
+};
+
+const SignUpSocialButtons = (): JSX.Element => {
   return (
     <>
+      {/* 가입 안내 title */}
       <Typography
         sx={{
           mb: 1,
@@ -14,6 +23,7 @@ const SignUpSocialButtons = () => {
       >
         소셜 계정으로 Pullim 가입하기
       </Typography>
+      {/* 가입 안내 desc */}
       <Typography
         variant="body1"
         sx={{
@@ -25,6 +35,7 @@ const SignUpSocialButtons = () => {
         소셜 계정으로 빠르게 가입하고 질문을 시작하세요
       </Typography>
 
+      {/* Google Button */}
       <Button
         variant="outlined"
         startIcon={<GoogleIcon />}
@@ -39,10 +50,12 @@ const SignUpSocialButtons = () => {
           transition: "all 0.2s",
           textTransform: "none",
         }}
+        onClick={() => handleOAuthLogin("google")}
       >
         구글로 가입하기
       </Button>
 
+      {/* Naver Button */}
       <Button
         variant="contained"
         startIcon={<NaverIcon />}
@@ -57,10 +70,12 @@ const SignUpSocialButtons = () => {
           transition: "all 0.2s",
           textTransform: "none",
         }}
+        onClick={() => handleOAuthLogin("naver")}
       >
         네이버로 가입하기
       </Button>
 
+      {/* Kakao Button */}
       <Button
         variant="contained"
         startIcon={<KakaoIcon />}
@@ -75,10 +90,12 @@ const SignUpSocialButtons = () => {
           transition: "all 0.2s",
           textTransform: "none",
         }}
+        onClick={() => handleOAuthLogin("kakao")}
       >
         카카오로 가입하기
       </Button>
 
+      {/* Divider */}
       <Box sx={{ display: "flex", alignItems: "center", my: 3 }}>
         <Divider sx={{ flex: 1, borderColor: "#00000008" }} />
         <Typography
