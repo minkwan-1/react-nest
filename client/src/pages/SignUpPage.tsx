@@ -74,7 +74,8 @@ const SignUpPage = () => {
       <Paper
         elevation={0}
         sx={{
-          width: isSmallScreen ? "100%" : isMediumScreen ? "60%" : "50%",
+          width: isMediumScreen || isSmallScreen ? "100%" : "50%",
+          height: "100vh",
           p: { xs: 3, sm: 4, md: 5 },
           display: "flex",
           flexDirection: "column",
@@ -323,7 +324,7 @@ const SignUpPage = () => {
         </Box>
       </Paper>
 
-      {!isSmallScreen && (
+      {!isSmallScreen && !isMediumScreen && (
         <Box
           sx={{
             width: isMediumScreen ? "40%" : "50%",
