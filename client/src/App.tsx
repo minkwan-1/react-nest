@@ -16,6 +16,8 @@ import {
   CollectionPage,
   TagPage,
   AskAIPage,
+  SignUpPage,
+  SignInPage,
 } from "./pages";
 
 const App = () => {
@@ -37,6 +39,8 @@ const App = () => {
       <Route path="/collection" element={<CollectionPage />} />
       <Route path="/tag" element={<TagPage />} />
       <Route path="/ask-ai" element={<AskAIPage />} />
+      <Route path="/sign-up" element={<SignUpPage />} />
+      <Route path="/sign-in" element={<SignInPage />} />
     </Routes>
   );
 };

@@ -80,10 +80,9 @@ export const useSocialLogin = (
   // OAuth login handler function
   const handleOAuthLogin = (provider: SocialPlatform) => {
     if (provider) {
-      console.log("로그인 버튼 클림 됨!!!!!!!!!!!!!!!!!!!!!!!!!!");
+      console.log("로그인 버튼 클림 됨");
       console.log(provider);
       window.location.href = `http://localhost:3000/auth/${provider}/login`;
-      // setShowGoogleLogin(!showGoogleLogin);
     }
   };
 

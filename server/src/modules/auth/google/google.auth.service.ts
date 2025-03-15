@@ -3,6 +3,14 @@ import { GoogleAuthRepository } from './google.auth.repository';
 import { GoogleUser } from './google.auth.entity';
 import axios from 'axios';
 
+type FindUserType = GoogleUser & { isExist: boolean };
+
+// type OptionalUser = Partial<FindUserType>
+
+// interface FindUserType2 extends GoogleUser {
+//   isExist: boolean;
+// }
+
 @Injectable()
 export class GoogleAuthService {
   private readonly googleClientId = process.env.GOOGLE_CLIENT_ID;
@@ -13,7 +21,7 @@ export class GoogleAuthService {
 
   // 1. 구글 로그인 URL 생성
   getGoogleAuthUrl(): string {
-    return `https://accounts.google.com/o/oauth2/v2/auth?client_id=${this.googleClientId}&redirect_uri=${this.googleCallbackUrl}&response_type=code&scope=email profile`;
+    return `https://accounts.google.com/o/oauth2/v2/auth?client_id=${this.googleClientId}&redirect_uri=${this.googleCallbackUrl}&response_type=code&scope=email profile&prompt=consent`;
   }
   // 2. 인가 코드를 사용하여 토큰 발급 요청
   async getToken(code: string): Promise<any> {
@@ -50,21 +58,17 @@ export class GoogleAuthService {
   }
 
   // 4. 회원 확인 또는 신규 회원 추가
-  async registerOrFindUser(user: any): Promise<GoogleUser> {
+  async findUser(user: any): Promise<FindUserType> {
     console.log('구글 유저:', user);
-    // 4.1. user 객체에서 필요한 속성들 추출
-    const nickname = user?.name || '익명';
-    const profileImage = user?.picture || '';
-    // 수정 필요 --------------------------------------------
-    const isDefaultImage = user?.picture || false;
-
-    // 4.2. 새로운 유저를 생성하거나, 기존 유저를 업데이트
-    return this.googleAuthRepository.findOrCreateUser({
+    const existingUser = await this.googleAuthRepository.findUser({
       id: user.id,
-      connectedAt: new Date(user.connected_at),
-      nickname,
-      profileImage,
-      isDefaultImage,
     });
+    console.log('황호왛아황나홓:', existingUser);
+    console.log('황호왛아황나홓:', typeof existingUser);
+    if (existingUser === null) {
+      return { ...user, isExist: false };
+    } else {
+      return { ...existingUser, isExist: true };
+    }
   }
 }

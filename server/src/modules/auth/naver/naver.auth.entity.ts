@@ -20,3 +20,8 @@ export class NaverUser {
   @CreateDateColumn()
   connectedAt: Date;
 }
+
+// id
+// connectedAt
+// profileImage
+// nickname

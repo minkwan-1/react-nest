@@ -14,6 +14,8 @@ import CommunityPage from "./CommunityPage";
 import CollectionPage from "./CollectionPage";
 import TagPage from "./TagPage";
 import AskAIPage from "./AskAIPage";
+import SignUpPage from "./SignUpPage";
+import SignInPage from "./SignInPage";
 export {
   HomePage,
   QuestionListPage,
@@ -31,4 +33,6 @@ export {
   CollectionPage,
   TagPage,
   AskAIPage,
+  SignUpPage,
+  SignInPage,
 };

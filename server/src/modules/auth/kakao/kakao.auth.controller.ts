@@ -1,12 +1,12 @@
 import { Controller, Get, Body, Redirect, Post } from '@nestjs/common';
 import { KakaoAuthService } from './kakao.auth.service';
-import { AuthService } from '../auth.service';
+// import { AuthService } from '../auth.service';
 
 @Controller('auth/kakao')
 export class KakaoAuthController {
   constructor(
     private readonly kakaoAuthService: KakaoAuthService,
-    private readonly authService: AuthService,
+    // private readonly authService: AuthService,
   ) {}
 
   // 1. 인가 코드 발급 요청 (카카오 로그인 URL로 리다이렉트)
@@ -38,18 +38,18 @@ export class KakaoAuthController {
       const userInfo = await this.kakaoAuthService.registerOrFindUser(user);
 
       // 6. JWT 토큰 생성
-      let jwtTokens = null;
-      if (userInfo.isExisted) {
-        // 기존 회원인 경우에만 JWT 토큰 생성
-        jwtTokens = this.authService.generateToken(userInfo.user, 'kakao');
-        console.log('JWT 토큰 생성됨:', jwtTokens);
-      }
+      // let jwtTokens = null;
+      // if (userInfo.isExisted) {
+      //   // 기존 회원인 경우에만 JWT 토큰 생성
+      //   jwtTokens = this.authService.generateToken(userInfo.user, 'kakao');
+      //   console.log('JWT 토큰 생성됨:', jwtTokens);
+      // }
 
       // 7. 결과 반환
       return {
         message: userInfo.message,
         user: userInfo.user,
-        tokens: jwtTokens, // 기존 회원의 경우에만 토큰 포함, 신규 회원은 null
+        // tokens: jwtTokens, // 기존 회원의 경우에만 토큰 포함, 신규 회원은 null
       };
     } catch (error) {
       console.log(error);

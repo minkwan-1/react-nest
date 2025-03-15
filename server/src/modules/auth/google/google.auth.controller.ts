@@ -1,12 +1,12 @@
 import { Controller, Get, Redirect, Post, Body } from '@nestjs/common';
 import { GoogleAuthService } from './google.auth.service';
-import { AuthService } from '../auth.service';
+// import { AuthService } from '../auth.service';
 
 @Controller('auth/google')
 export class GoogleAuthController {
   constructor(
     private readonly googleAuthService: GoogleAuthService,
-    private readonly authService: AuthService,
+    // private readonly authService: AuthService,
   ) {}
 
   // 1. 구글 로그인 URL로 리다이렉트
@@ -31,18 +31,18 @@ export class GoogleAuthController {
     console.log('User info:', user);
 
     // 5. 회원 확인 또는 신규 회원 등록
-    const userInfo = await this.googleAuthService.registerOrFindUser(user);
+    const userInfo = await this.googleAuthService.findUser(user);
     console.log('유저 정보:', userInfo);
 
     // 6. JWT 토큰 생성
-    const jwtTokens = this.authService.generateToken(userInfo, 'google');
-    console.log('JWT 토큰 생성됨:', jwtTokens);
+    // const jwtTokens = this.authService.generateToken(userInfo, 'google');
+    // console.log('JWT 토큰 생성됨:', jwtTokens);
 
     // 7. 결과 반환 (JWT 토큰 포함)
     return {
-      message: '로그인 성공',
+      message: '조회 성공',
       user: userInfo,
-      tokens: jwtTokens,
+      // tokens: jwtTokens,
     };
   }
 }
