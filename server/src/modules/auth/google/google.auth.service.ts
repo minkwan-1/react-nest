@@ -63,8 +63,8 @@ export class GoogleAuthService {
     const existingUser = await this.googleAuthRepository.findUser({
       id: user.id,
     });
-    console.log('황호왛아황나홓:', existingUser);
-    console.log('황호왛아황나홓:', typeof existingUser);
+    console.log('기존 유저 확인을 위한 로그:', existingUser);
+    console.log('기존 유저의 타입 확인을 위한 로그:', typeof existingUser);
     if (existingUser === null) {
       return { ...user, isExist: false };
     } else {

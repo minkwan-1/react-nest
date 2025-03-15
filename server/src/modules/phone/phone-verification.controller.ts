@@ -1,42 +1,38 @@
-// import { Controller, Post, Body } from '@nestjs/common';
-// import { PhoneVerificationService } from './phone-verification.service';
+import { Controller, Post, Body } from '@nestjs/common';
+import * as twilio from 'twilio';
 
-// @Controller('api')
-// export class PhoneVerificationController {
-//   constructor(
-//     private readonly phoneVerificationService: PhoneVerificationService,
-//   ) {}
+@Controller('api')
+export class PhoneVerificationController {
+  private client = twilio(
+    process.env.TWILIO_ACCOUNT_SID,
+    process.env.TWILIO_AUTH_TOKEN,
+  );
 
-//   @Post('send-code')
-//   async sendCode(@Body() body: { phoneNumber: string }) {
-//     console.log('Received request to send verification code:', body); // 로그 추가
-//     try {
-//       const message = await this.phoneVerificationService.sendVerificationCode(
-//         body.phoneNumber,
-//       );
-//       console.log('Verification code sent:', message); // 로그 추가
-//       return { message };
-//     } catch (error) {
-//       console.error('Error sending verification code:', error); // 에러 로그 추가
-//       return { message: error.message };
-//     }
-//   }
+  // 전화번호로 SMS 전송
+  @Post('send-code')
+  async sendSms(@Body() body: { toPhoneNumber: string }): Promise<any> {
+    const { toPhoneNumber } = body;
 
-//   @Post('verify-code')
-//   async verifyCode(
-//     @Body() body: { phoneNumber: string; verificationCode: string },
-//   ) {
-//     console.log('Received request to verify code:', body); // 로그 추가
-//     try {
-//       const message = await this.phoneVerificationService.verifyCode(
-//         body.phoneNumber,
-//         body.verificationCode,
-//       );
-//       console.log('Verification code verified:', message); // 로그 추가
-//       return { message };
-//     } catch (error) {
-//       console.error('Error verifying code:', error); // 에러 로그 추가
-//       return { message: error.message };
-//     }
-//   }
-// }
+    // 확인용 로그 추가
+    console.log('Phone number received:', toPhoneNumber);
+
+    // toPhoneNumber가 비어있는지 확인
+    if (!toPhoneNumber) {
+      return { message: 'Phone number is required.' };
+    }
+
+    try {
+      const message = await this.client.messages.create({
+        from: process.env.TWILIO_PHONE_NUMBER,
+        to: toPhoneNumber, // 수신번호
+        body: 'Hello, this is a test message from Twilio!',
+      });
+
+      console.log('SMS sent successfully:', message.sid);
+      return { message: 'SMS sent successfully!', sid: message.sid };
+    } catch (error) {
+      console.error('Error sending SMS:', error);
+      return { message: 'Failed to send SMS.' };
+    }
+  }
+}

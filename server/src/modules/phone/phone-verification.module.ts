@@ -1,11 +1,9 @@
-// import { Module } from '@nestjs/common';
-// import { PhoneVerificationService } from './phone-verification.service';
-// import { PhoneVerificationController } from './phone-verification.controller';
-// // import { KakaoAuthModule } from '../auth/kakao/kakao.auth.module';
+import { Module } from '@nestjs/common';
 
-// @Module({
-//   // imports: [KakaoAuthModule],
-//   providers: [PhoneVerificationService],
-//   controllers: [PhoneVerificationController],
-// })
-// export class PhoneVerificationModule {}
+import { PhoneVerificationController } from './phone-verification.controller';
+
+@Module({
+  providers: [],
+  controllers: [PhoneVerificationController],
+})
+export class PhoneVerificationModule {}

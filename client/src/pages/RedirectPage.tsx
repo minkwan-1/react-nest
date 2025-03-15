@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
+import { CircularProgress, Box } from "@mui/material";
 
 const RedirectPage = () => {
-  const [data, setData] = useState(null);
+  const [data, setData] = useState<unknown>(null);
+  const [loading, setLoading] = useState<boolean>(false);
   const [query] = useSearchParams();
   const navigate = useNavigate();
   const code = query.get("code");
@@ -17,6 +19,8 @@ const RedirectPage = () => {
         return;
       }
 
+      setLoading(true); // 로딩 시작
+
       try {
         const response = await fetch(
           `http://localhost:3000/auth/${provider}/user`,
@@ -30,11 +34,11 @@ const RedirectPage = () => {
         ).then((res) => res.json());
 
         setData(response);
-
-        // 요청 성공 시 /phone 페이지로 이동
-        navigate("/phone");
+        navigate("/phone"); // 데이터 로딩 후 /phone 페이지로 이동
       } catch (err) {
         console.error("Error during fetch:", err);
+      } finally {
+        setLoading(false); // 로딩 종료
       }
     };
 
@@ -46,7 +50,18 @@ const RedirectPage = () => {
     }
   }, [code, navigate, provider]);
 
-  return <div>redirect 용 페이지</div>;
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        minHeight: "100vh",
+      }}
+    >
+      {loading ? <CircularProgress /> : <></>}
+    </Box>
+  );
 };
 
 export default RedirectPage;
