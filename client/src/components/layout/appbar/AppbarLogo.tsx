@@ -19,7 +19,7 @@ function AppbarLogo({ sx }: AppbarLogoProps) {
         cursor: "pointer",
         ...sx,
       }}
-      onClick={() => navigate("/")}
+      onClick={() => navigate("/home")}
     >
       {/* Logo Icon */}
       <Code size={24} className="text-primary" style={{ color: "#03cb84" }} />

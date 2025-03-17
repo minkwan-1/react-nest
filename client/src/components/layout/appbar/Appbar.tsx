@@ -1,16 +1,18 @@
-import { Box, Container, SxProps, Theme } from "@mui/material";
+import {
+  Box,
+  Container,
+  Button,
+  IconButton,
+  SxProps,
+  Theme,
+  useTheme,
+} from "@mui/material";
+import Brightness4Icon from "@mui/icons-material/Brightness4";
+import Brightness7Icon from "@mui/icons-material/Brightness7";
 import { useColorScheme } from "@mui/material/styles";
-import { google, naver, kakao } from "../../../images";
-
-// Components
 import AppbarLogo from "./AppbarLogo";
-import UserInfo from "./UserInfo";
-import SocialLoginButtons from "./SocialLoginButtons";
 import ErrorDialog from "./ErrorDialog";
-
-// Custom Hooks
-import useAuth from "./hooks/useAuth";
-import useSocialLogin from "./hooks/useSocialLogin";
+import { useNavigate } from "react-router-dom";
 
 // Interface for Appbar Props
 interface AppbarProps {
@@ -18,23 +20,14 @@ interface AppbarProps {
 }
 
 function Appbar({ sx }: AppbarProps) {
-  const { mode } = useColorScheme();
+  const navigate = useNavigate();
+  const { mode, setMode } = useColorScheme();
+  const theme = useTheme();
 
-  // Authentication states and functions
-  const { user, nickname, logout, setUser, setNickname } = useAuth();
-
-  // Social login states and functions
-  const {
-    showGoogleLogin,
-    loginError,
-    showErrorDialog,
-    handleOAuthLogin,
-    handleGoogleSuccess,
-    handleGoogleError,
-    closeErrorDialog,
-  } = useSocialLogin(setUser, setNickname);
-
-  console.log(user);
+  // 다크모드 토글 함수
+  const toggleColorMode = () => {
+    setMode(mode === "light" ? "dark" : "light");
+  };
 
   return (
     <Box
@@ -47,9 +40,16 @@ function Appbar({ sx }: AppbarProps) {
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
-        bgcolor: mode === "dark" ? "grey.900" : "white",
-        color: mode === "dark" ? "white" : "black",
-        boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
+        ...theme.applyStyles("light", {
+          backgroundColor: "#ffffff",
+          color: "black",
+          boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.06)",
+        }),
+        ...theme.applyStyles("dark", {
+          backgroundColor: "#121212",
+          color: "white",
+          boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.15)",
+        }),
         ...sx,
       }}
     >
@@ -63,31 +63,57 @@ function Appbar({ sx }: AppbarProps) {
         {/* AppbarLogo Component */}
         <AppbarLogo />
 
-        <Box sx={{ display: "flex", alignItems: "center" }}>
-          {nickname ? (
-            // UserInfo Component
-            <UserInfo nickname={nickname} onLogout={logout} />
-          ) : (
-            // SocialLoginButtons Components
-            <SocialLoginButtons
-              googleImage={google}
-              kakaoImage={kakao}
-              naverImage={naver}
-              showGoogleLogin={showGoogleLogin}
-              onOAuthLogin={handleOAuthLogin}
-              onGoogleSuccess={handleGoogleSuccess}
-              onGoogleError={handleGoogleError}
-            />
-          )}
+        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+          {/* 다크모드 토글 버튼 */}
+          <IconButton
+            onClick={toggleColorMode}
+            sx={{
+              ...theme.applyStyles("light", {
+                color: "#555",
+              }),
+              ...theme.applyStyles("dark", {
+                color: "#f0f0f0",
+              }),
+            }}
+          >
+            {mode === "dark" ? <Brightness7Icon /> : <Brightness4Icon />}
+          </IconButton>
+
+          {/* 시작하기 버튼 */}
+          <Button
+            variant="outlined"
+            sx={{
+              borderRadius: 50,
+              px: 3,
+              py: 1,
+              textTransform: "none",
+              fontWeight: 500,
+              ...theme.applyStyles("light", {
+                borderColor: "#00000025",
+                color: "#333",
+                "&:hover": {
+                  borderColor: "#00000050",
+                  backgroundColor: "rgba(0, 0, 0, 0.04)",
+                },
+              }),
+              ...theme.applyStyles("dark", {
+                borderColor: "#ffffff25",
+                color: "#f0f0f0",
+                "&:hover": {
+                  borderColor: "#ffffff50",
+                  backgroundColor: "rgba(255, 255, 255, 0.08)",
+                },
+              }),
+            }}
+            onClick={() => navigate("/sign-up")}
+          >
+            시작하기
+          </Button>
         </Box>
       </Container>
 
-      {/* ErrorDialog Component */}
-      <ErrorDialog
-        open={showErrorDialog}
-        message={loginError}
-        onClose={closeErrorDialog}
-      />
+      {/* ErrorDialog Component - 유지 */}
+      <ErrorDialog open={false} message={""} onClose={() => {}} />
     </Box>
   );
 }
