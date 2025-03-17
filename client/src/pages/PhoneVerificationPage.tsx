@@ -32,8 +32,9 @@ const PhoneVerificationPage = () => {
     console.log("Sending verification code for phone number:", phoneNumber);
     setIsSending(true);
     try {
+      // phoneNumber가 요청 본문에 포함되어 전달되는지 확인
       const response = await axios.post("http://localhost:3000/api/send-code", {
-        phoneNumber,
+        toPhoneNumber: phoneNumber, // 'phoneNumber' 대신 'toPhoneNumber'로 전달
       });
       console.log("Response from send-code:", response.data);
       setMessage(response.data.message || "Verification code sent!");
