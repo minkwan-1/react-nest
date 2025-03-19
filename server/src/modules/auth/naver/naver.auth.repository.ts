@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { NaverUser } from './naver.auth.entity';
 
-// github 연결
+// github 연결213
 
 @Injectable()
 export class NaverAuthRepository {
