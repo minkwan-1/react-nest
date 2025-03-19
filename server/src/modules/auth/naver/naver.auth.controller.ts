@@ -32,17 +32,11 @@ export class NaverAuthController {
     console.log('User info:', user);
 
     // 5. 회원 확인 또는 신규 회원 등록
-    const userInfo = await this.naverAuthService.registerOrFindUser(user);
+    const userInfo = await this.naverAuthService.findUser(user);
 
-    // 6. JWT 토큰 생성
-    // const jwtTokens = this.authService.generateToken(userInfo.user, 'naver');
-    // console.log('JWT 토큰 생성됨:', jwtTokens);
-
-    // 7. 결과 반환 (JWT 토큰 포함)
     return {
-      message: userInfo.message,
-      user: userInfo.user,
-      // tokens: jwtTokens,
+      message: '조회 성공',
+      user: userInfo,
     };
   }
 }
