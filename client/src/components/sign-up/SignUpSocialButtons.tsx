@@ -3,10 +3,17 @@ import GoogleIcon from "@mui/icons-material/Google";
 import { NaverIcon, KakaoIcon } from "./SocialIcons";
 
 const handleOAuthLogin = (provider: string): void => {
-  if (provider) {
+  if (!provider) {
+    console.error("로그인 제공자가 지정되지 않았습니다.");
+    return;
+  }
+
+  try {
     console.log("회원가입 버튼 클릭 확인 콘솔");
     console.log("회원가입 처리 프로바이더 확인용 콘솔:", provider);
     window.location.href = `http://localhost:3000/auth/${provider}/login`;
+  } catch (error) {
+    console.error(`${provider} 로그인 중 오류가 발생했습니다:`, error);
   }
 };
 
