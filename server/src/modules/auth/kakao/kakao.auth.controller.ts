@@ -35,21 +35,11 @@ export class KakaoAuthController {
       console.log('User info:', user);
 
       // 5. 회원 확인 또는 신규 회원 추가
-      const userInfo = await this.kakaoAuthService.registerOrFindUser(user);
+      const userInfo = await this.kakaoAuthService.findUser(user);
 
-      // 6. JWT 토큰 생성
-      // let jwtTokens = null;
-      // if (userInfo.isExisted) {
-      //   // 기존 회원인 경우에만 JWT 토큰 생성
-      //   jwtTokens = this.authService.generateToken(userInfo.user, 'kakao');
-      //   console.log('JWT 토큰 생성됨:', jwtTokens);
-      // }
-
-      // 7. 결과 반환
       return {
-        message: userInfo.message,
-        user: userInfo.user,
-        // tokens: jwtTokens, // 기존 회원의 경우에만 토큰 포함, 신규 회원은 null
+        message: '조회 성공',
+        user: userInfo,
       };
     } catch (error) {
       console.log(error);

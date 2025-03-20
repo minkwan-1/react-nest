@@ -3,6 +3,8 @@ import axios from 'axios';
 import { KakaoAuthRepository } from './kakao.auth.repository';
 import { KakaoUser } from './kakao.auth.entity';
 
+type FindUserType = KakaoUser & { isExist: boolean };
+
 @Injectable()
 export class KakaoAuthService {
   private readonly kakaoClientId = process.env.KAKAO_CLIENT_ID;
@@ -62,66 +64,17 @@ export class KakaoAuthService {
   }
 
   // 4. 회원 확인 또는 신규 회원 처리
-  async registerOrFindUser(user: any): Promise<{
-    message: string;
-    user:
-      | KakaoUser
-      | {
-          nickname: string;
-          profileImage: string;
-          thumbnailImage: string;
-          isDefaultImage: string | boolean;
-          kakaoAccountId: number;
-        };
-    isExisted: boolean;
-  }> {
-    // 4.1. user 객체에서 필요한 속성들 추출
-    const kakaoAccountId = user.id;
-
-    const nickname = user?.kakao_account?.profile?.nickname || '익명';
-    const profileImage = user?.kakao_account?.profile?.profile_image_url || '';
-    const thumbnailImage =
-      user?.kakao_account?.profile?.thumbnail_image_url || '';
-    const isDefaultImage =
-      user?.kakao_account?.profile?.is_default_image || false;
-
-    // 4.2. 기존 유저 확인
-    const existingUser =
-      await this.kakaoAuthRepository.findUserByAccountId(kakaoAccountId);
-    if (existingUser) {
-      // 기존 유저면 성공 메시지와 함께 유저 정보 반환
-      return {
-        message: '로그인 필요',
-        isExisted: true,
-        user: existingUser,
-      };
+  async findUser(user: any): Promise<FindUserType> {
+    console.log('구글 유저:', user);
+    const existingUser = await this.kakaoAuthRepository.findUser({
+      id: user.id,
+    });
+    console.log('기존 유저 확인을 위한 로그:', existingUser);
+    console.log('기존 유저의 타입 확인을 위한 로그:', typeof existingUser);
+    if (existingUser === null) {
+      return { ...user, isExist: false };
     } else {
-      return {
-        message: '회원가입 필요',
-        isExisted: false,
-        user: {
-          nickname,
-          profileImage,
-          thumbnailImage,
-          isDefaultImage,
-          kakaoAccountId,
-        },
-      };
+      return { ...existingUser, isExist: true };
     }
-
-    // 4.3. 신규 회원 처리
-    // const newUser = await this.kakaoAuthRepository.createNewUser({
-    //   id: kakaoAccountId,
-    //   connectedAt: new Date(user.connected_at),
-    //   nickname,
-    //   profileImage,
-    //   thumbnailImage,
-    //   isDefaultImage,
-    // });
-
-    // return {
-    //   message: '신규 회원입니다. 전화번호 인증이 필요합니다.',
-    //   user: newUser,
-    // };
   }
 }
