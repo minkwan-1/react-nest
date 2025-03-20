@@ -19,7 +19,7 @@ const RedirectPage = () => {
         return;
       }
 
-      setLoading(true); // 로딩 시작
+      setLoading(true);
 
       try {
         const response = await fetch(
@@ -31,14 +31,30 @@ const RedirectPage = () => {
             },
             body: JSON.stringify({ code }),
           }
-        ).then((res) => res.json());
+        );
 
-        setData(response);
-        navigate("/phone"); // 데이터 로딩 후 /phone 페이지로 이동
+        // HTTP 응답이 실패한 경우 예외 발생
+        if (!response.ok) {
+          throw new Error(`서버 오류 발생: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        // 서버 응답 데이터가 예상과 다를 경우 예외 발생
+        if (!data || typeof data !== "object") {
+          throw new Error("잘못된 응답 데이터 형식입니다.");
+        }
+
+        setData(data);
+        navigate("/phone");
       } catch (err) {
-        console.error("Error during fetch:", err);
+        // 예외 발생 시 메시지 출력
+        console.error(
+          "Error during fetch:",
+          err instanceof Error ? err.message : "알 수 없는 오류 발생"
+        );
       } finally {
-        setLoading(false); // 로딩 종료
+        setLoading(false);
       }
     };
 
@@ -46,7 +62,8 @@ const RedirectPage = () => {
       postFn();
     } else {
       console.log("인가 코드 없음");
-      // navigate("/some-other-page");
+      // 인가 코드가 없을 경우 예외 처리 추가
+      throw new Error("인가 코드가 제공되지 않았습니다.");
     }
   }, [code, navigate, provider]);
 
@@ -59,7 +76,7 @@ const RedirectPage = () => {
         minHeight: "100vh",
       }}
     >
-      {loading ? <CircularProgress /> : <></>}
+      {loading ? <CircularProgress /> : null}
     </Box>
   );
 };
