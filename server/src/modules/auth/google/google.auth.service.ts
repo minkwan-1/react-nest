@@ -14,11 +14,12 @@ export class GoogleAuthService {
   constructor(private readonly googleAuthRepository: GoogleAuthRepository) {}
 
   // 1. 구글 로그인 URL 생성
+  // 왜 이 부분에서는 error가 잡히지 않는가?
   getGoogleAuthUrl(): string {
     try {
       return `https://accounts.google.com/o/oauth2/v2/auth?client_id=${this.googleClientId}&redirect_uri=${this.googleCallbackUrl}&response_type=code&scope=email profile&prompt=consent`;
     } catch (error) {
-      console.log('구글 인증 URL 생성 중 발생한 오류:', error);
+      console.error('구글 인증 URL 생성 중 발생한 오류:', error);
       throw new Error('구글 인증 URL 생성 중 오류 발생');
     }
   }
@@ -81,8 +82,8 @@ export class GoogleAuthService {
         return { ...existingUser, isExist: true };
       }
     } catch (error) {
-      console.log('사용자 확인 또는 추가 중 발생한 오류', error);
-      throw new Error('사용자 확인 또는 추가 중 오류 발생');
+      console.log('구글 사용자 확인 또는 추가 중 발생한 오류', error);
+      throw new Error('구글 사용자 확인 또는 추가 중 오류 발생');
     }
   }
 }
