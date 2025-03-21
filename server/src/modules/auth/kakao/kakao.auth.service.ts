@@ -15,7 +15,12 @@ export class KakaoAuthService {
 
   // 1. 카카오 로그인 URL 생성
   getKakaoAuthUrl(): string {
-    return `https://kauth.kakao.com/oauth/authorize?client_id=${this.kakaoClientId}&redirect_uri=${this.kakaoCallbackUrl}&response_type=code&prompt=login`;
+    try {
+      return `https://kauth.kakao.com/oauth/authorize?client_id=${this.kakaoClientId}&redirect_uri=${this.kakaoCallbackUrl}&response_type=code&prompt=login`;
+    } catch (error) {
+      console.error('카카오 인증 URL 생성 중 발생한 오류:', error);
+      throw new Error('카카오 인증 URL 생성 중 오류 발생');
+    }
   }
 
   // 2. 인가 코드를 사용하여 토큰 발급 요청
@@ -37,8 +42,8 @@ export class KakaoAuthService {
       // 받은 토큰을 반환
       return response.data;
     } catch (error) {
-      console.log(error);
-      throw new Error('토큰 요청 에러');
+      console.log('카카오에서 토큰을 가져오는 중 발생한 오류:', error);
+      throw new Error('카카오에서 토큰을 가져오는 중 오류 발생');
     }
   }
 
@@ -58,23 +63,28 @@ export class KakaoAuthService {
       console.log('Kakao 사용자 정보 확인 로그:', response.data);
       return response.data;
     } catch (error) {
-      console.log(error);
-      throw new Error('카카오 유저 정보 오류');
+      console.log('카카오에서 사용자 정보를 가져오는 중 발생한 오류:', error);
+      throw new Error('카카오에서 사용자 정보를 가져오는 중 오류 발생');
     }
   }
 
   // 4. 회원 확인 또는 신규 회원 처리
   async findUser(user: any): Promise<FindUserType> {
-    console.log('구글 유저:', user);
-    const existingUser = await this.kakaoAuthRepository.findUser({
-      id: user.id,
-    });
-    console.log('기존 유저 확인을 위한 로그:', existingUser);
-    console.log('기존 유저의 타입 확인을 위한 로그:', typeof existingUser);
-    if (existingUser === null) {
-      return { ...user, isExist: false };
-    } else {
-      return { ...existingUser, isExist: true };
+    try {
+      console.log('구글 유저:', user);
+      const existingUser = await this.kakaoAuthRepository.findUser({
+        id: user.id,
+      });
+      console.log('기존 유저 확인을 위한 로그:', existingUser);
+      console.log('기존 유저의 타입 확인을 위한 로그:', typeof existingUser);
+      if (existingUser === null) {
+        return { ...user, isExist: false };
+      } else {
+        return { ...existingUser, isExist: true };
+      }
+    } catch (error) {
+      console.log('카카오 사용자 확인 또는 추가 중 발생한 오류', error);
+      throw new Error('카카오 사용자 확인 또는 추가 중 오류 발생');
     }
   }
 }
