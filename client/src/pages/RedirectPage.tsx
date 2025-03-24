@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { CircularProgress, Box } from "@mui/material";
-// import { signupUserInfo } from "@atom/auth";
-// import { useAtom } from "jotai";
+import { signupUserInfo } from "@atom/auth";
+import { useAtom } from "jotai";
 
 const RedirectPage = () => {
   const [data, setData] = useState<unknown>(null);
@@ -11,10 +11,12 @@ const RedirectPage = () => {
   const navigate = useNavigate();
   const code = query.get("code");
   const provider = query.get("provider");
-  // const [userInfo, setUserInfo] = useAtom(signupUserInfo);
-  // console.log(userInfo);
+  const [userInfo, setUserInfo] = useAtom(signupUserInfo);
+  console.log(userInfo);
 
-  console.log({ data, provider, code });
+  console.log("1.Redirect Page Data:", data);
+  console.log("2.Redirect Page Provider:", provider);
+  console.log("3.Redirect Page Authorization Code:", code);
 
   useEffect(() => {
     const postFn = async () => {
@@ -50,7 +52,15 @@ const RedirectPage = () => {
         }
 
         setData(data);
-        // 이 데이터가  -> 전역
+        if (data.user) {
+          setUserInfo({
+            email: data.user.email || "",
+            name: data.user.name || "",
+            // You can also access other fields if needed
+            // fullName: `${data.user.given_name} ${data.user.family_name}`,
+            // id: data.user.id
+          });
+        }
         navigate("/phone");
       } catch (err) {
         // 예외 발생 시 메시지 출력

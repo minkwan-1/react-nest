@@ -1,3 +1,8 @@
 import { atom } from "jotai";
 
-export const signupUserInfo = atom({ email: "이메일", username: "민관" });
+interface UserInfo {
+  email: string;
+  name: string;
+}
+
+export const signupUserInfo = atom<UserInfo | null>(null);

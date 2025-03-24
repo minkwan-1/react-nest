@@ -9,6 +9,8 @@ import {
 } from "@mui/material";
 import { PageContainer, ComponentWrapper } from "../components/layout/common";
 import axios from "axios";
+import { useAtom } from "jotai";
+import { signupUserInfo } from "@atom/auth";
 
 // Define a custom error interface
 interface ApiError {
@@ -26,6 +28,8 @@ const PhoneVerificationPage = () => {
   const [isSending, setIsSending] = useState(false);
   const [isVerifying, setIsVerifying] = useState(false);
   const [message, setMessage] = useState("");
+  const [userInfo] = useAtom(signupUserInfo);
+  console.log("/phone에서 전역 변수 반영 체크:", userInfo);
 
   // 전화번호 인증 코드 발송 처리 함수
   const handleSendCode = async () => {
