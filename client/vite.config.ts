@@ -1,16 +1,19 @@
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import path from "path";
 
-// https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
+
   define: {
     global: {},
   },
-  server: {
-    fs: {
-      // fs 모듈 사용 허용
-      allow: ['..'],
+
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "./src"),
+      "@atom": path.resolve(__dirname, "./src/atom"),
+      "@components": path.resolve(__dirname, "./src/components"),
     },
   },
 });

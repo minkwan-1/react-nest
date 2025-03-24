@@ -7,9 +7,12 @@ import {
   CardContent,
   CardActions,
 } from "@mui/material";
-import { PageContainer, ComponentWrapper } from "../components/layout/common";
+import { PageContainer, ComponentWrapper } from "@components/layout/common";
 import SearchIcon from "@mui/icons-material/Search";
 import SortIcon from "@mui/icons-material/Sort";
+import { useAtom } from "jotai";
+// import { signupUserInfo } from "@atom/auth";
+import { signupUserInfo } from "@atom/auth";
 
 const questionData = [
   {
@@ -71,6 +74,8 @@ const questionData = [
 ];
 
 const HomePage = () => {
+  const [userInfo, setUserInfo] = useAtom(signupUserInfo);
+  console.log(userInfo);
   return (
     <PageContainer>
       <ComponentWrapper sx={{ padding: 2 }}>

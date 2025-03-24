@@ -1,5 +1,13 @@
 {
+  // "include": ["src"],
   "files": [],
+  "compilerOptions": {
+    "baseUrl": "./src"
+    // "paths": {
+    //   "@atom/*": ["atom/*"],
+    //   "@/*": ["*"]
+    // }
+  },
   "references": [
     { "path": "./tsconfig.app.json" },
     { "path": "./tsconfig.node.json" }

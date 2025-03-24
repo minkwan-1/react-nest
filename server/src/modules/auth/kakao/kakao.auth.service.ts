@@ -25,6 +25,7 @@ export class KakaoAuthService {
 
   // 2. 인가 코드를 사용하여 토큰 발급 요청
   async getToken(code: string): Promise<any> {
+    console.log('카카오 코드:', code);
     try {
       const tokenUrl = 'https://kauth.kakao.com/oauth/token';
 

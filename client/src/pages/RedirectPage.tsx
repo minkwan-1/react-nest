@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { CircularProgress, Box } from "@mui/material";
+// import { signupUserInfo } from "@atom/auth";
+// import { useAtom } from "jotai";
 
 const RedirectPage = () => {
   const [data, setData] = useState<unknown>(null);
@@ -9,6 +11,8 @@ const RedirectPage = () => {
   const navigate = useNavigate();
   const code = query.get("code");
   const provider = query.get("provider");
+  // const [userInfo, setUserInfo] = useAtom(signupUserInfo);
+  // console.log(userInfo);
 
   console.log({ data, provider, code });
 
@@ -46,6 +50,7 @@ const RedirectPage = () => {
         }
 
         setData(data);
+        // 이 데이터가  -> 전역
         navigate("/phone");
       } catch (err) {
         // 예외 발생 시 메시지 출력
@@ -65,7 +70,7 @@ const RedirectPage = () => {
       // 인가 코드가 없을 경우 예외 처리 추가
       throw new Error("인가 코드가 제공되지 않았습니다.");
     }
-  }, [code, navigate, provider]);
+  }, []);
 
   return (
     <Box
