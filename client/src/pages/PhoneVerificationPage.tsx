@@ -16,12 +16,10 @@ import { PageContainer, ComponentWrapper } from "../components/layout/common";
 import axios from "axios";
 import { useAtom } from "jotai";
 import { signupUserInfo } from "@atom/auth";
-import PersonIcon from "@mui/icons-material/Person";
-import EmailIcon from "@mui/icons-material/Email";
 import PhoneIcon from "@mui/icons-material/Phone";
 import SendIcon from "@mui/icons-material/Send";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import { PhoneVerificationTitle } from "@components/phone";
+import { PhoneVerificationTitle, UserInfoField } from "@components/phone";
 
 // Define a custom error interface
 interface ApiError {
@@ -134,52 +132,7 @@ const PhoneVerificationPage = () => {
           <PhoneVerificationTitle />
 
           {/* 사용자 정보 표시 섹션 */}
-          <Box
-            sx={{
-              mb: 3,
-              p: 2,
-              bgcolor: "rgba(0, 0, 0, 0.02)",
-              borderRadius: 1,
-            }}
-          >
-            <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-              회원 정보
-            </Typography>
-
-            <TextField
-              fullWidth
-              variant="outlined"
-              margin="normal"
-              value={userInfo?.name || ""}
-              InputProps={{
-                readOnly: true,
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <PersonIcon color="primary" />
-                  </InputAdornment>
-                ),
-              }}
-              placeholder="이름"
-              size="small"
-            />
-
-            <TextField
-              fullWidth
-              variant="outlined"
-              margin="normal"
-              value={userInfo?.email || ""}
-              InputProps={{
-                readOnly: true,
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <EmailIcon color="primary" />
-                  </InputAdornment>
-                ),
-              }}
-              placeholder="이메일"
-              size="small"
-            />
-          </Box>
+          <UserInfoField />
 
           {/* 전화번호 인증 섹션 */}
           <Box sx={{ mb: 3 }}>
