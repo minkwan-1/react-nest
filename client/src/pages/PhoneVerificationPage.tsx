@@ -8,7 +8,6 @@ import {
   CircularProgress,
   Paper,
   Divider,
-  Avatar,
   InputAdornment,
   Chip,
   Fade,
@@ -21,8 +20,8 @@ import PersonIcon from "@mui/icons-material/Person";
 import EmailIcon from "@mui/icons-material/Email";
 import PhoneIcon from "@mui/icons-material/Phone";
 import SendIcon from "@mui/icons-material/Send";
-import VerifiedUserIcon from "@mui/icons-material/VerifiedUser";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import { PhoneVerificationTitle } from "@components/phone";
 
 // Define a custom error interface
 interface ApiError {
@@ -132,16 +131,7 @@ const PhoneVerificationPage = () => {
             padding: 4,
           }}
         >
-          <Box sx={{ display: "flex", alignItems: "center", mb: 3 }}>
-            <Avatar sx={{ bgcolor: "primary.main", mr: 2 }}>
-              <VerifiedUserIcon />
-            </Avatar>
-            <Typography variant="h5" fontWeight="600">
-              휴대폰 인증
-            </Typography>
-          </Box>
-
-          <Divider sx={{ mb: 3 }} />
+          <PhoneVerificationTitle />
 
           {/* 사용자 정보 표시 섹션 */}
           <Box
