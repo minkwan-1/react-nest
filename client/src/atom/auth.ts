@@ -1,6 +1,6 @@
 import { atom } from "jotai";
 
-interface UserInfo {
+export interface UserInfo {
   email: string;
   name: string;
 }

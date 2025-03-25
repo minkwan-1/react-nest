@@ -1,18 +1,27 @@
+// RedirectPage.tsx - 타입 안전성이 개선된 버전
 import { useEffect, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { CircularProgress, Box } from "@mui/material";
-import { signupUserInfo } from "@atom/auth";
+import { signupUserInfo, UserInfo } from "@atom/auth";
 import { useAtom } from "jotai";
 
+interface ServerResponse {
+  user?: {
+    email?: string;
+    name?: string;
+    // 기타 가능한 필드들
+  };
+  // 응답에 포함될 수 있는 다른 필드들
+}
+
 const RedirectPage = () => {
-  const [data, setData] = useState<unknown>(null);
+  const [data, setData] = useState<ServerResponse | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [query] = useSearchParams();
   const navigate = useNavigate();
   const code = query.get("code");
   const provider = query.get("provider");
-  const [userInfo, setUserInfo] = useAtom(signupUserInfo);
-  console.log(userInfo);
+  const [, setUserInfo] = useAtom(signupUserInfo); // userInfo는 사용하지 않으므로 생략
 
   console.log("1.Redirect Page Data:", data);
   console.log("2.Redirect Page Provider:", provider);
@@ -39,31 +48,33 @@ const RedirectPage = () => {
           }
         );
 
-        // HTTP 응답이 실패한 경우 예외 발생
         if (!response.ok) {
           throw new Error(`서버 오류 발생: ${response.status}`);
         }
 
-        const data = await response.json();
+        const responseData: ServerResponse = await response.json();
 
-        // 서버 응답 데이터가 예상과 다를 경우 예외 발생
-        if (!data || typeof data !== "object") {
+        if (!responseData || typeof responseData !== "object") {
           throw new Error("잘못된 응답 데이터 형식입니다.");
         }
 
-        setData(data);
-        if (data.user) {
-          setUserInfo({
-            email: data.user.email || "",
-            name: data.user.name || "",
-            // You can also access other fields if needed
-            // fullName: `${data.user.given_name} ${data.user.family_name}`,
-            // id: data.user.id
-          });
+        setData(responseData);
+
+        if (responseData.user) {
+          const newUserInfo: UserInfo = {
+            email: responseData.user.email || "",
+            name: responseData.user.name || "",
+          };
+
+          // Update Jotai state
+          setUserInfo(newUserInfo);
+
+          // Also store in localStorage for persistence
+          localStorage.setItem("userInfo", JSON.stringify(newUserInfo));
         }
+
         navigate("/phone");
       } catch (err) {
-        // 예외 발생 시 메시지 출력
         console.error(
           "Error during fetch:",
           err instanceof Error ? err.message : "알 수 없는 오류 발생"
@@ -77,10 +88,11 @@ const RedirectPage = () => {
       postFn();
     } else {
       console.log("인가 코드 없음");
-      // 인가 코드가 없을 경우 예외 처리 추가
-      throw new Error("인가 코드가 제공되지 않았습니다.");
+      navigate("/error", {
+        state: { message: "인가 코드가 제공되지 않았습니다." },
+      });
     }
-  }, []);
+  }, [code, navigate, provider, setUserInfo]);
 
   return (
     <Box

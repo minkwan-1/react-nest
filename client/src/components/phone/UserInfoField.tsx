@@ -1,10 +1,21 @@
+// UserInfoField.tsx - UserInfo가 null일 경우 처리 추가
 import { Box, Typography, TextField, InputAdornment } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
 import EmailIcon from "@mui/icons-material/Email";
-import { useAtom } from "jotai";
-import { signupUserInfo } from "@atom/auth";
-const UserInfoField = () => {
-  const [userInfo] = useAtom(signupUserInfo);
+
+interface UserInfo {
+  name: string;
+  email: string;
+}
+
+interface UserInfoFieldProps {
+  userInfo: UserInfo | null;
+  setUserInfo: (userInfo: UserInfo) => void;
+}
+
+const UserInfoField = ({ userInfo }: UserInfoFieldProps) => {
+  console.log("유저 정보 필드의 유저: ", userInfo);
+
   return (
     <Box
       sx={{
