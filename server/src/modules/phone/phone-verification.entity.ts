@@ -1,24 +1,16 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  CreateDateColumn,
-} from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
 @Entity('phone_verifications')
 export class PhoneVerification {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ type: 'varchar', length: 15 })
   phoneNumber: string;
 
-  @Column()
+  @Column({ type: 'varchar', length: 6 })
   code: string;
 
-  @Column()
+  @Column({ type: 'timestamp' })
   expiresAt: Date;
-
-  @CreateDateColumn()
-  createdAt: Date;
 }

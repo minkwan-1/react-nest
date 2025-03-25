@@ -18,14 +18,16 @@ export class PhoneVerificationController {
 
   // 전화번호로 인증 코드 SMS 전송 API
   @Post('send-code')
-  async sendSms(@Body() body: SendCodeDto): Promise<any> {
+  async sendSms(
+    @Body() body: SendCodeDto,
+  ): Promise<{ message: string; sid?: string }> {
     const { toPhoneNumber } = body;
     return this.phoneVerificationService.sendVerificationCode(toPhoneNumber);
   }
 
   // 인증 코드 확인 API
   @Post('verify-code')
-  async verifyCode(@Body() body: VerifyCodeDto): Promise<any> {
+  async verifyCode(@Body() body: VerifyCodeDto): Promise<{ message: string }> {
     const { phoneNumber, verificationCode } = body;
     return this.phoneVerificationService.verifyCode(
       phoneNumber,
