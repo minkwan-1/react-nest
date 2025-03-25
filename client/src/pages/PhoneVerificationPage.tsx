@@ -1,9 +1,7 @@
 // PhoneVerificationPage.tsx
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { Paper } from "@mui/material";
 import { PageContainer, ComponentWrapper } from "../components/layout/common";
-import axios from "axios";
 import { useAtom } from "jotai";
 import { signupUserInfo } from "@atom/auth";
 
@@ -16,15 +14,14 @@ import {
 } from "@components/phone";
 
 const PhoneVerificationPage = () => {
-  const navigate = useNavigate();
   const [userInfo, setUserInfo] = useAtom(signupUserInfo);
-  const [isSending, setIsSending] = useState(false);
-  const [isVerifying, setIsVerifying] = useState(false);
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState<"info" | "success" | "error">(
     "info"
   );
+  const [phoneNumber, setPhoneNumber] = useState(""); // 전화번호 상태 추가
 
+  // Load user info from localStorage when component mounts
   useEffect(() => {
     const storedUserInfo = localStorage.getItem("userInfo");
     if (storedUserInfo) {
@@ -37,42 +34,21 @@ const PhoneVerificationPage = () => {
     }
   }, [setUserInfo]);
 
-  const handleSendCode = async (phoneNumber: string) => {
-    setIsSending(true);
-    try {
-      const response = await axios.post("http://localhost:3000/api/send-code", {
-        toPhoneNumber: phoneNumber,
-      });
-      setMessage(response.data.message || "인증 코드가 발송되었습니다!");
-      setMessageType("success");
-    } catch (error) {
-      console.log(error);
-      setMessage("인증 코드 발송에 실패했습니다.");
-      setMessageType("error");
-    } finally {
-      setIsSending(false);
-    }
+  // 성공 메시지 처리 함수
+  const handleSuccess = (successMessage: string) => {
+    setMessage(successMessage);
+    setMessageType("success");
   };
 
-  const handleVerifyCode = async (code: string) => {
-    setIsVerifying(true);
-    try {
-      const response = await axios.post(
-        "http://localhost:3000/api/verify-code",
-        {
-          verificationCode: code,
-        }
-      );
-      setMessage(response.data.message || "전화번호가 인증되었습니다!");
-      setMessageType("success");
-      if (response.data.message.includes("verified")) navigate("/home");
-    } catch (error) {
-      console.log(error);
-      setMessage("인증에 실패했습니다.");
-      setMessageType("error");
-    } finally {
-      setIsVerifying(false);
-    }
+  // 에러 메시지 처리 함수
+  const handleError = (errorMessage: string) => {
+    setMessage(errorMessage);
+    setMessageType("error");
+  };
+
+  // 전화번호 설정 함수
+  const handlePhoneNumberChange = (newPhoneNumber: string) => {
+    setPhoneNumber(newPhoneNumber);
   };
 
   return (
@@ -81,10 +57,15 @@ const PhoneVerificationPage = () => {
         <Paper sx={{ padding: 4 }}>
           <PhoneVerificationTitle />
           <UserInfoField userInfo={userInfo} setUserInfo={setUserInfo} />
-          <PhoneNumberField onSend={handleSendCode} isSending={isSending} />
+          <PhoneNumberField
+            onSuccess={handleSuccess}
+            onError={handleError}
+            onPhoneNumberChange={handlePhoneNumberChange} // 전화번호 변경 핸들러 전달
+          />
           <VerificationInput
-            onVerify={handleVerifyCode}
-            isVerifying={isVerifying}
+            phoneNumber={phoneNumber} // 전화번호 전달
+            onSuccess={handleSuccess}
+            onError={handleError}
           />
           <MessageBox message={message} messageType={messageType} />
         </Paper>

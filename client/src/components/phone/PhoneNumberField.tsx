@@ -1,5 +1,5 @@
-// components/phone/PhoneInput.tsx
-import { useState } from "react";
+// components/phone/PhoneNumberField.tsx
+import { useState, useEffect } from "react";
 import {
   Box,
   TextField,
@@ -9,14 +9,55 @@ import {
 } from "@mui/material";
 import PhoneIcon from "@mui/icons-material/Phone";
 import SendIcon from "@mui/icons-material/Send";
+import axios from "axios";
 
-interface PhoneInputProps {
-  onSend: (phoneNumber: string) => void;
-  isSending: boolean;
+interface PhoneNumberFieldProps {
+  onSuccess: (message: string) => void;
+  onError: (message: string) => void;
+  onPhoneNumberChange: (phoneNumber: string) => void;
 }
 
-const PhoneNumberField = ({ onSend, isSending }: PhoneInputProps) => {
+const PhoneNumberField = ({
+  onSuccess,
+  onError,
+  onPhoneNumberChange,
+}: PhoneNumberFieldProps) => {
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [isSending, setIsSending] = useState(false);
+
+  // 전화번호가 변경될 때마다 부모 컴포넌트에 알림
+  useEffect(() => {
+    onPhoneNumberChange(phoneNumber);
+  }, [phoneNumber, onPhoneNumberChange]);
+
+  const handleSendCode = async () => {
+    if (!phoneNumber) {
+      onError("전화번호를 입력해주세요.");
+      return;
+    }
+
+    setIsSending(true);
+    try {
+      const response = await axios.post("http://localhost:3000/api/send-code", {
+        toPhoneNumber: phoneNumber,
+      });
+      onSuccess(response.data.message || "인증 코드가 발송되었습니다!");
+    } catch (error: unknown) {
+      console.log(error);
+
+      // axios 에러 처리
+      if (axios.isAxiosError(error) && error.response) {
+        // 서버 응답 에러 메시지가 있으면 사용
+        const errorMessage =
+          error.response.data?.message || "인증 코드 발송에 실패했습니다.";
+        onError(errorMessage);
+      } else {
+        onError("인증 코드 발송에 실패했습니다.");
+      }
+    } finally {
+      setIsSending(false);
+    }
+  };
 
   return (
     <Box sx={{ mb: 3 }}>
@@ -39,7 +80,7 @@ const PhoneNumberField = ({ onSend, isSending }: PhoneInputProps) => {
       <Button
         variant="contained"
         color="primary"
-        onClick={() => onSend(phoneNumber)}
+        onClick={handleSendCode}
         disabled={isSending || !phoneNumber}
         fullWidth
         sx={{ mt: 1, mb: 3, height: "48px" }}

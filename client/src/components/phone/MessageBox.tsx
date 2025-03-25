@@ -1,22 +1,26 @@
-import { Box, Typography } from "@mui/material";
+// components/phone/MessageBox.tsx
+import { Box, Alert, AlertTitle } from "@mui/material";
 
 interface MessageBoxProps {
   message: string;
-  messageType: "error" | "success" | "info";
+  messageType: "info" | "success" | "error";
 }
 
 const MessageBox = ({ message, messageType }: MessageBoxProps) => {
   if (!message) return null;
 
-  const colors = {
-    error: "rgba(255, 0, 0, 0.05)",
-    success: "rgba(0, 255, 0, 0.05)",
-    info: "rgba(0, 0, 255, 0.05)",
+  const titles = {
+    info: "안내",
+    success: "성공",
+    error: "오류",
   };
 
   return (
-    <Box mt={3} p={2} bgcolor={colors[messageType]} borderRadius={1}>
-      <Typography color={`${messageType}.main`}>{message}</Typography>
+    <Box sx={{ mb: 2 }}>
+      <Alert severity={messageType}>
+        <AlertTitle>{titles[messageType]}</AlertTitle>
+        {message}
+      </Alert>
     </Box>
   );
 };
