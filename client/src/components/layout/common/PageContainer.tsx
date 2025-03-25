@@ -9,16 +9,8 @@ type LayoutProps = {
 const PageContainer = ({ children }: LayoutProps) => {
   return (
     <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
-      <Appbar
-        sx={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          right: 0,
-          zIndex: (theme) => theme.zIndex.drawer + 1,
-        }}
-      />
-      <Box sx={{ flexGrow: 1, mt: "40px" }}>{children}</Box>
+      <Appbar />
+      <Box sx={{ flexGrow: 1 }}>{children}</Box>
     </Box>
   );
 };

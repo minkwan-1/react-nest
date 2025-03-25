@@ -1,6 +1,6 @@
 import { Box, Button, Typography, Divider, useTheme } from "@mui/material";
 import GoogleIcon from "@mui/icons-material/Google";
-import { NaverIcon, KakaoIcon } from "./SocialIcons";
+import { NaverIcon } from "./SocialIcons";
 
 const handleOAuthLogin = (provider: string): void => {
   if (!provider) {
@@ -124,7 +124,7 @@ const SignUpSocialButtons = (): JSX.Element => {
       </Button>
 
       {/* Kakao Button */}
-      <Button
+      {/* <Button
         variant="contained"
         startIcon={<KakaoIcon />}
         sx={{
@@ -154,7 +154,7 @@ const SignUpSocialButtons = (): JSX.Element => {
         onClick={() => handleOAuthLogin("kakao")}
       >
         카카오로 가입하기
-      </Button>
+      </Button> */}
 
       {/* Divider */}
       <Box sx={{ display: "flex", alignItems: "center", my: 3 }}>
