@@ -30,10 +30,6 @@ export class PhoneVerificationService {
     }
 
     try {
-      await this.phoneVerificationRepository.delete({
-        phoneNumber: toPhoneNumber,
-      });
-
       const verificationCode = this.generateVerificationCode();
       const expiresAt = new Date();
       expiresAt.setMinutes(expiresAt.getMinutes() + 10);
@@ -43,14 +39,14 @@ export class PhoneVerificationService {
         phoneNumber: toPhoneNumber,
         code: verificationCode,
         expiresAt,
-        verified: false, // 초기 상태는 미인증
+        verified: false,
       });
-      console.log('3. DB에 전달할 인증 정보:', phoneVerification);
+      console.log('DB에 전달할 인증 정보:', phoneVerification);
 
       // 데이터베이스에 저장
       const savedVerification =
         await this.phoneVerificationRepository.save(phoneVerification);
-      console.log('4. 저장된 인증 정보:', savedVerification);
+      console.log('저장된 인증 정보:', savedVerification);
 
       // Twilio로 SMS 전송
       const message = await this.client.messages.create({
@@ -118,12 +114,5 @@ export class PhoneVerificationService {
       console.error('인증 코드 확인 오류:', error);
       return { message: '인증 처리 중 오류가 발생했습니다.' };
     }
-  }
-
-  // 인증된 사용자 정보를 조회하는 메서드 (필요시 사용)
-  async getVerifiedUsers() {
-    return this.phoneVerificationRepository.find({
-      where: { verified: true },
-    });
   }
 }
