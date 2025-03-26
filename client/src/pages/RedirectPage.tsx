@@ -92,7 +92,7 @@ const RedirectPage = () => {
         state: { message: "인가 코드가 제공되지 않았습니다." },
       });
     }
-  }, [code, navigate, provider, setUserInfo]);
+  }, []);
 
   return (
     <Box

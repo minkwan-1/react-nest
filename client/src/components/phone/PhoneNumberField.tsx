@@ -38,6 +38,7 @@ const PhoneNumberField = ({
 
     setIsSending(true);
     try {
+      console.log("1. 전화번호 전송 frontend: ", phoneNumber);
       const response = await axios.post("http://localhost:3000/api/send-code", {
         toPhoneNumber: phoneNumber,
       });

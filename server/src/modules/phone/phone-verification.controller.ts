@@ -22,6 +22,7 @@ export class PhoneVerificationController {
     @Body() body: SendCodeDto,
   ): Promise<{ message: string; sid?: string }> {
     const { toPhoneNumber } = body;
+    console.log('2. 서버에 도착한 전화번호: ', toPhoneNumber);
     return this.phoneVerificationService.sendVerificationCode(toPhoneNumber);
   }
 
@@ -29,6 +30,10 @@ export class PhoneVerificationController {
   @Post('verify-code')
   async verifyCode(@Body() body: VerifyCodeDto): Promise<{ message: string }> {
     const { phoneNumber, verificationCode } = body;
+    console.log('6. 인증 번호와 휴대전화 번호 서버 도착: ', {
+      verificationCode,
+      phoneNumber,
+    });
     return this.phoneVerificationService.verifyCode(
       phoneNumber,
       verificationCode,

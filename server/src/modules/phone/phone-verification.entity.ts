@@ -13,4 +13,7 @@ export class PhoneVerification {
 
   @Column({ type: 'timestamp' })
   expiresAt: Date;
+
+  @Column({ type: 'boolean', default: false })
+  verified: boolean;
 }

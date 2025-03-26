@@ -4,6 +4,10 @@ import { Repository } from 'typeorm';
 import { PhoneVerification } from './phone-verification.entity';
 import * as twilio from 'twilio';
 
+// phone-verification.entity.ts에 'verified' 필드 추가 필요
+// @Column({ type: 'boolean', default: false })
+// verified: boolean;
+
 @Injectable()
 export class PhoneVerificationService {
   private client = twilio(
@@ -30,19 +34,29 @@ export class PhoneVerificationService {
     }
 
     try {
+      await this.phoneVerificationRepository.delete({
+        phoneNumber: toPhoneNumber,
+      });
+
       const verificationCode = this.generateVerificationCode();
       const expiresAt = new Date();
       expiresAt.setMinutes(expiresAt.getMinutes() + 10);
 
+      // 인증 코드 생성 (verified = false 상태로)
       const phoneVerification = this.phoneVerificationRepository.create({
         phoneNumber: toPhoneNumber,
         code: verificationCode,
         expiresAt,
+        verified: false, // 초기 상태는 미인증
       });
-      console.log('DB에 전달할 twilio 값:', phoneVerification);
+      console.log('3. DB에 전달할 인증 정보:', phoneVerification);
 
-      await this.phoneVerificationRepository.save(phoneVerification);
+      // 데이터베이스에 저장
+      const savedVerification =
+        await this.phoneVerificationRepository.save(phoneVerification);
+      console.log('4. 저장된 인증 정보:', savedVerification);
 
+      // Twilio로 SMS 전송
       const message = await this.client.messages.create({
         from: process.env.TWILIO_PHONE_NUMBER,
         to: toPhoneNumber,
@@ -54,7 +68,7 @@ export class PhoneVerificationService {
         sid: message.sid,
       };
     } catch (error) {
-      console.error('SMS 전송 오류:', error);
+      console.error('SMS 전송 또는 DB 저장 오류:', error);
       return { message: '인증 코드 전송에 실패했습니다.' };
     }
   }
@@ -69,29 +83,51 @@ export class PhoneVerificationService {
       return { message: '전화번호와 인증 코드가 필요합니다.' };
     }
 
-    const storedVerification = await this.phoneVerificationRepository.findOne({
-      where: { phoneNumber },
+    try {
+      const storedVerification = await this.phoneVerificationRepository.findOne(
+        {
+          where: { phoneNumber },
+        },
+      );
+
+      console.log('DB에서 찾은 인증 정보:', storedVerification);
+
+      if (!storedVerification) {
+        return {
+          message: '인증 코드를 찾을 수 없습니다. 새 코드를 요청해 주세요.',
+        };
+      }
+
+      if (new Date() > storedVerification.expiresAt) {
+        await this.phoneVerificationRepository.delete({ phoneNumber });
+        return {
+          message: '인증 코드가 만료되었습니다. 새 코드를 요청해 주세요.',
+        };
+      }
+
+      if (verificationCode !== storedVerification.code) {
+        return {
+          message: '유효하지 않은 인증 코드입니다. 다시 시도해 주세요.',
+        };
+      }
+
+      // 인증 성공 시 verified 상태를 true로 업데이트
+      storedVerification.verified = true;
+      await this.phoneVerificationRepository.save(storedVerification);
+
+      console.log('인증 완료된 사용자 정보:', storedVerification);
+
+      return { message: '전화번호 인증 및 사용자 등록이 완료되었습니다!' };
+    } catch (error) {
+      console.error('인증 코드 확인 오류:', error);
+      return { message: '인증 처리 중 오류가 발생했습니다.' };
+    }
+  }
+
+  // 인증된 사용자 정보를 조회하는 메서드 (필요시 사용)
+  async getVerifiedUsers() {
+    return this.phoneVerificationRepository.find({
+      where: { verified: true },
     });
-
-    if (!storedVerification) {
-      return {
-        message: '인증 코드를 찾을 수 없습니다. 새 코드를 요청해 주세요.',
-      };
-    }
-
-    if (new Date() > storedVerification.expiresAt) {
-      await this.phoneVerificationRepository.delete({ phoneNumber });
-      return {
-        message: '인증 코드가 만료되었습니다. 새 코드를 요청해 주세요.',
-      };
-    }
-
-    if (verificationCode !== storedVerification.code) {
-      return { message: '유효하지 않은 인증 코드입니다. 다시 시도해 주세요.' };
-    }
-
-    await this.phoneVerificationRepository.delete({ phoneNumber });
-
-    return { message: '전화번호 인증 및 사용자 등록이 완료되었습니다!' };
   }
 }

@@ -33,6 +33,10 @@ const VerificationInput = ({
 
     setIsVerifying(true);
     try {
+      console.log("5. 인증 번호와 휴대전화 번호 전달: ", {
+        verificationCode,
+        phoneNumber,
+      });
       const response = await axios.post(
         "http://localhost:3000/api/verify-code",
         {
