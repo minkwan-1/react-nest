@@ -4,10 +4,6 @@ import { Repository } from 'typeorm';
 import { PhoneVerification } from './phone-verification.entity';
 import * as twilio from 'twilio';
 
-// phone-verification.entity.ts에 'verified' 필드 추가 필요
-// @Column({ type: 'boolean', default: false })
-// verified: boolean;
-
 @Injectable()
 export class PhoneVerificationService {
   private client = twilio(

@@ -1,4 +1,10 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  HttpException,
+  HttpStatus,
+} from '@nestjs/common';
 import { PhoneVerificationService } from './phone-verification.service';
 
 interface SendCodeDto {
@@ -22,21 +28,36 @@ export class PhoneVerificationController {
     @Body() body: SendCodeDto,
   ): Promise<{ message: string; sid?: string }> {
     const { toPhoneNumber } = body;
-    console.log('2. 서버에 도착한 전화번호: ', toPhoneNumber);
-    return this.phoneVerificationService.sendVerificationCode(toPhoneNumber);
+
+    try {
+      return await this.phoneVerificationService.sendVerificationCode(
+        toPhoneNumber,
+      );
+    } catch (error) {
+      console.log(error);
+      throw new HttpException(
+        'Failed to send verification code. Please try again later.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
   }
 
   // 인증 코드 확인 API
   @Post('verify-code')
   async verifyCode(@Body() body: VerifyCodeDto): Promise<{ message: string }> {
     const { phoneNumber, verificationCode } = body;
-    console.log('6. 인증 번호와 휴대전화 번호 서버 도착: ', {
-      verificationCode,
-      phoneNumber,
-    });
-    return this.phoneVerificationService.verifyCode(
-      phoneNumber,
-      verificationCode,
-    );
+
+    try {
+      return await this.phoneVerificationService.verifyCode(
+        phoneNumber,
+        verificationCode,
+      );
+    } catch (error) {
+      console.log(error);
+      throw new HttpException(
+        'Verification failed. Please check the code and try again.',
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
   }
 }
