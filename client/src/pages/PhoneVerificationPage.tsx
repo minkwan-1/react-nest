@@ -51,6 +51,8 @@ const PhoneVerificationPage = () => {
     setPhoneNumber(newPhoneNumber);
   };
 
+  console.log("입력한 전화번호가 부모 컴포넌트에 전달되는지: ", phoneNumber);
+
   return (
     <PageContainer>
       <ComponentWrapper sx={{ maxWidth: "600px" }}>
