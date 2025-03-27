@@ -24,11 +24,10 @@ import { signupUserInfo } from "@atom/auth";
 const questionData = [
   {
     id: 1,
-    title: "React의 useEffect 훅을 어떻게 사용할까요?",
-    author: "김민수",
+    title: "래퍼 때려 치우고 개발자 하고 싶은데 어떤 것부터 공부해야 할까요?",
+    author: "빈지노",
     date: "2025-01-23",
-    content:
-      "React에서 useEffect를 사용하여 데이터를 fetching하려면 어떻게 해야 할까요? useEffect의 기본적인 사용법을 알고 싶습니다.",
+    content: "랩보다 개발이 더 재밌어 보여요, 공부 방향에 대해 조언 해주세요!",
     thumbnail:
       "https://images.unsplash.com/photo-1633356122102-3fe601e05bd2?w=500&auto=format&fit=crop&q=60", // React 관련 이미지
     answers: [
@@ -43,11 +42,10 @@ const questionData = [
   },
   {
     id: 2,
-    title: "자바스크립트의 비동기 처리 이해하기",
-    author: "이정민",
+    title: "웹툰 작가, 유튜버, 다음은 개발자가 되고 싶어요",
+    author: "침착맨",
     date: "2025-01-22",
-    content:
-      "자바스크립트에서 비동기 처리 방식인 Promise와 async/await의 차이점에 대해 자세히 알고 싶습니다.",
+    content: "개청자들 상대하는 것도 이젠 질렸습니다. 개발 알려주세요.",
     thumbnail:
       "https://images.unsplash.com/photo-1627398242454-45a1465c2479?w=500&auto=format&fit=crop&q=60", // JS 코드 이미지
     answers: [
@@ -525,8 +523,8 @@ const staffPicks = [
   },
   {
     id: 3,
-    author: "이세영",
-    title: "게임 이론으로 알아보는 프로그래밍 패턴",
+    author: "원민관",
+    title: "애자일: Pullim 팀이 고민하는 방식",
     date: "2월 8일",
     thumbnail: "https://randomuser.me/api/portraits/men/34.jpg", // 아바타 이미지 예시
   },
