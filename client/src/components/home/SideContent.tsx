@@ -21,7 +21,7 @@ const SideContent = () => {
       sx={{
         display: { xs: "none", sm: "none", md: "block" },
         flex: 1,
-        pl: 3,
+        pl: 6,
         position: "sticky",
         alignSelf: "flex-start",
         overflowY: "auto",
@@ -221,10 +221,9 @@ const SideContent = () => {
       <Box
         sx={{
           mt: 5,
-          paddingLeft: "20px",
           py: 3,
           px: 3,
-          borderRadius: 3,
+          borderRadius: 6,
           border: "1px dashed #03cb84",
           ...theme.applyStyles("light", {
             backgroundColor: "#F0FBF7", // 라이트 모드 배경

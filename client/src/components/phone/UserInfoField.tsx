@@ -1,5 +1,5 @@
-// UserInfoField.tsx - UserInfo가 null일 경우 처리 추가
-import { Box, Typography, TextField, InputAdornment } from "@mui/material";
+// UserInfoField.tsx
+import { Box, Typography, Paper, Avatar } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
 import EmailIcon from "@mui/icons-material/Email";
 
@@ -14,55 +14,97 @@ interface UserInfoFieldProps {
 }
 
 const UserInfoField = ({ userInfo }: UserInfoFieldProps) => {
-  console.log("유저 정보 필드의 유저: ", userInfo);
+  const name = userInfo?.name || "이름 정보 없음";
+  const email = userInfo?.email || "이메일 정보 없음";
+
+  // 이름의 첫 글자 또는 기본값을 사용
+  const nameInitial = name ? name.charAt(0).toUpperCase() : "?";
 
   return (
-    <Box
+    <Paper
+      elevation={0}
       sx={{
-        mb: 3,
-        p: 2,
-        bgcolor: "rgba(0, 0, 0, 0.02)",
-        borderRadius: 1,
+        mb: 4,
+        borderRadius: 3,
+        overflow: "hidden",
+        border: "1px solid",
+        borderColor: "divider",
       }}
     >
-      <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-        회원 정보
-      </Typography>
-
-      <TextField
-        fullWidth
-        variant="outlined"
-        margin="normal"
-        value={userInfo?.name || ""}
-        InputProps={{
-          readOnly: true,
-          startAdornment: (
-            <InputAdornment position="start">
-              <PersonIcon color="primary" />
-            </InputAdornment>
-          ),
+      <Box
+        sx={{
+          py: 1.5,
+          px: 3,
+          borderBottom: "1px solid",
+          borderColor: "divider",
+          bgcolor: "background.paper",
         }}
-        placeholder="이름"
-        size="small"
-      />
+      >
+        <Typography
+          variant="subtitle2"
+          fontWeight={600}
+          sx={{ color: "#03cb84" }}
+        >
+          회원 정보
+        </Typography>
+      </Box>
 
-      <TextField
-        fullWidth
-        variant="outlined"
-        margin="normal"
-        value={userInfo?.email || ""}
-        InputProps={{
-          readOnly: true,
-          startAdornment: (
-            <InputAdornment position="start">
-              <EmailIcon color="primary" />
-            </InputAdornment>
-          ),
+      <Box
+        sx={{
+          p: 3,
+          display: "flex",
+          alignItems: "center",
+          gap: 2,
+          flexDirection: { xs: "column", sm: "row" },
         }}
-        placeholder="이메일"
-        size="small"
-      />
-    </Box>
+      >
+        <Avatar
+          sx={{
+            width: 80,
+            height: 80,
+            bgcolor: "#ffffff",
+            color: "#03cb84",
+            border: `2px solid #03cb84`,
+            fontSize: 32,
+            fontWeight: "bold",
+          }}
+        >
+          {nameInitial}
+        </Avatar>
+
+        <Box sx={{ width: "100%" }}>
+          <Box sx={{ mb: 2 }}>
+            <Box sx={{ display: "flex", alignItems: "center", mb: 0.5 }}>
+              <PersonIcon
+                fontSize="small"
+                sx={{ color: "text.secondary", mr: 1 }}
+              />
+              <Typography variant="caption" color="text.secondary">
+                이름
+              </Typography>
+            </Box>
+            <Typography variant="body1" fontWeight={500}>
+              {name}
+            </Typography>
+          </Box>
+
+          <Box>
+            <Box sx={{ display: "flex", alignItems: "center", mb: 0.5 }}>
+              <EmailIcon
+                fontSize="small"
+                sx={{ color: "text.secondary", mr: 1 }}
+              />
+              <Typography variant="caption" color="text.secondary">
+                이메일
+              </Typography>
+            </Box>
+            <Typography variant="body1" fontWeight={500}>
+              {email}
+            </Typography>
+          </Box>
+        </Box>
+      </Box>
+    </Paper>
   );
 };
 

@@ -1,6 +1,6 @@
 // PhoneVerificationPage.tsx
 import { useState, useEffect } from "react";
-import { Paper } from "@mui/material";
+import { Box } from "@mui/material";
 import { PageContainer, ComponentWrapper } from "../components/layout/common";
 import { useAtom } from "jotai";
 import { signupUserInfo } from "@atom/auth";
@@ -56,7 +56,7 @@ const PhoneVerificationPage = () => {
   return (
     <PageContainer>
       <ComponentWrapper sx={{ maxWidth: "600px" }}>
-        <Paper sx={{ padding: 4 }}>
+        <Box sx={{ padding: 4 }}>
           <PhoneVerificationTitle />
           <UserInfoField userInfo={userInfo} setUserInfo={setUserInfo} />
           <PhoneNumberField
@@ -70,7 +70,7 @@ const PhoneVerificationPage = () => {
             onError={handleError}
           />
           <MessageBox message={message} messageType={messageType} />
-        </Paper>
+        </Box>
       </ComponentWrapper>
     </PageContainer>
   );

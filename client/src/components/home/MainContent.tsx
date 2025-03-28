@@ -25,8 +25,8 @@ const MainContent = () => {
     <Box
       sx={{
         flex: 2,
-        pr: 4,
-        overflowY: "auto", // Y축 스크롤만 가능하도록
+        pr: { xs: "0", sm: "0", md: "3" },
+        overflowY: "auto",
         height: "100%",
         scrollbarWidth: "thin",
         "&::-webkit-scrollbar": {
@@ -309,7 +309,6 @@ const MainContent = () => {
                     marginBottom: 1.5,
                     ...theme.applyStyles("light", { color: "#333333" }),
                     ...theme.applyStyles("dark", { color: "#F0FBF7" }),
-                    fontFamily: "'Noto Serif KR', serif",
                     fontSize: "18px",
                     lineHeight: 1.4,
                   }}
