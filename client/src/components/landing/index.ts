@@ -1,4 +1,5 @@
-// landing components export
-import DescriptionSection from "./DescriptionSection";
+import MainContent from "./MainContent";
+import LandingTitle from "./LandingTitle";
+import ImageSection from "./ImageSection";
 
-export { DescriptionSection };
+export { MainContent, LandingTitle, ImageSection };

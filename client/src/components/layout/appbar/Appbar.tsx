@@ -40,15 +40,18 @@ function Appbar({ sx }: AppbarProps) {
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
+
         ...theme.applyStyles("light", {
-          backgroundColor: "#ffffff",
+          backgroundColor: "#f8f8f8",
           color: "black",
           boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.06)",
+          borderBottom: "1px solid #E0E0E0",
         }),
         ...theme.applyStyles("dark", {
           backgroundColor: "#121212",
           color: "white",
           boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.15)",
+          borderBottom: "1px solid #E0E0E0",
         }),
         ...sx,
       }}
@@ -83,6 +86,8 @@ function Appbar({ sx }: AppbarProps) {
           <Button
             variant="outlined"
             sx={{
+              color: "inherit",
+              borderColor: "inherit",
               borderRadius: 50,
               px: 3,
               py: 1,
@@ -105,7 +110,7 @@ function Appbar({ sx }: AppbarProps) {
                 },
               }),
             }}
-            onClick={() => navigate("/sign-up")}
+            onClick={() => navigate("/home")}
           >
             시작하기
           </Button>
