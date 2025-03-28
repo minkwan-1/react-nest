@@ -19,6 +19,7 @@ const SideContent = () => {
   return (
     <Box
       sx={{
+        display: { xs: "none", sm: "none", md: "block" },
         flex: 1,
         pl: 3,
         position: "sticky",

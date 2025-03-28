@@ -5,6 +5,7 @@ const SectionDivider = () => {
   return (
     <Box
       sx={{
+        display: { xs: "none", sm: "none", md: "block" },
         position: "absolute",
         top: 0,
         left: "66.67%",
