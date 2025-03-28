@@ -12,7 +12,7 @@ import Brightness7Icon from "@mui/icons-material/Brightness7";
 import { useColorScheme } from "@mui/material/styles";
 import AppbarLogo from "./AppbarLogo";
 import ErrorDialog from "./ErrorDialog";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 // Interface for Appbar Props
 interface AppbarProps {
@@ -21,12 +21,22 @@ interface AppbarProps {
 
 function Appbar({ sx }: AppbarProps) {
   const navigate = useNavigate();
+  const location = useLocation(); // 현재 경로 가져오기
   const { mode, setMode } = useColorScheme();
   const theme = useTheme();
 
   // 다크모드 토글 함수
   const toggleColorMode = () => {
     setMode(mode === "light" ? "dark" : "light");
+  };
+
+  // 시작하기/살펴보기 버튼 클릭 이벤트
+  const handleButtonClick = () => {
+    if (location.pathname === "/") {
+      navigate("/home"); // / 경로에서 /home으로 이동
+    } else {
+      navigate("/sign-up"); // 그 외 경로에서 /sign-up으로 이동
+    }
   };
 
   return (
@@ -82,7 +92,7 @@ function Appbar({ sx }: AppbarProps) {
             {mode === "dark" ? <Brightness7Icon /> : <Brightness4Icon />}
           </IconButton>
 
-          {/* 시작하기 버튼 */}
+          {/* 시작하기/살펴보기 버튼 */}
           <Button
             variant="outlined"
             sx={{
@@ -110,9 +120,10 @@ function Appbar({ sx }: AppbarProps) {
                 },
               }),
             }}
-            onClick={() => navigate("/home")}
+            onClick={handleButtonClick}
           >
-            시작하기
+            {location.pathname === "/" ? "살펴보기" : "시작하기"}{" "}
+            {/* 경로에 따라 버튼 텍스트 변경 */}
           </Button>
         </Box>
       </Container>
