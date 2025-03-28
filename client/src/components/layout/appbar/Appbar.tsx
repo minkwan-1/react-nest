@@ -51,7 +51,7 @@ function Appbar({ sx }: AppbarProps) {
           backgroundColor: "#121212",
           color: "white",
           boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.15)",
-          borderBottom: "1px solid #E0E0E0",
+          borderBottom: "1px solid #616161",
         }),
         ...sx,
       }}

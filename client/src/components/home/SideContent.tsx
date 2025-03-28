@@ -1,7 +1,8 @@
-import { Box, Typography, Button, Chip } from "@mui/material";
+import { Box, Typography, Button, Chip, useTheme } from "@mui/material";
 import { staffPicks, recommendedTopics } from "@mock/mockHomePageData";
 
 const SideContent = () => {
+  const theme = useTheme();
   return (
     <Box
       sx={{
@@ -24,7 +25,8 @@ const SideContent = () => {
           sx={{
             fontWeight: "bold",
             mb: 2.5,
-            color: "#212121",
+            ...theme.applyStyles("light", { color: "#212121" }), // 라이트 모드 색상
+            ...theme.applyStyles("dark", { color: "#ffffff" }), // 다크 모드 색상
             fontSize: "18px",
             position: "relative",
             display: "inline-block",
@@ -48,12 +50,21 @@ const SideContent = () => {
             key={pick.id}
             sx={{
               mb: 2,
-              border: "1px solid #E0E0E0",
+
               p: 2,
               borderRadius: 2,
               transition: "all 0.3s",
+              ...theme.applyStyles("light", {
+                backgroundColor: "#ffffff",
+                border: "1px solid #E0E0E0",
+              }), // 라이트 모드 배경
+              ...theme.applyStyles("dark", {
+                backgroundColor: "#333333",
+                border: "none",
+              }), // 다크 모드 배경
               "&:hover": {
-                backgroundColor: "#F5F5F5",
+                ...theme.applyStyles("light", { backgroundColor: "#F5F5F5" }),
+                ...theme.applyStyles("dark", { backgroundColor: "#4F4F4F" }),
                 cursor: "pointer",
               },
             }}
@@ -86,7 +97,14 @@ const SideContent = () => {
               </Box>
               <Box>
                 <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
-                  <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      fontWeight: 500,
+                      ...theme.applyStyles("light", { color: "#212121" }), // 라이트 모드 텍스트 색상
+                      ...theme.applyStyles("dark", { color: "#F0FBF7" }), // 다크 모드 텍스트 색상
+                    }}
+                  >
                     {pick.author}
                   </Typography>
                 </Box>
@@ -96,31 +114,25 @@ const SideContent = () => {
                     fontWeight: "bold",
                     mb: 0.5,
                     lineHeight: 1.3,
-                    color: "#212121",
+                    ...theme.applyStyles("light", { color: "#212121" }), // 라이트 모드 텍스트 색상
+                    ...theme.applyStyles("dark", { color: "#F0FBF7" }), // 다크 모드 텍스트 색상
                   }}
                 >
                   {pick.title}
                 </Typography>
-                <Typography variant="caption" sx={{ color: "#757575" }}>
+                <Typography
+                  variant="caption"
+                  sx={{
+                    ...theme.applyStyles("light", { color: "#757575" }), // 라이트 모드 색상
+                    ...theme.applyStyles("dark", { color: "#BDBDBD" }), // 다크 모드 색상
+                  }}
+                >
                   {pick.date}
                 </Typography>
               </Box>
             </Box>
           </Box>
         ))}
-        <Button
-          sx={{
-            textTransform: "none",
-            color: "#757575",
-            fontWeight: 500,
-            "&:hover": {
-              backgroundColor: "#F5F5F5",
-              color: "#03cb84",
-            },
-          }}
-        >
-          더 보기
-        </Button>
       </Box>
 
       {/* 추천 토픽 섹션 */}
@@ -130,7 +142,8 @@ const SideContent = () => {
           sx={{
             fontWeight: "bold",
             mb: 2.5,
-            color: "#212121",
+            ...theme.applyStyles("light", { color: "#212121" }),
+            ...theme.applyStyles("dark", { color: "#ffffff" }),
             fontSize: "18px",
             position: "relative",
             display: "inline-block",
@@ -155,18 +168,33 @@ const SideContent = () => {
               label={`${topic.name} (${topic.count})`}
               sx={{
                 borderRadius: 8,
-                bgcolor: "#F5F5F5",
-                color: "#424242",
+                bgcolor: "#F5F5F5", // 기본 라이트모드 배경
+                color: "#757575", // 기본 라이트모드 텍스트 색상
                 mb: 1.5,
                 py: 2.5,
                 border: "1px solid #EEEEEE",
                 fontWeight: 500,
                 transition: "all 0.2s",
+                ...theme.applyStyles("light", {
+                  backgroundColor: "#F5F5F5",
+                  color: "#757575",
+                  border: "1px solid #EEEEEE",
+                }), // 라이트모드 스타일
+                ...theme.applyStyles("dark", {
+                  backgroundColor: "#4F4F4F", // 다크모드 배경
+                  color: "#F0FBF7", // 다크모드 텍스트 색상
+                  border: "1px solid #333333", // 다크모드 테두리
+                }), // 다크모드 스타일
                 "&:hover": {
-                  bgcolor: "#E8F7F2",
+                  ...theme.applyStyles("light", {
+                    backgroundColor: "#E0E0E0", // 라이트모드 호버 배경
+                  }),
+                  ...theme.applyStyles("dark", {
+                    backgroundColor: "#616161", // 다크모드 호버 배경
+                  }),
                   border: "1px solid #03cb84",
                   boxShadow: "0 2px 5px rgba(0,0,0,0.08)",
-                  color: "#03cb84",
+                  color: "#03cb84", // 호버 시 글자 색상
                 },
               }}
               clickable
@@ -180,11 +208,16 @@ const SideContent = () => {
         sx={{
           mt: 5,
           paddingLeft: "20px",
-          backgroundColor: "#F0FBF7",
           py: 3,
           px: 3,
           borderRadius: 3,
           border: "1px dashed #03cb84",
+          ...theme.applyStyles("light", {
+            backgroundColor: "#F0FBF7", // 라이트 모드 배경
+          }),
+          ...theme.applyStyles("dark", {
+            backgroundColor: "#333333", // 다크 모드 배경
+          }),
         }}
       >
         <Typography
@@ -193,11 +226,20 @@ const SideContent = () => {
             fontWeight: "bold",
             mb: 1.5,
             color: "#03cb84",
+            ...theme.applyStyles("light", { color: "#03cb84" }),
+            ...theme.applyStyles("dark", { color: "#80e0b0" }), // 다크 모드에서 색상 변경
           }}
         >
           궁금한 내용이 있으신가요?
         </Typography>
-        <Typography variant="body2" sx={{ mb: 2, color: "#616161" }}>
+        <Typography
+          variant="body2"
+          sx={{
+            mb: 2,
+            ...theme.applyStyles("light", { color: "#616161" }), // 라이트 모드 텍스트 색상
+            ...theme.applyStyles("dark", { color: "#E0E0E0" }), // 다크 모드 텍스트 색상
+          }}
+        >
           개발자 커뮤니티에 질문을 남겨보세요. 다양한 전문가들의 답변을 받을 수
           있습니다.
         </Typography>
@@ -212,6 +254,8 @@ const SideContent = () => {
             boxShadow: "0 2px 5px rgba(3,203,132,0.3)",
             py: 1,
             transition: "all 0.3s",
+            ...theme.applyStyles("light", { bgcolor: "#03cb84" }),
+            ...theme.applyStyles("dark", { bgcolor: "#02a770" }), // 다크 모드 배경색
             "&:hover": {
               bgcolor: "#02a770",
               boxShadow: "0 4px 10px rgba(3,203,132,0.4)",
@@ -230,7 +274,8 @@ const SideContent = () => {
           sx={{
             fontWeight: "bold",
             mb: 2.5,
-            color: "#212121",
+            ...theme.applyStyles("light", { color: "#212121" }),
+            ...theme.applyStyles("dark", { color: "#ffffff" }),
             fontSize: "18px",
             position: "relative",
             display: "inline-block",
@@ -270,7 +315,14 @@ const SideContent = () => {
                 mb: 1,
                 border: "1px solid #E0E0E0",
                 "&:hover": {
-                  bgcolor: "#FAFAFA",
+                  "&:hover": {
+                    ...theme.applyStyles("light", {
+                      backgroundColor: "#F5F5F5",
+                    }),
+                    ...theme.applyStyles("dark", {
+                      backgroundColor: "#4F4F4F",
+                    }),
+                  },
                   color: "#03cb84",
                   border: "1px solid #03cb84",
                 },

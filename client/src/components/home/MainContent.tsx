@@ -7,6 +7,7 @@ import {
   CardContent,
   Avatar,
   IconButton,
+  useTheme,
 } from "@mui/material";
 import { InputAdornment } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
@@ -19,6 +20,7 @@ import { Badge } from "@mui/material";
 import { questionData } from "@mock/mockHomePageData";
 
 const MainContent = () => {
+  const theme = useTheme();
   return (
     <Box
       sx={{
@@ -44,7 +46,8 @@ const MainContent = () => {
           fontSize: "32px",
           fontWeight: "bold",
           marginBottom: 3,
-          color: "#212121",
+          ...theme.applyStyles("light", { color: "#212121" }),
+          ...theme.applyStyles("dark", { color: "#ffffff" }),
           fontFamily: "'Noto Sans KR', sans-serif",
         }}
       >
@@ -58,10 +61,14 @@ const MainContent = () => {
           placeholder="원하는 주제를 찾아보세요"
           fullWidth
           sx={{
+            // 라이트모드와 다크모드 스타일 적용
+            ...theme.applyStyles("light", { color: "#212121" }), // 라이트모드 스타일
+            ...theme.applyStyles("light", { color: "#ffffff" }), // 다크모드 스타일
             flexGrow: 1,
             "& .MuiOutlinedInput-root": {
               borderRadius: 2,
-              backgroundColor: "#FFFFFF",
+              backgroundColor:
+                theme.palette.mode === "dark" ? "#333333" : "#FFFFFF", // 다크모드일 때 배경 색상
               boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
               transition: "all 0.3s",
               "&:hover": {
@@ -76,6 +83,9 @@ const MainContent = () => {
               "&.Mui-focused fieldset": {
                 borderColor: "#03cb84",
               },
+            },
+            "& .MuiInputBase-input::placeholder": {
+              color: theme.palette.mode === "dark" ? "#ffffff" : "#757575", // 다크모드에서 흰색으로 플레이스홀더 텍스트 색상 설정
             },
           }}
           InputProps={{
@@ -106,7 +116,7 @@ const MainContent = () => {
         </Button>
       </Box>
 
-      {/* 필터 버튼들 - 더 세련된 디자인 */}
+      {/* 필터 버튼들 */}
       <Box
         sx={{
           display: "flex",
@@ -129,15 +139,19 @@ const MainContent = () => {
         <Button
           sx={{
             color: "#03cb84",
+            ...theme.applyStyles("light", { backgroundColor: "#F0FBF7" }),
+            ...theme.applyStyles("dark", { backgroundColor: "#333333" }),
             border: "1px solid #E0E0E0",
             borderRadius: 6,
             textTransform: "none",
             px: 2,
             py: 0.8,
-            backgroundColor: "#F0FBF7",
             fontWeight: 500,
             "&:hover": {
-              backgroundColor: "#E1F7F0",
+              "&:hover": {
+                ...theme.applyStyles("light", { backgroundColor: "#F5F5F5" }),
+                ...theme.applyStyles("dark", { backgroundColor: "#4F4F4F" }),
+              },
               borderColor: "#03cb84",
             },
           }}
@@ -153,10 +167,14 @@ const MainContent = () => {
             textTransform: "none",
             px: 2,
             py: 0.8,
-            backgroundColor: "#FFFFFF",
+            ...theme.applyStyles("light", { backgroundColor: "#F0FBF7" }),
+            ...theme.applyStyles("dark", { backgroundColor: "#333333" }),
             fontWeight: 500,
             "&:hover": {
-              backgroundColor: "#F5F5F5",
+              "&:hover": {
+                ...theme.applyStyles("light", { backgroundColor: "#F5F5F5" }),
+                ...theme.applyStyles("dark", { backgroundColor: "#4F4F4F" }),
+              },
             },
           }}
           startIcon={<ThumbUpOutlinedIcon sx={{ fontSize: 18 }} />}
@@ -171,10 +189,14 @@ const MainContent = () => {
             textTransform: "none",
             px: 2,
             py: 0.8,
-            backgroundColor: "#FFFFFF",
+            ...theme.applyStyles("light", { backgroundColor: "#F0FBF7" }),
+            ...theme.applyStyles("dark", { backgroundColor: "#333333" }),
             fontWeight: 500,
             "&:hover": {
-              backgroundColor: "#F5F5F5",
+              "&:hover": {
+                ...theme.applyStyles("light", { backgroundColor: "#F5F5F5" }),
+                ...theme.applyStyles("dark", { backgroundColor: "#4F4F4F" }),
+              },
             },
           }}
           startIcon={<CommentOutlinedIcon sx={{ fontSize: 18 }} />}
@@ -189,10 +211,14 @@ const MainContent = () => {
             textTransform: "none",
             px: 2,
             py: 0.8,
-            backgroundColor: "#FFFFFF",
+            ...theme.applyStyles("light", { backgroundColor: "#F0FBF7" }),
+            ...theme.applyStyles("dark", { backgroundColor: "#333333" }),
             fontWeight: 500,
             "&:hover": {
-              backgroundColor: "#F5F5F5",
+              "&:hover": {
+                ...theme.applyStyles("light", { backgroundColor: "#F5F5F5" }),
+                ...theme.applyStyles("dark", { backgroundColor: "#4F4F4F" }),
+              },
             },
           }}
           startIcon={<TrendingUpIcon sx={{ fontSize: 18 }} />}
@@ -201,7 +227,7 @@ const MainContent = () => {
         </Button>
       </Box>
 
-      {/* 질문 카드들 - 더 세련된 디자인 */}
+      {/* 질문 카드들 */}
       {questionData.map((question) => (
         <Card
           key={question.id}
@@ -213,9 +239,19 @@ const MainContent = () => {
             "&:hover": {
               boxShadow: "0 5px 15px rgba(0,0,0,0.1)",
               transform: "translateY(-2px)",
+              ...theme.applyStyles("light", { backgroundColor: "#F5F5F5" }),
+              ...theme.applyStyles("dark", { backgroundColor: "#4F4F4F" }),
             },
             overflow: "visible",
-            border: "1px solid #F0F0F0",
+
+            ...theme.applyStyles("light", {
+              backgroundColor: "#ffffff", // 라이트 모드 배경 색상
+              border: "1px solid #F0F0F0",
+            }),
+            ...theme.applyStyles("dark", {
+              backgroundColor: "#333333", // 다크 모드 배경 색상
+              border: "none",
+            }),
           }}
         >
           <CardContent sx={{ p: 3 }}>
@@ -236,7 +272,8 @@ const MainContent = () => {
                 variant="body2"
                 sx={{
                   fontWeight: 500,
-                  color: "#424242",
+                  ...theme.applyStyles("light", { color: "#333333" }), // 라이트 모드 글자 색상
+                  ...theme.applyStyles("dark", { color: "#F0FBF7" }), // 다크 모드 글자 색상
                 }}
               >
                 {question.author}
@@ -244,7 +281,13 @@ const MainContent = () => {
               <Typography variant="body2" sx={{ mx: 1, color: "#BDBDBD" }}>
                 •
               </Typography>
-              <Typography variant="body2" sx={{ color: "#757575" }}>
+              <Typography
+                variant="body2"
+                sx={{
+                  ...theme.applyStyles("light", { color: "#333333" }),
+                  ...theme.applyStyles("dark", { color: "#F0FBF7" }),
+                }}
+              >
                 {question.date}
               </Typography>
             </Box>
@@ -264,7 +307,8 @@ const MainContent = () => {
                   sx={{
                     fontWeight: "bold",
                     marginBottom: 1.5,
-                    color: "#212121",
+                    ...theme.applyStyles("light", { color: "#333333" }),
+                    ...theme.applyStyles("dark", { color: "#F0FBF7" }),
                     fontFamily: "'Noto Serif KR', serif",
                     fontSize: "18px",
                     lineHeight: 1.4,
@@ -283,6 +327,7 @@ const MainContent = () => {
                     overflow: "hidden",
                     textOverflow: "ellipsis",
                     lineHeight: 1.5,
+                    ...theme.applyStyles("dark", { color: "#F0FBF7" }), // 다크모드 텍스트 색상
                   }}
                 >
                   {question.content}

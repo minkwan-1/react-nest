@@ -138,7 +138,7 @@ const questionData = [
     content:
       "TypeScript에서 제네릭을 효과적으로 사용하는 방법이 궁금합니다. 복잡한 타입을 다루는 실전 예제와 함께 설명해주세요.",
     thumbnail:
-      "https://images.unsplash.com/photo-1622670070847-1e48352c379a?w=500&auto=format&fit=crop&q=60", // TypeScript 코드 이미지
+      "https://images.unsplash.com/photo-1551650975-87deedd944c3?w=500&auto=format&fit=crop&q=60", // TypeScript 코드 이미지
     answers: [
       {
         id: 1,
@@ -176,7 +176,7 @@ const questionData = [
     content:
       "대규모 웹 애플리케이션의 성능을 최적화하는 다양한 방법과 전략에 대해 알고 싶습니다. 로딩 시간 단축, 렌더링 최적화 등의 기법을 알려주세요.",
     thumbnail:
-      "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=500&auto=format&fit=crop&q=60", // 웹 성능 이미지
+      "https://images.unsplash.com/photo-1551650975-87deedd944c3?w=500&auto=format&fit=crop&q=60",
     answers: [
       {
         id: 1,
@@ -195,7 +195,7 @@ const questionData = [
     content:
       "백엔드 API 개발 시 GraphQL과 REST API의 주요 차이점과 각각의 장단점에 대해 알고 싶습니다. 어떤 상황에서 어떤 방식을 선택해야 할까요?",
     thumbnail:
-      "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=500&auto=format&fit=crop&q=60", // API 이미지
+      "https://images.unsplash.com/photo-1551650975-87deedd944c3?w=500&auto=format&fit=crop&q=60",
     answers: [
       {
         id: 1,
@@ -214,7 +214,7 @@ const questionData = [
     content:
       "컨테이너화와 오케스트레이션 기술인 Docker와 Kubernetes를 처음 배우려고 합니다. 효과적인 학습 로드맵과 추천 자료를 공유해주세요.",
     thumbnail:
-      "https://images.unsplash.com/photo-1605745341112-85968b19335b?w=500&auto=format&fit=crop&q=60", // 컨테이너 이미지
+      "https://images.unsplash.com/photo-1551650975-87deedd944c3?w=500&auto=format&fit=crop&q=60",
     answers: [
       {
         id: 1,
@@ -233,7 +233,7 @@ const questionData = [
     content:
       "모던 자바스크립트에서 추가된 기능들, 예를 들어 async/await, spread operator, destructuring 등에 대해 자세히 알고 싶습니다.",
     thumbnail:
-      "https://images.unsplash.com/photo-1573164574432-507b57cf24e7?w=500&auto=format&fit=crop&q=60", // ES6 이미지
+      "https://images.unsplash.com/photo-1551650975-87deedd944c3?w=500&auto=format&fit=crop&q=60",
     answers: [
       {
         id: 1,
@@ -252,7 +252,7 @@ const questionData = [
     content:
       "테스트 주도 개발(TDD)의 개념과 장단점, 실제 프로젝트에 어떻게 적용할 수 있는지 알고 싶습니다.",
     thumbnail:
-      "https://images.unsplash.com/photo-1611790869222-cce3f23fbe3b?w=500&auto=format&fit=crop&q=60", // TDD 이미지
+      "https://images.unsplash.com/photo-1551650975-87deedd944c3?w=500&auto=format&fit=crop&q=60",
     answers: [
       {
         id: 1,
@@ -271,7 +271,7 @@ const questionData = [
     content:
       "자바스크립트에서 `this` 키워드가 어떤 방식으로 동작하는지, 특히 함수 내에서 `this`가 어떻게 바인딩되는지 알고 싶습니다.",
     thumbnail:
-      "https://images.unsplash.com/photo-1562059707-7a212079d1f8?w=500&auto=format&fit=crop&q=60", // this 키워드 관련 이미지
+      "https://images.unsplash.com/photo-1551650975-87deedd944c3?w=500&auto=format&fit=crop&q=60",
     answers: [
       {
         id: 1,
@@ -290,7 +290,7 @@ const questionData = [
     content:
       "Vue.js와 React.js는 각각의 특징과 장단점이 있습니다. 어떤 프로젝트에 어떤 프레임워크가 더 적합할지 비교해주세요.",
     thumbnail:
-      "https://images.unsplash.com/photo-1583478385598-1fdd8c1c8e43?w=500&auto=format&fit=crop&q=60", // Vue와 React 비교 이미지
+      "https://images.unsplash.com/photo-1551650975-87deedd944c3?w=500&auto=format&fit=crop&q=60",
     answers: [
       {
         id: 1,
@@ -309,7 +309,7 @@ const questionData = [
     content:
       "UI/UX 디자인에서 사용자의 경험을 개선할 수 있는 중요한 요소들, 예를 들어 인터페이스 설계, 사용성 등을 다뤄주세요.",
     thumbnail:
-      "https://images.unsplash.com/photo-1549811707-035e98ff1c3b?w=500&auto=format&fit=crop&q=60", // UI/UX 이미지
+      "https://images.unsplash.com/photo-1551650975-87deedd944c3?w=500&auto=format&fit=crop&q=60",
     answers: [
       {
         id: 1,
@@ -328,7 +328,7 @@ const questionData = [
     content:
       "Git과 GitHub의 차이점에 대해 설명해주세요. 각각의 역할과 사용 방법을 알고 싶습니다.",
     thumbnail:
-      "https://images.unsplash.com/photo-1527693492582-8093305f31c0?w=500&auto=format&fit=crop&q=60", // Git과 GitHub 이미지
+      "https://images.unsplash.com/photo-1551650975-87deedd944c3?w=500&auto=format&fit=crop&q=60",
     answers: [
       {
         id: 1,
@@ -347,7 +347,7 @@ const questionData = [
     content:
       "React에서 React Router를 사용하여 페이지 간 라우팅을 어떻게 처리하는지에 대해 설명해주세요.",
     thumbnail:
-      "https://images.unsplash.com/photo-1569291360-e207672a372f?w=500&auto=format&fit=crop&q=60", // React Router 이미지
+      "https://images.unsplash.com/photo-1551650975-87deedd944c3?w=500&auto=format&fit=crop&q=60",
     answers: [
       {
         id: 1,
@@ -366,7 +366,7 @@ const questionData = [
     content:
       "웹 애플리케이션의 보안은 매우 중요합니다. 보안을 강화하기 위한 기본적인 전략을 알려주세요.",
     thumbnail:
-      "https://images.unsplash.com/photo-1551919077-e575730bbfd7?w=500&auto=format&fit=crop&q=60", // 보안 이미지
+      "https://images.unsplash.com/photo-1551650975-87deedd944c3?w=500&auto=format&fit=crop&q=60",
     answers: [
       {
         id: 1,
@@ -385,7 +385,7 @@ const questionData = [
     content:
       "CSS에서 변수를 어떻게 사용하는지에 대해 설명해주세요. 변수는 어떻게 선언하고, 사용할 수 있나요?",
     thumbnail:
-      "https://images.unsplash.com/photo-1587387071075-29a7b7487955?w=500&auto=format&fit=crop&q=60", // CSS 변수 이미지
+      "https://images.unsplash.com/photo-1551650975-87deedd944c3?w=500&auto=format&fit=crop&q=60",
     answers: [
       {
         id: 1,
@@ -404,7 +404,7 @@ const questionData = [
     content:
       "JavaScript ES6 이상에서 추가된 기능 중에서 가장 유용한 것에 대해 알고 싶습니다.",
     thumbnail:
-      "https://images.unsplash.com/photo-1549435568-85ff378d5664?w=500&auto=format&fit=crop&q=60", // ES6+ 이미지
+      "https://images.unsplash.com/photo-1551650975-87deedd944c3?w=500&auto=format&fit=crop&q=60",
     answers: [
       {
         id: 1,
@@ -423,7 +423,7 @@ const questionData = [
     content:
       "React에서 Context API를 어떻게 활용할 수 있는지, 예시를 통해 설명해주세요.",
     thumbnail:
-      "https://images.unsplash.com/photo-1517794174168-b98d46977ef9?w=500&auto=format&fit=crop&q=60", // Context API 이미지
+      "https://images.unsplash.com/photo-1551650975-87deedd944c3?w=500&auto=format&fit=crop&q=60",
     answers: [
       {
         id: 1,
@@ -442,7 +442,7 @@ const questionData = [
     content:
       "Node.js에서 비동기 처리를 위한 여러 가지 패턴들, 예를 들어 콜백, Promise, async/await의 차이를 다뤄주세요.",
     thumbnail:
-      "https://images.unsplash.com/photo-1523681211563-ffac0240e1e5?w=500&auto=format&fit=crop&q=60", // 비동기 처리 이미지
+      "https://images.unsplash.com/photo-1551650975-87deedd944c3?w=500&auto=format&fit=crop&q=60",
     answers: [
       {
         id: 1,
@@ -461,7 +461,7 @@ const questionData = [
     content:
       "JavaScript에서 모듈 시스템에 대해 설명해주세요. 어떻게 모듈을 import/export 할 수 있나요?",
     thumbnail:
-      "https://images.unsplash.com/photo-1568147442-5e6e3148b8f5?w=500&auto=format&fit=crop&q=60", // 모듈 시스템 이미지
+      "https://images.unsplash.com/photo-1551650975-87deedd944c3?w=500&auto=format&fit=crop&q=60",
     answers: [
       {
         id: 1,
