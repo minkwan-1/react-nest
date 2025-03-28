@@ -1,8 +1,21 @@
 import { Box, Typography, Button, Chip, useTheme } from "@mui/material";
 import { staffPicks, recommendedTopics } from "@mock/mockHomePageData";
+import { useNavigate } from "react-router-dom";
+import { useAtom } from "jotai";
+import { signupUserInfo } from "@atom/auth";
 
 const SideContent = () => {
   const theme = useTheme();
+  const navigate = useNavigate();
+  const [userInfo] = useAtom(signupUserInfo);
+
+  const handleClick = () => {
+    if (!userInfo) {
+      navigate("/sign-up");
+    } else {
+      console.log("edit으로");
+    }
+  };
   return (
     <Box
       sx={{
@@ -262,6 +275,7 @@ const SideContent = () => {
               transform: "translateY(-1px)",
             },
           }}
+          onClick={() => handleClick()}
         >
           질문하기
         </Button>

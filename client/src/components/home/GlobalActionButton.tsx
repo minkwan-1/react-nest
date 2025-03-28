@@ -1,6 +1,19 @@
 import { Box, Button, Typography } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { useAtom } from "jotai";
+import { signupUserInfo } from "@atom/auth";
 
 const GlobalActionButton = () => {
+  const navigate = useNavigate();
+  const [userInfo] = useAtom(signupUserInfo);
+
+  const handleClick = () => {
+    if (!userInfo) {
+      navigate("/sign-up");
+    } else {
+      console.log("edit으로");
+    }
+  };
   return (
     <Box
       sx={{
@@ -11,6 +24,7 @@ const GlobalActionButton = () => {
       }}
     >
       <Button
+        onClick={() => handleClick()}
         variant="contained"
         sx={{
           bgcolor: "#03cb84",
