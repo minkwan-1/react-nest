@@ -3,6 +3,7 @@ import { Box } from "@mui/material";
 import { PageContainer, ComponentWrapper } from "../components/layout/common";
 import { useAtom } from "jotai";
 import { signupUserInfo, completeUserInfo } from "@atom/auth";
+import { handleCompleteSignupWithAPI } from "../api/auth";
 
 import {
   PhoneVerificationTitle,
@@ -11,19 +12,19 @@ import {
   VerificationInput,
   MessageBox,
 } from "@components/phone";
-import SignupButton from "@components/phone/SignupButton"; // 새로 만든 컴포넌트 import
-
-// import { completeUserInfo as completeUserInfoAtom } from "@atom/auth";
+import SignupButton from "@components/phone/SignupButton";
 
 const PhoneVerificationPage = () => {
   const [userInfo, setUserInfo] = useAtom(signupUserInfo);
-  const [newUserInfo, setNewUserInfo] = useAtom(completeUserInfo);
+
+  const [, setNewUserInfo] = useAtom(completeUserInfo);
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState<"info" | "success" | "error">(
     "info"
   );
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [isVerified, setIsVerified] = useState(false); // 인증 완료 상태 추가
+  const [isVerified, setIsVerified] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Load user info from localStorage when component mounts
   useEffect(() => {
@@ -60,19 +61,38 @@ const PhoneVerificationPage = () => {
     setIsVerified(true);
     handleSuccess("전화번호 인증이 완료되었습니다. 회원가입을 완료해주세요.");
   };
+
   // 최종 가입
-  const handleCompleteSignup = () => {
+  const handleCompleteSignup = async () => {
     if (!userInfo) return handleError("유저 정보가 없습니다.");
     if (!phoneNumber) return handleError("전화번호를 입력해 주세요.");
 
     const newCompleteUserInfo = { ...userInfo, phoneNumber };
-    setNewUserInfo(newCompleteUserInfo);
-    console.log("회원가입 완료 처리", newCompleteUserInfo);
-  };
+    // Only call setNewUserInfo if it exists
+    if (setNewUserInfo) {
+      setNewUserInfo(newCompleteUserInfo);
+    }
 
-  console.log("입력한 전화번호가 부모 컴포넌트에 전달되는지: ", phoneNumber);
-  console.log("인증 완료 상태: ", isVerified);
-  console.log("최종 가입 유저 정보: ", newUserInfo);
+    // 로딩 상태 활성화
+    setIsLoading(true);
+
+    try {
+      // API를 통해 회원가입 처리
+      const result = await handleCompleteSignupWithAPI(newCompleteUserInfo);
+
+      if (result.success) {
+        handleSuccess("회원가입이 성공적으로 완료되었습니다.");
+        // 회원가입 성공 후 추가 처리 (페이지 이동은 SignupButton에서 처리)
+      } else {
+        handleError(result.message || "회원가입 중 오류가 발생했습니다.");
+      }
+    } catch (error) {
+      console.error("회원가입 처리 중 오류:", error);
+      handleError("회원가입 처리 중 오류가 발생했습니다.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <PageContainer>
@@ -89,11 +109,16 @@ const PhoneVerificationPage = () => {
             phoneNumber={phoneNumber}
             onSuccess={handleSuccess}
             onError={handleError}
-            onVerified={handleVerified} // 인증 완료 콜백 전달
+            onVerified={handleVerified}
           />
 
           {/* 인증 완료 시 회원가입 버튼 표시 */}
-          {isVerified && <SignupButton onClick={handleCompleteSignup} />}
+          {isVerified && (
+            <SignupButton
+              onClick={handleCompleteSignup}
+              isLoading={isLoading}
+            />
+          )}
 
           <MessageBox message={message} messageType={messageType} />
         </Box>

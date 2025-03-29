@@ -1,24 +1,40 @@
 import React from "react";
-import { Button, Paper, Typography, Box, useTheme } from "@mui/material";
+import {
+  Button,
+  Paper,
+  Typography,
+  Box,
+  useTheme,
+  CircularProgress,
+} from "@mui/material";
 import HowToRegIcon from "@mui/icons-material/HowToReg"; // 회원가입 아이콘
 import { useNavigate } from "react-router-dom";
 
 interface SignupButtonProps {
   onClick?: () => void;
+  isLoading?: boolean;
 }
 
-const SignupButton: React.FC<SignupButtonProps> = ({ onClick }) => {
+const SignupButton: React.FC<SignupButtonProps> = ({
+  onClick,
+  isLoading = false,
+}) => {
   const theme = useTheme();
   const keyColor = "#03cb84";
   const navigate = useNavigate();
 
-  const handleSignup = () => {
+  const handleSignup = async () => {
     try {
-      if (onClick) onClick();
+      if (onClick) {
+        await onClick();
+      }
 
+      // onClick 함수가 성공적으로 완료되면 페이지 이동
+      // 에러가 발생하면 onClick 내부에서 처리하고 여기까지 오지 않음
       navigate("/sign-in");
     } catch (error) {
-      console.log(error);
+      console.error("Signup error:", error);
+      // 에러는 onClick 내부에서 처리되므로 여기서 추가 처리 필요 없음
     }
   };
 
@@ -53,6 +69,7 @@ const SignupButton: React.FC<SignupButtonProps> = ({ onClick }) => {
         variant="contained"
         onClick={handleSignup}
         fullWidth
+        disabled={isLoading}
         sx={{
           mt: 2,
           height: "50px",
@@ -68,9 +85,13 @@ const SignupButton: React.FC<SignupButtonProps> = ({ onClick }) => {
           },
           transition: "all 0.3s",
         }}
-        endIcon={<HowToRegIcon />}
+        endIcon={isLoading ? undefined : <HowToRegIcon />}
       >
-        회원가입 완료하기
+        {isLoading ? (
+          <CircularProgress size={24} color="inherit" />
+        ) : (
+          "회원가입 완료하기"
+        )}
       </Button>
     </Paper>
   );
