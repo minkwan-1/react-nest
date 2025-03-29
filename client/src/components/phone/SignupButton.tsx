@@ -13,12 +13,12 @@ const SignupButton: React.FC<SignupButtonProps> = ({ onClick }) => {
   const navigate = useNavigate();
 
   const handleSignup = () => {
-    // 회원가입 처리 로직
-    if (onClick) {
-      onClick();
-    } else {
-      // 기본 동작으로 홈 페이지로 이동
-      navigate("/home");
+    try {
+      if (onClick) onClick();
+
+      navigate("/sign-in");
+    } catch (error) {
+      console.log(error);
     }
   };
 

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Box } from "@mui/material";
 import { PageContainer, ComponentWrapper } from "../components/layout/common";
 import { useAtom } from "jotai";
-import { signupUserInfo } from "@atom/auth";
+import { signupUserInfo, completeUserInfo } from "@atom/auth";
 
 import {
   PhoneVerificationTitle,
@@ -13,8 +13,11 @@ import {
 } from "@components/phone";
 import SignupButton from "@components/phone/SignupButton"; // 새로 만든 컴포넌트 import
 
+// import { completeUserInfo as completeUserInfoAtom } from "@atom/auth";
+
 const PhoneVerificationPage = () => {
   const [userInfo, setUserInfo] = useAtom(signupUserInfo);
+  const [newUserInfo, setNewUserInfo] = useAtom(completeUserInfo);
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState<"info" | "success" | "error">(
     "info"
@@ -57,19 +60,19 @@ const PhoneVerificationPage = () => {
     setIsVerified(true);
     handleSuccess("전화번호 인증이 완료되었습니다. 회원가입을 완료해주세요.");
   };
-
-  // 회원가입 완료 처리 함수
+  // 최종 가입
   const handleCompleteSignup = () => {
-    // 여기에 최종 회원가입 처리 로직 추가
-    // 필요한 API 호출 등을 수행한 후 /home으로 리다이렉트
-    console.log("회원가입 완료 처리", { userInfo, phoneNumber });
-    // 최종 회원가입 API 호출 예시:
-    // await axios.post("http://localhost:3000/api/signup", { ...userInfo, phoneNumber });
-    // navigate("/home");
+    if (!userInfo) return handleError("유저 정보가 없습니다.");
+    if (!phoneNumber) return handleError("전화번호를 입력해 주세요.");
+
+    const newCompleteUserInfo = { ...userInfo, phoneNumber };
+    setNewUserInfo(newCompleteUserInfo);
+    console.log("회원가입 완료 처리", newCompleteUserInfo);
   };
 
   console.log("입력한 전화번호가 부모 컴포넌트에 전달되는지: ", phoneNumber);
   console.log("인증 완료 상태: ", isVerified);
+  console.log("최종 가입 유저 정보: ", newUserInfo);
 
   return (
     <PageContainer>

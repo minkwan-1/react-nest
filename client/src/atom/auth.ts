@@ -6,3 +6,11 @@ export interface UserInfo {
 }
 
 export const signupUserInfo = atom<UserInfo | null>(null);
+
+export interface CompleteUserInfo {
+  email: string;
+  name: string;
+  phoneNumber: string;
+}
+
+export const completeUserInfo = atom<CompleteUserInfo | null>(null);

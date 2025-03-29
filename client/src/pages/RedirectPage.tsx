@@ -94,6 +94,7 @@ const RedirectPage = () => {
     }
   }, []);
 
+  console.log("Redirect Page에 떨어지는 user data: ", data);
   return (
     <Box
       sx={{
