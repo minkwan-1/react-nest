@@ -19,7 +19,7 @@ const PhoneVerificationPage = () => {
   const [messageType, setMessageType] = useState<"info" | "success" | "error">(
     "info"
   );
-  const [phoneNumber, setPhoneNumber] = useState(""); // 전화번호 상태 추가
+  const [phoneNumber, setPhoneNumber] = useState("");
 
   // Load user info from localStorage when component mounts
   useEffect(() => {

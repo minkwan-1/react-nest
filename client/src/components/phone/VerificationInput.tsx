@@ -27,10 +27,10 @@ const VerificationInput = ({
   onError,
 }: VerificationInputProps) => {
   const theme = useTheme();
-  const keyColor = "#03cb84"; // 키 컬러 정의
+  const keyColor = "#03cb84";
   const [verificationCode, setVerificationCode] = useState("");
   const [isVerifying, setIsVerifying] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(300); // 5분 타이머
+  const [timeLeft, setTimeLeft] = useState(300);
   const [timerActive, setTimerActive] = useState(false);
   const navigate = useNavigate();
 
@@ -40,7 +40,7 @@ const VerificationInput = ({
       setTimeLeft(300);
       setTimerActive(true);
     }
-  }, [phoneNumber]);
+  }, []);
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
@@ -92,10 +92,14 @@ const VerificationInput = ({
         }
       );
 
+      console.log("twilio에서 떨어지는 response:", response);
+
+      // 성공 메시지 처리
       const message = response.data.message || "전화번호가 인증되었습니다!";
       onSuccess(message);
 
-      if (response.data.message?.includes("verified")) {
+      // 성공적인 응답 (status 201 or 200)이면 홈 페이지로 리다이렉션
+      if (response.status === 201 || response.status === 200) {
         setTimeout(() => {
           navigate("/home");
         }, 1500);
@@ -125,7 +129,7 @@ const VerificationInput = ({
   // 다크모드 감지
   const isDarkMode = theme.palette.mode === "dark";
   const borderColor = isDarkMode ? `${keyColor}40` : `${keyColor}30`;
-  const successColor = keyColor; // 원래 success.main 색상 대신 키 컬러 사용
+  const successColor = keyColor;
 
   // 버튼 비활성화 상태 확인
   const isButtonDisabled =
