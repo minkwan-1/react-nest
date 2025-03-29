@@ -10,7 +10,6 @@ import {
   useTheme,
 } from "@mui/material";
 import { InputAdornment } from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import CommentOutlinedIcon from "@mui/icons-material/CommentOutlined";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
@@ -18,6 +17,7 @@ import ThumbUpOutlinedIcon from "@mui/icons-material/ThumbUpOutlined";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import { Badge } from "@mui/material";
 import { questionData } from "@mock/mockHomePageData";
+import SearchIcon from "@mui/icons-material/Search";
 
 const MainContent = () => {
   const theme = useTheme();
@@ -85,7 +85,7 @@ const MainContent = () => {
               },
             },
             "& .MuiInputBase-input::placeholder": {
-              color: theme.palette.mode === "dark" ? "#ffffff" : "#757575", // 다크모드에서 흰색으로 플레이스홀더 텍스트 색상 설정
+              color: theme.palette.mode === "dark" ? "#ffffff" : "#757575",
             },
           }}
           InputProps={{
@@ -96,27 +96,17 @@ const MainContent = () => {
             ),
           }}
         />
-        <Button
-          variant="contained"
-          sx={{
-            bgcolor: "#03cb84",
-            textTransform: "none",
-            fontWeight: "bold",
-            borderRadius: 2,
-            boxShadow: "0 2px 5px rgba(3,203,132,0.3)",
-            transition: "all 0.3s",
-            "&:hover": {
-              bgcolor: "#02a770",
-              boxShadow: "0 4px 10px rgba(3,203,132,0.4)",
-              transform: "translateY(-1px)",
-            },
-          }}
-        >
-          검색
-        </Button>
+        <IconButton disableRipple>
+          <SearchIcon
+            sx={{
+              ...theme.applyStyles("light", { color: "#03cb84" }),
+              ...theme.applyStyles("dark", { color: "#ffffff" }),
+            }}
+          />
+        </IconButton>
       </Box>
 
-      {/* 필터 버튼들 */}
+      {/* 필터 버튼들 - 고정 크기 및 가로 스크롤 적용 */}
       <Box
         sx={{
           display: "flex",
@@ -124,6 +114,7 @@ const MainContent = () => {
           marginBottom: 4,
           overflowX: "auto",
           pb: 1,
+          flexWrap: "nowrap", // 버튼이 줄바꿈되지 않도록 설정
           "&::-webkit-scrollbar": {
             height: "4px",
           },
@@ -147,11 +138,11 @@ const MainContent = () => {
             px: 2,
             py: 0.8,
             fontWeight: 500,
+            minWidth: "85px", // 버튼 최소 너비 고정
+            flexShrink: 0, // 버튼 크기 축소 방지
             "&:hover": {
-              "&:hover": {
-                ...theme.applyStyles("light", { backgroundColor: "#F5F5F5" }),
-                ...theme.applyStyles("dark", { backgroundColor: "#4F4F4F" }),
-              },
+              ...theme.applyStyles("light", { backgroundColor: "#F5F5F5" }),
+              ...theme.applyStyles("dark", { backgroundColor: "#4F4F4F" }),
               borderColor: "#03cb84",
             },
           }}
@@ -170,11 +161,11 @@ const MainContent = () => {
             ...theme.applyStyles("light", { backgroundColor: "#F0FBF7" }),
             ...theme.applyStyles("dark", { backgroundColor: "#333333" }),
             fontWeight: 500,
+            minWidth: "85px", // 버튼 최소 너비 고정
+            flexShrink: 0, // 버튼 크기 축소 방지
             "&:hover": {
-              "&:hover": {
-                ...theme.applyStyles("light", { backgroundColor: "#F5F5F5" }),
-                ...theme.applyStyles("dark", { backgroundColor: "#4F4F4F" }),
-              },
+              ...theme.applyStyles("light", { backgroundColor: "#F5F5F5" }),
+              ...theme.applyStyles("dark", { backgroundColor: "#4F4F4F" }),
             },
           }}
           startIcon={<ThumbUpOutlinedIcon sx={{ fontSize: 18 }} />}
@@ -192,11 +183,11 @@ const MainContent = () => {
             ...theme.applyStyles("light", { backgroundColor: "#F0FBF7" }),
             ...theme.applyStyles("dark", { backgroundColor: "#333333" }),
             fontWeight: 500,
+            minWidth: "85px", // 버튼 최소 너비 고정
+            flexShrink: 0, // 버튼 크기 축소 방지
             "&:hover": {
-              "&:hover": {
-                ...theme.applyStyles("light", { backgroundColor: "#F5F5F5" }),
-                ...theme.applyStyles("dark", { backgroundColor: "#4F4F4F" }),
-              },
+              ...theme.applyStyles("light", { backgroundColor: "#F5F5F5" }),
+              ...theme.applyStyles("dark", { backgroundColor: "#4F4F4F" }),
             },
           }}
           startIcon={<CommentOutlinedIcon sx={{ fontSize: 18 }} />}
@@ -214,11 +205,11 @@ const MainContent = () => {
             ...theme.applyStyles("light", { backgroundColor: "#F0FBF7" }),
             ...theme.applyStyles("dark", { backgroundColor: "#333333" }),
             fontWeight: 500,
+            minWidth: "85px", // 버튼 최소 너비 고정
+            flexShrink: 0, // 버튼 크기 축소 방지
             "&:hover": {
-              "&:hover": {
-                ...theme.applyStyles("light", { backgroundColor: "#F5F5F5" }),
-                ...theme.applyStyles("dark", { backgroundColor: "#4F4F4F" }),
-              },
+              ...theme.applyStyles("light", { backgroundColor: "#F5F5F5" }),
+              ...theme.applyStyles("dark", { backgroundColor: "#4F4F4F" }),
             },
           }}
           startIcon={<TrendingUpIcon sx={{ fontSize: 18 }} />}
@@ -389,8 +380,13 @@ const MainContent = () => {
                 </Box>
               </Box>
 
-              {/* 썸네일 이미지 영역 - 더 세련된 스타일 */}
-              <Box sx={{ flexShrink: 0 }}>
+              {/* 썸네일 이미지 영역 - 600px 이하에서 숨김 처리 */}
+              <Box
+                sx={{
+                  flexShrink: 0,
+                  display: { xs: "none", sm: "block" }, // 600px 이하에서 숨김 (xs 사이즈에서 none)
+                }}
+              >
                 <Box
                   sx={{
                     width: "140px",
