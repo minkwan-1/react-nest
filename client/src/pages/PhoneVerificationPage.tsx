@@ -1,4 +1,3 @@
-// PhoneVerificationPage.tsx
 import { useState, useEffect } from "react";
 import { Box } from "@mui/material";
 import { PageContainer, ComponentWrapper } from "../components/layout/common";
@@ -12,6 +11,7 @@ import {
   VerificationInput,
   MessageBox,
 } from "@components/phone";
+import SignupButton from "@components/phone/SignupButton"; // 새로 만든 컴포넌트 import
 
 const PhoneVerificationPage = () => {
   const [userInfo, setUserInfo] = useAtom(signupUserInfo);
@@ -20,6 +20,7 @@ const PhoneVerificationPage = () => {
     "info"
   );
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [isVerified, setIsVerified] = useState(false); // 인증 완료 상태 추가
 
   // Load user info from localStorage when component mounts
   useEffect(() => {
@@ -51,7 +52,24 @@ const PhoneVerificationPage = () => {
     setPhoneNumber(newPhoneNumber);
   };
 
+  // 인증 완료 처리 함수
+  const handleVerified = () => {
+    setIsVerified(true);
+    handleSuccess("전화번호 인증이 완료되었습니다. 회원가입을 완료해주세요.");
+  };
+
+  // 회원가입 완료 처리 함수
+  const handleCompleteSignup = () => {
+    // 여기에 최종 회원가입 처리 로직 추가
+    // 필요한 API 호출 등을 수행한 후 /home으로 리다이렉트
+    console.log("회원가입 완료 처리", { userInfo, phoneNumber });
+    // 최종 회원가입 API 호출 예시:
+    // await axios.post("http://localhost:3000/api/signup", { ...userInfo, phoneNumber });
+    // navigate("/home");
+  };
+
   console.log("입력한 전화번호가 부모 컴포넌트에 전달되는지: ", phoneNumber);
+  console.log("인증 완료 상태: ", isVerified);
 
   return (
     <PageContainer>
@@ -62,13 +80,18 @@ const PhoneVerificationPage = () => {
           <PhoneNumberField
             onSuccess={handleSuccess}
             onError={handleError}
-            onPhoneNumberChange={handlePhoneNumberChange} // 전화번호 변경 핸들러 전달
+            onPhoneNumberChange={handlePhoneNumberChange}
           />
           <VerificationInput
-            phoneNumber={phoneNumber} // 전화번호 전달
+            phoneNumber={phoneNumber}
             onSuccess={handleSuccess}
             onError={handleError}
+            onVerified={handleVerified} // 인증 완료 콜백 전달
           />
+
+          {/* 인증 완료 시 회원가입 버튼 표시 */}
+          {isVerified && <SignupButton onClick={handleCompleteSignup} />}
+
           <MessageBox message={message} messageType={messageType} />
         </Box>
       </ComponentWrapper>

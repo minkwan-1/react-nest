@@ -13,18 +13,20 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import VerifiedIcon from "@mui/icons-material/Verified";
 import LockIcon from "@mui/icons-material/Lock";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 
 interface VerificationInputProps {
   phoneNumber: string;
   onSuccess: (message: string) => void;
   onError: (message: string) => void;
+  onVerified: () => void; // 인증 성공 시 호출될 콜백 함수
 }
 
 const VerificationInput = ({
   phoneNumber,
   onSuccess,
   onError,
+  onVerified,
 }: VerificationInputProps) => {
   const theme = useTheme();
   const keyColor = "#03cb84";
@@ -32,7 +34,7 @@ const VerificationInput = ({
   const [isVerifying, setIsVerifying] = useState(false);
   const [timeLeft, setTimeLeft] = useState(300);
   const [timerActive, setTimerActive] = useState(false);
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   // 타이머 관리
   useEffect(() => {
@@ -40,7 +42,7 @@ const VerificationInput = ({
       setTimeLeft(300);
       setTimerActive(true);
     }
-  }, []);
+  }, [phoneNumber, timerActive]);
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
@@ -98,11 +100,9 @@ const VerificationInput = ({
       const message = response.data.message || "전화번호가 인증되었습니다!";
       onSuccess(message);
 
-      // 성공적인 응답 (status 201 or 200)이면 홈 페이지로 리다이렉션
+      // 성공적인 응답 (status 201 or 200)이면 onVerified 콜백 호출
       if (response.status === 201 || response.status === 200) {
-        setTimeout(() => {
-          navigate("/home");
-        }, 1500);
+        onVerified(); // 인증 성공 시 부모 컴포넌트에 알림
       }
     } catch (error: unknown) {
       if (axios.isAxiosError(error) && error.response) {
