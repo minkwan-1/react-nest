@@ -5,13 +5,14 @@ const MainContent = () => {
   return (
     <Box
       sx={{
-        width: { xs: "100%", sm: "60%" },
+        width: { xs: "100%", md: "60%" },
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
-        pl: { xs: 4, sm: 10 },
-        pr: 4,
-        py: { xs: 4, sm: 8 },
+        pl: { xs: 3, sm: 4, md: 8, lg: 10 },
+        pr: { xs: 3, sm: 4 },
+        py: { xs: 6, sm: 8 },
+        order: { xs: 2, md: 1 },
       }}
     >
       <LandingTitle />

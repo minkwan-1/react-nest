@@ -93,38 +93,41 @@ function Appbar({ sx }: AppbarProps) {
           </IconButton>
 
           {/* 시작하기/살펴보기 버튼 */}
-          <Button
-            variant="outlined"
-            sx={{
-              color: "inherit",
-              borderColor: "inherit",
-              borderRadius: 50,
-              px: 3,
-              py: 1,
-              textTransform: "none",
-              fontWeight: 500,
-              ...theme.applyStyles("light", {
-                borderColor: "#00000025",
-                color: "#333",
-                "&:hover": {
-                  borderColor: "#00000050",
-                  backgroundColor: "rgba(0, 0, 0, 0.04)",
-                },
-              }),
-              ...theme.applyStyles("dark", {
-                borderColor: "#ffffff25",
-                color: "#f0f0f0",
-                "&:hover": {
-                  borderColor: "#ffffff50",
-                  backgroundColor: "rgba(255, 255, 255, 0.08)",
-                },
-              }),
-            }}
-            onClick={handleButtonClick}
-          >
-            {location.pathname === "/" ? "살펴보기" : "시작하기"}{" "}
-            {/* 경로에 따라 버튼 텍스트 변경 */}
-          </Button>
+          {location.pathname == "/" ? (
+            <></>
+          ) : (
+            <Button
+              variant="outlined"
+              sx={{
+                color: "inherit",
+                borderColor: "inherit",
+                borderRadius: 50,
+                px: 3,
+                py: 1,
+                textTransform: "none",
+                fontWeight: 500,
+                ...theme.applyStyles("light", {
+                  borderColor: "#00000025",
+                  color: "#333",
+                  "&:hover": {
+                    borderColor: "#00000050",
+                    backgroundColor: "rgba(0, 0, 0, 0.04)",
+                  },
+                }),
+                ...theme.applyStyles("dark", {
+                  borderColor: "#ffffff25",
+                  color: "#f0f0f0",
+                  "&:hover": {
+                    borderColor: "#ffffff50",
+                    backgroundColor: "rgba(255, 255, 255, 0.08)",
+                  },
+                }),
+              }}
+              onClick={handleButtonClick}
+            >
+              시작하기
+            </Button>
+          )}
         </Box>
       </Container>
 
