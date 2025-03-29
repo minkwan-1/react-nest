@@ -9,7 +9,8 @@ const GlobalActionButton = () => {
 
   const handleClick = () => {
     if (!userInfo) {
-      navigate("/sign-up");
+      // navigate("/sign-up");
+      navigate("/edit");
     } else {
       console.log("edit으로");
     }
