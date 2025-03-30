@@ -3,19 +3,36 @@ import GoogleIcon from "@mui/icons-material/Google";
 import { NaverIcon } from "./SocialIcons";
 import { useAtom } from "jotai";
 import { completeUserInfo } from "@atom/auth";
+import axios from "axios";
 
 const SignInSocialButtons = () => {
   const theme = useTheme();
   const [newUser] = useAtom(completeUserInfo); // 유저 정보 (phoneNumber 포함)
 
   // 로그인 처리 함수
-  const handleOAuthLogin = (provider: string): void => {
+  const handleOAuthLogin = async (): Promise<void> => {
     if (!newUser?.phoneNumber) {
       console.error("전화번호 정보가 없습니다.");
       return;
     }
+
     const phoneNumber = newUser.phoneNumber;
-    console.log({ phoneNumber, provider });
+    console.log({ phoneNumber });
+
+    try {
+      // 전화번호로 유저 정보 찾기
+      const response = await axios.get(
+        `http://localhost:3000/users/find-user/${phoneNumber}`
+      );
+      if (response?.data && response.data.statusCode === 200) {
+        console.log("유저 정보:", response.data.data);
+        // 유저 정보를 상태에 저장하거나 다른 처리를 할 수 있습니다.
+      } else {
+        console.error("유저를 찾을 수 없습니다.");
+      }
+    } catch (error) {
+      console.error("로그인 중 오류가 발생했습니다.", error);
+    }
   };
 
   return (
@@ -45,7 +62,7 @@ const SignInSocialButtons = () => {
 
       {/* Google 로그인 버튼 */}
       <Button
-        onClick={() => handleOAuthLogin("google")}
+        onClick={() => handleOAuthLogin()}
         variant="outlined"
         startIcon={<GoogleIcon />}
         sx={{
@@ -81,7 +98,7 @@ const SignInSocialButtons = () => {
 
       {/* Naver 로그인 버튼 */}
       <Button
-        onClick={() => handleOAuthLogin("naver")}
+        onClick={() => handleOAuthLogin()}
         variant="contained"
         startIcon={<NaverIcon />}
         sx={{
