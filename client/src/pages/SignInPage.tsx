@@ -1,6 +1,7 @@
 import { Box, Paper, useMediaQuery, useTheme } from "@mui/material";
 import SignInSocialButtons from "../components/sign-in/SignInSocialButtons";
 import BackgroundImage from "../components/sign-in/BackgroundImage";
+import BenefitsList from "@components/sign-in/BenefitsList";
 
 const SignUpPage = () => {
   const theme = useTheme();
@@ -48,6 +49,7 @@ const SignUpPage = () => {
         }}
       >
         <SignInSocialButtons />
+        <BenefitsList />
       </Paper>
 
       {!isSmallScreen && !isMediumScreen && <BackgroundImage />}

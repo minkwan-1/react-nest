@@ -61,7 +61,7 @@ function Appbar({ sx }: AppbarProps) {
   }, [realUser]);
 
   // Get the user's first name for avatar display (assuming realUser has name)
-  const firstName = realUser?.name?.split(" ")[0];
+  // const firstName = realUser?.name?.split(" ")[0];
 
   return (
     <Box
@@ -115,23 +115,27 @@ function Appbar({ sx }: AppbarProps) {
             {mode === "dark" ? <Brightness7Icon /> : <Brightness4Icon />}
           </IconButton>
 
-          {/* Display user's first name and avatar if logged in */}
+          {/* Display user's avatar if logged in */}
           {realUser ? (
             <Tooltip title={realUser.name} onClick={() => navigate("/my")}>
               <Avatar
                 sx={{
-                  width: 28,
-                  height: 28,
+                  width: 40, // 크기 키움
+                  height: 40, // 크기 키움
                   mr: 1,
-                  bgcolor: "#03cb84", // Custom background color
-                  fontSize: "14px", // Custom font size
-                  fontWeight: "bold", // Bold font weight
+                  bgcolor: "#03cb84", // 기본 배경 색
+                  fontSize: "16px", // 글자 크기
+                  fontWeight: "bold", // 글자 두께
                   cursor: "pointer",
+                  boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.2)", // 그림자 추가
+                  border: "2px solid #fff", // 흰색 테두리 추가
+                  transition: "transform 0.2s ease-in-out", // 클릭 시 애니메이션 효과
+                  "&:hover": {
+                    transform: "scale(1.1)", // 호버 시 크기 증가
+                  },
                 }}
-              >
-                {firstName?.charAt(0)}{" "}
-                {/* Use the first letter of the user's name */}
-              </Avatar>
+                src="https://i.namu.wiki/i/u0c4TvXo_si7IwPcgYdL1XiGz8dhBHbgfCLSIEPm_AKmyzEYDe5oM3TBynQINBM89XE9gBdQ5uvOEvDMU-Uokg.webp"
+              />
             </Tooltip>
           ) : (
             <Button
