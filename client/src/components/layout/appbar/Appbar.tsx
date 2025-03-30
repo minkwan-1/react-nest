@@ -6,6 +6,8 @@ import {
   SxProps,
   Theme,
   useTheme,
+  Avatar,
+  Tooltip,
 } from "@mui/material";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
@@ -13,6 +15,9 @@ import { useColorScheme } from "@mui/material/styles";
 import AppbarLogo from "./AppbarLogo";
 import ErrorDialog from "./ErrorDialog";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useEffect } from "react";
+import { useAtom } from "jotai"; // Assuming you're using Jotai to manage the state
+import { realUserInfo } from "@atom/auth"; // Import your atom for user info
 
 // Interface for Appbar Props
 interface AppbarProps {
@@ -21,23 +26,42 @@ interface AppbarProps {
 
 function Appbar({ sx }: AppbarProps) {
   const navigate = useNavigate();
-  const location = useLocation(); // 현재 경로 가져오기
+  const location = useLocation();
   const { mode, setMode } = useColorScheme();
   const theme = useTheme();
+  const [realUser, setRealUser] = useAtom(realUserInfo); // Jotai atom for user info
 
-  // 다크모드 토글 함수
+  // Dark mode toggle function
   const toggleColorMode = () => {
     setMode(mode === "light" ? "dark" : "light");
   };
 
-  // 시작하기/살펴보기 버튼 클릭 이벤트
+  // Handle button click for navigation
   const handleButtonClick = () => {
     if (location.pathname === "/") {
-      navigate("/home"); // / 경로에서 /home으로 이동
+      navigate("/home"); // Navigate to /home from /
     } else {
-      navigate("/sign-up"); // 그 외 경로에서 /sign-up으로 이동
+      navigate("/sign-up"); // Navigate to /sign-up for other paths
     }
   };
+
+  // UseEffect to load user from localStorage when the component mounts
+  useEffect(() => {
+    const storedUser = localStorage.getItem("realUser");
+    if (storedUser) {
+      setRealUser(JSON.parse(storedUser)); // Set realUser from localStorage
+    }
+  }, [setRealUser]);
+
+  // Store user info in localStorage whenever it changes
+  useEffect(() => {
+    if (realUser) {
+      localStorage.setItem("realUser", JSON.stringify(realUser));
+    }
+  }, [realUser]);
+
+  // Get the user's first name for avatar display (assuming realUser has name)
+  const firstName = realUser?.name?.split(" ")[0];
 
   return (
     <Box
@@ -50,7 +74,6 @@ function Appbar({ sx }: AppbarProps) {
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
-
         ...theme.applyStyles("light", {
           backgroundColor: "#f8f8f8",
           color: "black",
@@ -77,7 +100,7 @@ function Appbar({ sx }: AppbarProps) {
         <AppbarLogo />
 
         <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-          {/* 다크모드 토글 버튼 */}
+          {/* Dark mode toggle button */}
           <IconButton
             onClick={toggleColorMode}
             sx={{
@@ -92,9 +115,24 @@ function Appbar({ sx }: AppbarProps) {
             {mode === "dark" ? <Brightness7Icon /> : <Brightness4Icon />}
           </IconButton>
 
-          {/* 시작하기/살펴보기 버튼 */}
-          {location.pathname == "/" ? (
-            <></>
+          {/* Display user's first name and avatar if logged in */}
+          {realUser ? (
+            <Tooltip title={realUser.name} onClick={() => navigate("/my")}>
+              <Avatar
+                sx={{
+                  width: 28,
+                  height: 28,
+                  mr: 1,
+                  bgcolor: "#03cb84", // Custom background color
+                  fontSize: "14px", // Custom font size
+                  fontWeight: "bold", // Bold font weight
+                  cursor: "pointer",
+                }}
+              >
+                {firstName?.charAt(0)}{" "}
+                {/* Use the first letter of the user's name */}
+              </Avatar>
+            </Tooltip>
           ) : (
             <Button
               variant="outlined"
@@ -131,7 +169,7 @@ function Appbar({ sx }: AppbarProps) {
         </Box>
       </Container>
 
-      {/* ErrorDialog Component - 유지 */}
+      {/* ErrorDialog Component */}
       <ErrorDialog open={false} message={""} onClose={() => {}} />
     </Box>
   );

@@ -4,10 +4,16 @@ import { NaverIcon } from "./SocialIcons";
 import { useAtom } from "jotai";
 import { completeUserInfo } from "@atom/auth";
 import axios from "axios";
+import { realUserInfo } from "@atom/auth";
+import { useNavigate } from "react-router-dom";
 
 const SignInSocialButtons = () => {
   const theme = useTheme();
-  const [newUser] = useAtom(completeUserInfo); // 유저 정보 (phoneNumber 포함)
+  const navigate = useNavigate();
+  const [newUser] = useAtom(completeUserInfo);
+  const [realUser, setRealUser] = useAtom(realUserInfo);
+
+  console.log(realUser);
 
   // 로그인 처리 함수
   const handleOAuthLogin = async (): Promise<void> => {
@@ -27,9 +33,11 @@ const SignInSocialButtons = () => {
       if (response?.data && response.data.statusCode === 200) {
         console.log("유저 정보:", response.data.data);
         // 유저 정보를 상태에 저장하거나 다른 처리를 할 수 있습니다.
+        setRealUser(response.data.data);
       } else {
         console.error("유저를 찾을 수 없습니다.");
       }
+      navigate("/home");
     } catch (error) {
       console.error("로그인 중 오류가 발생했습니다.", error);
     }

@@ -14,3 +14,14 @@ export interface CompleteUserInfo {
 }
 
 export const completeUserInfo = atom<CompleteUserInfo | null>(null);
+
+interface realUserInfo {
+  id: string;
+  email: string;
+  name: string;
+  phoneNumber: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export const realUserInfo = atom<realUserInfo | null>(null);
