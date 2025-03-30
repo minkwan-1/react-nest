@@ -28,9 +28,9 @@ export const handleCompleteSignupWithAPI = async (userInfo: SignupUserInfo) => {
   try {
     const result = await signup(userInfo);
     // Save auth token if returned from backend
-    if (result.data?.token) {
-      localStorage.setItem("token", result.data.token);
-    }
+    // if (result.data?.token) {
+    //   localStorage.setItem("token", result.data.token);
+    // }
     return { success: true, data: result.data };
   } catch (error) {
     console.error("Signup error:", error);

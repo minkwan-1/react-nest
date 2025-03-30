@@ -1,5 +1,4 @@
 import { Box, Paper, useMediaQuery, useTheme } from "@mui/material";
-import SignInForm from "../components/sign-in/SignInForm";
 import SignInSocialButtons from "../components/sign-in/SignInSocialButtons";
 import BackgroundImage from "../components/sign-in/BackgroundImage";
 
@@ -49,7 +48,6 @@ const SignUpPage = () => {
         }}
       >
         <SignInSocialButtons />
-        <SignInForm />
       </Paper>
 
       {!isSmallScreen && !isMediumScreen && <BackgroundImage />}
