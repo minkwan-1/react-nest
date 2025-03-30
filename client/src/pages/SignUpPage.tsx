@@ -1,7 +1,7 @@
 import { Box, Paper, useMediaQuery, useTheme } from "@mui/material";
-import SignUpForm from "../components/sign-up/SignUpForm";
 import SignUpSocialButtons from "../components/sign-up/SignUpSocialButtons";
 import BackgroundImage from "../components/sign-up/BackgroundImage";
+import BenefitsList from "@components/sign-up/BenefitsList";
 
 const SignUpPage = () => {
   const theme = useTheme();
@@ -49,7 +49,7 @@ const SignUpPage = () => {
         }}
       >
         <SignUpSocialButtons />
-        <SignUpForm />
+        <BenefitsList />
       </Paper>
 
       {!isSmallScreen && !isMediumScreen && <BackgroundImage />}
