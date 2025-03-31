@@ -9,9 +9,7 @@ interface ServerResponse {
   user?: {
     email?: string;
     name?: string;
-    // 기타 가능한 필드들
   };
-  // 응답에 포함될 수 있는 다른 필드들
 }
 
 const RedirectPage = () => {
@@ -21,7 +19,7 @@ const RedirectPage = () => {
   const navigate = useNavigate();
   const code = query.get("code");
   const provider = query.get("provider");
-  const [, setUserInfo] = useAtom(signupUserInfo); // userInfo는 사용하지 않으므로 생략
+  const [, setUserInfo] = useAtom(signupUserInfo);
 
   console.log("1.Redirect Page Data:", data);
   console.log("2.Redirect Page Provider:", provider);
@@ -104,7 +102,7 @@ const RedirectPage = () => {
         minHeight: "100vh",
       }}
     >
-      {loading ? <CircularProgress /> : null}
+      {loading ? <CircularProgress sx={{ color: "#03cb84" }} /> : null}
     </Box>
   );
 };
