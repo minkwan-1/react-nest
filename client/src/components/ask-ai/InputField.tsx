@@ -48,6 +48,7 @@ const InputField: React.FC<InputFieldProps> = ({
         border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
       }}
     >
+      {/* Text Field */}
       <TextField
         variant="standard"
         placeholder="질문을 입력하세요"
@@ -67,14 +68,14 @@ const InputField: React.FC<InputFieldProps> = ({
         onChange={(e) => setPrompt(e.target.value)}
         onKeyDown={handleKeyPress}
       />
-
+      {/* Refresh Button */}
       <IconButton
         onClick={handleReset}
         sx={{ color: alpha(theme.palette.text.secondary, 0.7) }}
       >
         <RefreshIcon />
       </IconButton>
-
+      {/* Send Button */}
       <IconButton
         onClick={handleSubmit}
         disabled={loading || !prompt.trim()}
