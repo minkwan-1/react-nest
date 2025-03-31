@@ -1,14 +1,12 @@
 import { useState } from "react";
 import {
   Box,
-  TextField,
   Typography,
   Card,
   CardContent,
   CircularProgress,
   Paper,
   Avatar,
-  IconButton,
   useTheme,
   alpha,
 } from "@mui/material";
@@ -17,11 +15,14 @@ import remarkGfm from "remark-gfm";
 import rehypeHighlight from "rehype-highlight";
 import "highlight.js/styles/github-dark.css";
 import { PageContainer, ComponentWrapper } from "../components/layout/common";
-import SendIcon from "@mui/icons-material/Send";
-import RefreshIcon from "@mui/icons-material/Refresh";
 import SmartToyOutlinedIcon from "@mui/icons-material/SmartToyOutlined";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
-import LightbulbOutlinedIcon from "@mui/icons-material/LightbulbOutlined";
+import {
+  InputField,
+  CodeHighlightStyles,
+  PageTitle,
+  ErrorCard,
+} from "@components/ask-ai";
 
 const AskAIPage = () => {
   const theme = useTheme();
@@ -33,6 +34,7 @@ const AskAIPage = () => {
     Array<{ type: "user" | "ai"; content: string }>
   >([]);
   console.log(response);
+
   const handleSubmit = async () => {
     if (!prompt.trim()) return;
 
@@ -85,13 +87,6 @@ const AskAIPage = () => {
     }
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      handleSubmit();
-    }
-  };
-
   const handleReset = () => {
     setPrompt("");
     setResponse("");
@@ -99,6 +94,7 @@ const AskAIPage = () => {
     setError("");
   };
 
+  console.log(response);
   return (
     <PageContainer>
       <ComponentWrapper
@@ -111,65 +107,11 @@ const AskAIPage = () => {
           margin: "0 auto",
         }}
       >
-        {/* Add this CSS to the page for code syntax highlighting */}
-        <Box
-          component="style"
-          dangerouslySetInnerHTML={{
-            __html: `
-              .hljs {
-                background: ${alpha(theme.palette.common.black, 0.03)};
-                border-radius: 8px;
-              }
-              .hljs-comment, .hljs-quote {
-                color: #6a8759;
-                font-style: italic;
-              }
-              .hljs-keyword, .hljs-selector-tag {
-                color: #cc7832;
-              }
-              .hljs-string, .hljs-attribute, .hljs-addition {
-                color: #6a8759;
-              }
-              .hljs-title, .hljs-section {
-                color: #ffc66d;
-              }
-              .hljs-type, .hljs-name, .hljs-selector-id, .hljs-selector-class {
-                color: #e8bf6a;
-              }
-              .hljs-variable, .hljs-template-variable {
-                color: #9876aa;
-              }
-              .hljs-number {
-                color: #6897bb;
-              }
-            `,
-          }}
-        />
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            gap: 1,
-            mb: 3,
-          }}
-        >
-          <LightbulbOutlinedIcon
-            sx={{
-              color: "#03cb84",
-              fontSize: 40,
-            }}
-          />
-          <Typography
-            sx={{
-              color: theme.palette.text.primary,
-              fontSize: { xs: "28px", md: "36px" },
-              fontWeight: 700,
-              letterSpacing: "-0.5px",
-            }}
-          >
-            AI에게 물어보세요
-          </Typography>
-        </Box>
+        {/* CodeHighlightStyles.tsx */}
+        <CodeHighlightStyles />
+
+        {/* PageTitle.tsx */}
+        <PageTitle />
 
         {/* Conversation Display Area */}
         <Paper
@@ -432,89 +374,17 @@ const AskAIPage = () => {
           )}
         </Paper>
 
-        {error && (
-          <Card
-            sx={{
-              mb: 3,
-              borderRadius: 2,
-              bgcolor: alpha(theme.palette.error.main, 0.1),
-            }}
-          >
-            <CardContent sx={{ py: 1.5, px: 2, "&:last-child": { pb: 1.5 } }}>
-              <Typography color="error" align="center">
-                {error}
-              </Typography>
-            </CardContent>
-          </Card>
-        )}
+        {/* ErrorCard.tsx */}
+        {error && <ErrorCard error={error} />}
 
         {/* Input Area */}
-        <Box
-          component={Paper}
-          elevation={2}
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            p: 1,
-            pl: 2,
-            borderRadius: 4,
-            bgcolor: alpha(theme.palette.background.paper, 0.9),
-            border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
-          }}
-        >
-          <TextField
-            variant="standard"
-            placeholder="질문을 입력하세요"
-            fullWidth
-            multiline
-            maxRows={4}
-            InputProps={{
-              disableUnderline: true,
-            }}
-            sx={{
-              "& .MuiInputBase-input": {
-                fontSize: "16px",
-                py: 1,
-              },
-            }}
-            value={prompt}
-            onChange={(e) => setPrompt(e.target.value)}
-            onKeyDown={handleKeyPress}
-          />
-
-          <IconButton
-            onClick={handleReset}
-            sx={{ color: alpha(theme.palette.text.secondary, 0.7) }}
-          >
-            <RefreshIcon />
-          </IconButton>
-
-          <IconButton
-            onClick={handleSubmit}
-            disabled={loading || !prompt.trim()}
-            sx={{
-              bgcolor: "#03cb84",
-              color: "white",
-              "&:hover": {
-                bgcolor: "#028a66",
-              },
-              "&.Mui-disabled": {
-                bgcolor: alpha("#03cb84", 0.4),
-                color: "white",
-              },
-              ml: 1,
-              borderRadius: 2,
-              width: 40,
-              height: 40,
-            }}
-          >
-            {loading ? (
-              <CircularProgress size={20} sx={{ color: "white" }} />
-            ) : (
-              <SendIcon />
-            )}
-          </IconButton>
-        </Box>
+        <InputField
+          prompt={prompt}
+          setPrompt={setPrompt}
+          handleSubmit={handleSubmit}
+          handleReset={handleReset}
+          loading={loading}
+        />
       </ComponentWrapper>
     </PageContainer>
   );
