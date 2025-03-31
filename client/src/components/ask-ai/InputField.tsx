@@ -18,13 +18,13 @@ interface InputFieldProps {
   loading: boolean;
 }
 
-const InputField: React.FC<InputFieldProps> = ({
+const InputField = ({
   prompt,
   setPrompt,
   handleSubmit,
   handleReset,
   loading,
-}) => {
+}: InputFieldProps) => {
   const theme = useTheme();
 
   const handleKeyPress = (e: React.KeyboardEvent) => {

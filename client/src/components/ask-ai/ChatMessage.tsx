@@ -1,4 +1,3 @@
-import React from "react";
 import { Card, CardContent, Typography, Box } from "@mui/material";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -14,7 +13,7 @@ interface ChatMessageProps {
   message: Message;
 }
 
-const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
+const ChatMessage = ({ message }: ChatMessageProps) => {
   const theme = useTheme();
 
   return (

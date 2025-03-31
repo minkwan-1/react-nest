@@ -1,6 +1,6 @@
 import { useState } from "react";
 import "highlight.js/styles/github-dark.css";
-import { PageContainer, ComponentWrapper } from "../components/layout/common";
+import { PageContainer, ComponentWrapper } from "@components/layout/common";
 import {
   InputField,
   CodeHighlightStyles,
@@ -21,7 +21,6 @@ const AskAIPage = () => {
   const handleSubmit = async () => {
     if (!prompt.trim()) return;
 
-    // Add user message to conversation
     const userMessage = prompt.trim();
     setConversation([...conversation, { type: "user", content: userMessage }]);
     setPrompt("");
@@ -43,17 +42,13 @@ const AskAIPage = () => {
 
       const data = await res.json();
 
-      // Save the raw response
       setResponse(data.result);
 
-      // Add AI response to conversation
-      // The ReactMarkdown component will handle the rendering
       setConversation((prev) => [
         ...prev,
         { type: "ai", content: data.result },
       ]);
 
-      // Scroll to bottom of conversation
       setTimeout(() => {
         const conversationContainer = document.querySelector(
           ".conversation-container"
@@ -90,19 +85,14 @@ const AskAIPage = () => {
           margin: "0 auto",
         }}
       >
-        {/* CodeHighlightStyles.tsx */}
         <CodeHighlightStyles />
 
-        {/* PageTitle.tsx */}
         <PageTitle />
 
-        {/* DisplayArea.tsx */}
         <DisplayArea conversation={conversation} loading={loading} />
 
-        {/* ErrorCard.tsx */}
         {error && <ErrorCard error={error} />}
 
-        {/* Input Area */}
         <InputField
           prompt={prompt}
           setPrompt={setPrompt}

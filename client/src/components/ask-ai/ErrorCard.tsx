@@ -2,10 +2,10 @@ import { Card, CardContent, alpha, Typography, useTheme } from "@mui/material";
 import React from "react";
 
 interface ErrorCardProps {
-  error: string | React.ReactNode; // Allow string or ReactNode for error
+  error: string | React.ReactNode;
 }
 
-const ErrorCard: React.FC<ErrorCardProps> = ({ error }) => {
+const ErrorCard = ({ error }: ErrorCardProps) => {
   const theme = useTheme();
   return (
     <Card

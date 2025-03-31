@@ -7,6 +7,7 @@ import {
   useTheme,
 } from "@mui/material";
 import SmartToyOutlinedIcon from "@mui/icons-material/SmartToyOutlined";
+
 const MessageLoading = () => {
   const theme = useTheme();
   return (

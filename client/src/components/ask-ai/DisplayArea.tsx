@@ -1,17 +1,18 @@
-import React from "react";
 import { Box, Paper, useTheme, alpha } from "@mui/material";
-import WelcomeMessage from "./WelcomeMessage";
-import MessageLoading from "./MessageLoading";
-import UserAvatar from "./UserAvatar";
-import AIAvatar from "./AIAvatar";
-import ChatMessage from "./ChatMessage";
+import {
+  WelcomeMessage,
+  MessageLoading,
+  UserAvatar,
+  AIAvatar,
+  ChatMessage,
+} from "@components/ask-ai/index";
 
 interface DisplayAreaProps {
   conversation: { type: string; content: string }[];
   loading: boolean;
 }
 
-const DisplayArea: React.FC<DisplayAreaProps> = ({ conversation, loading }) => {
+const DisplayArea = ({ conversation, loading }: DisplayAreaProps) => {
   const theme = useTheme();
 
   return (
