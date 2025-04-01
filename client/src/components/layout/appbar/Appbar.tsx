@@ -8,6 +8,8 @@ import {
   useTheme,
   Avatar,
   Tooltip,
+  Stack,
+  Typography,
 } from "@mui/material";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
@@ -16,8 +18,8 @@ import AppbarLogo from "./AppbarLogo";
 import ErrorDialog from "./ErrorDialog";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useEffect } from "react";
-import { useAtom } from "jotai"; // Assuming you're using Jotai to manage the state
-import { realUserInfo } from "@atom/auth"; // Import your atom for user info
+import { useAtom } from "jotai";
+import { realUserInfo } from "@atom/auth";
 
 // Interface for Appbar Props
 interface AppbarProps {
@@ -29,7 +31,7 @@ function Appbar({ sx }: AppbarProps) {
   const location = useLocation();
   const { mode, setMode } = useColorScheme();
   const theme = useTheme();
-  const [realUser, setRealUser] = useAtom(realUserInfo); // Jotai atom for user info
+  const [realUser, setRealUser] = useAtom(realUserInfo);
 
   // Dark mode toggle function
   const toggleColorMode = () => {
@@ -39,9 +41,9 @@ function Appbar({ sx }: AppbarProps) {
   // Handle button click for navigation
   const handleButtonClick = () => {
     if (location.pathname === "/") {
-      navigate("/home"); // Navigate to /home from /
+      navigate("/home");
     } else {
-      navigate("/sign-up"); // Navigate to /sign-up for other paths
+      navigate("/sign-up");
     }
   };
 
@@ -49,7 +51,7 @@ function Appbar({ sx }: AppbarProps) {
   useEffect(() => {
     const storedUser = localStorage.getItem("realUser");
     if (storedUser) {
-      setRealUser(JSON.parse(storedUser)); // Set realUser from localStorage
+      setRealUser(JSON.parse(storedUser));
     }
   }, [setRealUser]);
 
@@ -60,8 +62,15 @@ function Appbar({ sx }: AppbarProps) {
     }
   }, [realUser]);
 
-  // Get the user's first name for avatar display (assuming realUser has name)
-  // const firstName = realUser?.name?.split(" ")[0];
+  // Navigation items
+  const navItems = [
+    { name: "상세", path: "/questions/1" },
+    { name: "마이", path: "/my" },
+    { name: "인증", path: "/phone" },
+    { name: "약관", path: "/privacy" },
+    { name: "글쓰기", path: "/edit" },
+    { name: "404", path: "*" },
+  ];
 
   return (
     <Box
@@ -96,9 +105,76 @@ function Appbar({ sx }: AppbarProps) {
           justifyContent: "space-between",
         }}
       >
-        {/* AppbarLogo Component */}
-        <AppbarLogo />
+        {/* Left section: Logo and Navigation */}
+        <Box sx={{ display: "flex", alignItems: "center" }}>
+          {/* AppbarLogo Component */}
+          <AppbarLogo />
 
+          {/* Navigation Links - 새로 추가된 부분 */}
+          <Stack
+            direction="row"
+            spacing={1}
+            sx={{
+              ml: 5,
+              display: { xs: "none", md: "flex" }, // 모바일에서는 숨김
+            }}
+          >
+            {navItems.map((item) => (
+              <Typography
+                key={item.path}
+                variant="body1"
+                component="button"
+                onClick={() => navigate(item.path)}
+                sx={{
+                  position: "relative",
+                  px: 2,
+                  py: 1,
+                  fontSize: "0.95rem",
+                  fontWeight: 500,
+                  background: "none",
+                  border: "none",
+                  borderRadius: 1,
+                  cursor: "pointer",
+                  transition: "all 0.2s",
+                  textTransform: "none",
+                  opacity: location.pathname === item.path ? 1 : 0.7,
+                  ...theme.applyStyles("light", {
+                    color: location.pathname === item.path ? "#03cb84" : "#333",
+                    "&:hover": {
+                      opacity: 1,
+                      backgroundColor: "rgba(3, 203, 132, 0.05)",
+                    },
+                  }),
+                  ...theme.applyStyles("dark", {
+                    color:
+                      location.pathname === item.path ? "#03cb84" : "#f0f0f0",
+                    "&:hover": {
+                      opacity: 1,
+                      backgroundColor: "rgba(3, 203, 132, 0.1)",
+                    },
+                  }),
+                  "&::after":
+                    location.pathname === item.path
+                      ? {
+                          content: '""',
+                          position: "absolute",
+                          bottom: -1,
+                          left: "20%",
+                          width: "60%",
+                          height: "2px",
+                          backgroundColor: "#03cb84",
+                          borderRadius: "2px",
+                        }
+                      : {},
+                }}
+              >
+                {item.name}
+              </Typography>
+            ))}
+          </Stack>
+        </Box>
+
+        {/* Right section: Theme toggle and User/Auth */}
         <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
           {/* Dark mode toggle button */}
           <IconButton
@@ -120,18 +196,18 @@ function Appbar({ sx }: AppbarProps) {
             <Tooltip title={realUser.name} onClick={() => navigate("/my")}>
               <Avatar
                 sx={{
-                  width: 40, // 크기 키움
-                  height: 40, // 크기 키움
+                  width: 40,
+                  height: 40,
                   mr: 1,
-                  bgcolor: "#03cb84", // 기본 배경 색
-                  fontSize: "16px", // 글자 크기
-                  fontWeight: "bold", // 글자 두께
+                  bgcolor: "#03cb84",
+                  fontSize: "16px",
+                  fontWeight: "bold",
                   cursor: "pointer",
-                  boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.2)", // 그림자 추가
-                  border: "2px solid #fff", // 흰색 테두리 추가
-                  transition: "transform 0.2s ease-in-out", // 클릭 시 애니메이션 효과
+                  boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.2)",
+                  border: "2px solid #fff",
+                  transition: "transform 0.2s ease-in-out",
                   "&:hover": {
-                    transform: "scale(1.1)", // 호버 시 크기 증가
+                    transform: "scale(1.1)",
                   },
                 }}
                 src="https://i.namu.wiki/i/u0c4TvXo_si7IwPcgYdL1XiGz8dhBHbgfCLSIEPm_AKmyzEYDe5oM3TBynQINBM89XE9gBdQ5uvOEvDMU-Uokg.webp"
