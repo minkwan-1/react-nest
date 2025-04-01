@@ -16,10 +16,10 @@ const WelcomeMessage = () => {
     >
       <SmartToyOutlinedIcon sx={{ fontSize: 64, mb: 2, color: "#03cb84" }} />
       <Typography variant="h6" align="center" sx={{ mb: 1, fontWeight: 600 }}>
-        AI 어시스턴트에게 무엇이든 물어보세요
+        AI에게 추가 질문을 해보세요
       </Typography>
       <Typography align="center">
-        질문, 아이디어, 문제 해결 등 다양한 주제에 대해 대화를 시작해보세요.
+        답변 내용을 확인하고, 궁금한 점을 AI에게 물어보세요.
       </Typography>
     </Box>
   );

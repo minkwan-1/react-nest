@@ -2,6 +2,7 @@ import React, { useRef } from "react";
 import ReactQuill, { Quill } from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { ImageResize } from "quill-image-resize-module-ts";
+// import { useTheme } from "@mui/material";
 
 const Font = Quill.import("formats/font");
 Font.whitelist = [
@@ -23,6 +24,9 @@ interface QuillEditorProps {
 
 const QuillEditor: React.FC<QuillEditorProps> = ({ value, onChange }) => {
   const quillRef = useRef<ReactQuill | null>(null);
+  // const theme = useTheme();
+  // const isDarkMode = theme.palette.mode === "dark";
+  const mainColor = "#03cb84";
 
   const modules = {
     toolbar: {
@@ -48,6 +52,7 @@ const QuillEditor: React.FC<QuillEditorProps> = ({ value, onChange }) => {
               "#ffff00",
               "#008a00",
               "#0066cc",
+              mainColor,
               "custom-color",
             ],
           },
@@ -62,7 +67,7 @@ const QuillEditor: React.FC<QuillEditorProps> = ({ value, onChange }) => {
       modules: ["Resize", "DisplaySize"],
     },
   };
-  console.log(value);
+
   return (
     <ReactQuill
       ref={quillRef}
@@ -70,6 +75,8 @@ const QuillEditor: React.FC<QuillEditorProps> = ({ value, onChange }) => {
       onChange={onChange}
       modules={modules}
       theme="snow"
+      placeholder="질문 내용을 자세히 작성하세요..."
+      style={{ borderRadius: "8px", marginBottom: "20px" }}
     />
   );
 };

@@ -1,6 +1,13 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { Box, Typography } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Container,
+  useTheme,
+  alpha,
+  Paper,
+} from "@mui/material";
 import { PageContainer, ComponentWrapper } from "../components/layout/common";
 import {
   TitleField,
@@ -16,6 +23,9 @@ export default function QuestionEditPage() {
   const [content, setContent] = useState("");
   const [tags, setTags] = useState<string[]>([]);
   const [previewMode, setPreviewMode] = useState(false);
+  const theme = useTheme();
+  const isDarkMode = theme.palette.mode === "dark";
+  const mainColor = "#03cb84";
 
   // AWS S3 설정
   AWS.config.update({
@@ -143,43 +153,181 @@ export default function QuestionEditPage() {
   return (
     <PageContainer>
       <ComponentWrapper>
-        <Box sx={{ padding: 3, maxWidth: 1200, mx: "auto" }}>
-          <Typography
-            variant="h4"
-            gutterBottom
+        <Container maxWidth="lg" disableGutters>
+          <Box
             sx={{
-              color: (theme) => ({
-                ...theme.applyStyles("light", {
-                  color: "black",
-                }),
-                ...theme.applyStyles("dark", {
-                  color: "white",
-                }),
-              }),
-              fontSize: "36px",
-              fontWeight: "bold",
-              marginBottom: 2,
+              position: "relative",
+              padding: { xs: 2, sm: 3 },
+              maxWidth: 1200,
+              mx: "auto",
+              zIndex: 1,
             }}
           >
-            질문 등록하기
-          </Typography>
-
-          <form onSubmit={handleSubmit}>
-            <TitleField title={title} setTitle={setTitle} />
-            <ContentField content={content} setContent={setContent} />
-            <TagsField tags={tags} handleTagsChange={handleTagsChange} />
-
+            {/* Background elements */}
             <Box
-              sx={{ display: "flex", justifyContent: "space-between", mt: 3 }}
-            >
-              <PreviewButton
-                previewMode={previewMode}
-                setPreviewMode={setPreviewMode}
-              />
-              <SubmitButton />
+              sx={{
+                position: "absolute",
+                width: "300px",
+                height: "300px",
+                borderRadius: "50%",
+                background: `radial-gradient(circle, ${alpha(
+                  mainColor,
+                  0.15
+                )} 0%, ${alpha(mainColor, 0.02)} 70%, transparent 100%)`,
+                top: "-150px",
+                right: "-100px",
+                zIndex: -1,
+                filter: "blur(30px)",
+              }}
+            />
+            <Box
+              sx={{
+                position: "absolute",
+                width: "250px",
+                height: "250px",
+                borderRadius: "50%",
+                background: `radial-gradient(circle, ${alpha(
+                  mainColor,
+                  0.1
+                )} 0%, ${alpha(mainColor, 0.02)} 70%, transparent 100%)`,
+                bottom: "0%",
+                left: "-100px",
+                zIndex: -1,
+                filter: "blur(35px)",
+              }}
+            />
+
+            {/* Header */}
+            <Box sx={{ mb: 4 }}>
+              <Typography
+                variant="h4"
+                sx={{
+                  fontWeight: 800,
+                  fontSize: { xs: "28px", sm: "36px" },
+                  background: `linear-gradient(135deg, ${mainColor} 0%, #02b279 100%)`,
+                  backgroundClip: "text",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  letterSpacing: "-0.5px",
+                  mb: 2,
+                  position: "relative",
+                  display: "inline-block",
+                  "&::after": {
+                    content: '""',
+                    position: "absolute",
+                    left: 0,
+                    bottom: "-8px",
+                    width: "60px",
+                    height: "4px",
+                    borderRadius: "2px",
+                    background: `linear-gradient(90deg, ${mainColor} 0%, #02b279 100%)`,
+                  },
+                }}
+              >
+                질문 등록하기
+              </Typography>
+              <Typography
+                variant="subtitle1"
+                sx={{
+                  color: isDarkMode ? alpha("#fff", 0.7) : alpha("#000", 0.6),
+                  fontSize: { xs: "15px", sm: "16px" },
+                  mt: 3,
+                }}
+              >
+                궁금한 점을 명확하게 작성하여 커뮤니티에서 도움을 받아보세요.
+              </Typography>
             </Box>
-          </form>
-        </Box>
+
+            {/* Form */}
+            <Paper
+              elevation={0}
+              sx={{
+                borderRadius: "16px",
+                backgroundColor: isDarkMode ? alpha("#222", 0.7) : "#ffffff",
+                boxShadow: isDarkMode
+                  ? "0 8px 20px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.1) inset"
+                  : "0 8px 30px rgba(0, 0, 0, 0.06), 0 0 0 1px rgba(0, 0, 0, 0.02) inset",
+                backdropFilter: "blur(10px)",
+                padding: { xs: 2, sm: 4 },
+                overflow: "hidden",
+              }}
+            >
+              <form onSubmit={handleSubmit}>
+                <TitleField title={title} setTitle={setTitle} />
+
+                {previewMode ? (
+                  <Box
+                    sx={{
+                      mb: 3,
+                      mt: 4,
+                      padding: 3,
+                      borderRadius: "12px",
+                      backgroundColor: isDarkMode
+                        ? alpha("#fff", 0.05)
+                        : alpha("#f5f5f5", 0.7),
+                      border: `1px solid ${
+                        isDarkMode ? alpha("#fff", 0.1) : alpha("#000", 0.1)
+                      }`,
+                    }}
+                  >
+                    <Typography
+                      variant="h6"
+                      sx={{
+                        mb: 2,
+                        fontWeight: 600,
+                        color: mainColor,
+                        display: "flex",
+                        alignItems: "center",
+                        "&::before": {
+                          content: '""',
+                          display: "inline-block",
+                          width: "4px",
+                          height: "16px",
+                          borderRadius: "2px",
+                          marginRight: "10px",
+                          background: `linear-gradient(to bottom, ${mainColor}, #02b279)`,
+                        },
+                      }}
+                    >
+                      미리보기
+                    </Typography>
+                    <div
+                      className="ql-editor"
+                      dangerouslySetInnerHTML={{
+                        __html: content,
+                      }}
+                      style={{
+                        overflow: "auto",
+                        minHeight: "250px",
+                      }}
+                    />
+                  </Box>
+                ) : (
+                  <ContentField content={content} setContent={setContent} />
+                )}
+
+                <TagsField tags={tags} handleTagsChange={handleTagsChange} />
+
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    mt: 4,
+                    flexDirection: { xs: "column", sm: "row" },
+                    gap: { xs: 2, sm: 0 },
+                  }}
+                >
+                  <PreviewButton
+                    previewMode={previewMode}
+                    setPreviewMode={setPreviewMode}
+                  />
+                  <SubmitButton />
+                </Box>
+              </form>
+            </Paper>
+          </Box>
+        </Container>
       </ComponentWrapper>
     </PageContainer>
   );

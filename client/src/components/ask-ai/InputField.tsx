@@ -43,6 +43,7 @@ const InputField = ({
         alignItems: "center",
         p: 1,
         pl: 2,
+        mb: 2,
         borderRadius: 4,
         bgcolor: alpha(theme.palette.background.paper, 0.9),
         border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
