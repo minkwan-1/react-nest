@@ -23,6 +23,7 @@ export class GoogleAuthController {
     const user = await this.googleAuthService.getUserInfo(tokens.access_token);
     console.log('User info:', user);
 
+    // 회원 확인 또는 신규 회원 추가
     const userInfo = await this.googleAuthService.findUser(user);
     console.log('유저 정보:', userInfo);
 

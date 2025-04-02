@@ -22,7 +22,7 @@ export class PhoneVerificationController {
     private readonly phoneVerificationService: PhoneVerificationService,
   ) {}
 
-  // 전화번호로 인증 코드 SMS 전송 API
+  // sendVerificationCode
   @Post('send-code')
   async sendSms(
     @Body() body: SendCodeDto,
@@ -42,7 +42,7 @@ export class PhoneVerificationController {
     }
   }
 
-  // 인증 코드 확인 API
+  // verifyCode
   @Post('verify-code')
   async verifyCode(@Body() body: VerifyCodeDto): Promise<{ message: string }> {
     const { phoneNumber, verificationCode } = body;

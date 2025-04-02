@@ -10,7 +10,6 @@ export class GoogleAuthRepository {
     private readonly googleUserRepository: Repository<GoogleUser>,
   ) {}
 
-  // 1. 사용자 정보가 존재하는지 확인하고, 없으면 생성
   async findUser(user: { id: number }): Promise<GoogleUser> {
     const existingUser = await this.googleUserRepository.findOneBy({
       id: user.id,

@@ -17,7 +17,7 @@ export class GoogleAuthService {
   // 왜 이 부분에서는 error가 잡히지 않는가?
   getGoogleAuthUrl(): string {
     try {
-      return `https://accounts.google.com/o/oauth2/v2/auth?client_id=${this.googleClientId}&redirect_uri=${this.googleCallbackUrl}&response_type=code&scope=email profile&prompt=consent`;
+      return `https://accounts.google.com/o/oauth2/v2/auth?client_id=${this.googleClientId}&redirect_uri=${this.googleCallbackUrl}&response_type=code&scope=email profile&prompt=consent&access_type=offline`;
     } catch (error) {
       console.error('구글 인증 URL 생성 중 발생한 오류:', error);
       throw new Error('구글 인증 URL 생성 중 오류 발생');
@@ -74,11 +74,11 @@ export class GoogleAuthService {
       const existingUser = await this.googleAuthRepository.findUser({
         id: user.id,
       });
-      console.log('기존 유저 확인을 위한 로그:', existingUser);
-      console.log('기존 유저의 타입 확인을 위한 로그:', typeof existingUser);
       if (existingUser === null) {
+        // 신규 회원
         return { ...user, isExist: false };
       } else {
+        // 기존 회원
         return { ...existingUser, isExist: true };
       }
     } catch (error) {

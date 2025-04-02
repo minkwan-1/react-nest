@@ -19,7 +19,7 @@ export class PhoneVerificationService {
   private generateVerificationCode(): string {
     return Math.floor(100000 + Math.random() * 900000).toString();
   }
-
+  // sendVerificationCode
   async sendVerificationCode(
     toPhoneNumber: string,
   ): Promise<{ message: string; sid?: string }> {
@@ -64,7 +64,7 @@ export class PhoneVerificationService {
       return { message: '인증 코드 전송에 실패했습니다.' };
     }
   }
-
+  // verifyCode
   async verifyCode(
     phoneNumber: string,
     verificationCode: string,
