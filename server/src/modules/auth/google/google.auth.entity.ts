@@ -8,7 +8,7 @@ import {
 
 @Entity('google_user')
 export class GoogleUser {
-  @PrimaryColumn({ name: 'google_id' })
+  @PrimaryColumn()
   id: string;
 
   @Column({ unique: true })
