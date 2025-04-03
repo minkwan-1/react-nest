@@ -8,24 +8,36 @@ import {
 
 @Entity('google_user')
 export class GoogleUser {
-  @PrimaryColumn({ type: 'numeric' })
-  id: number;
+  @PrimaryColumn({ name: 'google_id' })
+  id: string;
 
-  @Column({ type: 'timestamptz' })
-  connectedAt: Date;
+  @Column({ unique: true })
+  email: string;
+
+  @Column({ name: 'verified_email', default: false })
+  verifiedEmail: boolean;
 
   @Column()
-  nickname: string;
+  name: string;
 
-  @Column({ nullable: true })
+  @Column({ name: 'given_name' })
+  givenName: string;
+
+  @Column({ name: 'family_name' })
+  familyName: string;
+
+  @Column({ name: 'profile_image', nullable: true })
   profileImage?: string;
 
-  @Column({ default: false })
+  @Column({ name: 'is_default_image', default: false })
   isDefaultImage: boolean;
 
-  @CreateDateColumn()
+  @Column({ name: 'connected_at', type: 'timestamptz', nullable: true })
+  connectedAt: Date;
+
+  @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
 }
