@@ -9,6 +9,40 @@ export interface SignupUserInfo {
   phoneNumber: string;
 }
 
+// await fetch(`http://localhost:3000/auth/${provider}/user`, {
+//   method: "POST",
+//   headers: {
+//     "Content-Type": "application/json",
+//   },
+//   body: JSON.stringify({ code }),
+// });
+
+// if (!response.ok) {
+//   throw new Error(`서버 오류 발생: ${response.status}`);
+// }
+
+export const postAuthorizationCode = async ({
+  code,
+  provider,
+}: {
+  code: string;
+  provider: string;
+}) => {
+  try {
+    const response = await axios.post(`${API_URL}auth/${provider}/user`, {
+      code,
+    });
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
+      throw new Error(
+        error.response.data.message || "회원가입 중 오류가 발생했습니다."
+      );
+    }
+    throw new Error("서버와 통신 중 오류가 발생했습니다.");
+  }
+};
+
 export const signup = async (userInfo: SignupUserInfo) => {
   try {
     const response = await axios.post(`${API_URL}users/signup`, userInfo);

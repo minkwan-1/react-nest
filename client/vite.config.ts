@@ -19,6 +19,7 @@ export default defineConfig({
         "src/components/ask-ai/*"
       ),
       "@mock": path.resolve(__dirname, "./src/mock"),
+      "@api": path.resolve(__dirname, "./src/api"),
     },
   },
 });

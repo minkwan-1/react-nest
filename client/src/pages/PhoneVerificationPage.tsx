@@ -3,7 +3,7 @@ import { Box } from "@mui/material";
 import { PageContainer, ComponentWrapper } from "../components/layout/common";
 import { useAtom } from "jotai";
 import { signupUserInfo, completeUserInfo } from "@atom/auth";
-import { handleCompleteSignupWithAPI } from "../api/auth";
+import { handleCompleteSignupWithAPI } from "../api/auth/auth";
 
 import {
   PhoneVerificationTitle,
