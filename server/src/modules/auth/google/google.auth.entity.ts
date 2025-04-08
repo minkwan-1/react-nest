@@ -40,4 +40,7 @@ export class GoogleUser {
 
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
+
+  @Column({ default: false })
+  registrationComplete: boolean;
 }

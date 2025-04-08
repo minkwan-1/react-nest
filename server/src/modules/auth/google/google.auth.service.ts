@@ -15,7 +15,13 @@ export class GoogleAuthService {
 
   getGoogleAuthUrl(): string {
     try {
-      return `https://accounts.google.com/o/oauth2/v2/auth?client_id=${this.googleClientId}&redirect_uri=${this.googleCallbackUrl}&response_type=code&scope=email profile&prompt=consent&access_type=offline`;
+      // 매번 새로운 세션을 강제하는 파라미터 추가
+      const timestamp = new Date().getTime();
+      return `https://accounts.google.com/o/oauth2/v2/auth?client_id=${
+        this.googleClientId
+      }&redirect_uri=${
+        this.googleCallbackUrl
+      }&response_type=code&scope=email profile&prompt=consent&access_type=offline&state=${timestamp}`;
     } catch {
       throw new Error('구글 인증 URL 생성 중 오류 발생');
     }
@@ -46,8 +52,14 @@ export class GoogleAuthService {
 
       return response.data;
     } catch (error) {
-      console.log(error);
-      throw new Error('구글에서 토큰을 가져오는 중 오류 발생');
+      // 더 자세한 오류 정보 로깅
+      if (error.response) {
+        console.log('토큰 오류 응답:', error.response.data);
+        console.log('토큰 오류 상태:', error.response.status);
+      }
+      throw new Error(
+        `구글에서 토큰을 가져오는 중 오류 발생: ${error.message}`,
+      );
     }
   }
 
@@ -63,19 +75,28 @@ export class GoogleAuthService {
 
       return response.data;
     } catch (error) {
-      console.log(error);
-      throw new Error('구글에서 사용자 정보를 가져오는 중 오류 발생');
+      if (error.response) {
+        console.log('사용자 정보 오류 응답:', error.response.data);
+        console.log('사용자 정보 오류 상태:', error.response.status);
+      }
+      throw new Error(
+        `구글에서 사용자 정보를 가져오는 중 오류 발생: ${error.message}`,
+      );
     }
   }
 
-  async findOrCreateUser(userData: any): Promise<FindUserType> {
+  async findOrCreateUser(
+    userData: any,
+  ): Promise<FindUserType & { registrationComplete: boolean }> {
     try {
       const user = await this.googleAuthRepository.findUser({
         id: userData.id,
       });
 
       if (user) {
-        return { ...user, isExist: true };
+        // registrationComplete이 undefined일 경우 기본값으로 false 설정
+        const registrationComplete = user.registrationComplete ?? false;
+        return { ...user, isExist: true, registrationComplete };
       }
 
       const {
@@ -98,12 +119,31 @@ export class GoogleAuthService {
         profileImage,
         isDefaultImage: false,
         connectedAt: new Date(),
+        registrationComplete: false,
       });
 
-      return { ...newUser, isExist: false };
+      return { ...newUser, isExist: false, registrationComplete: false };
     } catch (error) {
-      console.log(error);
+      console.log('사용자 조회/생성 오류:', error);
       throw new Error('구글 사용자 확인 또는 추가 중 오류 발생');
+    }
+  }
+
+  // 테스트 전용 - 사용자 등록 완료 상태 업데이트
+  async completeRegistration(userId: string): Promise<void> {
+    try {
+      const user = await this.googleAuthRepository.findUser({ id: userId });
+      if (!user) {
+        throw new Error('사용자를 찾을 수 없습니다');
+      }
+
+      await this.googleAuthRepository.saveUser({
+        ...user,
+        registrationComplete: true,
+      });
+    } catch (error) {
+      console.log('등록 완료 처리 오류:', error);
+      throw new Error('사용자 등록 완료 처리 중 오류 발생');
     }
   }
 }

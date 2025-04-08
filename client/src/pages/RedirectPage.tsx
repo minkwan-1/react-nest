@@ -1,4 +1,3 @@
-// RedirectPage.tsx - 타입 안전성이 개선된 버전
 import { useEffect, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { CircularProgress, Box } from "@mui/material";
@@ -10,6 +9,8 @@ interface ServerResponse {
   user?: {
     email?: string;
     name?: string;
+    isExist?: boolean;
+    registrationComplete?: boolean;
   };
 }
 
@@ -36,11 +37,9 @@ const RedirectPage = () => {
         navigate("/error", {
           state: { message: "인가 코드가 제공되지 않았습니다." },
         });
-
-        // toast: 소셜 회원가입 도중 오류
-        // navigate("/sign-up");
         return;
       }
+
       if (loading) return;
       setLoading(true);
 
@@ -50,9 +49,16 @@ const RedirectPage = () => {
           onSuccess: (res) => {
             console.log("성공 응답값: ", res);
             setUserInfo(res?.user);
-            if (res?.user?.isExist == false) {
+
+            // 새 사용자이거나 이미 존재하지만 가입이 미완료된 경우
+            if (
+              !res?.user?.isExist ||
+              (res?.user?.isExist && !res?.user?.registrationComplete)
+            ) {
               navigate("/phone");
-            } else {
+            }
+            // 가입이 완료된 기존 사용자
+            else {
               navigate("/sign-in");
             }
 
