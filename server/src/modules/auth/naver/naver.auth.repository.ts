@@ -10,12 +10,24 @@ export class NaverAuthRepository {
     private readonly naverUserRepository: Repository<NaverUser>,
   ) {}
 
-  // 1. 사용자 정보가 존재하는지 확인하고, 없으면 생성
-  async findUser(user: { id: string }): Promise<NaverUser> {
-    console.log('깃허브 테스트용3333:', user);
-    const existingUser = await this.naverUserRepository.findOneBy({
-      id: user?.id,
-    });
-    return existingUser;
+  async findUser(user: { id: string }): Promise<NaverUser | null> {
+    try {
+      return await this.naverUserRepository.findOne({
+        where: { id: user.id },
+      });
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async saveUser(userData: Partial<NaverUser>): Promise<NaverUser> {
+    try {
+      await this.naverUserRepository.upsert(userData, ['id']);
+      return await this.naverUserRepository.findOneOrFail({
+        where: { id: userData.id },
+      });
+    } catch (error) {
+      throw error;
+    }
   }
 }

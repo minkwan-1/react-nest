@@ -12,6 +12,6 @@ import { AuthModule } from '../auth.module';
   ],
   controllers: [NaverAuthController],
   providers: [NaverAuthService, NaverAuthRepository],
-  exports: [NaverAuthService, NaverAuthRepository],
+  exports: [NaverAuthService],
 })
 export class NaverAuthModule {}
