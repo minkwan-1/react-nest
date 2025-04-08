@@ -50,7 +50,12 @@ const RedirectPage = () => {
           onSuccess: (res) => {
             console.log("성공 응답값: ", res);
             setUserInfo(res?.user);
-            navigate("/phone");
+            if (res?.user?.isExist == false) {
+              navigate("/phone");
+            } else {
+              navigate("/sign-in");
+            }
+
             console.log("성공");
           },
           onError: () => {
@@ -65,15 +70,6 @@ const RedirectPage = () => {
       );
     };
     postFn();
-
-    // if (code) {
-    //   postFn();
-    // } else {
-    //   console.log("인가 코드 없음");
-    //   navigate("/error", {
-    //     state: { message: "인가 코드가 제공되지 않았습니다." },
-    //   });
-    // }
   }, []);
 
   console.log("Redirect Page에 떨어지는 user data: ", data);
