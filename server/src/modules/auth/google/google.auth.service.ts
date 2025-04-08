@@ -63,6 +63,37 @@ export class GoogleAuthService {
     }
   }
 
+  async refreshToken(refreshToken: string): Promise<any> {
+    const tokenUrl = 'https://oauth2.googleapis.com/token';
+
+    try {
+      const response = await axios.post(
+        tokenUrl,
+        {
+          grant_type: 'refresh_token',
+          client_id: this.googleClientId,
+          client_secret: this.googleClientSecret,
+          refresh_token: refreshToken,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
+      );
+
+      return response.data;
+    } catch (error) {
+      if (error.response) {
+        console.log('토큰 갱신 오류 응답:', error.response.data);
+        console.log('토큰 갱신 오류 상태:', error.response.status);
+      }
+      throw new Error(
+        `리프레시 토큰을 사용한 액세스 토큰 갱신 중 오류 발생: ${error.message}`,
+      );
+    }
+  }
+
   async getUserInfo(accessToken: string): Promise<any> {
     const userInfoUrl = 'https://www.googleapis.com/oauth2/v2/userinfo';
 
@@ -87,6 +118,7 @@ export class GoogleAuthService {
 
   async findOrCreateUser(
     userData: any,
+    refreshToken?: string,
   ): Promise<FindUserType & { registrationComplete: boolean }> {
     try {
       const user = await this.googleAuthRepository.findUser({
@@ -94,6 +126,14 @@ export class GoogleAuthService {
       });
 
       if (user) {
+        // 리프레시 토큰이 제공되었다면 갱신
+        if (refreshToken) {
+          await this.googleAuthRepository.updateRefreshToken(
+            userData.id,
+            refreshToken,
+          );
+        }
+
         // registrationComplete이 undefined일 경우 기본값으로 false 설정
         const registrationComplete = user.registrationComplete ?? false;
         return { ...user, isExist: true, registrationComplete };
@@ -120,12 +160,38 @@ export class GoogleAuthService {
         isDefaultImage: false,
         connectedAt: new Date(),
         registrationComplete: false,
+        refreshToken,
       });
 
       return { ...newUser, isExist: false, registrationComplete: false };
     } catch (error) {
       console.log('사용자 조회/생성 오류:', error);
       throw new Error('구글 사용자 확인 또는 추가 중 오류 발생');
+    }
+  }
+
+  async getUserByRefreshToken(
+    refreshToken: string,
+  ): Promise<GoogleUser | null> {
+    try {
+      return await this.googleAuthRepository.findUserByRefreshToken(
+        refreshToken,
+      );
+    } catch (error) {
+      console.log('리프레시 토큰으로 사용자 조회 오류:', error);
+      throw new Error('리프레시 토큰으로 사용자 조회 중 오류 발생');
+    }
+  }
+
+  async updateRefreshToken(
+    userId: string,
+    refreshToken: string,
+  ): Promise<void> {
+    try {
+      await this.googleAuthRepository.updateRefreshToken(userId, refreshToken);
+    } catch (error) {
+      console.log('리프레시 토큰 업데이트 오류:', error);
+      throw new Error('리프레시 토큰 업데이트 중 오류 발생');
     }
   }
 

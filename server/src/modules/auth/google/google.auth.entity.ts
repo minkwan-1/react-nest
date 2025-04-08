@@ -1,20 +1,14 @@
-import {
-  Column,
-  Entity,
-  PrimaryColumn,
-  CreateDateColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { Entity, Column, PrimaryColumn } from 'typeorm';
 
 @Entity('google_user')
 export class GoogleUser {
   @PrimaryColumn()
   id: string;
 
-  @Column({ unique: true })
+  @Column()
   email: string;
 
-  @Column({ name: 'verified_email', default: false })
+  @Column({ name: 'verified_email' })
   verifiedEmail: boolean;
 
   @Column()
@@ -26,21 +20,21 @@ export class GoogleUser {
   @Column({ name: 'family_name' })
   familyName: string;
 
-  @Column({ name: 'profile_image', nullable: true })
-  profileImage?: string;
+  @Column({ name: 'profile_image' })
+  profileImage: string;
 
-  @Column({ name: 'is_default_image', default: false })
+  @Column({ name: 'is_default_image' })
   isDefaultImage: boolean;
 
-  @Column({ name: 'connected_at', type: 'timestamptz', nullable: true })
+  @Column({ name: 'connected_at' })
   connectedAt: Date;
 
-  @CreateDateColumn({ name: 'created_at' })
-  createdAt: Date;
-
-  @UpdateDateColumn({ name: 'updated_at' })
-  updatedAt: Date;
-
-  @Column({ default: false })
+  @Column({ name: 'registration_complete', default: false })
   registrationComplete: boolean;
+
+  @Column({ name: 'refresh_token', nullable: true })
+  refreshToken: string;
+
+  @Column({ name: 'token_expires_at', nullable: true })
+  tokenExpiresAt: Date;
 }
