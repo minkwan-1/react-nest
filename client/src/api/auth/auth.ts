@@ -1,4 +1,3 @@
-// src/api/auth.ts
 import axios from "axios";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000/";
@@ -8,18 +7,6 @@ export interface SignupUserInfo {
   name: string;
   phoneNumber: string;
 }
-
-// await fetch(`http://localhost:3000/auth/${provider}/user`, {
-//   method: "POST",
-//   headers: {
-//     "Content-Type": "application/json",
-//   },
-//   body: JSON.stringify({ code }),
-// });
-
-// if (!response.ok) {
-//   throw new Error(`서버 오류 발생: ${response.status}`);
-// }
 
 export const postAuthorizationCode = async ({
   code,

@@ -37,33 +37,20 @@ export class GoogleAuthController {
       );
     }
 
-    try {
-      const tokens = await this.googleAuthService.getToken(code);
-      const user = await this.googleAuthService.getUserInfo(
-        tokens.access_token,
-      );
-      const userInfo = await this.googleAuthService.findOrCreateUser(
-        user,
-        tokens.refresh_token,
-      );
+    const tokens = await this.googleAuthService.getToken(code);
+    const user = await this.googleAuthService.getUserInfo(tokens.access_token);
+    const userInfo = await this.googleAuthService.findOrCreateUser(
+      user,
+      tokens.refresh_token,
+    );
 
-      return {
-        message: '조회 성공',
-        user: userInfo,
-        accessToken: tokens.access_token,
-        refreshToken: tokens.refresh_token,
-        expiresIn: tokens.expires_in,
-      };
-    } catch (error) {
-      if (error instanceof HttpException) {
-        throw error;
-      }
-
-      throw new HttpException(
-        '서버 내부 오류가 발생했습니다',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
+    return {
+      message: '조회 성공',
+      user: userInfo,
+      accessToken: tokens.access_token,
+      refreshToken: tokens.refresh_token,
+      expiresIn: tokens.expires_in,
+    };
   }
 
   @Post('refresh')

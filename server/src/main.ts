@@ -1,12 +1,18 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as dotenv from 'dotenv';
+import { HttpAdapterHost } from '@nestjs/core';
+import { AllExceptionsFilter } from './filters/all-exceptions.filter';
 
 // .env 파일 로드
 dotenv.config();
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  const { httpAdapter } = app.get(HttpAdapterHost);
+  console.log(httpAdapter);
+  app.useGlobalFilters(new AllExceptionsFilter(httpAdapter));
 
   // CORS 설정
   app.enableCors({

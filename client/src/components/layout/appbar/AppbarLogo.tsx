@@ -1,7 +1,6 @@
-import { Box, Typography, Theme, SxProps } from "@mui/material";
-import { Code } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useColorScheme } from "@mui/material/styles";
+import { Box, Typography, Theme, SxProps, useTheme } from "@mui/material";
+import { Code } from "lucide-react";
 
 interface AppbarLogoProps {
   sx?: SxProps<Theme>;
@@ -9,7 +8,7 @@ interface AppbarLogoProps {
 
 function AppbarLogo({ sx }: AppbarLogoProps) {
   const navigate = useNavigate();
-  const { mode } = useColorScheme();
+  const theme = useTheme();
 
   return (
     <Box
@@ -21,16 +20,19 @@ function AppbarLogo({ sx }: AppbarLogoProps) {
       }}
       onClick={() => navigate("/home")}
     >
-      {/* Logo Icon */}
       <Code size={24} className="text-primary" style={{ color: "#03cb84" }} />
 
-      {/* Logo Text */}
       <Typography
         variant="h6"
         sx={{
           fontWeight: "bold",
           marginLeft: "8px",
-          color: mode === "dark" ? "white" : "black",
+          ...theme.applyStyles("light", {
+            color: "black",
+          }),
+          ...theme.applyStyles("dark", {
+            color: "white",
+          }),
         }}
       >
         Pullim

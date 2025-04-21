@@ -10,7 +10,6 @@ interface ThemeToggleButtonProps {
 function ThemeToggleButton({ sx }: ThemeToggleButtonProps) {
   const { mode, setMode } = useColorScheme();
 
-  // Toggle between light and dark mode
   const toggleMode = () => {
     setMode(mode === "light" ? "dark" : "light");
   };

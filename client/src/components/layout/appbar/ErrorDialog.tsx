@@ -16,15 +16,12 @@ interface ErrorDialogProps {
 function ErrorDialog({ open, message, onClose }: ErrorDialogProps) {
   return (
     <Dialog open={open} onClose={onClose}>
-      {/* Dialog Title */}
       <DialogTitle>로그인 오류</DialogTitle>
 
-      {/* Dialog Content */}
       <DialogContent>
         <Typography>{message}</Typography>
       </DialogContent>
 
-      {/* Dialog Actions */}
       <DialogActions>
         <Button onClick={onClose} color="primary">
           확인

@@ -8,7 +8,6 @@ interface UserInfoProps {
 function UserInfo({ nickname, onLogout }: UserInfoProps) {
   return (
     <Box sx={{ display: "flex", alignItems: "center" }}>
-      {/* Display User Nickname */}
       <Typography
         sx={{ marginRight: "16px", fontWeight: "bold" }}
         variant="body1"
@@ -16,7 +15,6 @@ function UserInfo({ nickname, onLogout }: UserInfoProps) {
         {nickname}님
       </Typography>
 
-      {/* Logout Button */}
       <Button
         variant="outlined"
         size="small"

@@ -1,6 +1,5 @@
-// ComponentWrapper.tsx
-import { Box, BoxProps } from "@mui/material";
 import { ReactNode } from "react";
+import { Box, BoxProps } from "@mui/material";
 
 interface ComponentWrapperProps extends BoxProps {
   children: ReactNode;

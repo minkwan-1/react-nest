@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { GoogleAuthRepository } from './google.auth.repository';
 import { GoogleUser } from './google.auth.entity';
 import axios from 'axios';
@@ -29,39 +29,43 @@ export class GoogleAuthService {
 
   async getToken(code: string): Promise<any> {
     const tokenUrl = 'https://oauth2.googleapis.com/token';
+    throw new HttpException('구글 에러: ', HttpStatus.BAD_GATEWAY);
 
-    try {
-      const response = await axios.post(
-        tokenUrl,
-        {
-          grant_type: 'authorization_code',
-          client_id: this.googleClientId,
-          client_secret: this.googleClientSecret,
-          redirect_uri: this.googleCallbackUrl,
-          code,
+    const response = await axios.post(
+      tokenUrl,
+      {
+        grant_type: 'authorization_code',
+        client_id: this.googleClientId,
+        client_secret: this.googleClientSecret,
+        redirect_uri: this.googleCallbackUrl,
+        code,
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          Pragma: 'no-cache',
+          Expires: '0',
         },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            'Cache-Control': 'no-cache, no-store, must-revalidate',
-            Pragma: 'no-cache',
-            Expires: '0',
-          },
-        },
-      );
+      },
+    );
 
-      return response.data;
-    } catch (error) {
-      // 더 자세한 오류 정보 로깅
-      if (error.response) {
-        console.log('토큰 오류 응답:', error.response.data);
-        console.log('토큰 오류 상태:', error.response.status);
-      }
-      throw new Error(
-        `구글에서 토큰을 가져오는 중 오류 발생: ${error.message}`,
-      );
-    }
+    return response.data;
   }
+  // try {
+  //   // 외부 API 호출 등의 코드
+  // } catch (e) {
+  //   // 오류 처리
+  // throw new HttpException(
+  //   {
+  //     status: HttpStatus.BAD_GATEWAY,
+  //     error: '외부 서비스 오류',
+  //     message: e.message,
+  //     details: e.response?.data // 외부 API의 응답 데이터
+  //   },
+  //   HttpStatus.BAD_GATEWAY
+  // );
+  // }
 
   async refreshToken(refreshToken: string): Promise<any> {
     const tokenUrl = 'https://oauth2.googleapis.com/token';

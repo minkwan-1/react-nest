@@ -67,6 +67,7 @@ const RedirectPage = () => {
           onError: () => {
             // toast
             console.log("실패");
+            alert("get token 알럿");
           },
           onSettled: () => {
             console.log("settled");

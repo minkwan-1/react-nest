@@ -1,6 +1,6 @@
-import { Box } from "@mui/material";
-import Appbar from "../appbar/Appbar";
 import { ReactNode } from "react";
+import { Box } from "@mui/material";
+import Appbar from "@components/layout/appbar/Appbar";
 
 type LayoutProps = {
   children: ReactNode;
