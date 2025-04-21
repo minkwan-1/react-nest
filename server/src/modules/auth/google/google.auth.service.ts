@@ -15,7 +15,6 @@ export class GoogleAuthService {
 
   getGoogleAuthUrl(): string {
     try {
-      // 매번 새로운 세션을 강제하는 파라미터 추가
       const timestamp = new Date().getTime();
       return `https://accounts.google.com/o/oauth2/v2/auth?client_id=${
         this.googleClientId
@@ -23,49 +22,49 @@ export class GoogleAuthService {
         this.googleCallbackUrl
       }&response_type=code&scope=email profile&prompt=consent&access_type=offline&state=${timestamp}`;
     } catch {
-      throw new Error('구글 인증 URL 생성 중 오류 발생');
+      throw new HttpException(
+        '구글 인증 URL 생성 중 오류 발생',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
   async getToken(code: string): Promise<any> {
     const tokenUrl = 'https://oauth2.googleapis.com/token';
-    throw new HttpException('구글 에러: ', HttpStatus.BAD_GATEWAY);
 
-    const response = await axios.post(
-      tokenUrl,
-      {
-        grant_type: 'authorization_code',
-        client_id: this.googleClientId,
-        client_secret: this.googleClientSecret,
-        redirect_uri: this.googleCallbackUrl,
-        code,
-      },
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          'Cache-Control': 'no-cache, no-store, must-revalidate',
-          Pragma: 'no-cache',
-          Expires: '0',
+    try {
+      const response = await axios.post(
+        tokenUrl,
+        {
+          grant_type: 'authorization_code',
+          client_id: this.googleClientId,
+          client_secret: this.googleClientSecret,
+          redirect_uri: this.googleCallbackUrl,
+          code,
         },
-      },
-    );
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'Cache-Control': 'no-cache, no-store, must-revalidate',
+            Pragma: 'no-cache',
+            Expires: '0',
+          },
+        },
+      );
 
-    return response.data;
+      return response.data;
+    } catch (e) {
+      throw new HttpException(
+        {
+          status: HttpStatus.BAD_GATEWAY,
+          error: '구글 액세스 토큰 요청 중 오류 발생',
+          message: e.message,
+          details: e.response?.data,
+        },
+        HttpStatus.BAD_GATEWAY,
+      );
+    }
   }
-  // try {
-  //   // 외부 API 호출 등의 코드
-  // } catch (e) {
-  //   // 오류 처리
-  // throw new HttpException(
-  //   {
-  //     status: HttpStatus.BAD_GATEWAY,
-  //     error: '외부 서비스 오류',
-  //     message: e.message,
-  //     details: e.response?.data // 외부 API의 응답 데이터
-  //   },
-  //   HttpStatus.BAD_GATEWAY
-  // );
-  // }
 
   async refreshToken(refreshToken: string): Promise<any> {
     const tokenUrl = 'https://oauth2.googleapis.com/token';
@@ -88,12 +87,14 @@ export class GoogleAuthService {
 
       return response.data;
     } catch (error) {
-      if (error.response) {
-        console.log('토큰 갱신 오류 응답:', error.response.data);
-        console.log('토큰 갱신 오류 상태:', error.response.status);
-      }
-      throw new Error(
-        `리프레시 토큰을 사용한 액세스 토큰 갱신 중 오류 발생: ${error.message}`,
+      throw new HttpException(
+        {
+          status: HttpStatus.BAD_GATEWAY,
+          error: '리프레시 토큰을 통한 액세스 토큰 갱신 중 오류 발생',
+          message: error.message,
+          details: error.response?.data,
+        },
+        HttpStatus.BAD_GATEWAY,
       );
     }
   }
@@ -110,12 +111,14 @@ export class GoogleAuthService {
 
       return response.data;
     } catch (error) {
-      if (error.response) {
-        console.log('사용자 정보 오류 응답:', error.response.data);
-        console.log('사용자 정보 오류 상태:', error.response.status);
-      }
-      throw new Error(
-        `구글에서 사용자 정보를 가져오는 중 오류 발생: ${error.message}`,
+      throw new HttpException(
+        {
+          status: HttpStatus.BAD_GATEWAY,
+          error: '구글 사용자 정보 요청 중 오류 발생',
+          message: error.message,
+          details: error.response?.data,
+        },
+        HttpStatus.BAD_GATEWAY,
       );
     }
   }
@@ -130,15 +133,12 @@ export class GoogleAuthService {
       });
 
       if (user) {
-        // 리프레시 토큰이 제공되었다면 갱신
         if (refreshToken) {
           await this.googleAuthRepository.updateRefreshToken(
             userData.id,
             refreshToken,
           );
         }
-
-        // registrationComplete이 undefined일 경우 기본값으로 false 설정
         const registrationComplete = user.registrationComplete ?? false;
         return { ...user, isExist: true, registrationComplete };
       }
@@ -168,9 +168,11 @@ export class GoogleAuthService {
       });
 
       return { ...newUser, isExist: false, registrationComplete: false };
-    } catch (error) {
-      console.log('사용자 조회/생성 오류:', error);
-      throw new Error('구글 사용자 확인 또는 추가 중 오류 발생');
+    } catch {
+      throw new HttpException(
+        '구글 사용자 확인 또는 추가 중 오류 발생',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
@@ -181,9 +183,11 @@ export class GoogleAuthService {
       return await this.googleAuthRepository.findUserByRefreshToken(
         refreshToken,
       );
-    } catch (error) {
-      console.log('리프레시 토큰으로 사용자 조회 오류:', error);
-      throw new Error('리프레시 토큰으로 사용자 조회 중 오류 발생');
+    } catch {
+      throw new HttpException(
+        '리프레시 토큰으로 사용자 조회 중 오류 발생',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
@@ -193,27 +197,33 @@ export class GoogleAuthService {
   ): Promise<void> {
     try {
       await this.googleAuthRepository.updateRefreshToken(userId, refreshToken);
-    } catch (error) {
-      console.log('리프레시 토큰 업데이트 오류:', error);
-      throw new Error('리프레시 토큰 업데이트 중 오류 발생');
+    } catch {
+      throw new HttpException(
+        '리프레시 토큰 업데이트 중 오류 발생',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
-  // 테스트 전용 - 사용자 등록 완료 상태 업데이트
   async completeRegistration(userId: string): Promise<void> {
     try {
       const user = await this.googleAuthRepository.findUser({ id: userId });
       if (!user) {
-        throw new Error('사용자를 찾을 수 없습니다');
+        throw new HttpException(
+          '사용자를 찾을 수 없습니다',
+          HttpStatus.NOT_FOUND,
+        );
       }
 
       await this.googleAuthRepository.saveUser({
         ...user,
         registrationComplete: true,
       });
-    } catch (error) {
-      console.log('등록 완료 처리 오류:', error);
-      throw new Error('사용자 등록 완료 처리 중 오류 발생');
+    } catch {
+      throw new HttpException(
+        '사용자 등록 완료 처리 중 오류 발생',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 }

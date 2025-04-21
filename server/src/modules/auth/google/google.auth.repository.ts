@@ -11,44 +11,28 @@ export class GoogleAuthRepository {
   ) {}
 
   async findUser(user: { id: string }): Promise<GoogleUser> {
-    try {
-      return await this.googleUserRepository.findOne({
-        where: { id: user.id },
-      });
-    } catch (error) {
-      throw error;
-    }
+    return await this.googleUserRepository.findOne({
+      where: { id: user.id },
+    });
   }
 
   async findUserByRefreshToken(
     refreshToken: string,
   ): Promise<GoogleUser | null> {
-    try {
-      return await this.googleUserRepository.findOne({
-        where: { refreshToken },
-      });
-    } catch (error) {
-      throw error;
-    }
+    return await this.googleUserRepository.findOne({
+      where: { refreshToken },
+    });
   }
 
   async saveUser(userData: Partial<GoogleUser>): Promise<GoogleUser> {
-    try {
-      const user = this.googleUserRepository.create(userData);
-      return await this.googleUserRepository.save(user);
-    } catch (error) {
-      throw error;
-    }
+    const user = this.googleUserRepository.create(userData);
+    return await this.googleUserRepository.save(user);
   }
 
   async updateRefreshToken(
     userId: string,
     refreshToken: string,
   ): Promise<void> {
-    try {
-      await this.googleUserRepository.update({ id: userId }, { refreshToken });
-    } catch (error) {
-      throw error;
-    }
+    await this.googleUserRepository.update({ id: userId }, { refreshToken });
   }
 }
