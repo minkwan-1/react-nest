@@ -15,12 +15,11 @@ export class GoogleAuthService {
 
   getGoogleAuthUrl(): string {
     try {
-      const timestamp = new Date().getTime();
       return `https://accounts.google.com/o/oauth2/v2/auth?client_id=${
         this.googleClientId
       }&redirect_uri=${
         this.googleCallbackUrl
-      }&response_type=code&scope=email profile&prompt=consent&access_type=offline&state=${timestamp}`;
+      }&response_type=code&scope=email profile&prompt=consent`;
     } catch {
       throw new HttpException(
         '구글 인증 URL 생성 중 오류 발생',
@@ -31,6 +30,16 @@ export class GoogleAuthService {
 
   async getToken(code: string): Promise<any> {
     const tokenUrl = 'https://oauth2.googleapis.com/token';
+
+    // 요청 전에 모든 정보 로그
+    console.log('🛰️ 구글 토큰 요청을 다음 파라미터로 보냅니다:');
+    console.log({
+      grant_type: 'authorization_code',
+      client_id: this.googleClientId,
+      client_secret: this.googleClientSecret,
+      redirect_uri: this.googleCallbackUrl,
+      code,
+    });
 
     try {
       const response = await axios.post(
@@ -52,8 +61,27 @@ export class GoogleAuthService {
         },
       );
 
+      // 성공 응답 로그
+      console.log('✅ 구글로부터 토큰 응답을 정상적으로 받았습니다:');
+      console.log(response.data);
+
       return response.data;
     } catch (e) {
+      // 에러 전체 로그
+      console.error('❌ 구글 토큰 요청 중 오류가 발생했습니다.');
+      console.error('🔗 요청 URL:', tokenUrl);
+      console.error('📦 요청 페이로드:', {
+        grant_type: 'authorization_code',
+        client_id: this.googleClientId,
+        client_secret: this.googleClientSecret,
+        redirect_uri: this.googleCallbackUrl,
+        code,
+      });
+      console.error('📨 응답 데이터:', e.response?.data);
+      console.error('📟 응답 상태 코드:', e.response?.status);
+      console.error('📄 응답 헤더:', e.response?.headers);
+      console.error('🧨 전체 에러 객체:', e);
+
       throw new HttpException(
         {
           status: HttpStatus.BAD_GATEWAY,
