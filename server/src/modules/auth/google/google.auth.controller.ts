@@ -39,7 +39,7 @@ export class GoogleAuthController {
 
     const tokens = await this.googleAuthService.getToken(code);
     const user = await this.googleAuthService.getUserInfo(tokens.access_token);
-    const userInfo = await this.googleAuthService.findOrCreateUser(
+    const userInfo = await this.googleAuthService.createUser(
       user,
       tokens.refresh_token,
     );

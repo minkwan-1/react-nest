@@ -3,7 +3,7 @@ import { GoogleAuthRepository } from './google.auth.repository';
 import { GoogleUser } from './google.auth.entity';
 import axios from 'axios';
 
-type FindUserType = GoogleUser & { isExist: boolean };
+// type FindUserType = GoogleUser & { isExist: boolean };
 
 @Injectable()
 export class GoogleAuthService {
@@ -94,6 +94,32 @@ export class GoogleAuthService {
     }
   }
 
+  async createUser(userData: any, refreshToken?: string) {
+    const {
+      id,
+      email,
+      verified_email: verifiedEmail,
+      name,
+      given_name: givenName,
+      family_name: familyName,
+      picture: profileImage,
+    } = userData;
+
+    return await this.googleAuthRepository.saveUser({
+      id,
+      email,
+      verifiedEmail,
+      name,
+      givenName,
+      familyName,
+      profileImage,
+      isDefaultImage: false,
+      connectedAt: new Date(),
+      registrationComplete: false,
+      refreshToken,
+    });
+  }
+
   async refreshToken(refreshToken: string): Promise<any> {
     const tokenUrl = 'https://oauth2.googleapis.com/token';
 
@@ -151,58 +177,58 @@ export class GoogleAuthService {
     }
   }
 
-  async findOrCreateUser(
-    userData: any,
-    refreshToken?: string,
-  ): Promise<FindUserType & { registrationComplete: boolean }> {
-    try {
-      const user = await this.googleAuthRepository.findUser({
-        id: userData.id,
-      });
+  // async findOrCreateUser(
+  //   userData: any,
+  //   refreshToken?: string,
+  // ): Promise<FindUserType & { registrationComplete: boolean }> {
+  //   try {
+  //     const user = await this.googleAuthRepository.findUser({
+  //       id: userData.id,
+  //     });
 
-      if (user) {
-        if (refreshToken) {
-          await this.googleAuthRepository.updateRefreshToken(
-            userData.id,
-            refreshToken,
-          );
-        }
-        const registrationComplete = user.registrationComplete ?? false;
-        return { ...user, isExist: true, registrationComplete };
-      }
+  //     if (user) {
+  //       if (refreshToken) {
+  //         await this.googleAuthRepository.updateRefreshToken(
+  //           userData.id,
+  //           refreshToken,
+  //         );
+  //       }
+  //       const registrationComplete = user.registrationComplete ?? false;
+  //       return { ...user, isExist: true, registrationComplete };
+  //     }
 
-      const {
-        id,
-        email,
-        verified_email: verifiedEmail,
-        name,
-        given_name: givenName,
-        family_name: familyName,
-        picture: profileImage,
-      } = userData;
+  //     const {
+  //       id,
+  //       email,
+  //       verified_email: verifiedEmail,
+  //       name,
+  //       given_name: givenName,
+  //       family_name: familyName,
+  //       picture: profileImage,
+  //     } = userData;
 
-      const newUser = await this.googleAuthRepository.saveUser({
-        id,
-        email,
-        verifiedEmail,
-        name,
-        givenName,
-        familyName,
-        profileImage,
-        isDefaultImage: false,
-        connectedAt: new Date(),
-        registrationComplete: false,
-        refreshToken,
-      });
+  //     const newUser = await this.googleAuthRepository.saveUser({
+  //       id,
+  //       email,
+  //       verifiedEmail,
+  //       name,
+  //       givenName,
+  //       familyName,
+  //       profileImage,
+  //       isDefaultImage: false,
+  //       connectedAt: new Date(),
+  //       registrationComplete: false,
+  //       refreshToken,
+  //     });
 
-      return { ...newUser, isExist: false, registrationComplete: false };
-    } catch {
-      throw new HttpException(
-        '구글 사용자 확인 또는 추가 중 오류 발생',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
-  }
+  //     return { ...newUser, isExist: false, registrationComplete: false };
+  //   } catch {
+  //     throw new HttpException(
+  //       '구글 사용자 확인 또는 추가 중 오류 발생',
+  //       HttpStatus.INTERNAL_SERVER_ERROR,
+  //     );
+  //   }
+  // }
 
   async getUserByRefreshToken(
     refreshToken: string,
