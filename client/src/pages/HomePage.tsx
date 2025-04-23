@@ -8,10 +8,13 @@ import {
 } from "@components/home";
 import { useAtom } from "jotai";
 import { signupUserInfo } from "@atom/auth";
+import { realUserInfo } from "@atom/auth";
 
 const HomePage = () => {
   const [userInfo] = useAtom(signupUserInfo);
+  const [realUser] = useAtom(realUserInfo);
   console.log("홈페이지에서 전역 상태(유저) 확인: ", userInfo);
+  console.log("최종적으로 가입된 유저 정보(약식 로그인 성공): ", realUser);
 
   return (
     <PageContainer>
