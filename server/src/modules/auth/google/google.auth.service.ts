@@ -150,6 +150,7 @@ export class GoogleAuthService {
       const user = await this.googleAuthRepository.findUser({
         id: userData.id,
       });
+      console.log('기존 유저: ', user);
 
       if (user) {
         const registrationComplete = user.registrationComplete ?? false;

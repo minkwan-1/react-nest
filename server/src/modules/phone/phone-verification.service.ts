@@ -1,7 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { PhoneVerification } from './phone-verification.entity';
+import { PhoneVerificationRepository } from './phone-verification.repository';
 import * as twilio from 'twilio';
 
 @Injectable()
@@ -12,14 +10,13 @@ export class PhoneVerificationService {
   );
 
   constructor(
-    @InjectRepository(PhoneVerification)
-    private readonly phoneVerificationRepository: Repository<PhoneVerification>,
+    private readonly phoneVerificationRepository: PhoneVerificationRepository,
   ) {}
 
   private generateVerificationCode(): string {
     return Math.floor(100000 + Math.random() * 900000).toString();
   }
-  // sendVerificationCode
+
   async sendVerificationCode(
     toPhoneNumber: string,
   ): Promise<{ message: string; sid?: string }> {
@@ -34,18 +31,13 @@ export class PhoneVerificationService {
       const expiresAt = new Date();
       expiresAt.setMinutes(expiresAt.getMinutes() + 10);
 
-      // 인증 코드 생성 (verified = false 상태로)
-      const phoneVerification = this.phoneVerificationRepository.create({
-        phoneNumber: toPhoneNumber,
-        code: verificationCode,
-        expiresAt,
-        verified: false,
-      });
-      console.log('DB에 전달할 인증 정보:', phoneVerification);
-
-      // 데이터베이스에 저장
+      // 저장소를 통해 인증 정보 저장
       const savedVerification =
-        await this.phoneVerificationRepository.save(phoneVerification);
+        await this.phoneVerificationRepository.savePhoneVerificationInfo(
+          toPhoneNumber,
+          verificationCode,
+          expiresAt,
+        );
       console.log('저장된 인증 정보:', savedVerification);
 
       // Twilio로 SMS 전송
@@ -60,11 +52,11 @@ export class PhoneVerificationService {
         sid: message.sid,
       };
     } catch (error) {
-      console.error('SMS 전송 또는 DB 저장 오류:', error);
+      console.error('인증 코드 전송 오류:', error);
       return { message: '인증 코드 전송에 실패했습니다.' };
     }
   }
-  // verifyCode
+
   async verifyCode(
     phoneNumber: string,
     verificationCode: string,
@@ -76,11 +68,9 @@ export class PhoneVerificationService {
     }
 
     try {
-      const storedVerification = await this.phoneVerificationRepository.findOne(
-        {
-          where: { phoneNumber },
-        },
-      );
+      // 리포지토리에서 findByPhoneNumber 메소드를 통해 검색
+      const storedVerification =
+        await this.phoneVerificationRepository.findByPhoneNumber(phoneNumber);
 
       console.log('DB에서 찾은 인증 정보:', storedVerification);
 
@@ -91,7 +81,7 @@ export class PhoneVerificationService {
       }
 
       if (new Date() > storedVerification.expiresAt) {
-        await this.phoneVerificationRepository.delete({ phoneNumber });
+        await this.phoneVerificationRepository.deleteByPhoneNumber(phoneNumber);
         return {
           message: '인증 코드가 만료되었습니다. 새 코드를 요청해 주세요.',
         };
@@ -104,10 +94,12 @@ export class PhoneVerificationService {
       }
 
       // 인증 성공 시 verified 상태를 true로 업데이트
-      storedVerification.verified = true;
-      await this.phoneVerificationRepository.save(storedVerification);
+      await this.phoneVerificationRepository.markAsVerified(phoneNumber);
 
-      console.log('인증 완료된 사용자 정보:', storedVerification);
+      console.log('인증 완료된 사용자 정보:', {
+        ...storedVerification,
+        verified: true,
+      });
 
       return { message: '전화번호 인증 및 사용자 등록이 완료되었습니다!' };
     } catch (error) {

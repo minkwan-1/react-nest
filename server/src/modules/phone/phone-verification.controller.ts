@@ -22,7 +22,6 @@ export class PhoneVerificationController {
     private readonly phoneVerificationService: PhoneVerificationService,
   ) {}
 
-  // sendVerificationCode
   @Post('send-code')
   async sendSms(
     @Body() body: SendCodeDto,
@@ -33,8 +32,7 @@ export class PhoneVerificationController {
       return await this.phoneVerificationService.sendVerificationCode(
         toPhoneNumber,
       );
-    } catch (error) {
-      console.log(error);
+    } catch {
       throw new HttpException(
         'Failed to send verification code. Please try again later.',
         HttpStatus.BAD_REQUEST,
@@ -42,7 +40,6 @@ export class PhoneVerificationController {
     }
   }
 
-  // verifyCode
   @Post('verify-code')
   async verifyCode(@Body() body: VerifyCodeDto): Promise<{ message: string }> {
     const { phoneNumber, verificationCode } = body;
@@ -52,8 +49,7 @@ export class PhoneVerificationController {
         phoneNumber,
         verificationCode,
       );
-    } catch (error) {
-      console.log(error);
+    } catch {
       throw new HttpException(
         'Verification failed. Please check the code and try again.',
         HttpStatus.UNAUTHORIZED,
