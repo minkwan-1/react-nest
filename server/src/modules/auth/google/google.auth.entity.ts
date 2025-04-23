@@ -32,9 +32,6 @@ export class GoogleUser {
   @Column({ name: 'registration_complete', default: false })
   registrationComplete: boolean;
 
-  @Column({ name: 'refresh_token', nullable: true })
-  refreshToken: string;
-
   @Column({ name: 'token_expires_at', nullable: true })
   tokenExpiresAt: Date;
 }

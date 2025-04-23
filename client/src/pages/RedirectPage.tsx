@@ -21,13 +21,14 @@ const RedirectPage = () => {
   const navigate = useNavigate();
   const code = query.get("code");
   const provider = query.get("provider");
-  const [, setUserInfo] = useAtom(signupUserInfo);
+  const [userInfo, setUserInfo] = useAtom(signupUserInfo);
 
   const { mutate: authorizationMutate } = usePostAuthorizationMutate();
 
   console.log("1.Redirect Page Data:", data);
   console.log("2.Redirect Page Provider:", provider);
   console.log("3.Redirect Page Authorization Code:", code);
+  console.log(userInfo);
 
   useEffect(() => {
     const postFn = async () => {

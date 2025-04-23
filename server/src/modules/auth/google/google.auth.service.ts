@@ -3,7 +3,7 @@ import { GoogleAuthRepository } from './google.auth.repository';
 import { GoogleUser } from './google.auth.entity';
 import axios from 'axios';
 
-// type FindUserType = GoogleUser & { isExist: boolean };
+type FindUserType = GoogleUser & { isExist: boolean };
 
 @Injectable()
 export class GoogleAuthService {
@@ -94,65 +94,6 @@ export class GoogleAuthService {
     }
   }
 
-  async createUser(userData: any, refreshToken?: string) {
-    const {
-      id,
-      email,
-      verified_email: verifiedEmail,
-      name,
-      given_name: givenName,
-      family_name: familyName,
-      picture: profileImage,
-    } = userData;
-
-    return await this.googleAuthRepository.saveUser({
-      id,
-      email,
-      verifiedEmail,
-      name,
-      givenName,
-      familyName,
-      profileImage,
-      isDefaultImage: false,
-      connectedAt: new Date(),
-      registrationComplete: false,
-      refreshToken,
-    });
-  }
-
-  async refreshToken(refreshToken: string): Promise<any> {
-    const tokenUrl = 'https://oauth2.googleapis.com/token';
-
-    try {
-      const response = await axios.post(
-        tokenUrl,
-        {
-          grant_type: 'refresh_token',
-          client_id: this.googleClientId,
-          client_secret: this.googleClientSecret,
-          refresh_token: refreshToken,
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        },
-      );
-
-      return response.data;
-    } catch (error) {
-      throw new HttpException(
-        {
-          status: HttpStatus.BAD_GATEWAY,
-          error: '리프레시 토큰을 통한 액세스 토큰 갱신 중 오류 발생',
-          message: error.message,
-          details: error.response?.data,
-        },
-        HttpStatus.BAD_GATEWAY,
-      );
-    }
-  }
-
   async getUserInfo(accessToken: string): Promise<any> {
     const userInfoUrl = 'https://www.googleapis.com/oauth2/v2/userinfo';
 
@@ -177,105 +118,46 @@ export class GoogleAuthService {
     }
   }
 
-  // async findOrCreateUser(
-  //   userData: any,
-  //   refreshToken?: string,
-  // ): Promise<FindUserType & { registrationComplete: boolean }> {
-  //   try {
-  //     const user = await this.googleAuthRepository.findUser({
-  //       id: userData.id,
-  //     });
+  async createUser(userData: any) {
+    const {
+      id,
+      email,
+      verified_email: verifiedEmail,
+      name,
+      given_name: givenName,
+      family_name: familyName,
+      picture: profileImage,
+    } = userData;
 
-  //     if (user) {
-  //       if (refreshToken) {
-  //         await this.googleAuthRepository.updateRefreshToken(
-  //           userData.id,
-  //           refreshToken,
-  //         );
-  //       }
-  //       const registrationComplete = user.registrationComplete ?? false;
-  //       return { ...user, isExist: true, registrationComplete };
-  //     }
-
-  //     const {
-  //       id,
-  //       email,
-  //       verified_email: verifiedEmail,
-  //       name,
-  //       given_name: givenName,
-  //       family_name: familyName,
-  //       picture: profileImage,
-  //     } = userData;
-
-  //     const newUser = await this.googleAuthRepository.saveUser({
-  //       id,
-  //       email,
-  //       verifiedEmail,
-  //       name,
-  //       givenName,
-  //       familyName,
-  //       profileImage,
-  //       isDefaultImage: false,
-  //       connectedAt: new Date(),
-  //       registrationComplete: false,
-  //       refreshToken,
-  //     });
-
-  //     return { ...newUser, isExist: false, registrationComplete: false };
-  //   } catch {
-  //     throw new HttpException(
-  //       '구글 사용자 확인 또는 추가 중 오류 발생',
-  //       HttpStatus.INTERNAL_SERVER_ERROR,
-  //     );
-  //   }
-  // }
-
-  async getUserByRefreshToken(
-    refreshToken: string,
-  ): Promise<GoogleUser | null> {
-    try {
-      return await this.googleAuthRepository.findUserByRefreshToken(
-        refreshToken,
-      );
-    } catch {
-      throw new HttpException(
-        '리프레시 토큰으로 사용자 조회 중 오류 발생',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
+    return await this.googleAuthRepository.saveUser({
+      id,
+      email,
+      verifiedEmail,
+      name,
+      givenName,
+      familyName,
+      profileImage,
+      isDefaultImage: false,
+      connectedAt: new Date(),
+      registrationComplete: false,
+    });
   }
 
-  async updateRefreshToken(
-    userId: string,
-    refreshToken: string,
-  ): Promise<void> {
+  async findUser(
+    userData: any,
+  ): Promise<FindUserType & { registrationComplete: boolean }> {
     try {
-      await this.googleAuthRepository.updateRefreshToken(userId, refreshToken);
-    } catch {
-      throw new HttpException(
-        '리프레시 토큰 업데이트 중 오류 발생',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
-  }
-
-  async completeRegistration(userId: string): Promise<void> {
-    try {
-      const user = await this.googleAuthRepository.findUser({ id: userId });
-      if (!user) {
-        throw new HttpException(
-          '사용자를 찾을 수 없습니다',
-          HttpStatus.NOT_FOUND,
-        );
-      }
-
-      await this.googleAuthRepository.saveUser({
-        ...user,
-        registrationComplete: true,
+      const user = await this.googleAuthRepository.findUser({
+        id: userData.id,
       });
+
+      if (user) {
+        const registrationComplete = user.registrationComplete ?? false;
+        return { ...user, isExist: true, registrationComplete };
+      }
     } catch {
       throw new HttpException(
-        '사용자 등록 완료 처리 중 오류 발생',
+        '구글 사용자 확인 또는 추가 중 오류 발생',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }

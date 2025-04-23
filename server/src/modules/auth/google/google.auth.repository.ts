@@ -16,23 +16,8 @@ export class GoogleAuthRepository {
     });
   }
 
-  async findUserByRefreshToken(
-    refreshToken: string,
-  ): Promise<GoogleUser | null> {
-    return await this.googleUserRepository.findOne({
-      where: { refreshToken },
-    });
-  }
-
   async saveUser(userData: Partial<GoogleUser>): Promise<GoogleUser> {
     const user = this.googleUserRepository.create(userData);
     return await this.googleUserRepository.save(user);
-  }
-
-  async updateRefreshToken(
-    userId: string,
-    refreshToken: string,
-  ): Promise<void> {
-    await this.googleUserRepository.update({ id: userId }, { refreshToken });
   }
 }

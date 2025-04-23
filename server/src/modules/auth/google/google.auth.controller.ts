@@ -6,7 +6,6 @@ import {
   Body,
   HttpException,
   HttpStatus,
-  UnauthorizedException,
 } from '@nestjs/common';
 import { GoogleAuthService } from './google.auth.service';
 
@@ -38,70 +37,32 @@ export class GoogleAuthController {
     }
 
     const tokens = await this.googleAuthService.getToken(code);
-    const user = await this.googleAuthService.getUserInfo(tokens.access_token);
-    const userInfo = await this.googleAuthService.createUser(
-      user,
-      tokens.refresh_token,
+    const userData = await this.googleAuthService.getUserInfo(
+      tokens.access_token,
     );
 
+    // 이미 존재하는 유저인지 확인
+    const existingUser = await this.googleAuthService.findUser(userData);
+
+    if (existingUser?.isExist) {
+      return {
+        message: '기존 유저 로그인 성공',
+        user: existingUser,
+        accessToken: tokens.access_token,
+        refreshToken: tokens.refresh_token,
+        expiresIn: tokens.expires_in,
+      };
+    }
+
+    // 신규 유저라면 회원가입 진행
+    const newUser = await this.googleAuthService.createUser(userData);
+
     return {
-      message: '조회 성공',
-      user: userInfo,
+      message: '신규 유저 회원가입 성공',
+      user: newUser,
       accessToken: tokens.access_token,
       refreshToken: tokens.refresh_token,
       expiresIn: tokens.expires_in,
     };
-  }
-
-  @Post('refresh')
-  async refreshToken(@Body('refreshToken') refreshToken: string) {
-    if (!refreshToken) {
-      throw new HttpException(
-        '리프레시 토큰이 제공되지 않았습니다',
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-
-    try {
-      // 리프레시 토큰으로 사용자 찾기
-      const user =
-        await this.googleAuthService.getUserByRefreshToken(refreshToken);
-
-      if (!user) {
-        throw new UnauthorizedException('유효하지 않은 리프레시 토큰입니다');
-      }
-
-      // 토큰 갱신
-      const newTokens = await this.googleAuthService.refreshToken(refreshToken);
-
-      // 새 액세스 토큰으로 사용자 정보 가져오기
-      const userData = await this.googleAuthService.getUserInfo(
-        newTokens.access_token,
-      );
-
-      // 새 리프레시 토큰이 있는 경우 저장
-      if (newTokens.refresh_token) {
-        await this.googleAuthService.updateRefreshToken(
-          userData.id,
-          newTokens.refresh_token,
-        );
-      }
-
-      return {
-        message: '토큰 갱신 성공',
-        accessToken: newTokens.access_token,
-        refreshToken: newTokens.refresh_token || refreshToken, // 새 리프레시 토큰이 없으면 기존 것 반환
-        expiresIn: newTokens.expires_in,
-      };
-    } catch (error) {
-      if (error instanceof HttpException) {
-        throw error;
-      }
-
-      throw new HttpException(
-        '토큰 갱신 중 오류가 발생했습니다',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
   }
 }
