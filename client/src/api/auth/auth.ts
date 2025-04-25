@@ -15,6 +15,7 @@ export const postAuthorizationCode = async ({
   code: string;
   provider: string;
 }) => {
+  console.log("#프론트엔드->백엔드 인가 코드: ", code);
   try {
     const response = await axios.post(`${API_URL}auth/${provider}/user`, {
       code,
@@ -32,7 +33,10 @@ export const postAuthorizationCode = async ({
 
 export const signup = async (userInfo: SignupUserInfo) => {
   try {
-    const response = await axios.post(`${API_URL}users/signup`, userInfo);
+    const response = await axios.post(
+      `${API_URL}auth/google/user/update`,
+      userInfo
+    );
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {

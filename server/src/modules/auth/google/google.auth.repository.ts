@@ -20,4 +20,12 @@ export class GoogleAuthRepository {
     const user = this.googleUserRepository.create(userData);
     return await this.googleUserRepository.save(user);
   }
+
+  async updateUserRegistrationStatus(
+    id: string,
+    registrationComplete: boolean,
+  ): Promise<GoogleUser> {
+    await this.googleUserRepository.update({ id }, { registrationComplete });
+    return await this.googleUserRepository.findOne({ where: { id } });
+  }
 }

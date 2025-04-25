@@ -67,7 +67,11 @@ const PhoneVerificationPage = () => {
     if (!userInfo) return handleError("유저 정보가 없습니다.");
     if (!phoneNumber) return handleError("전화번호를 입력해 주세요.");
 
-    const newCompleteUserInfo = { ...userInfo, phoneNumber };
+    const newCompleteUserInfo = {
+      ...userInfo,
+      phoneNumber,
+      registrationComplete: true,
+    };
     // Only call setNewUserInfo if it exists
     if (setNewUserInfo) {
       setNewUserInfo(newCompleteUserInfo);
@@ -75,6 +79,8 @@ const PhoneVerificationPage = () => {
 
     // 로딩 상태 활성화
     setIsLoading(true);
+
+    console.log("#최종 인증 완료 유저 데이터: ", newCompleteUserInfo);
 
     try {
       // API를 통해 회원가입 처리

@@ -65,4 +65,40 @@ export class GoogleAuthController {
       expiresIn: tokens.expires_in,
     };
   }
+
+  @Post('user/update')
+  async updateUser(
+    @Body() body: { id: string; registrationComplete: boolean },
+  ) {
+    const { id, registrationComplete } = body;
+
+    if (!id) {
+      throw new HttpException(
+        '사용자 ID가 누락되었습니다.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    try {
+      const updatedUser = await this.googleAuthService.updateUser({
+        id,
+        registrationComplete,
+      });
+
+      return {
+        message: '사용자 정보 업데이트 성공',
+        user: updatedUser,
+      };
+    } catch (error) {
+      throw new HttpException(
+        {
+          status: HttpStatus.INTERNAL_SERVER_ERROR,
+          error: '사용자 정보 업데이트 실패',
+          message: error.message,
+          details: error.response?.data,
+        },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
 }

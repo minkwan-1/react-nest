@@ -111,6 +111,7 @@ export class GoogleAuthService {
       isDefaultImage: false,
       connectedAt: new Date(),
       registrationComplete: false,
+      isExist: true,
     });
   }
 
@@ -129,6 +130,29 @@ export class GoogleAuthService {
     } catch {
       throw new HttpException(
         '구글 사용자 확인 또는 추가 중 오류 발생',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  async updateUser(userData: { id: string; registrationComplete: boolean }) {
+    const { id, registrationComplete } = userData;
+
+    try {
+      const updatedUser =
+        await this.googleAuthRepository.updateUserRegistrationStatus(
+          id,
+          registrationComplete,
+        );
+      return updatedUser;
+    } catch (error) {
+      throw new HttpException(
+        {
+          status: HttpStatus.INTERNAL_SERVER_ERROR,
+          error: '구글 사용자 정보 업데이트 중 오류 발생',
+          message: error.message,
+          details: error.response?.data,
+        },
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }

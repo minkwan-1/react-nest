@@ -28,7 +28,7 @@ const RedirectPage = () => {
   console.log("1.Redirect Page Data:", data);
   console.log("2.Redirect Page Provider:", provider);
   console.log("3.Redirect Page Authorization Code:", code);
-  console.log(userInfo);
+  console.log("#SMS 인증 직전 유저 정보: ", userInfo);
 
   useEffect(() => {
     const postFn = async () => {

@@ -22,11 +22,7 @@ const SocialButton = ({
   const theme = useTheme();
 
   const handleOAuthLogin = (provider: string): void => {
-    if (!provider) {
-      console.error("로그인 제공자가 지정되지 않았습니다.");
-      return;
-    }
-
+    console.log("#회원가입 버튼 클릭 시 provider: ", provider);
     try {
       window.location.href = `http://localhost:3000/auth/${provider}/login`;
     } catch (error) {

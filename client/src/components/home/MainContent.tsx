@@ -40,7 +40,7 @@ const MainContent = () => {
 
       {/* 4. question cards */}
       {questionData.map((question) => (
-        <QuestionCards question={question} />
+        <QuestionCards key={question.id} question={question} />
       ))}
     </Box>
   );

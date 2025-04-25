@@ -1,6 +1,7 @@
+// src/users/entities/user.entity.ts
 import {
-  Column,
   Entity,
+  Column,
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
