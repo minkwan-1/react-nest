@@ -157,4 +157,16 @@ export class GoogleAuthService {
       );
     }
   }
+
+  async isValidExistingUser(userId: string): Promise<boolean> {
+    try {
+      const user = await this.googleAuthRepository.findUser({ id: userId });
+      return user?.isExist === true && user?.registrationComplete === true;
+    } catch {
+      throw new HttpException(
+        '기존 유저 확인 중 오류 발생',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
 }

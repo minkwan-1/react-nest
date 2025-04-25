@@ -41,10 +41,13 @@ export class GoogleAuthController {
       tokens.access_token,
     );
 
-    // 이미 존재하는 유저인지 확인
-    const existingUser = await this.googleAuthService.findUser(userData);
+    // 기존 유저 여부 판단
+    const isValid = await this.googleAuthService.isValidExistingUser(
+      userData.id,
+    );
 
-    if (existingUser?.isExist) {
+    if (isValid) {
+      const existingUser = await this.googleAuthService.findUser(userData);
       return {
         message: '기존 유저 로그인 성공',
         user: existingUser,

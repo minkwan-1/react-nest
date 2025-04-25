@@ -1,45 +1,53 @@
 import { Box, Button, Typography, Divider, useTheme } from "@mui/material";
 import GoogleIcon from "@mui/icons-material/Google";
 import { NaverIcon } from "./SocialIcons";
-import { useAtom } from "jotai";
-import { completeUserInfo } from "@atom/auth";
-import axios from "axios";
-import { realUserInfo } from "@atom/auth";
-import { useNavigate } from "react-router-dom";
+// import { useAtom } from "jotai";
+// import { completeUserInfo } from "@atom/auth";
+// import axios from "axios";
+// import { realUserInfo } from "@atom/auth";
+// import { useNavigate } from "react-router-dom";
 
 const SignInSocialButtons = () => {
   const theme = useTheme();
-  const navigate = useNavigate();
-  const [newUser] = useAtom(completeUserInfo);
-  const [realUser, setRealUser] = useAtom(realUserInfo);
+  // const navigate = useNavigate();
+  // const [newUser] = useAtom(completeUserInfo);
+  // const [realUser, setRealUser] = useAtom(realUserInfo);
 
-  console.log(realUser);
+  // console.log(realUser);
 
   // 로그인 처리 함수
-  const handleOAuthLogin = async (): Promise<void> => {
-    if (!newUser?.phoneNumber) {
-      console.error("전화번호 정보가 없습니다.");
-      return;
-    }
+  // const handleOAuthLogin = async (): Promise<void> => {
+  //   if (!newUser?.phoneNumber) {
+  //     console.error("전화번호 정보가 없습니다.");
+  //     return;
+  //   }
 
-    const phoneNumber = newUser.phoneNumber;
-    console.log({ phoneNumber });
+  //   const phoneNumber = newUser.phoneNumber;
+  //   console.log({ phoneNumber });
 
+  //   try {
+  //     // 전화번호로 유저 정보 찾기
+  //     const response = await axios.get(
+  //       `http://localhost:3000/users/find-user/${phoneNumber}`
+  //     );
+  //     if (response?.data && response.data.statusCode === 200) {
+  //       console.log("유저 정보:", response.data.data);
+  //       // 유저 정보를 상태에 저장하거나 다른 처리를 할 수 있습니다.
+  //       setRealUser(response.data.data);
+  //     } else {
+  //       console.error("유저를 찾을 수 없습니다.");
+  //     }
+  //     navigate("/home");
+  //   } catch (error) {
+  //     console.error("로그인 중 오류가 발생했습니다.", error);
+  //   }
+  // };
+  const handleOAuthLogin = (provider: string): void => {
+    console.log("#로그인 버튼 클릭 시 provider: ", provider);
     try {
-      // 전화번호로 유저 정보 찾기
-      const response = await axios.get(
-        `http://localhost:3000/users/find-user/${phoneNumber}`
-      );
-      if (response?.data && response.data.statusCode === 200) {
-        console.log("유저 정보:", response.data.data);
-        // 유저 정보를 상태에 저장하거나 다른 처리를 할 수 있습니다.
-        setRealUser(response.data.data);
-      } else {
-        console.error("유저를 찾을 수 없습니다.");
-      }
-      navigate("/home");
+      window.location.href = `http://localhost:3000/auth/${provider}/login`;
     } catch (error) {
-      console.error("로그인 중 오류가 발생했습니다.", error);
+      console.error(`${provider} 로그인 중 오류가 발생했습니다:`, error);
     }
   };
 
@@ -70,7 +78,7 @@ const SignInSocialButtons = () => {
 
       {/* Google 로그인 버튼 */}
       <Button
-        onClick={() => handleOAuthLogin()}
+        onClick={() => handleOAuthLogin("google")}
         variant="outlined"
         startIcon={<GoogleIcon />}
         sx={{
@@ -106,7 +114,7 @@ const SignInSocialButtons = () => {
 
       {/* Naver 로그인 버튼 */}
       <Button
-        onClick={() => handleOAuthLogin()}
+        onClick={() => handleOAuthLogin("naver")}
         variant="contained"
         startIcon={<NaverIcon />}
         sx={{
