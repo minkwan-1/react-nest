@@ -9,6 +9,7 @@ import { GeminiModule } from './modules/ai/gemini/gemini.module';
 import { PhoneVerificationModule } from './modules/phone/phone-verification.module';
 import { UsersModule } from './users/users.module';
 import { CatchEverythingFilter } from './filters/catch-everything.filter';
+import { HttpExceptionFilter } from './filters/http-exceptions.filter';
 
 @Module({
   imports: [
@@ -26,6 +27,10 @@ import { CatchEverythingFilter } from './filters/catch-everything.filter';
     {
       provide: APP_FILTER,
       useClass: CatchEverythingFilter,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: HttpExceptionFilter,
     },
   ],
 })

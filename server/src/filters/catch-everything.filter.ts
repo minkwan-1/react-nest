@@ -21,12 +21,12 @@ export class CatchEverythingFilter implements ExceptionFilter {
         ? exception.getStatus()
         : HttpStatus.INTERNAL_SERVER_ERROR;
 
-    const responseBody = filterResponseParser(
-      httpStatus,
-      '서버 에러 발생',
-      null,
-      httpAdapter.getRequestUrl(ctx.getRequest()),
-    );
+    const responseBody = filterResponseParser({
+      statusCode: httpStatus,
+      message: '서버 에러 발생',
+      data: null,
+      requestPath: httpAdapter.getRequestUrl(ctx.getRequest()),
+    });
 
     httpAdapter.reply(ctx.getResponse(), responseBody, httpStatus);
   }
