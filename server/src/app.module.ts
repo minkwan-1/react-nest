@@ -32,6 +32,7 @@ import { HttpExceptionFilter } from './filters/http-exceptions.filter';
       provide: APP_FILTER,
       useClass: HttpExceptionFilter,
     },
+    // transaction filter 생성 필요 - typeorm 공부 같이
   ],
 })
 export class AppModule {}

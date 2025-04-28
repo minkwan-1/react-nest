@@ -52,10 +52,7 @@ const RedirectPage = () => {
             setUserInfo(res?.user);
 
             // 새 사용자이거나 이미 존재하지만 가입이 미완료된 경우
-            if (
-              !res?.user?.isExist ||
-              (res?.user?.isExist && !res?.user?.registrationComplete)
-            ) {
+            if (!res?.user?.isExist) {
               navigate("/phone");
             }
             // 가입이 완료된 기존 사용자

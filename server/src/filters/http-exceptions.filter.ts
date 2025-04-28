@@ -24,12 +24,13 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
     const url: string = request.url;
     const error: string = res.error;
+    const message: string = res?.message || 'http error 발생';
     const timestamp: string = new Date().toISOString();
 
     response.status(status).json(
       filterResponseParser({
         statusCode: status,
-        message: 'http 에러',
+        message,
         data: null,
         requestPath: url,
         error,

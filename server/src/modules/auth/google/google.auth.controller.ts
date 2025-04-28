@@ -8,10 +8,14 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { GoogleAuthService } from './google.auth.service';
+import { UsersService } from 'src/users/users.service';
 
 @Controller('auth/google')
 export class GoogleAuthController {
-  constructor(private readonly googleAuthService: GoogleAuthService) {}
+  constructor(
+    private readonly googleAuthService: GoogleAuthService,
+    private readonly usersService: UsersService,
+  ) {}
 
   @Get('login')
   @Redirect()
@@ -41,67 +45,43 @@ export class GoogleAuthController {
       tokens.access_token,
     );
 
-    // 기존 유저 여부 판단
-    const isValid = await this.googleAuthService.isValidExistingUser(
-      userData.id,
-    );
-
-    if (isValid) {
-      const existingUser = await this.googleAuthService.findUser(userData);
+    const user = await this.googleAuthService.findUser(userData);
+    if (user.isExist) {
       return {
-        message: '기존 유저 로그인 성공',
-        user: existingUser,
+        message: '기존 유저 데이터',
+        user,
+        accessToken: tokens.access_token,
+        refreshToken: tokens.refresh_token,
+        expiresIn: tokens.expires_in,
+      };
+    } else {
+      return {
+        message: '신규 유저 데이터',
+        user,
         accessToken: tokens.access_token,
         refreshToken: tokens.refresh_token,
         expiresIn: tokens.expires_in,
       };
     }
-
-    // 신규 유저라면 회원가입 진행
-    const newUser = await this.googleAuthService.createUser(userData);
-
-    return {
-      message: '신규 유저 회원가입 성공',
-      user: newUser,
-      accessToken: tokens.access_token,
-      refreshToken: tokens.refresh_token,
-      expiresIn: tokens.expires_in,
-    };
   }
 
   @Post('user/update')
-  async updateUser(
-    @Body() body: { id: string; registrationComplete: boolean },
-  ) {
-    const { id, registrationComplete } = body;
+  async updateUser(@Body() userData) {
+    // 1. 구글 유저 테이블 만들기
+    const finalGoogleUser = await this.googleAuthService.createUser(userData);
 
-    if (!id) {
-      throw new HttpException(
-        '사용자 ID가 누락되었습니다.',
-        HttpStatus.BAD_REQUEST,
-      );
-    }
+    // 2. 최종 유저 테이블 만들기
+    const parseFinalUser = {
+      email: userData.email,
+      name: userData.name,
+      phoneNumber: userData.phoneNumber,
+    };
 
-    try {
-      const updatedUser = await this.googleAuthService.updateUser({
-        id,
-        registrationComplete,
-      });
+    const finalUser = await this.usersService.create(parseFinalUser);
 
-      return {
-        message: '사용자 정보 업데이트 성공',
-        user: updatedUser,
-      };
-    } catch (error) {
-      throw new HttpException(
-        {
-          status: HttpStatus.INTERNAL_SERVER_ERROR,
-          error: '사용자 정보 업데이트 실패',
-          message: error.message,
-          details: error.response?.data,
-        },
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
+    return {
+      finalGoogleUser,
+      finalUser,
+    };
   }
 }

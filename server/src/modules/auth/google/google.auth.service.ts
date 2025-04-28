@@ -28,41 +28,61 @@ export class GoogleAuthService {
     }
   }
 
+  // axios -> http exception으로 변경하지 않고도 전역 필터에서 필터링하는 방법 찾기
   async getToken(code: string): Promise<any> {
     const tokenUrl = 'https://oauth2.googleapis.com/token';
+    const response = await axios.post(
+      tokenUrl,
+      {
+        grant_type: 'authorization_code',
+        client_id: this.googleClientId,
+        client_secret: this.googleClientSecret,
+        redirect_uri: this.googleCallbackUrl,
+        code,
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          Pragma: 'no-cache',
+          Expires: '0',
+        },
+      },
+    );
 
-    try {
-      const response = await axios.post(
-        tokenUrl,
-        {
-          grant_type: 'authorization_code',
-          client_id: this.googleClientId,
-          client_secret: this.googleClientSecret,
-          redirect_uri: this.googleCallbackUrl,
-          code,
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            'Cache-Control': 'no-cache, no-store, must-revalidate',
-            Pragma: 'no-cache',
-            Expires: '0',
-          },
-        },
-      );
+    return response.data;
+    // try {
+    //   const response = await axios.post(
+    //     tokenUrl,
+    //     {
+    //       grant_type: 'authorization_code',
+    //       client_id: this.googleClientId,
+    //       client_secret: this.googleClientSecret,
+    //       redirect_uri: this.googleCallbackUrl,
+    //       code,
+    //     },
+    //     {
+    //       headers: {
+    //         'Content-Type': 'application/json',
+    //         'Cache-Control': 'no-cache, no-store, must-revalidate',
+    //         Pragma: 'no-cache',
+    //         Expires: '0',
+    //       },
+    //     },
+    //   );
 
-      return response.data;
-    } catch (e) {
-      throw new HttpException(
-        {
-          status: HttpStatus.BAD_GATEWAY,
-          error: '구글 액세스 토큰 요청 중 오류 발생',
-          message: e.message,
-          details: e.response?.data,
-        },
-        HttpStatus.BAD_GATEWAY,
-      );
-    }
+    //   return response.data;
+    // } catch (e) {
+    //   throw new HttpException(
+    //     {
+    //       status: e.statusCode,
+    //       error: '구글 액세스 토큰 요청 중 오류 발생',
+    //       message: e.message,
+    //       details: e.response?.data,
+    //     },
+    //     e.statusCode,
+    //   );
+    // }
   }
 
   async getUserInfo(accessToken: string): Promise<any> {
@@ -89,44 +109,39 @@ export class GoogleAuthService {
     }
   }
 
-  async createUser(userData: any) {
-    const {
-      id,
-      email,
-      verified_email: verifiedEmail,
-      name,
-      given_name: givenName,
-      family_name: familyName,
-      picture: profileImage,
-    } = userData;
-
-    return await this.googleAuthRepository.saveUser({
-      id,
-      email,
-      verifiedEmail,
-      name,
-      givenName,
-      familyName,
-      profileImage,
-      isDefaultImage: false,
-      connectedAt: new Date(),
-      registrationComplete: false,
-      isExist: true,
-    });
-  }
-
-  async findUser(
-    userData: any,
-  ): Promise<FindUserType & { registrationComplete: boolean }> {
+  async findUser(userData: any): Promise<FindUserType> {
     try {
       const user = await this.googleAuthRepository.findUser({
         id: userData.id,
       });
 
       if (user) {
-        const registrationComplete = user.registrationComplete ?? false;
-        return { ...user, isExist: true, registrationComplete };
+        return { ...user, isExist: true };
       }
+
+      const {
+        id,
+        email,
+        verified_email: verifiedEmail,
+        name,
+        given_name: givenName,
+        family_name: familyName,
+        picture: profileImage,
+      } = userData;
+
+      const newUser = {
+        id,
+        email,
+        verifiedEmail,
+        name,
+        givenName,
+        familyName,
+        profileImage,
+        isDefaultImage: false,
+        connectedAt: new Date(),
+      };
+
+      return { ...newUser, isExist: false };
     } catch {
       throw new HttpException(
         '구글 사용자 확인 또는 추가 중 오류 발생',
@@ -135,38 +150,7 @@ export class GoogleAuthService {
     }
   }
 
-  async updateUser(userData: { id: string; registrationComplete: boolean }) {
-    const { id, registrationComplete } = userData;
-
-    try {
-      const updatedUser =
-        await this.googleAuthRepository.updateUserRegistrationStatus(
-          id,
-          registrationComplete,
-        );
-      return updatedUser;
-    } catch (error) {
-      throw new HttpException(
-        {
-          status: HttpStatus.INTERNAL_SERVER_ERROR,
-          error: '구글 사용자 정보 업데이트 중 오류 발생',
-          message: error.message,
-          details: error.response?.data,
-        },
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
-  }
-
-  async isValidExistingUser(userId: string): Promise<boolean> {
-    try {
-      const user = await this.googleAuthRepository.findUser({ id: userId });
-      return user?.isExist === true && user?.registrationComplete === true;
-    } catch {
-      throw new HttpException(
-        '기존 유저 확인 중 오류 발생',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
+  async createUser(userData: any) {
+    return await this.googleAuthRepository.saveUser(userData);
   }
 }

@@ -21,11 +21,11 @@ export class GoogleAuthRepository {
     return await this.googleUserRepository.save(user);
   }
 
-  async updateUserRegistrationStatus(
-    id: string,
-    registrationComplete: boolean,
-  ): Promise<GoogleUser> {
-    await this.googleUserRepository.update({ id }, { registrationComplete });
-    return await this.googleUserRepository.findOne({ where: { id } });
-  }
+  // async updateUserRegistrationStatus(
+  //   id: string,
+  //   registrationComplete: boolean,
+  // ): Promise<GoogleUser> {
+  //   await this.googleUserRepository.update({ id }, { registrationComplete });
+  //   return await this.googleUserRepository.findOne({ where: { id } });
+  // }
 }

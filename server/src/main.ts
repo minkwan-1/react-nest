@@ -2,8 +2,8 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as dotenv from 'dotenv';
-import { HttpAdapterHost } from '@nestjs/core';
-import { AllExceptionsFilter } from './filters/all-exceptions.filter';
+// import { HttpAdapterHost } from '@nestjs/core';
+// import { AllExceptionsFilter } from './filters/all-exceptions.filter';
 import * as session from 'express-session';
 import * as passport from 'passport';
 import * as cookieParser from 'cookie-parser';
@@ -14,8 +14,8 @@ dotenv.config();
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  const { httpAdapter } = app.get(HttpAdapterHost);
-  app.useGlobalFilters(new AllExceptionsFilter(httpAdapter));
+  // const { httpAdapter } = app.get(HttpAdapterHost);
+  // app.useGlobalFilters(new AllExceptionsFilter(httpAdapter));
 
   // CORS 설정
   app.enableCors({

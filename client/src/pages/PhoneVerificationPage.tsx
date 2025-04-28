@@ -70,7 +70,7 @@ const PhoneVerificationPage = () => {
     const newCompleteUserInfo = {
       ...userInfo,
       phoneNumber,
-      registrationComplete: true,
+      isExist: true,
     };
     // Only call setNewUserInfo if it exists
     if (setNewUserInfo) {
