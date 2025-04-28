@@ -3,6 +3,8 @@ import axios from 'axios';
 import { randomBytes } from 'crypto';
 import { NaverAuthRepository } from './naver.auth.repository';
 import { NaverUser } from './naver.auth.entity';
+import { HttpException } from '@nestjs/common';
+import { HttpStatus } from '@nestjs/common';
 
 type FindUserType = NaverUser & { isExist: boolean };
 
@@ -61,37 +63,36 @@ export class NaverAuthService {
     }
   }
 
-  async findOrCreateUser(userData: any): Promise<FindUserType> {
+  async findUser(userData: any): Promise<FindUserType> {
     try {
-      const user = await this.naverAuthRepository.findUser({
-        id: userData.id,
-      });
-
+      const user = await this.naverAuthRepository.findUser({ id: userData.id });
       if (user) {
         return { ...user, isExist: true };
       }
 
-      const {
-        id,
-        email,
-        nickname: nickname,
-        profileImage: profileImage,
-        name: name,
-      } = userData;
+      const { id, email, nickname, profileImage, name } = userData;
 
-      const newUser = await this.naverAuthRepository.saveUser({
+      const newUser = {
         id,
         email,
         nickname,
         name,
         profileImage,
         connectedAt: new Date(),
-      });
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
 
       return { ...newUser, isExist: false };
-    } catch (error) {
-      console.log(error);
-      throw new Error('구글 사용자 확인 또는 추가 중 오류 발생');
+    } catch {
+      throw new HttpException(
+        '네이버 사용자 확인 또는 추가 중 오류 발생',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
+  }
+
+  async createUser(userData: any) {
+    return await this.naverAuthRepository.saveUser(userData);
   }
 }
