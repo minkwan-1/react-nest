@@ -8,10 +8,14 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { NaverAuthService } from './naver.auth.service';
+import { UsersService } from 'src/users/users.service';
 
 @Controller('auth/naver')
 export class NaverAuthController {
-  constructor(private readonly naverAuthService: NaverAuthService) {}
+  constructor(
+    private readonly naverAuthService: NaverAuthService,
+    private readonly usersService: UsersService,
+  ) {}
 
   @Get('login')
   @Redirect()
@@ -36,24 +40,46 @@ export class NaverAuthController {
       );
     }
 
-    try {
-      const tokens = await this.naverAuthService.getToken(code, state);
-      const user = await this.naverAuthService.getUserInfo(tokens.access_token);
-      const userInfo = await this.naverAuthService.findOrCreateUser(user);
-
+    const tokens = await this.naverAuthService.getToken(code, state);
+    const userData = await this.naverAuthService.getUserInfo(
+      tokens.access_token,
+    );
+    const user = await this.naverAuthService.findUser(userData);
+    if (user.isExist) {
       return {
-        message: '조회 성공',
-        user: userInfo,
+        message: '기존 유저 데이터',
+        user,
+        accessToken: tokens.access_token,
+        refreshToken: tokens.refresh_token,
+        expiresIn: tokens.expires_in,
       };
-    } catch (error) {
-      if (error instanceof HttpException) {
-        throw error;
-      }
-
-      throw new HttpException(
-        '서버 내부 오류가 발생했습니다',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+    } else {
+      return {
+        message: '신규 유저 데이터',
+        user,
+        accessToken: tokens.access_token,
+        refreshToken: tokens.refresh_token,
+        expiresIn: tokens.expires_in,
+      };
     }
+  }
+  @Post('user/update')
+  async updateUser(@Body() userData) {
+    // 1. 네이버 유저 테이블 만들기
+    const finalGoogleUser = await this.naverAuthService.createUser(userData);
+
+    // 2. 최종 유저 테이블 만들기
+    const parseFinalUser = {
+      email: userData.email,
+      name: userData.name,
+      phoneNumber: userData.phoneNumber,
+    };
+
+    const finalUser = await this.usersService.create(parseFinalUser);
+
+    return {
+      finalGoogleUser,
+      finalUser,
+    };
   }
 }
