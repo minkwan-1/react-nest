@@ -10,24 +10,14 @@ export class NaverAuthRepository {
     private readonly naverUserRepository: Repository<NaverUser>,
   ) {}
 
-  async findUser(user: { id: string }): Promise<NaverUser | null> {
-    try {
-      return await this.naverUserRepository.findOne({
-        where: { id: user.id },
-      });
-    } catch (error) {
-      throw error;
-    }
+  async findUser(user: { id: string }): Promise<NaverUser> {
+    return await this.naverUserRepository.findOne({
+      where: { id: user.id },
+    });
   }
 
   async saveUser(userData: Partial<NaverUser>): Promise<NaverUser> {
-    try {
-      await this.naverUserRepository.upsert(userData, ['id']);
-      return await this.naverUserRepository.findOneOrFail({
-        where: { id: userData.id },
-      });
-    } catch (error) {
-      throw error;
-    }
+    const user = this.naverUserRepository.create(userData);
+    return await this.naverUserRepository.save(user);
   }
 }
