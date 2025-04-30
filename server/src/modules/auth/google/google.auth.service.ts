@@ -2,6 +2,7 @@ import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { GoogleAuthRepository } from './google.auth.repository';
 import { GoogleUser } from './google.auth.entity';
 import axios from 'axios';
+import { convertAxiosErrorToHttpException } from 'src/filters/utils/axios-error.util';
 
 type FindUserType = GoogleUser & { isExist: boolean };
 
@@ -28,61 +29,33 @@ export class GoogleAuthService {
     }
   }
 
-  // axios -> http exception으로 변경하지 않고도 전역 필터에서 필터링하는 방법 찾기
   async getToken(code: string): Promise<any> {
     const tokenUrl = 'https://oauth2.googleapis.com/token';
-    const response = await axios.post(
-      tokenUrl,
-      {
-        grant_type: 'authorization_code',
-        client_id: this.googleClientId,
-        client_secret: this.googleClientSecret,
-        redirect_uri: this.googleCallbackUrl,
-        code,
-      },
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          'Cache-Control': 'no-cache, no-store, must-revalidate',
-          Pragma: 'no-cache',
-          Expires: '0',
+
+    try {
+      const response = await axios.post(
+        tokenUrl,
+        {
+          grant_type: 'authorization_code',
+          client_id: this.googleClientId,
+          client_secret: this.googleClientSecret,
+          redirect_uri: this.googleCallbackUrl,
+          code,
         },
-      },
-    );
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'Cache-Control': 'no-cache, no-store, must-revalidate',
+            Pragma: 'no-cache',
+            Expires: '0',
+          },
+        },
+      );
 
-    return response.data;
-    // try {
-    //   const response = await axios.post(
-    //     tokenUrl,
-    //     {
-    //       grant_type: 'authorization_code',
-    //       client_id: this.googleClientId,
-    //       client_secret: this.googleClientSecret,
-    //       redirect_uri: this.googleCallbackUrl,
-    //       code,
-    //     },
-    //     {
-    //       headers: {
-    //         'Content-Type': 'application/json',
-    //         'Cache-Control': 'no-cache, no-store, must-revalidate',
-    //         Pragma: 'no-cache',
-    //         Expires: '0',
-    //       },
-    //     },
-    //   );
-
-    //   return response.data;
-    // } catch (e) {
-    //   throw new HttpException(
-    //     {
-    //       status: e.statusCode,
-    //       error: '구글 액세스 토큰 요청 중 오류 발생',
-    //       message: e.message,
-    //       details: e.response?.data,
-    //     },
-    //     e.statusCode,
-    //   );
-    // }
+      return response.data;
+    } catch (error) {
+      throw convertAxiosErrorToHttpException(error);
+    }
   }
 
   async getUserInfo(accessToken: string): Promise<any> {

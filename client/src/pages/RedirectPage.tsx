@@ -49,7 +49,7 @@ const RedirectPage = () => {
         {
           onSuccess: (res) => {
             console.log("성공 응답값: ", res);
-            setUserInfo({ ...res?.user });
+            setUserInfo(res?.user);
 
             // 새 사용자이거나 이미 존재하지만 가입이 미완료된 경우
             if (!res?.user?.isExist) {
