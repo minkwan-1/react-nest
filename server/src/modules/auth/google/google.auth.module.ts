@@ -6,14 +6,14 @@ import { GoogleAuthRepository } from './google.auth.repository';
 import { GoogleAuthController } from './google.auth.controller';
 import { GoogleAuthService } from './google.auth.service';
 // import { GoogleStrategy } from './google.auth.strategy';
-// import { GoogleUserSerializer } from './google.auth.serializer';
+import { GoogleUserSerializer } from './google.auth.serializer';
 import { AuthModule } from '../auth.module';
 import { UsersModule } from 'src/users/users.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([GoogleUser]),
-    PassportModule.register({ session: true }),
+    PassportModule.register({ session: true }), // 세션 활성화
     forwardRef(() => AuthModule),
     UsersModule,
   ],
@@ -22,7 +22,7 @@ import { UsersModule } from 'src/users/users.module';
     GoogleAuthService,
     GoogleAuthRepository,
     // GoogleStrategy,
-    // GoogleUserSerializer,
+    GoogleUserSerializer,
   ],
   exports: [GoogleAuthService],
 })

@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
-@Entity('phone_verifications')
+@Entity('phone')
 export class PhoneVerification {
   @PrimaryGeneratedColumn()
   id: number;

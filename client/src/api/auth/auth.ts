@@ -17,9 +17,15 @@ export const postAuthorizationCode = async ({
 }) => {
   console.log("#프론트엔드->백엔드 인가 코드: ", code);
   try {
-    const response = await axios.post(`${API_URL}auth/${provider}/user`, {
-      code,
-    });
+    const response = await axios.post(
+      `${API_URL}auth/${provider}/user`,
+      {
+        code,
+      },
+      {
+        withCredentials: true,
+      }
+    );
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {

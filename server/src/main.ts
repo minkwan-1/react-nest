@@ -1,9 +1,6 @@
-// main.ts
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as dotenv from 'dotenv';
-// import { HttpAdapterHost } from '@nestjs/core';
-// import { AllExceptionsFilter } from './filters/all-exceptions.filter';
 import * as session from 'express-session';
 import * as passport from 'passport';
 import * as cookieParser from 'cookie-parser';
@@ -13,9 +10,6 @@ dotenv.config();
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-
-  // const { httpAdapter } = app.get(HttpAdapterHost);
-  // app.useGlobalFilters(new AllExceptionsFilter(httpAdapter));
 
   // CORS 설정
   app.enableCors({
@@ -28,22 +22,22 @@ async function bootstrap() {
     credentials: true,
   });
 
+  // cookie-parser 적용
+  app.use(cookieParser());
+
   // session 설정
   app.use(
     session({
-      secret: process.env.SESSION_SECRET || 'your-secret-key',
+      secret: process.env.SESSION_SECRET,
       resave: false,
       saveUninitialized: false,
       cookie: {
         maxAge: 60000 * 60 * 24, // 24시간
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production', // 배포 시 secure 쿠키 사용
+        httpOnly: false,
+        secure: false,
       },
     }),
   );
-
-  // cookie-parser 적용
-  app.use(cookieParser());
 
   // passport 초기화 및 세션 적용
   app.use(passport.initialize());
@@ -53,7 +47,7 @@ async function bootstrap() {
   app.use((req, res, next) => {
     res.setHeader(
       'Content-Security-Policy',
-      `script-src 'self' ${process.env.CSP_SCRIPT_SRC || ''};`,
+      `script-src 'self' ${process.env.CSP_SCRIPT_SRC || ''} 'unsafe-eval';`,
     );
     next();
   });

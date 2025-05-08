@@ -57,7 +57,7 @@ const RedirectPage = () => {
             }
             // 가입이 완료된 기존 사용자
             else {
-              navigate("/sign-in");
+              navigate("/home");
             }
 
             console.log("성공");

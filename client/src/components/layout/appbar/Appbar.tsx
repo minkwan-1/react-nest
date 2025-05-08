@@ -31,6 +31,29 @@ function Appbar({ sx }: AppbarProps) {
     }
   }, [realUser]);
 
+  // 사용자 세션 정보 가져오기
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await fetch("http://localhost:3000/auth/google/me", {
+          method: "GET",
+          credentials: "include",
+        });
+
+        if (!response.ok) {
+          throw new Error("로그인되지 않았습니다.");
+        }
+
+        const data = await response.json();
+        console.log("로그인 세션 유지에 대한 데이터: ", data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchUser();
+  }, [setRealUser]);
+
   return (
     <AppbarWrapper sx={sx}>
       <Container
