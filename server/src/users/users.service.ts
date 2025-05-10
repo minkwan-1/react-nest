@@ -11,6 +11,10 @@ export class UsersService {
     return this.usersRepository.create(createUserDto);
   }
 
+  async findById(id: string): Promise<User | null> {
+    return this.usersRepository.findById(id);
+  }
+
   async findByPhoneNumber(phoneNumber: string): Promise<User | null> {
     return this.usersRepository.findOneByPhoneNumber(phoneNumber);
   }

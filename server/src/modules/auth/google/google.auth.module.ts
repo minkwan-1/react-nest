@@ -9,6 +9,7 @@ import { GoogleAuthService } from './google.auth.service';
 import { GoogleUserSerializer } from './google.auth.serializer';
 import { AuthModule } from '../auth.module';
 import { UsersModule } from 'src/users/users.module';
+import { GoogleStrategy } from './google.auth.strategy';
 
 @Module({
   imports: [
@@ -21,7 +22,7 @@ import { UsersModule } from 'src/users/users.module';
   providers: [
     GoogleAuthService,
     GoogleAuthRepository,
-    // GoogleStrategy,
+    GoogleStrategy,
     GoogleUserSerializer,
   ],
   exports: [GoogleAuthService],

@@ -28,7 +28,9 @@ export class GoogleAuthService {
       );
     }
   }
+
   // convertAxiosErrorToHttpException()를 사용하기 위해 try~catch를 계속 작성해야 하는가? => interceptor
+
   async getToken(code: string): Promise<any> {
     const tokenUrl = 'https://oauth2.googleapis.com/token';
 
