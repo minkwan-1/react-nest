@@ -5,7 +5,12 @@ import { GoogleAuthModule } from './google/google.auth.module';
 
 import { NaverAuthModule } from './naver/naver.auth.module';
 @Module({
-  imports: [PassportModule, ConfigModule, GoogleAuthModule, NaverAuthModule],
+  imports: [
+    PassportModule.register({ session: true }),
+    ConfigModule,
+    GoogleAuthModule,
+    NaverAuthModule,
+  ],
   controllers: [],
   providers: [],
   exports: [],

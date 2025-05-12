@@ -21,6 +21,7 @@ export const postAuthorizationCode = async ({
       `${API_URL}auth/${provider}/user`,
       {
         code,
+        provider,
       },
       {
         withCredentials: true,
