@@ -41,6 +41,7 @@ async function bootstrap() {
 
   // passport 초기화 및 세션 적용
   app.use(passport.initialize());
+
   app.use(passport.session());
 
   // CSP(Content-Security-Policy) 설정
