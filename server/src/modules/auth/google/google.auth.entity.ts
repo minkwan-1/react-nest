@@ -30,5 +30,5 @@ export class GoogleUser {
   connectedAt: Date;
 
   @Column({ default: false })
-  isExist: boolean;
+  isExist: boolean; // 회원 가입 완료 여부
 }

@@ -1,49 +1,60 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PassportSerializer } from '@nestjs/passport';
 import { UsersService } from 'src/users/users.service';
+import { GoogleAuthService } from './google.auth.service';
 
 @Injectable()
 export class GoogleUserSerializer extends PassportSerializer {
-  private readonly logger = new Logger(GoogleUserSerializer.name);
-
-  constructor(private readonly usersService: UsersService) {
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly googleAuthService: GoogleAuthService,
+  ) {
     super();
   }
 
-  // 유저 객체를 세션에 저장할 때 호출됨
+  // 유저 객체를 세션에 저장
   serializeUser(user: any, done: (err: any, id?: any) => void) {
-    // 세션에 user.id만 저장
-    if (user.provider === 'google') {
-      done(null, user.id);
-    } else {
-      done(null, user.id);
+    if (!user || !user.id) {
+      return done(new Error('Invalid user object'));
     }
+
+    const sessionData = {
+      id: user.id,
+      provider: user.provider || 'local',
+    };
+
+    done(null, sessionData);
   }
 
-  // 세션에서 유저 ID를 읽어 실제 유저 객체로 복원할 때 호출됨
-  async deserializeUser(userId: string, done: (err: any, user?: any) => void) {
-    this.logger.debug(
-      `[세션플로우 1] 세션에서 유저 복원 시작 - 세션에 저장된 유저 ID: ${userId}`,
-    );
-
+  async deserializeUser(
+    payload: { id: string; provider: string },
+    done: (err: any, user?: any) => void,
+  ) {
     try {
-      // DB에서 사용자 정보 조회
-      const user = await this.usersService.findById(userId);
+      let user;
 
-      this.logger.debug(`[세션플로우 2] DB에서 유저 조회 성공`);
-      this.logger.verbose(
-        `[세션플로우 3] 복원된 유저 데이터: ${JSON.stringify(user)}`,
-      );
+      if (payload.provider === 'google') {
+        const googleUser = await this.googleAuthService.findUser(payload.id);
 
-      // 복원된 유저 객체를 req.user에 할당
+        if (!googleUser) {
+          return done(null, false);
+        }
+
+        user = await this.usersService.findByEmail(googleUser.email);
+
+        if (user) {
+          user.provider = 'google';
+        }
+      } else {
+        user = await this.usersService.findById(payload.id);
+      }
+
+      if (!user) {
+        return done(null, false);
+      }
+
       done(null, user);
-
-      this.logger.debug(`[세션플로우 4] req.user에 유저 데이터 할당 완료`);
     } catch (error) {
-      this.logger.error(
-        `[세션플로우 X] 유저 복원 실패: ${error.message}`,
-        error.stack,
-      );
       done(error);
     }
   }
