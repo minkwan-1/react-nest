@@ -66,6 +66,7 @@ export class NaverAuthService {
   async findUser(userData: any): Promise<FindUserType> {
     try {
       const user = await this.naverAuthRepository.findUser({ id: userData.id });
+
       if (user) {
         return { ...user, isExist: true };
       }

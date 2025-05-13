@@ -52,15 +52,7 @@ export class GoogleAuthController {
         const addedProviderViaGoogleUser = { ...viaGoogleUser, provider };
 
         // 세션 로그인 처리 시작
-        (req as any).login(addedProviderViaGoogleUser, (err: any) => {
-          if (err) {
-            throw new HttpException(
-              '세션 로그인 실패',
-              HttpStatus.INTERNAL_SERVER_ERROR,
-            );
-          }
-
-          // 세션에 유저 정보 저장 (세션 미들웨어 사용)
+        (req as any).login(addedProviderViaGoogleUser, () => {
           const user = (req as any).user;
 
           console.log(user);

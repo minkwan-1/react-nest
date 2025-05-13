@@ -4,10 +4,11 @@ import {
   Post,
   Redirect,
   Body,
-  HttpException,
-  HttpStatus,
+  Req,
+  Res,
 } from '@nestjs/common';
 import { NaverAuthService } from './naver.auth.service';
+import { Request, Response } from 'express';
 import { UsersService } from 'src/users/users.service';
 
 @Controller('auth/naver')
@@ -20,53 +21,58 @@ export class NaverAuthController {
   @Get('login')
   @Redirect()
   async login() {
-    try {
-      const naverAuthUrl = this.naverAuthService.getNaverAuthUrl();
-      return { url: naverAuthUrl };
-    } catch {
-      throw new HttpException(
-        '네이버 로그인 URL 생성 중 오류가 발생했습니다',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
+    const naverAuthUrl = this.naverAuthService.getNaverAuthUrl();
+    return { url: naverAuthUrl };
   }
 
   @Post('user')
-  async redirect(@Body('code') code: string, @Body('state') state: string) {
-    if (!code) {
-      throw new HttpException(
-        '인가 코드가 제공되지 않았습니다',
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-
+  async redirect(
+    @Body('code') code: string,
+    @Body('state') state: string,
+    @Body('provider') provider: string,
+    @Req() req: Request,
+    @Res() res: Response,
+  ) {
     const tokens = await this.naverAuthService.getToken(code, state);
+
     const userData = await this.naverAuthService.getUserInfo(
       tokens.access_token,
     );
-    const user = await this.naverAuthService.findUser(userData);
-    if (user.isExist) {
-      return {
-        message: '기존 유저 데이터',
-        user,
-        accessToken: tokens.access_token,
-        refreshToken: tokens.refresh_token,
-        expiresIn: tokens.expires_in,
-      };
+
+    const foundUser = await this.naverAuthService.findUser(userData);
+
+    console.log('유저: ', foundUser);
+
+    if (foundUser.isExist) {
+      const viaNaverUser = await this.usersService.findByEmail(foundUser.email);
+
+      const addedProviderViaNaverUser = { ...viaNaverUser, provider };
+
+      (req as any).login(addedProviderViaNaverUser, () => {
+        const user = (req as any).user;
+
+        console.log(user);
+
+        res.send({
+          message: '기존 유저 데이터',
+          user: { ...addedProviderViaNaverUser, isExist: true },
+        });
+      });
     } else {
       return {
         message: '신규 유저 데이터',
-        user,
+        user: foundUser,
         accessToken: tokens.access_token,
         refreshToken: tokens.refresh_token,
         expiresIn: tokens.expires_in,
       };
     }
   }
+
   @Post('user/update')
   async updateUser(@Body() userData) {
     // 1. 네이버 유저 테이블 만들기
-    const finalGoogleUser = await this.naverAuthService.createUser(userData);
+    const finalNaverUser = await this.naverAuthService.createUser(userData);
 
     // 2. 최종 유저 테이블 만들기
     const parseFinalUser = {
@@ -78,8 +84,24 @@ export class NaverAuthController {
     const finalUser = await this.usersService.create(parseFinalUser);
 
     return {
-      finalGoogleUser,
+      finalNaverUser,
       finalUser,
+    };
+  }
+
+  @Get('me')
+  async getMe(@Req() req: Request) {
+    const user = (req as any).user;
+    const isAuthenticated = (req as any).isAuthenticated();
+
+    console.log({ ...user });
+    console.log(isAuthenticated);
+
+    return {
+      isAuthenticated,
+      user,
+      sessionId: req.sessionID,
+      session: req.session,
     };
   }
 }

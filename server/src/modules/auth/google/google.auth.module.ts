@@ -5,11 +5,9 @@ import { GoogleUser } from './google.auth.entity';
 import { GoogleAuthRepository } from './google.auth.repository';
 import { GoogleAuthController } from './google.auth.controller';
 import { GoogleAuthService } from './google.auth.service';
-import { GoogleUserSerializer } from './google.auth.serializer';
+// import { AuthSerializer } from '../utils/auth.serializer';
 import { AuthModule } from '../auth.module';
 import { UsersModule } from 'src/users/users.module';
-// import { GoogleStrategy } from './google.auth.strategy';
-// import { GoogleAuthGuard } from './google.auth.guard';
 
 @Module({
   imports: [
@@ -19,13 +17,7 @@ import { UsersModule } from 'src/users/users.module';
     UsersModule,
   ],
   controllers: [GoogleAuthController],
-  providers: [
-    GoogleAuthService,
-    GoogleAuthRepository,
-    // GoogleStrategy,
-    GoogleUserSerializer,
-    // GoogleAuthGuard,
-  ],
+  providers: [GoogleAuthService, GoogleAuthRepository],
   exports: [GoogleAuthService],
 })
 export class GoogleAuthModule {}
