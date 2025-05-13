@@ -5,6 +5,7 @@ import { GoogleAuthModule } from './google/google.auth.module';
 import { AuthSerializer } from './utils/auth.serializer';
 import { UsersModule } from 'src/users/users.module';
 import { NaverAuthModule } from './naver/naver.auth.module';
+import { AuthController } from './auth.controller';
 
 @Module({
   imports: [
@@ -14,7 +15,7 @@ import { NaverAuthModule } from './naver/naver.auth.module';
     NaverAuthModule,
     UsersModule,
   ],
-  controllers: [],
+  controllers: [AuthController],
   providers: [AuthSerializer],
   exports: [],
 })

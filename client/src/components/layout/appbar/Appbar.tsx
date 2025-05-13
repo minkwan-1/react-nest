@@ -35,7 +35,7 @@ function Appbar({ sx }: AppbarProps) {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await fetch("http://localhost:3000/auth/naver/me", {
+        const response = await fetch("http://localhost:3000/auth/me", {
           method: "GET",
           credentials: "include",
         });

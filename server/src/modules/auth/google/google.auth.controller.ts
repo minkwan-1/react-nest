@@ -100,20 +100,4 @@ export class GoogleAuthController {
       finalUser,
     };
   }
-
-  @Get('me')
-  async getMe(@Req() req: Request) {
-    // console.log('request user:', req?.user);
-    const user = (req as any).user;
-    console.log({ ...user });
-    console.log((req as any).isAuthenticated());
-
-    const isAuthenticated = (req as any).isAuthenticated();
-    return {
-      isAuthenticated,
-      user,
-      sessionId: req.sessionID,
-      session: req.session,
-    };
-  }
 }
