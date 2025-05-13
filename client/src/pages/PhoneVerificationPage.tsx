@@ -71,6 +71,7 @@ const PhoneVerificationPage = () => {
       ...userInfo,
       phoneNumber,
       isExist: true,
+      provider: userInfo.provider,
     };
     // Only call setNewUserInfo if it exists
     if (setNewUserInfo) {

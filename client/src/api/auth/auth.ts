@@ -6,6 +6,7 @@ export interface SignupUserInfo {
   email: string;
   name: string;
   phoneNumber: string;
+  provider: string;
 }
 
 export const postAuthorizationCode = async ({
@@ -40,10 +41,23 @@ export const postAuthorizationCode = async ({
 
 export const signup = async (userInfo: SignupUserInfo) => {
   try {
-    const response = await axios.post(
-      `${API_URL}auth/google/user/update`,
-      userInfo
-    );
+    console.log("최종 회원가입 시 userInfo: ", userInfo);
+
+    let endpoint = "";
+    switch (userInfo.provider) {
+      case "google":
+        endpoint = `${API_URL}auth/google/user/update`;
+        break;
+      case "naver":
+        endpoint = `${API_URL}auth/naver/user/update`;
+        break;
+
+        break;
+      default:
+        throw new Error("지원하지 않는 소셜 로그인 제공자입니다.");
+    }
+
+    const response = await axios.post(endpoint, userInfo);
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {

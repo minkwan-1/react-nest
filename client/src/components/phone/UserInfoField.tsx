@@ -1,23 +1,17 @@
-// UserInfoField.tsx
 import { Box, Typography, Paper, Avatar } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
 import EmailIcon from "@mui/icons-material/Email";
+import { SetStateAction } from "jotai";
+import type { UserInfo } from "@/atom/auth";
 
-interface UserInfo {
-  name: string;
-  email: string;
-}
-
-interface UserInfoFieldProps {
+export interface UserInfoFieldProps {
   userInfo: UserInfo | null;
-  setUserInfo: (userInfo: UserInfo) => void;
+  setUserInfo: (userInfo: SetStateAction<UserInfo | null>) => void;
 }
 
 const UserInfoField = ({ userInfo }: UserInfoFieldProps) => {
   const name = userInfo?.name || "이름 정보 없음";
   const email = userInfo?.email || "이메일 정보 없음";
-
-  // 이름의 첫 글자 또는 기본값을 사용
   const nameInitial = name ? name.charAt(0).toUpperCase() : "?";
 
   return (
