@@ -10,6 +10,7 @@ export class QuestionsService {
     private questionsRepository: Repository<Question>,
   ) {}
 
+  // 1. 질문 생성
   async create(
     title: string,
     content: string,
@@ -28,18 +29,25 @@ export class QuestionsService {
       viewCount: 0,
     });
 
+    // 2. 새로운 질문 저장 후 반환
     return await this.questionsRepository.save(newQuestion);
   }
 
+  // 3. 모든 질문 조회
   async findAll(): Promise<Question[]> {
+    // 4. 저장된 모든 질문 목록 반환
     return await this.questionsRepository.find();
   }
 
+  // 5. 특정 질문 조회
   async findOne(id: number): Promise<Question | null> {
+    // 6. ID로 질문 조회
     return await this.questionsRepository.findOne({ where: { id } });
   }
 
+  // 7. 특정 질문 삭제
   async remove(id: number): Promise<void> {
+    // 8. ID로 질문 삭제
     await this.questionsRepository.delete(id);
   }
 }

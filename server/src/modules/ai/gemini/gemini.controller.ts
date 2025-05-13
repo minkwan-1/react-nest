@@ -7,15 +7,13 @@ export class GoogleGenerativeAIController {
     private readonly googleGenerativeAIService: GoogleGenerativeAIService,
   ) {}
 
+  // 1. AI에게 질문을 요청하는 엔드포인트
   @Post()
   async askAI(@Body('prompt') prompt: string): Promise<{ result: string }> {
-    try {
-      const result =
-        await this.googleGenerativeAIService.generateContent(prompt);
-      return { result };
-    } catch (error) {
-      console.error('Error in GoogleGenerativeAIController:', error);
-      return { result: 'Failed to generate content from Google Generative AI' };
-    }
+    // 2. 질문(prompt)을 AI 서비스로 전달하여 결과를 받아옴
+    const result = await this.googleGenerativeAIService.generateContent(prompt);
+
+    // 3. AI로부터 받은 결과를 반환
+    return { result };
   }
 }

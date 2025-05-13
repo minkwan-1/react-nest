@@ -10,6 +10,7 @@ export class PhoneVerificationRepository {
     private readonly repo: Repository<PhoneVerification>,
   ) {}
 
+  // 1. 전화번호 인증 정보 저장
   async savePhoneVerificationInfo(
     phoneNumber: string,
     code: string,
@@ -24,6 +25,7 @@ export class PhoneVerificationRepository {
     return await this.repo.save(verification);
   }
 
+  // 2. 전화번호로 인증 정보 찾기
   async findByPhoneNumber(
     phoneNumber: string,
   ): Promise<PhoneVerification | null> {
@@ -32,10 +34,12 @@ export class PhoneVerificationRepository {
     });
   }
 
+  // 3. 전화번호로 인증 정보 삭제
   async deleteByPhoneNumber(phoneNumber: string): Promise<void> {
     await this.repo.delete({ phoneNumber });
   }
 
+  // 4. 인증 완료 처리
   async markAsVerified(phoneNumber: string): Promise<void> {
     const verification = await this.findByPhoneNumber(phoneNumber);
     if (verification) {
