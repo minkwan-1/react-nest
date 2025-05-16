@@ -13,7 +13,7 @@ interface TagsFieldProps {
   handleTagsChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const TagsField = ({ tags, handleTagsChange }: TagsFieldProps) => {
+const TagsField: React.FC<TagsFieldProps> = ({ tags, handleTagsChange }) => {
   const theme = useTheme();
   const isDarkMode = theme.palette.mode === "dark";
   const mainColor = "#03cb84";

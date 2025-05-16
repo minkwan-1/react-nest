@@ -1,9 +1,14 @@
-import { Box, Button, alpha } from "@mui/material";
+import React from "react";
+import { Box, Button, alpha, CircularProgress } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 
-const SubmitButton = () => {
-  // const theme = useTheme();
-  // const isDarkMode = theme.palette.mode === "dark";
+interface SubmitButtonProps {
+  isSubmitting?: boolean;
+}
+
+const SubmitButton: React.FC<SubmitButtonProps> = ({
+  isSubmitting = false,
+}) => {
   const mainColor = "#03cb84";
 
   return (
@@ -11,8 +16,10 @@ const SubmitButton = () => {
       <Button
         type="submit"
         variant="contained"
-        endIcon={<SendIcon />}
+        disabled={isSubmitting}
+        endIcon={!isSubmitting && <SendIcon />}
         sx={{
+          position: "relative",
           background: `linear-gradient(135deg, ${mainColor} 0%, #02b279 100%)`,
           color: "white",
           textTransform: "none",
@@ -31,9 +38,29 @@ const SubmitButton = () => {
             transform: "translateY(0)",
             boxShadow: `0 2px 8px ${alpha(mainColor, 0.3)}`,
           },
+          "&.Mui-disabled": {
+            background: `linear-gradient(135deg, ${mainColor} 0%, #02b279 100%)`,
+            opacity: 0.7,
+            color: "white",
+          },
         }}
       >
-        질문 등록하기
+        {isSubmitting ? (
+          <>
+            <CircularProgress
+              size={24}
+              sx={{
+                color: "white",
+                position: "absolute",
+                left: "50%",
+                marginLeft: "-12px",
+              }}
+            />
+            <span style={{ visibility: "hidden" }}>질문 등록하기</span>
+          </>
+        ) : (
+          "질문 등록하기"
+        )}
       </Button>
     </Box>
   );

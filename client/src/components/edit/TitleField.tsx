@@ -6,7 +6,7 @@ interface TitleFieldProps {
   setTitle: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const TitleField = ({ title, setTitle }: TitleFieldProps) => {
+const TitleField: React.FC<TitleFieldProps> = ({ title, setTitle }) => {
   const theme = useTheme();
   const isDarkMode = theme.palette.mode === "dark";
   const mainColor = "#03cb84";

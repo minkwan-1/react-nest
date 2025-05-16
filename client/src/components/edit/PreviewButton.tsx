@@ -1,3 +1,4 @@
+import React from "react";
 import { Box, Button, useTheme, alpha } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
@@ -7,7 +8,10 @@ interface PreviewButtonProps {
   previewMode: boolean;
 }
 
-const PreviewButton = ({ previewMode, setPreviewMode }: PreviewButtonProps) => {
+const PreviewButton: React.FC<PreviewButtonProps> = ({
+  previewMode,
+  setPreviewMode,
+}) => {
   const theme = useTheme();
   const isDarkMode = theme.palette.mode === "dark";
   const mainColor = "#03cb84";

@@ -18,7 +18,7 @@ interface AppbarProps {
 function Appbar({ sx }: AppbarProps) {
   const [realUser, setRealUser] = useAtom(realUserInfo);
 
-  console.log("전역 상태를 사용 중인지?: ", realUser);
+  // console.log("전역 상태를 사용 중인지?: ", realUser);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -34,7 +34,7 @@ function Appbar({ sx }: AppbarProps) {
 
         const data = await response.json();
         setRealUser(data?.user);
-        console.log("로그인 세션 유지에 대한 데이터: ", data);
+        // console.log("로그인 세션 유지에 대한 데이터: ", data);
       } catch (error) {
         console.error(error);
       }
