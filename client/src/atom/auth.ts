@@ -1,12 +1,12 @@
 import { atom } from "jotai";
 
-export interface UserInfo {
+export interface signupUserInfo {
   email: string;
   name: string;
   provider: string;
 }
 
-export const signupUserInfo = atom<UserInfo | null>(null);
+export const signupUserInfo = atom<signupUserInfo | null>(null);
 
 export interface CompleteUserInfo {
   email: string;
@@ -23,6 +23,7 @@ interface realUserInfo {
   phoneNumber: string;
   createdAt: string;
   updatedAt: string;
+  provider: string;
 }
 
 export const realUserInfo = atom<realUserInfo | null>(null);

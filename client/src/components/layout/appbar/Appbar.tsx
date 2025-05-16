@@ -18,20 +18,8 @@ interface AppbarProps {
 function Appbar({ sx }: AppbarProps) {
   const [realUser, setRealUser] = useAtom(realUserInfo);
 
-  useEffect(() => {
-    const storedUser = localStorage.getItem("realUser");
-    if (storedUser) {
-      setRealUser(JSON.parse(storedUser));
-    }
-  }, [setRealUser]);
+  console.log("전역 상태를 사용 중인지?: ", realUser);
 
-  useEffect(() => {
-    if (realUser) {
-      localStorage.setItem("realUser", JSON.stringify(realUser));
-    }
-  }, [realUser]);
-
-  // 사용자 세션 정보 가져오기
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -45,6 +33,7 @@ function Appbar({ sx }: AppbarProps) {
         }
 
         const data = await response.json();
+        setRealUser(data?.user);
         console.log("로그인 세션 유지에 대한 데이터: ", data);
       } catch (error) {
         console.error(error);
