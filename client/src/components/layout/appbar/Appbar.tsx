@@ -6,6 +6,7 @@ import {
   StartButton,
   RealUserTooltip,
   AppbarWrapper,
+  LogoutButton,
 } from "@components/layout/appbar";
 import { Box, Container, SxProps, Theme } from "@mui/material";
 import { useAtom } from "jotai";
@@ -58,7 +59,14 @@ function Appbar({ sx }: AppbarProps) {
 
         <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
           <ThemeToggleButton />
-          {realUser ? <RealUserTooltip realUser={realUser} /> : <StartButton />}
+          {realUser ? (
+            <>
+              <RealUserTooltip realUser={realUser} />
+              <LogoutButton />
+            </>
+          ) : (
+            <StartButton />
+          )}
         </Box>
       </Container>
 

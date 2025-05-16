@@ -4,6 +4,7 @@ import ThemeToggleButton from "@components/layout/appbar/ThemeToggleButton";
 import StartButton from "@components/layout/appbar/StartButton";
 import RealUserTooltip from "@components/layout/appbar/RealUserTooltip";
 import AppbarWrapper from "@components/layout/appbar/AppbarWrapper";
+import LogoutButton from "./LogoutButton";
 
 export {
   AppbarWrapper,
@@ -12,4 +13,5 @@ export {
   ThemeToggleButton,
   StartButton,
   RealUserTooltip,
+  LogoutButton,
 };
