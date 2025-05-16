@@ -12,9 +12,10 @@ export class QuestionsController {
     @Body('title') title: string,
     @Body('content') content: string,
     @Body('tags') tags: string[],
+    @Body('userId') userId: string,
   ): Promise<Question> {
     // 2. Service에서 생성된 질문 반환
-    return this.questionsService.create(title, content, tags);
+    return this.questionsService.create(title, content, tags, userId);
   }
 
   // 3. 모든 질문 조회

@@ -15,6 +15,9 @@ export class Question {
   tags: string[];
 
   @Column()
+  userId: string;
+
+  @Column()
   askedBy: string;
 
   @Column()

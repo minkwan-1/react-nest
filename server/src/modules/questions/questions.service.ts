@@ -15,11 +15,13 @@ export class QuestionsService {
     title: string,
     content: string,
     tags: string[],
+    userId: string,
   ): Promise<Question> {
     const newQuestion = this.questionsRepository.create({
       title,
       content,
       tags,
+      userId,
       askedBy: 'Anonymous',
       createdAt: new Date(),
       updatedAt: new Date(),

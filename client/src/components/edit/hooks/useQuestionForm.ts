@@ -1,6 +1,8 @@
 import { useState } from "react";
 import axios from "axios";
 import { imageService } from "../service/imageService";
+import { useAtom } from "jotai";
+import { realUserInfo } from "@atom/auth";
 
 interface UseQuestionFormProps {
   onSuccess?: () => void;
@@ -17,6 +19,9 @@ export const useQuestionForm = ({
   const [tags, setTags] = useState<string[]>([]);
   const [previewMode, setPreviewMode] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const [userInfo] = useAtom(realUserInfo);
+  console.log(userInfo);
 
   // 태그 입력 변경 핸들러
   const handleTagsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -37,6 +42,7 @@ export const useQuestionForm = ({
         title,
         content: processedContent,
         tags,
+        userId: userInfo?.id,
       });
 
       console.log("Question submitted:", response.data);

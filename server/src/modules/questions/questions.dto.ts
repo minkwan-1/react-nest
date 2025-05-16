@@ -16,6 +16,9 @@ export class QuestionDto {
   @IsArray()
   tags: string[];
 
+  @IsString()
+  userId: string;
+
   @IsInt()
   answerCount: number;
 
