@@ -17,15 +17,14 @@ const RealUserTooltip = ({ realUser }: RealUserTooltipProps) => {
     <Tooltip title={realUser.name} onClick={() => navigate("/my")}>
       <Avatar
         sx={{
-          width: 40,
-          height: 40,
-          mr: 1,
-          bgcolor: "#03cb84",
-          fontSize: "16px",
+          color: "#03cb84",
+          bgcolor: "white",
+          border: "1px solid #adb5be",
+          width: "32px",
+          height: "32px",
+          fontSize: "14px",
           fontWeight: "bold",
           cursor: "pointer",
-          boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.2)",
-          border: "2px solid #fff",
           transition: "transform 0.2s ease-in-out",
           "&:hover": {
             transform: "scale(1.1)",

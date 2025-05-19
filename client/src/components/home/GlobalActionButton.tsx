@@ -1,18 +1,18 @@
 import { Box, Button, Typography, Tooltip, Zoom } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useAtom } from "jotai";
-import { signupUserInfo } from "@atom/auth";
+import { realUserInfo } from "@atom/auth";
 
 const GlobalActionButton = () => {
   const navigate = useNavigate();
-  const [userInfo] = useAtom(signupUserInfo);
+  const [userInfo] = useAtom(realUserInfo);
 
   const handleClick = () => {
     if (!userInfo) {
-      // navigate("/sign-up");
-      navigate("/edit");
+      navigate("/sign-in");
     } else {
       console.log("edit으로");
+      navigate("/edit");
     }
   };
 

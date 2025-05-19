@@ -29,11 +29,10 @@ export class GoogleAuthController {
   }
 
   // 2. Google OAuth 인증 후 리디렉션 및 사용자 정보 처리
+
   @Post('user')
   async redirect(
-    // 3. Google OAuth로 받은 인가 코드
     @Body('code') code: string,
-    // 4. 제공된 로그인 프로바이더
     @Body('provider') provider: string,
     @Req() req: Request,
     @Res() res: Response,
@@ -60,6 +59,7 @@ export class GoogleAuthController {
         (req as any).login(addedProviderViaGoogleUser, () => {
           const user = (req as any).user;
 
+          console.log(`세션 ID: ${req.sessionID}`);
           console.log(user);
 
           // 10. 기존 사용자 데이터 반환
