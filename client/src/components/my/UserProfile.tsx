@@ -28,9 +28,7 @@ import {
   Favorite as FavoriteIcon,
   Comment as CommentIcon,
   Verified as VerifiedIcon,
-  Message as MessageIcon,
   Add as AddIcon,
-  Email as EmailIcon,
   Public as PublicIcon,
 } from "@mui/icons-material";
 
@@ -259,7 +257,7 @@ const UserProfile: React.FC<UserProfileProps> = ({
               variant="body2"
               sx={{ mb: 2, color: themeColors.textSecondary }}
             >
-              Product Engineer
+              Frontend Developer
             </Typography>
 
             <Box sx={{ width: "100%", display: "flex", gap: 1, mb: 3 }}>
@@ -278,24 +276,6 @@ const UserProfile: React.FC<UserProfileProps> = ({
                 }}
               >
                 팔로우
-              </Button>
-
-              <Button
-                variant="outlined"
-                fullWidth
-                startIcon={<MessageIcon />}
-                sx={{
-                  borderColor: "#b8dae1",
-                  color: "#b8dae1",
-                  borderRadius: 3,
-                  fontWeight: "normal",
-                  "&:hover": {
-                    borderColor: "#02b676",
-                    backgroundColor: "rgba(3, 203, 132, 0.08)",
-                  },
-                }}
-              >
-                커피챗
               </Button>
             </Box>
 
@@ -473,44 +453,6 @@ const UserProfile: React.FC<UserProfileProps> = ({
               >
                 <GitHubIcon fontSize="small" />
               </IconButton>
-            </Box>
-
-            <Box sx={{ width: "100%", mt: 2 }}>
-              <Paper
-                elevation={0}
-                sx={{
-                  p: 2,
-                  // bgcolor: "rgba(3, 203, 132, 0.08)",
-                  borderRadius: 2,
-                  border: `1px dashed #b8dae1`,
-                }}
-              >
-                <Typography
-                  variant="subtitle2"
-                  fontWeight="bold"
-                  sx={{ mb: 1 }}
-                >
-                  {koreanContent.subscribeNewsletter}
-                </Typography>
-                <Typography variant="caption" sx={{ display: "block", mb: 2 }}>
-                  매주 수요일, 최신 커머스 트렌드를 받아보세요
-                </Typography>
-                <Button
-                  variant="contained"
-                  fullWidth
-                  startIcon={<EmailIcon />}
-                  sx={{
-                    bgcolor: "#b8dae1",
-                    color: "#000",
-                    fontWeight: "bold",
-                    "&:hover": {
-                      bgcolor: themeColors.primaryDark,
-                    },
-                  }}
-                >
-                  구독신청
-                </Button>
-              </Paper>
             </Box>
           </Box>
 

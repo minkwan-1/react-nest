@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Button,
@@ -29,6 +29,7 @@ const LogoutButton = () => {
       await axios.get("http://localhost:3000/auth/logout", {
         withCredentials: true,
       });
+
       navigate("/");
     } catch (err) {
       console.error("로그아웃 실패: ", err);

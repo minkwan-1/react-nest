@@ -17,14 +17,6 @@ export class AuthController {
 
   @Get('logout')
   logout(@Req() req: Request, @Res() res: Response) {
-    (req as any).logout(() => {
-      req.session.destroy((err) => {
-        if (err) {
-          return res.status(500).json({ message: '세션 제거 실패' });
-        }
-        res.clearCookie('connect.sid');
-        res.status(200).json({ message: '로그아웃 성공' });
-      });
-    });
+    return this.sessionService.logoutWithSession(req, res);
   }
 }

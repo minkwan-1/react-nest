@@ -58,4 +58,10 @@ export class SessionRepository {
       where: { sessionId },
     });
   }
+
+  // 3. deleteBySessionId(= 로그아웃 시 세션 삭제)
+  async deleteBySessionId(sessionId: string): Promise<void> {
+    console.log('세션 삭제를 위한 sessionId가 들어왔는지: ', sessionId);
+    await this.sessionRepository.delete({ sessionId });
+  }
 }
