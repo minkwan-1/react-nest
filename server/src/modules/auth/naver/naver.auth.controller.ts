@@ -10,12 +10,15 @@ import {
 import { NaverAuthService } from './naver.auth.service';
 import { Request, Response } from 'express';
 import { UsersService } from 'src/users/users.service';
+import { SessionService } from '../session/session.service';
+import { HttpException, HttpStatus } from '@nestjs/common';
 
 @Controller('auth/naver')
 export class NaverAuthController {
   constructor(
     private readonly naverAuthService: NaverAuthService,
     private readonly usersService: UsersService,
+    private readonly sessionService: SessionService,
   ) {}
 
   // 1. Naver 로그인 URL을 제공하는 GET 엔드포인트
@@ -29,56 +32,71 @@ export class NaverAuthController {
   // 2. Naver OAuth 인증 후 리디렉션 및 사용자 정보 처리
   @Post('user')
   async redirect(
-    // 3. Naver OAuth로 받은 인가 코드
     @Body('code') code: string,
     @Body('state') state: string,
-    // 4. 제공된 로그인 프로바이더
     @Body('provider') provider: string,
     @Req() req: Request,
     @Res() res: Response,
   ) {
-    // 5. 인가 코드로 액세스 토큰을 교환
-    const tokens = await this.naverAuthService.getToken(code, state);
+    try {
+      // 5. 인가 코드로 액세스 토큰을 교환
+      const tokens = await this.naverAuthService.getToken(code, state);
 
-    // 6. 액세스 토큰으로 사용자 정보 획득
-    const userData = await this.naverAuthService.getUserInfo(
-      tokens.access_token,
-    );
+      // 6. 액세스 토큰으로 사용자 정보 획득
+      const userData = await this.naverAuthService.getUserInfo(
+        tokens.access_token,
+      );
 
-    // 7. 기존 사용자 여부 확인
-    const foundUser = await this.naverAuthService.findUser(userData);
+      // 7. 기존 사용자 여부 확인
+      const foundUser = await this.naverAuthService.findUser(userData);
 
-    console.log('유저: ', foundUser);
+      if (foundUser.isExist) {
+        // 8. 기존 사용자일 경우, 세션 로그인 처리
+        const viaNaverUser = await this.usersService.findByEmail(
+          foundUser.email,
+        );
+        const addedProviderViaNaverUser = { ...viaNaverUser, provider };
 
-    if (foundUser.isExist) {
-      // 8. 기존 사용자일 경우, 세션 로그인 처리
-      const viaNaverUser = await this.usersService.findByEmail(foundUser.email);
+        try {
+          // 9. SessionService를 사용한 세션 로그인 처리
+          await this.sessionService.loginWithSession(
+            req,
+            addedProviderViaNaverUser,
+          );
 
-      const addedProviderViaNaverUser = { ...viaNaverUser, provider };
-
-      // 9. 세션 로그인 처리
-      (req as any).login(addedProviderViaNaverUser, () => {
-        const user = (req as any).user;
-
-        console.log(user);
-
-        // 10. 기존 사용자 데이터 반환
+          // 10. 기존 사용자 데이터 반환
+          res.send({
+            message: '기존 유저 데이터',
+            user: { ...addedProviderViaNaverUser, isExist: true },
+            sessionId: req.sessionID, // 세션 ID 포함
+          });
+        } catch (sessionError) {
+          console.error('세션 로그인 처리 중 오류:', sessionError);
+          throw new HttpException(
+            '세션 처리 중 오류가 발생했습니다',
+            HttpStatus.INTERNAL_SERVER_ERROR,
+          );
+        }
+        return;
+      } else {
+        // 11. 신규 사용자일 경우, 사용자 정보를 반환
         res.send({
-          message: '기존 유저 데이터',
-          user: { ...addedProviderViaNaverUser, isExist: true },
+          message: '신규 유저 데이터',
+          user: foundUser,
+          accessToken: tokens.access_token,
+          refreshToken: tokens.refresh_token,
+          expiresIn: tokens.expires_in,
         });
-      });
-    } else {
-      // 11. 신규 사용자일 경우, 사용자 정보를 반환
-      return {
-        message: '신규 유저 데이터',
-        user: foundUser,
-        accessToken: tokens.access_token,
-        refreshToken: tokens.refresh_token,
-        expiresIn: tokens.expires_in,
-      };
+      }
+    } catch (error) {
+      console.error('인증 처리 중 오류:', error);
+      throw new HttpException(
+        '인증 처리 중 오류가 발생했습니다',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
+
   // 12. 사용자 정보를 업데이트하거나 신규 생성하는 POST 엔드포인트
   @Post('user/update')
   async updateUser(@Body() userData) {

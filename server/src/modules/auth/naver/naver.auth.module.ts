@@ -13,6 +13,7 @@ import { NaverAuthController } from './naver.auth.controller';
 // 3. 의존 모듈
 import { AuthModule } from '../auth.module';
 import { UsersModule } from 'src/users/users.module';
+import { SessionModule } from '../session/session.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { UsersModule } from 'src/users/users.module';
 
     // 유저 정보 접근을 위한 UsersModule
     UsersModule,
+    SessionModule,
   ],
   controllers: [NaverAuthController],
   providers: [NaverAuthService, NaverAuthRepository],
