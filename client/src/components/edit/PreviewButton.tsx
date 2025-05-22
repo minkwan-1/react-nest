@@ -14,7 +14,7 @@ const PreviewButton: React.FC<PreviewButtonProps> = ({
 }) => {
   const theme = useTheme();
   const isDarkMode = theme.palette.mode === "dark";
-  const mainColor = "#c5a3d5";
+  const mainColor = "#b8dae1";
 
   return (
     <Box display="flex" justifyContent="flex-start">

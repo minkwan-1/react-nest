@@ -23,7 +23,7 @@ const ChatMessage = ({ message }: ChatMessageProps) => {
         borderRadius: 3,
         bgcolor:
           message.type === "user"
-            ? "#c5a3d5"
+            ? "#b8dae1"
             : alpha(theme.palette.background.default, 0.7),
         overflow: "visible",
         border:
@@ -85,7 +85,7 @@ const ChatMessage = ({ message }: ChatMessageProps) => {
                 mb: 0.5,
               },
               "& blockquote": {
-                borderLeft: `4px solid ${alpha("#c5a3d5", 0.5)}`,
+                borderLeft: `4px solid ${alpha("#b8dae1", 0.5)}`,
                 pl: 2,
                 py: 0.5,
                 my: 1,
@@ -112,7 +112,7 @@ const ChatMessage = ({ message }: ChatMessageProps) => {
                 fontWeight: 600,
               },
               "& a": {
-                color: "#c5a3d5",
+                color: "#b8dae1",
                 textDecoration: "none",
                 "&:hover": {
                   textDecoration: "underline",

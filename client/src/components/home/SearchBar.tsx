@@ -27,10 +27,10 @@ const SearchBar = () => {
               boxShadow: "0 3px 8px rgba(3,203,132,0.25)",
             },
             "&:hover fieldset": {
-              borderColor: "#c5a3d5",
+              borderColor: "#b8dae1",
             },
             "&.Mui-focused fieldset": {
-              borderColor: "#c5a3d5",
+              borderColor: "#b8dae1",
             },
           },
           "& .MuiInputBase-input::placeholder": {
@@ -48,7 +48,7 @@ const SearchBar = () => {
       <IconButton disableRipple>
         <SearchIcon
           sx={{
-            ...theme.applyStyles("light", { color: "#c5a3d5" }),
+            ...theme.applyStyles("light", { color: "#b8dae1" }),
             ...theme.applyStyles("dark", { color: "#ffffff" }),
           }}
         />

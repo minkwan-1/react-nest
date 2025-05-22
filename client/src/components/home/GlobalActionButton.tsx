@@ -56,7 +56,7 @@ const GlobalActionButton = () => {
           onClick={() => handleClick()}
           variant="contained"
           sx={{
-            bgcolor: "#c5a3d5",
+            bgcolor: "#b8dae1",
             borderRadius: "50%",
             width: 64,
             height: 64,

@@ -26,7 +26,7 @@ const PhoneNumberField = ({
   onPhoneNumberChange,
 }: PhoneNumberFieldProps) => {
   const theme = useTheme();
-  const keyColor = "#c5a3d5"; // 키 컬러 정의
+  const keyColor = "#b8dae1"; // 키 컬러 정의
   const [phoneNumber, setPhoneNumber] = useState("");
   const [isSending, setIsSending] = useState(false);
   const [isFocused, setIsFocused] = useState(false);

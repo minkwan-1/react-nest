@@ -110,10 +110,10 @@ const CommunityPage = () => {
               flexGrow: 1,
               "& .MuiOutlinedInput-root": {
                 "&:hover fieldset": {
-                  borderColor: "#c5a3d5",
+                  borderColor: "#b8dae1",
                 },
                 "&.Mui-focused fieldset": {
-                  borderColor: "#c5a3d5",
+                  borderColor: "#b8dae1",
                 },
               },
             }}
@@ -121,7 +121,7 @@ const CommunityPage = () => {
               startAdornment: <SearchIcon />,
             }}
           />
-          <Button variant="contained" sx={{ bgcolor: "#c5a3d5" }}>
+          <Button variant="contained" sx={{ bgcolor: "#b8dae1" }}>
             검색
           </Button>
         </Box>
@@ -174,7 +174,7 @@ const CommunityPage = () => {
                 </Typography>
               </CardContent>
               <CardActions sx={{ justifyContent: "center", padding: 2 }}>
-                <Button size="small" sx={{ color: "#c5a3d5" }}>
+                <Button size="small" sx={{ color: "#b8dae1" }}>
                   팔로우
                 </Button>
               </CardActions>

@@ -22,7 +22,7 @@ const MessageLoading = () => {
     >
       <Avatar
         sx={{
-          bgcolor: "#c5a3d5",
+          bgcolor: "#b8dae1",
           width: 38,
           height: 38,
         }}
@@ -39,7 +39,7 @@ const MessageLoading = () => {
           p: 2,
         }}
       >
-        <CircularProgress size={24} sx={{ color: "#c5a3d5" }} />
+        <CircularProgress size={24} sx={{ color: "#b8dae1" }} />
       </Card>
     </Box>
   );

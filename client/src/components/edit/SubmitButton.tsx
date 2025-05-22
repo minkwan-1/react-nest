@@ -9,7 +9,7 @@ interface SubmitButtonProps {
 const SubmitButton: React.FC<SubmitButtonProps> = ({
   isSubmitting = false,
 }) => {
-  const mainColor = "#c5a3d5";
+  const mainColor = "#b8dae1";
 
   return (
     <Box>

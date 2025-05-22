@@ -22,7 +22,7 @@ const TrendingTopics = () => {
             height: "3px",
             left: 0,
             bottom: "-8px",
-            backgroundColor: "#c5a3d5",
+            backgroundColor: "#b8dae1",
             borderRadius: "10px",
           },
         }}
@@ -60,9 +60,9 @@ const TrendingTopics = () => {
                 ...theme.applyStyles("dark", {
                   backgroundColor: "#616161",
                 }),
-                border: "1px solid #c5a3d5",
+                border: "1px solid #b8dae1",
                 boxShadow: "0 2px 5px rgba(0,0,0,0.08)",
-                color: "#c5a3d5",
+                color: "#b8dae1",
               },
             }}
             clickable

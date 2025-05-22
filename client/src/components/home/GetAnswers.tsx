@@ -13,7 +13,7 @@ const GetAnswers = ({ handleClick }: GetAnswersProps) => {
         py: 3,
         px: 3,
         borderRadius: 6,
-        border: "1px dashed #c5a3d5",
+        border: "1px dashed #b8dae1",
         ...theme.applyStyles("light", {
           backgroundColor: "#F0FBF7", // 라이트 모드 배경
         }),
@@ -27,8 +27,8 @@ const GetAnswers = ({ handleClick }: GetAnswersProps) => {
         sx={{
           fontWeight: "bold",
           mb: 1.5,
-          color: "#c5a3d5",
-          ...theme.applyStyles("light", { color: "#c5a3d5" }),
+          color: "#b8dae1",
+          ...theme.applyStyles("light", { color: "#b8dae1" }),
           ...theme.applyStyles("dark", { color: "#80e0b0" }), // 다크 모드에서 색상 변경
         }}
       >
@@ -49,14 +49,14 @@ const GetAnswers = ({ handleClick }: GetAnswersProps) => {
         variant="contained"
         fullWidth
         sx={{
-          bgcolor: "#c5a3d5",
+          bgcolor: "#b8dae1",
           textTransform: "none",
           fontWeight: "bold",
           borderRadius: 2,
           boxShadow: "0 2px 5px rgba(3,203,132,0.3)",
           py: 1,
           transition: "all 0.3s",
-          ...theme.applyStyles("light", { bgcolor: "#c5a3d5" }),
+          ...theme.applyStyles("light", { bgcolor: "#b8dae1" }),
           ...theme.applyStyles("dark", { bgcolor: "#02a770" }), // 다크 모드 배경색
           "&:hover": {
             bgcolor: "#02a770",

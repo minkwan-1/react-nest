@@ -88,7 +88,7 @@ const RedirectPage = () => {
         minHeight: "100vh",
       }}
     >
-      {loading ? <CircularProgress sx={{ color: "#c5a3d5" }} /> : null}
+      {loading ? <CircularProgress sx={{ color: "#b8dae1" }} /> : null}
     </Box>
   );
 };

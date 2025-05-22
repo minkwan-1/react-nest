@@ -14,7 +14,7 @@ const PageTitle = () => {
     >
       <LightbulbOutlinedIcon
         sx={{
-          color: "#c5a3d5",
+          color: "#b8dae1",
           fontSize: 40,
         }}
       />

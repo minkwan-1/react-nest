@@ -35,7 +35,7 @@ const pulsate = keyframes`
 
 const BackgroundImage = () => {
   const theme = useTheme();
-  const keyColor = "#c5a3d5"; // 키 컬러 정의
+  const keyColor = "#b8dae1"; // 키 컬러 정의
 
   return (
     <Box

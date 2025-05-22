@@ -21,8 +21,8 @@ function UserInfo({ nickname, onLogout }: UserInfoProps) {
         onClick={onLogout}
         sx={{
           marginRight: "16px",
-          color: "#c5a3d5",
-          borderColor: "#c5a3d5",
+          color: "#b8dae1",
+          borderColor: "#b8dae1",
         }}
       >
         로그아웃

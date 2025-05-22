@@ -43,10 +43,10 @@ const BenefitsList = () => {
             sx={{
               mr: 1.5,
               ...theme.applyStyles("light", {
-                color: "#c5a3d5",
+                color: "#b8dae1",
               }),
               ...theme.applyStyles("dark", {
-                color: "#c5a3d5",
+                color: "#b8dae1",
               }),
             }}
           />

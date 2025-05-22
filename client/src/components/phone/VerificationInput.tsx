@@ -29,7 +29,7 @@ const VerificationInput = ({
   onVerified,
 }: VerificationInputProps) => {
   const theme = useTheme();
-  const keyColor = "#c5a3d5";
+  const keyColor = "#b8dae1";
   const [verificationCode, setVerificationCode] = useState("");
   const [isVerifying, setIsVerifying] = useState(false);
   const [timeLeft, setTimeLeft] = useState(300);

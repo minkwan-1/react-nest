@@ -69,7 +69,7 @@ const QuestionCards = ({ question }: QuestionCardsProps) => {
                 width: 28,
                 height: 28,
                 mr: 1,
-                bgcolor: "#c5a3d5",
+                bgcolor: "#b8dae1",
                 fontSize: "14px",
                 fontWeight: "bold",
               }}
@@ -150,7 +150,7 @@ const QuestionCards = ({ question }: QuestionCardsProps) => {
                 <Button
                   size="small"
                   sx={{
-                    color: "#c5a3d5",
+                    color: "#b8dae1",
                     fontWeight: 500,
                     textTransform: "none",
                     "&:hover": {

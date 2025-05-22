@@ -14,7 +14,7 @@ const WelcomeMessage = () => {
         color: alpha(theme.palette.text.secondary, 0.7),
       }}
     >
-      <SmartToyOutlinedIcon sx={{ fontSize: 64, mb: 2, color: "#c5a3d5" }} />
+      <SmartToyOutlinedIcon sx={{ fontSize: 64, mb: 2, color: "#b8dae1" }} />
       <Typography variant="h6" align="center" sx={{ mb: 1, fontWeight: 600 }}>
         AI에게 추가 질문을 해보세요
       </Typography>

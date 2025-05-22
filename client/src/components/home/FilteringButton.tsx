@@ -19,7 +19,7 @@ const FilteringButton = ({
     <Button
       onClick={onClick}
       sx={{
-        color: selected ? "#c5a3d5" : "#616161",
+        color: selected ? "#b8dae1" : "#616161",
         border: "1px solid #E0E0E0",
         borderRadius: 6,
         textTransform: "none",
@@ -36,7 +36,7 @@ const FilteringButton = ({
         "&:hover": {
           backgroundColor:
             theme.palette.mode === "light" ? "#F5F5F5" : "#4F4F4F",
-          borderColor: "#c5a3d5",
+          borderColor: "#b8dae1",
         },
       }}
       startIcon={icon}

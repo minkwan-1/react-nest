@@ -23,7 +23,7 @@ const StaffPicks = () => {
             height: "3px",
             left: 0,
             bottom: "-8px",
-            backgroundColor: "#c5a3d5",
+            backgroundColor: "#b8dae1",
             borderRadius: "10px",
           },
         }}

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 const NotFoundPage = () => {
   const navigate = useNavigate();
-  const mainColor = "#c5a3d5";
+  const mainColor = "#b8dae1";
 
   const handleGoLanding = () => {
     navigate("/home");

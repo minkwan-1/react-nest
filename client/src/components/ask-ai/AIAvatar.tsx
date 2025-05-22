@@ -4,7 +4,7 @@ const AIAvatar = () => {
   return (
     <Avatar
       sx={{
-        bgcolor: "#c5a3d5",
+        bgcolor: "#b8dae1",
         width: 38,
         height: 38,
       }}

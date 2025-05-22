@@ -59,7 +59,7 @@ const LandingTitle = () => {
             fontWeight: "600",
             fontSize: { xs: "14px", md: "16px" },
             textTransform: "none",
-            bgcolor: "#c5a3d5",
+            bgcolor: "#b8dae1",
             "&:hover": {
               bgcolor: "#02a76f",
             },
@@ -79,8 +79,8 @@ const LandingTitle = () => {
             fontSize: { xs: "14px", md: "16px" },
             textTransform: "none",
             ...theme.applyStyles("light", {
-              borderColor: "#c5a3d5",
-              color: "#c5a3d5",
+              borderColor: "#b8dae1",
+              color: "#b8dae1",
               "&:hover": {
                 borderColor: "#02a76f",
                 bgcolor: "rgba(3, 203, 132, 0.04)",

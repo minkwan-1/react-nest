@@ -9,7 +9,7 @@ const TermSection = ({
   children: React.ReactNode;
 }) => {
   const theme = useTheme();
-  const mainColor = "#c5a3d5";
+  const mainColor = "#b8dae1";
   const isDarkMode = theme.palette.mode === "dark";
 
   return (
