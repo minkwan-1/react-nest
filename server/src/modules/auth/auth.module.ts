@@ -9,6 +9,7 @@ import { NaverAuthModule } from './naver/naver.auth.module';
 // 2. 유저 모듈 및 직렬화 도구
 import { UsersModule } from 'src/users/users.module';
 import { AuthSerializer } from './utils/auth.serializer';
+import { SessionModule } from './session/session.module';
 
 // 3. 컨트롤러
 import { AuthController } from './auth.controller';
@@ -24,6 +25,7 @@ import { AuthController } from './auth.controller';
     // 소셜 로그인 관련 모듈
     GoogleAuthModule,
     NaverAuthModule,
+    SessionModule,
 
     // 유저 도메인 모듈
     UsersModule,

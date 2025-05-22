@@ -10,7 +10,7 @@ export class SessionRepository {
     private readonly sessionRepository: Repository<UserSession>,
   ) {}
 
-  // 1. save session(로그인)
+  // 1. saveSession(= 로그인 시 세션 정보를 DB에 저장하는 로직)
   async saveSession(
     sessionId: string,
     userId: string,
@@ -50,5 +50,12 @@ export class SessionRepository {
       console.error('세션 저장 중 오류 발생:', error);
       throw new Error(`세션 저장에 실패했습니다: ${error.message}`);
     }
+  }
+
+  // 2. findBySessionId(= protected info 요청시 세션을 찾는 로직)
+  async findBySessionId(sessionId: string): Promise<UserSession | null> {
+    return await this.sessionRepository.findOne({
+      where: { sessionId },
+    });
   }
 }

@@ -6,7 +6,7 @@ import { Request } from 'express';
 export class SessionService {
   constructor(private sessionRepository: SessionRepository) {}
 
-  // 1. loginWithSession(=로그인)
+  // 1. loginWithSession(= 로그인)
   async loginWithSession(req: Request, user: any): Promise<void> {
     await new Promise<void>((resolve, reject) => {
       (req as any).login(user, (err: any) => {
@@ -37,5 +37,38 @@ export class SessionService {
     console.log('로그인 한 유저 정보: ', user);
   }
 
-  // 2. findWithSession()
+  // 2. findWithSession(= protected info, 사실상 로그인 유지)
+  async findWithSession(req: Request): Promise<any> {
+    const sessionId = req.sessionID;
+
+    if (!sessionId) {
+      return {
+        isAuthenticated: false,
+        user: null,
+        sessionId: null,
+        session: null,
+      };
+    }
+
+    const sessionRecord =
+      await this.sessionRepository.findBySessionId(sessionId);
+
+    console.log('찾아낸 세션 정보: ', sessionRecord);
+
+    if (!sessionRecord) {
+      return {
+        isAuthenticated: false,
+        user: null,
+        sessionId,
+        session: req.session,
+      };
+    }
+
+    return {
+      isAuthenticated: true,
+      user: sessionRecord.data,
+      sessionId,
+      session: req.session,
+    };
+  }
 }

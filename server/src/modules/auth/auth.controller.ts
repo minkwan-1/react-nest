@@ -1,25 +1,18 @@
 import { Controller, Get, Req, Res } from '@nestjs/common';
 import { Request, Response } from 'express';
+import { SessionService } from './session/session.service';
 
 @Controller('auth')
 export class AuthController {
-  constructor() {}
+  constructor(private readonly sessionService: SessionService) {}
 
   @Get('me')
   async getMe(@Req() req: Request) {
-    const user = (req as any).user;
+    const result = await this.sessionService.findWithSession(req);
 
-    const isAuthenticated = (req as any).isAuthenticated();
+    console.log('세션 기반 로그인 정보: ', result);
 
-    console.log({ ...user });
-    console.log(isAuthenticated);
-
-    return {
-      isAuthenticated,
-      user,
-      sessionId: req.sessionID,
-      session: req.session,
-    };
+    return result;
   }
 
   @Get('logout')
