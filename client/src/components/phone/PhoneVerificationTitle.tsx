@@ -2,7 +2,7 @@ import { Box, Typography } from "@mui/material";
 import VerifiedUserIcon from "@mui/icons-material/VerifiedUser";
 
 const PhoneVerificationTitle = () => {
-  const keyColor = "#03cb84";
+  const keyColor = "#c5a3d5";
 
   return (
     <Box sx={{ mb: 4 }}>

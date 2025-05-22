@@ -20,7 +20,7 @@ const CheckAgreeSection = ({
   handleAgreeChange,
 }: CheckAgreeSectionProps) => {
   const theme = useTheme();
-  const mainColor = "#03cb84";
+  const mainColor = "#c5a3d5";
   const isDarkMode = theme.palette.mode === "dark";
 
   return (

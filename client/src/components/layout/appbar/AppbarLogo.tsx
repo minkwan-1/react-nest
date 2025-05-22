@@ -20,7 +20,7 @@ function AppbarLogo({ sx }: AppbarLogoProps) {
       }}
       onClick={() => navigate("/home")}
     >
-      <Code size={24} className="text-primary" style={{ color: "#03cb84" }} />
+      <Code size={24} className="text-primary" style={{ color: "#c5a3d5" }} />
 
       <Typography
         variant="h6"

@@ -17,7 +17,7 @@ interface ContentFieldProps {
 const ContentField: React.FC<ContentFieldProps> = ({ content, setContent }) => {
   const theme = useTheme();
   const isDarkMode = theme.palette.mode === "dark";
-  const mainColor = "#03cb84";
+  const mainColor = "#c5a3d5";
 
   const Quill_Editor = useMemo(
     () => <QuillEditor value={content} onChange={setContent} />,

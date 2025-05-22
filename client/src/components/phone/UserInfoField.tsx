@@ -37,7 +37,7 @@ const UserInfoField = ({ userInfo }: UserInfoFieldProps) => {
         <Typography
           variant="subtitle2"
           fontWeight={600}
-          sx={{ color: "#03cb84" }}
+          sx={{ color: "#c5a3d5" }}
         >
           회원 정보
         </Typography>
@@ -57,8 +57,8 @@ const UserInfoField = ({ userInfo }: UserInfoFieldProps) => {
             width: 80,
             height: 80,
             bgcolor: "#ffffff",
-            color: "#03cb84",
-            border: `2px solid #03cb84`,
+            color: "#c5a3d5",
+            border: `2px solid #c5a3d5`,
             fontSize: 32,
             fontWeight: "bold",
           }}

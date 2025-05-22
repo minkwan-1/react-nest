@@ -13,8 +13,10 @@ const LandingPage = () => {
           display: "flex",
           flexDirection: { xs: "column", md: "row" },
           minHeight: "calc(100vh - 80px)",
+          maxWidth: "1300px",
+          mx: "auto",
           ...theme.applyStyles("light", {
-            bgcolor: "#f8f8f8",
+            backgroundColor: "#ffffff",
           }),
           ...theme.applyStyles("dark", {
             bgcolor: "#121212",

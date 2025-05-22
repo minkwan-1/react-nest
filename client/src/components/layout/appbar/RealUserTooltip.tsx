@@ -17,7 +17,7 @@ const RealUserTooltip = ({ realUser }: RealUserTooltipProps) => {
     <Tooltip title={realUser.name} onClick={() => navigate("/my")}>
       <Avatar
         sx={{
-          color: "#03cb84",
+          color: "#c5a3d5",
           bgcolor: "white",
           border: "1px solid #adb5be",
           width: "32px",

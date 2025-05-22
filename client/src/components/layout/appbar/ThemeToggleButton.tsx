@@ -18,7 +18,7 @@ function ThemeToggleButton({ sx }: ThemeToggleButtonProps) {
     <IconButton
       onClick={toggleMode}
       sx={{
-        color: "#03cb84",
+        color: "#c5a3d5",
         border: "1px solid #adb5be",
         width: "32px",
         height: "32px",

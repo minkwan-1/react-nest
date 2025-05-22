@@ -8,7 +8,7 @@ interface PreviewContentProps {
 
 export const PreviewContent: React.FC<PreviewContentProps> = ({
   content,
-  mainColor = "#03cb84",
+  mainColor = "#c5a3d5",
 }) => {
   const theme = useTheme();
   const isDarkMode = theme.palette.mode === "dark";

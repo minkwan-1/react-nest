@@ -83,7 +83,7 @@ const TagPage = () => {
                   alignItems: "center",
                   width: "100%",
                   padding: "10px",
-                  border: "2px solid #03cb84",
+                  border: "2px solid #c5a3d5",
                   borderRadius: 4,
                   marginBottom: 2,
                 }}
@@ -92,7 +92,7 @@ const TagPage = () => {
                   variant="h6"
                   sx={{
                     fontWeight: "bold",
-                    color: "#03cb84",
+                    color: "#c5a3d5",
                   }}
                 >
                   {tag.tag}
@@ -112,7 +112,7 @@ const TagPage = () => {
               </Typography>
               {/* 버튼 */}
               <CardActions sx={{ justifyContent: "center", padding: 0 }}>
-                <Button size="small" sx={{ color: "#03cb84" }}>
+                <Button size="small" sx={{ color: "#c5a3d5" }}>
                   태그 보기
                 </Button>
               </CardActions>

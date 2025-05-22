@@ -278,7 +278,7 @@ const UserProfile: React.FC<UserProfileProps> = ({
                     sx={{
                       backgroundColor: "white",
                       borderRadius: "50%",
-                      color: "#03cb84",
+                      color: "#c5a3d5",
                       width: 24,
                       height: 24,
                       padding: "2px",
@@ -317,7 +317,7 @@ const UserProfile: React.FC<UserProfileProps> = ({
                 fullWidth
                 startIcon={<AddIcon />}
                 sx={{
-                  bgcolor: "#03cb84",
+                  bgcolor: "#c5a3d5",
                   color: "#000",
                   borderRadius: 3,
                   fontWeight: "bold",
@@ -334,8 +334,8 @@ const UserProfile: React.FC<UserProfileProps> = ({
                 fullWidth
                 startIcon={<MessageIcon />}
                 sx={{
-                  borderColor: "#03cb84",
-                  color: "#03cb84",
+                  borderColor: "#c5a3d5",
+                  color: "#c5a3d5",
                   borderRadius: 3,
                   fontWeight: "normal",
                   "&:hover": {
@@ -531,7 +531,7 @@ const UserProfile: React.FC<UserProfileProps> = ({
                   p: 2,
                   // bgcolor: "rgba(3, 203, 132, 0.08)",
                   borderRadius: 2,
-                  border: `1px dashed #03cb84`,
+                  border: `1px dashed #c5a3d5`,
                 }}
               >
                 <Typography
@@ -549,7 +549,7 @@ const UserProfile: React.FC<UserProfileProps> = ({
                   fullWidth
                   startIcon={<EmailIcon />}
                   sx={{
-                    bgcolor: "#03cb84",
+                    bgcolor: "#c5a3d5",
                     color: "#000",
                     fontWeight: "bold",
                     "&:hover": {
@@ -580,10 +580,10 @@ const UserProfile: React.FC<UserProfileProps> = ({
                 variant="fullWidth"
                 sx={{
                   borderBottom: 1,
-                  borderColor: "#03cb84",
+                  borderColor: "#c5a3d5",
                   bgcolor: themeColors.cardBg,
                   ".MuiTabs-indicator": {
-                    backgroundColor: "#03cb84",
+                    backgroundColor: "#c5a3d5",
                     height: 3,
                   },
                 }}
@@ -592,7 +592,7 @@ const UserProfile: React.FC<UserProfileProps> = ({
                   label={koreanContent.overview}
                   sx={{
                     color:
-                      tabValue === 0 ? "#03cb84" : themeColors.textSecondary,
+                      tabValue === 0 ? "#c5a3d5" : themeColors.textSecondary,
                     fontWeight: tabValue === 0 ? "bold" : "normal",
                     fontSize: "0.95rem",
                     textTransform: "none",
@@ -720,7 +720,7 @@ const UserProfile: React.FC<UserProfileProps> = ({
                                   borderRadius: 4,
                                   bgcolor: "rgba(3, 203, 132, 0.1)",
                                   "& .MuiLinearProgress-bar": {
-                                    bgcolor: "#03cb84",
+                                    bgcolor: "#c5a3d5",
                                     borderRadius: 4,
                                   },
                                 }}

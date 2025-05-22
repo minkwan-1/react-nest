@@ -20,7 +20,7 @@ const SignupButton: React.FC<SignupButtonProps> = ({
   isLoading = false,
 }) => {
   const theme = useTheme();
-  const keyColor = "#03cb84";
+  const keyColor = "#c5a3d5";
   const navigate = useNavigate();
 
   const handleSignup = async () => {

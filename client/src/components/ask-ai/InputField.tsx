@@ -81,13 +81,13 @@ const InputField = ({
         onClick={handleSubmit}
         disabled={loading || !prompt.trim()}
         sx={{
-          bgcolor: "#03cb84",
+          bgcolor: "#c5a3d5",
           color: "white",
           "&:hover": {
             bgcolor: "#028a66",
           },
           "&.Mui-disabled": {
-            bgcolor: alpha("#03cb84", 0.4),
+            bgcolor: alpha("#c5a3d5", 0.4),
             color: "white",
           },
           ml: 1,

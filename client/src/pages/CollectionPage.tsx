@@ -100,17 +100,17 @@ const CollectionPage = () => {
                 flexGrow: 1,
                 "& .MuiOutlinedInput-root": {
                   "& fieldset": {
-                    borderColor: "#03cb84",
+                    borderColor: "#c5a3d5",
                   },
                   "&:hover fieldset": {
-                    borderColor: "#03cb84",
+                    borderColor: "#c5a3d5",
                   },
                   "&.Mui-focused fieldset": {
-                    borderColor: "#03cb84",
+                    borderColor: "#c5a3d5",
                   },
                 },
                 "& .MuiSelect-icon": {
-                  color: "#03cb84",
+                  color: "#c5a3d5",
                 },
               }}
             >
@@ -151,10 +151,10 @@ const CollectionPage = () => {
                   </Typography>
                 </CardContent>
                 <CardActions sx={{ justifyContent: "flex-start", padding: 2 }}>
-                  <Button size="small" sx={{ color: "#03cb84" }}>
+                  <Button size="small" sx={{ color: "#c5a3d5" }}>
                     답변하기
                   </Button>
-                  <Button size="small" sx={{ color: "#03cb84" }}>
+                  <Button size="small" sx={{ color: "#c5a3d5" }}>
                     관심 취소
                   </Button>
                 </CardActions>

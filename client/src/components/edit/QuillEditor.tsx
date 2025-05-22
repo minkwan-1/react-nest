@@ -23,7 +23,7 @@ interface QuillEditorProps {
 
 const QuillEditor: React.FC<QuillEditorProps> = ({ value, onChange }) => {
   const quillRef = useRef<ReactQuill | null>(null);
-  const mainColor = "#03cb84";
+  const mainColor = "#c5a3d5";
 
   const modules = {
     toolbar: {

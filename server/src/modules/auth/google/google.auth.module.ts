@@ -13,6 +13,7 @@ import { GoogleAuthController } from './google.auth.controller';
 // 3. 의존 모듈
 import { UsersModule } from 'src/users/users.module';
 import { AuthModule } from '../auth.module';
+import { SessionModule } from '../session/session.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { AuthModule } from '../auth.module';
 
     // 유저 정보 접근용 모듈
     UsersModule,
+    SessionModule,
   ],
   controllers: [GoogleAuthController],
   providers: [GoogleAuthService, GoogleAuthRepository],

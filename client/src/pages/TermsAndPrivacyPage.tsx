@@ -13,7 +13,7 @@ import { termsData } from "../mock";
 
 const TermsAndPrivacyPage = () => {
   const [isAgreed, setIsAgreed] = useState(false);
-  const mainColor = "#03cb84";
+  const mainColor = "#c5a3d5";
   const theme = useTheme();
   const isDarkMode = theme.palette.mode === "dark";
 

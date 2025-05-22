@@ -12,12 +12,14 @@ import {
 import { Request, Response } from 'express';
 import { GoogleAuthService } from './google.auth.service';
 import { UsersService } from 'src/users/users.service';
+import { SessionService } from '../session/session.service';
 
 @Controller('auth/google')
 export class GoogleAuthController {
   constructor(
     private readonly googleAuthService: GoogleAuthService,
     private readonly usersService: UsersService,
+    private readonly sessionService: SessionService,
   ) {}
 
   // 1. Google 로그인 URL을 제공하는 GET 엔드포인트
@@ -55,19 +57,27 @@ export class GoogleAuthController {
 
         const addedProviderViaGoogleUser = { ...viaGoogleUser, provider };
 
-        // 9. 세션 로그인 처리
-        (req as any).login(addedProviderViaGoogleUser, () => {
-          const user = (req as any).user;
-
-          console.log(`세션 ID: ${req.sessionID}`);
-          console.log(user);
-
-          // 10. 기존 사용자 데이터 반환
-          res.send({
-            message: '기존 유저 데이터',
-            user: { ...addedProviderViaGoogleUser, isExist: true },
-          });
+        await this.sessionService.loginWithSession(
+          req,
+          addedProviderViaGoogleUser,
+        );
+        res.send({
+          message: '기존 유저 데이터',
+          user: { ...addedProviderViaGoogleUser, isExist: true },
         });
+        // // 9. 세션 로그인 처리
+        // (req as any).login(addedProviderViaGoogleUser, () => {
+        //   const user = (req as any).user;
+
+        //   console.log(`세션 ID: ${req.sessionID}`);
+        //   console.log(user);
+
+        //   // 10. 기존 사용자 데이터 반환
+        //   res.send({
+        //     message: '기존 유저 데이터',
+        //     user: { ...addedProviderViaGoogleUser, isExist: true },
+        //   });
+        // });
 
         return;
       } else {

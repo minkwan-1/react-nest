@@ -6,7 +6,7 @@ interface BackgroundElementsProps {
 }
 
 export const BackgroundElements: React.FC<BackgroundElementsProps> = ({
-  mainColor = "#03cb84",
+  mainColor = "#c5a3d5",
 }) => {
   return (
     <>

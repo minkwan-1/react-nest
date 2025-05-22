@@ -10,7 +10,7 @@ interface PageHeaderProps {
 export const PageHeader: React.FC<PageHeaderProps> = ({
   title,
   subtitle,
-  mainColor = "#03cb84",
+  mainColor = "#c5a3d5",
 }) => {
   const theme = useTheme();
   const isDarkMode = theme.palette.mode === "dark";

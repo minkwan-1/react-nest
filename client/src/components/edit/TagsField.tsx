@@ -16,7 +16,7 @@ interface TagsFieldProps {
 const TagsField: React.FC<TagsFieldProps> = ({ tags, handleTagsChange }) => {
   const theme = useTheme();
   const isDarkMode = theme.palette.mode === "dark";
-  const mainColor = "#03cb84";
+  const mainColor = "#c5a3d5";
 
   return (
     <Box sx={{ mb: 3 }}>

@@ -22,7 +22,7 @@ const PopularTagsSection = () => {
             height: "3px",
             left: 0,
             bottom: "-8px",
-            backgroundColor: "#03cb84",
+            backgroundColor: "#c5a3d5",
             borderRadius: "10px",
           },
         }}
@@ -59,8 +59,8 @@ const PopularTagsSection = () => {
                     backgroundColor: "#4F4F4F",
                   }),
                 },
-                color: "#03cb84",
-                border: "1px solid #03cb84",
+                color: "#c5a3d5",
+                border: "1px solid #c5a3d5",
               },
             }}
             clickable

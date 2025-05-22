@@ -477,10 +477,10 @@ const MainContent = () => {
               <Button
                 variant="outlined"
                 sx={{
-                  borderColor: "#03cb84",
+                  borderColor: "#c5a3d5",
                   color: alpha(theme.palette.text.secondary, 0.7),
                   "&:hover": {
-                    borderColor: "#03cb84",
+                    borderColor: "#c5a3d5",
                     backgroundColor: alpha(themeColors.primary, 0.05),
                   },
                 }}
@@ -645,7 +645,7 @@ const MainContent = () => {
                 gap: 1,
               }}
             >
-              <CodeIcon sx={{ color: "#03cb84" }} /> {/* 아이콘 색상 변경 */}
+              <CodeIcon sx={{ color: "#c5a3d5" }} /> {/* 아이콘 색상 변경 */}
               답변 작성하기
             </Typography>
             <Paper
@@ -669,7 +669,7 @@ const MainContent = () => {
                   borderRadius: 1,
                 }}
               >
-                <InfoIcon style={{ color: "#03cb84" }} />{" "}
+                <InfoIcon style={{ color: "#c5a3d5" }} />{" "}
                 {/* 아이콘 색상 변경 */}
                 마크다운을 지원합니다. Ctrl+B로 굵게, Ctrl+I로 기울임체를 사용할
                 수 있습니다. 코드 블록은 ```로 감싸주세요.
@@ -680,7 +680,7 @@ const MainContent = () => {
                 size="large"
                 sx={{
                   mt: 2,
-                  bgcolor: "#03cb84", // 버튼 배경색 변경
+                  bgcolor: "#c5a3d5", // 버튼 배경색 변경
                   "&:hover": {
                     bgcolor: "#02b676", // 호버 시 약간 더 진한 청록색
                   },
