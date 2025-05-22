@@ -117,25 +117,6 @@ const SignInSocialButtons = () => {
             ...theme.applyStyles("dark", { borderColor: "#ffffff15" }),
           }}
         />
-        <Typography
-          variant="body2"
-          color="text.secondary"
-          sx={{
-            px: 2,
-            fontWeight: 300,
-            ...theme.applyStyles("light", { color: "text.secondary" }),
-            ...theme.applyStyles("dark", { color: "#b0b0b0" }),
-          }}
-        >
-          또는
-        </Typography>
-        <Divider
-          sx={{
-            flex: 1,
-            ...theme.applyStyles("light", { borderColor: "#00000008" }),
-            ...theme.applyStyles("dark", { borderColor: "#ffffff15" }),
-          }}
-        />
       </Box>
     </>
   );

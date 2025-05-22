@@ -487,24 +487,24 @@ const recommendedTopics = [
 const staffPicks = [
   {
     id: 1,
-    author: "김주희",
-    title: "개발자의 시선: 우리에게 필요한 증명",
-    date: "3월 11일",
-    thumbnail: "https://randomuser.me/api/portraits/women/44.jpg", // 아바타 이미지 예시
-  },
-  {
-    id: 2,
-    author: "박재민",
-    title: "코드 리뷰를 통한 팀 문화 개선 방법",
-    date: "6일 전",
-    thumbnail: "https://randomuser.me/api/portraits/men/23.jpg", // 아바타 이미지 예시
-  },
-  {
-    id: 3,
     author: "원민관",
     title: "애자일: Pullim 팀이 고민하는 방식",
     date: "2월 8일",
-    thumbnail: "https://randomuser.me/api/portraits/men/34.jpg", // 아바타 이미지 예시
+    thumbnail: "https://randomuser.me/api/portraits/men/34.jpg",
+  },
+  {
+    id: 2,
+    author: "김주희",
+    title: "개발자의 시선: 우리에게 필요한 증명",
+    date: "3월 11일",
+    thumbnail: "https://randomuser.me/api/portraits/women/44.jpg",
+  },
+  {
+    id: 3,
+    author: "박재민",
+    title: "코드 리뷰를 통한 팀 문화 개선 방법",
+    date: "6일 전",
+    thumbnail: "https://randomuser.me/api/portraits/men/23.jpg",
   },
 ];
 
