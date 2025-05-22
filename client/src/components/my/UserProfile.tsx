@@ -6,9 +6,6 @@ import {
   Button,
   Paper,
   Container,
-  Tabs,
-  Tab,
-  Link,
   useTheme,
   Grid,
   Chip,
@@ -30,11 +27,7 @@ import {
   GitHub as GitHubIcon,
   Favorite as FavoriteIcon,
   Comment as CommentIcon,
-  Bookmark as BookmarkIcon,
-  Share as ShareIcon,
-  MoreVert as MoreVertIcon,
   Verified as VerifiedIcon,
-  // Notifications as NotificationsIcon,
   Message as MessageIcon,
   Add as AddIcon,
   Email as EmailIcon,
@@ -78,12 +71,6 @@ const UserProfile: React.FC<UserProfileProps> = ({
     accent2: "#7678ED",
     success: "#2EC4B6",
     warning: "#E71D36",
-  };
-
-  const [tabValue, setTabValue] = React.useState(0);
-
-  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
-    setTabValue(newValue);
   };
 
   // Translated content for Korean language sections
@@ -171,50 +158,14 @@ const UserProfile: React.FC<UserProfileProps> = ({
     },
   ];
 
-  const answerData = [
-    {
-      id: 1,
-      questionTitle: "국내 D2C 브랜드의 성공 요인은 무엇인가요?",
-      author: "박셀러",
-      date: "2025-03-20",
-      content:
-        "성공적인 D2C 브랜드의 핵심은 강력한 브랜드 스토리와 고객과의 직접적인 소통 채널 구축입니다. 특히 CRM을 통한 고객 데이터 활용과 개인화된 마케팅이 중요합니다. 또한 제품 품질과 언박싱 경험도 차별화 요소로 작용합니다.",
-      likes: 45,
-      questionAuthor: "이커머스",
-      tags: ["D2C", "브랜딩", "CRM"],
-    },
-    {
-      id: 2,
-      questionTitle: "뉴스레터 마케팅의 효과적인 전략은 무엇인가요?",
-      author: "최콘텐츠",
-      date: "2025-03-10",
-      content:
-        "효과적인 뉴스레터 마케팅을 위해서는 명확한 타겟 설정과 일관된 가치 제공이 필수입니다. 주기적인 발송과 개인화된 콘텐츠, 그리고 클릭률을 높이는 제목 설정이 중요해요. 또한 구독자의 행동 데이터를 분석하여 지속적으로 콘텐츠를 최적화해야 합니다.",
-      likes: 32,
-      questionAuthor: "김마케터",
-      tags: ["뉴스레터", "이메일마케팅", "콘텐츠전략"],
-    },
-    {
-      id: 3,
-      questionTitle: "소셜 커머스와 라이브 커머스의 차이점은 무엇인가요?",
-      author: "정디지털",
-      date: "2025-02-25",
-      content:
-        "소셜 커머스는 소셜 미디어를 통한 제품 추천과 공동구매에 중점을 두고 있는 반면, 라이브 커머스는 실시간 방송을 통한 직접적인 상품 소개와 즉각적인 구매 유도에 특화되어 있습니다. 라이브 커머스의 경우 호스트와 시청자 간의 실시간 상호작용이 구매 결정에 큰 영향을 미칩니다.",
-      likes: 28,
-      questionAuthor: "장쇼핑",
-      tags: ["소셜커머스", "라이브커머스", "플랫폼비즈니스"],
-    },
-  ];
-
   // Sample interest tags
   const interestTags = [
     "Full-stack Development",
-    "JavaScript",
+    "NestJS",
     "TypeScript",
-    "React",
-    "Node.js",
-    "AI",
+    "ReactJS",
+    "NextJS",
+    "Git",
     "AWS",
     "CI/CD",
     "Software Architecture",
@@ -564,411 +515,45 @@ const UserProfile: React.FC<UserProfileProps> = ({
           </Box>
 
           {/* Right Content Area */}
-          <Box sx={{ flex: 1, p: 0 }}>
-            {/* Tabs */}
-            <Paper
-              elevation={0}
-              sx={{
-                borderRadius: 2,
-                overflow: "hidden",
-                boxShadow: "0 2px 12px rgba(0,0,0,0.04)",
-              }}
-            >
-              <Tabs
-                value={tabValue}
-                onChange={handleTabChange}
-                variant="fullWidth"
-                sx={{
-                  borderBottom: 1,
-                  borderColor: "#b8dae1",
-                  bgcolor: themeColors.cardBg,
-                  ".MuiTabs-indicator": {
-                    backgroundColor: "#b8dae1",
-                    height: 3,
-                  },
-                }}
-              >
-                <Tab
-                  label={koreanContent.overview}
-                  sx={{
-                    color:
-                      tabValue === 0 ? "#b8dae1" : themeColors.textSecondary,
-                    fontWeight: tabValue === 0 ? "bold" : "normal",
-                    fontSize: "0.95rem",
-                    textTransform: "none",
-                  }}
-                />
-                <Tab
-                  label={koreanContent.articles}
-                  sx={{
-                    color:
-                      tabValue === 1
-                        ? themeColors.primary
-                        : themeColors.textSecondary,
-                    fontWeight: tabValue === 1 ? "bold" : "normal",
-                    fontSize: "0.95rem",
-                    textTransform: "none",
-                  }}
-                />
-                <Tab
-                  label={koreanContent.replies}
-                  sx={{
-                    color:
-                      tabValue === 2
-                        ? themeColors.primary
-                        : themeColors.textSecondary,
-                    fontWeight: tabValue === 2 ? "bold" : "normal",
-                    fontSize: "0.95rem",
-                    textTransform: "none",
-                  }}
-                />
-              </Tabs>
-            </Paper>
-
+          <Box sx={{ flex: 1, p: 0, borderRadius: 2 }}>
             {/* Content Sections */}
-            <Box sx={{ mt: 2 }}>
-              {tabValue === 0 && (
-                <Grid spacing={2}>
-                  <Grid item xs={14} md={8}>
-                    {/* Self Introduction Section */}
-                    <Paper
-                      elevation={0}
-                      sx={{
-                        p: 3,
-                        mb: 2,
-                        bgcolor: themeColors.cardBg,
-                        borderRadius: 2,
-                        boxShadow: "0 2px 12px rgba(0,0,0,0.04)",
-                      }}
-                    >
-                      <Typography
-                        variant="h6"
-                        fontWeight="bold"
-                        sx={{ mb: 2, display: "flex", alignItems: "center" }}
-                      >
-                        {koreanContent.selfIntro}
-                      </Typography>
-                      <Typography
-                        variant="body2"
-                        sx={{
-                          color: themeColors.textSecondary,
-                          lineHeight: 1.7,
-                        }}
-                      >
-                        {koreanContent.introText}
-                      </Typography>
-                    </Paper>
-
-                    {/* Service Introduction Section */}
-                    <Paper
-                      elevation={0}
-                      sx={{
-                        p: 3,
-                        mb: 2,
-                        bgcolor: themeColors.cardBg,
-                        borderRadius: 2,
-                        boxShadow: "0 2px 12px rgba(0,0,0,0.04)",
-                      }}
-                    >
-                      <Box
-                        sx={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                          alignItems: "center",
-                          mb: 2,
-                        }}
-                      >
-                        <Typography
-                          variant="h6"
-                          fontWeight="bold"
-                          sx={{ display: "flex", alignItems: "center" }}
-                        >
-                          {koreanContent.serviceIntro}
-                        </Typography>
-                      </Box>
-                      <Typography
-                        variant="body2"
-                        sx={{
-                          color: themeColors.textSecondary,
-                          mb: 2,
-                          lineHeight: 1.7,
-                        }}
-                      >
-                        {koreanContent.serviceText}
-                      </Typography>
-
-                      <Box
-                        sx={{
-                          display: "flex",
-                          alignItems: "center",
-                          width: "100%",
-                          mt: 2,
-                          mb: 1,
-                        }}
-                      >
-                        <Box sx={{ flex: 1 }}>
-                          <Typography variant="caption" fontWeight="medium">
-                            구독자 성장률
-                          </Typography>
-                          <Box sx={{ display: "flex", alignItems: "center" }}>
-                            <Box sx={{ width: "100%", mr: 1 }}>
-                              <LinearProgress
-                                variant="determinate"
-                                value={72}
-                                sx={{
-                                  height: 8,
-                                  borderRadius: 4,
-                                  bgcolor: "rgba(3, 203, 132, 0.1)",
-                                  "& .MuiLinearProgress-bar": {
-                                    bgcolor: "#b8dae1",
-                                    borderRadius: 4,
-                                  },
-                                }}
-                              />
-                            </Box>
-                            <Typography variant="body2" fontWeight="bold">
-                              72%
-                            </Typography>
-                          </Box>
-                        </Box>
-                      </Box>
-
-                      <Divider sx={{ my: 2 }} />
-
-                      <Box
-                        sx={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                        }}
-                      >
-                        <Box>
-                          <Typography
-                            variant="caption"
-                            sx={{ color: themeColors.textSecondary }}
-                          >
-                            주간 구독자
-                          </Typography>
-                          <Typography variant="body1" fontWeight="bold">
-                            25,420명
-                          </Typography>
-                        </Box>
-                        <Box>
-                          <Typography
-                            variant="caption"
-                            sx={{ color: themeColors.textSecondary }}
-                          >
-                            오픈율
-                          </Typography>
-                          <Typography variant="body1" fontWeight="bold">
-                            43.8%
-                          </Typography>
-                        </Box>
-                        <Box>
-                          <Typography
-                            variant="caption"
-                            sx={{ color: themeColors.textSecondary }}
-                          >
-                            클릭률
-                          </Typography>
-                          <Typography variant="body1" fontWeight="bold">
-                            16.2%
-                          </Typography>
-                        </Box>
-                      </Box>
-                    </Paper>
-
-                    {/* Popular Articles Section */}
-                    <Paper
-                      elevation={0}
-                      sx={{
-                        p: 3,
-                        mb: 2,
-                        bgcolor: themeColors.cardBg,
-                        borderRadius: 2,
-                        boxShadow: "0 2px 12px rgba(0,0,0,0.04)",
-                      }}
-                    >
-                      <Box
-                        sx={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                          alignItems: "center",
-                          mb: 2,
-                        }}
-                      >
-                        <Typography variant="h6" fontWeight="bold">
-                          {koreanContent.popularPosts}
-                        </Typography>
-                      </Box>
-
-                      <Grid spacing={2}>
-                        {questionData.map((article) => (
-                          <Grid item xs={12} key={article.id}>
-                            <Card
-                              sx={{
-                                display: "flex",
-                                mb: 1,
-                                boxShadow: "none",
-                                border: `1px solid ${themeColors.border}`,
-                                borderRadius: 2,
-                                overflow: "hidden",
-                                transition: "all 0.3s ease",
-                                "&:hover": {
-                                  transform: "translateY(-3px)",
-                                  boxShadow: "0 6px 12px rgba(0,0,0,0.1)",
-                                  borderColor: themeColors.primary,
-                                },
-                              }}
-                            >
-                              <CardActionArea
-                                sx={{
-                                  display: "flex",
-                                  flexDirection: { xs: "column", sm: "row" },
-                                  alignItems: "stretch",
-                                  height: "100%",
-                                }}
-                              >
-                                <CardMedia
-                                  component="img"
-                                  sx={{
-                                    width: { xs: "100%", sm: 140 },
-                                    height: { xs: 140, sm: "auto" },
-                                  }}
-                                  image={article.thumbnail}
-                                  alt={article.title}
-                                />
-                                <CardContent sx={{ flex: 1, p: 2 }}>
-                                  <Box sx={{ mb: 1 }}>
-                                    {article.tags.map((tag, i) => (
-                                      <Chip
-                                        key={i}
-                                        label={tag}
-                                        size="small"
-                                        sx={{
-                                          mr: 0.5,
-                                          mb: 0.5,
-                                          fontSize: "0.625rem",
-                                          height: 20,
-                                          bgcolor: `rgba(3, 203, 132, ${
-                                            0.05 + i * 0.05
-                                          })`,
-                                          color: themeColors.primaryDark,
-                                        }}
-                                      />
-                                    ))}
-                                  </Box>
-                                  <Typography
-                                    variant="subtitle1"
-                                    component="div"
-                                    fontWeight="bold"
-                                    sx={{ mb: 1 }}
-                                  >
-                                    {article.title}
-                                  </Typography>
-                                  <Typography
-                                    variant="body2"
-                                    color="text.secondary"
-                                    sx={{
-                                      mb: 1,
-                                      overflow: "hidden",
-                                      textOverflow: "ellipsis",
-                                      display: "-webkit-box",
-                                      WebkitLineClamp: "2",
-                                      WebkitBoxOrient: "vertical",
-                                    }}
-                                  >
-                                    {article.content}
-                                  </Typography>
-                                  <Box
-                                    sx={{
-                                      display: "flex",
-                                      justifyContent: "space-between",
-                                      mt: 1,
-                                    }}
-                                  >
-                                    <Typography
-                                      variant="caption"
-                                      color="text.secondary"
-                                    >
-                                      {article.date}
-                                    </Typography>
-                                    <Box
-                                      sx={{
-                                        display: "flex",
-                                        alignItems: "center",
-                                        gap: 1.5,
-                                      }}
-                                    >
-                                      <Box
-                                        sx={{
-                                          display: "flex",
-                                          alignItems: "center",
-                                        }}
-                                      >
-                                        <FavoriteIcon
-                                          sx={{
-                                            fontSize: 14,
-                                            mr: 0.5,
-                                            color: themeColors.warning,
-                                          }}
-                                        />
-                                        <Typography variant="caption">
-                                          {article.likes}
-                                        </Typography>
-                                      </Box>
-                                      <Box
-                                        sx={{
-                                          display: "flex",
-                                          alignItems: "center",
-                                        }}
-                                      >
-                                        <CommentIcon
-                                          sx={{
-                                            fontSize: 14,
-                                            mr: 0.5,
-                                            color: themeColors.accent2,
-                                          }}
-                                        />
-                                        <Typography variant="caption">
-                                          {article.comments}
-                                        </Typography>
-                                      </Box>
-                                      <Box
-                                        sx={{
-                                          display: "flex",
-                                          alignItems: "center",
-                                        }}
-                                      >
-                                        <PublicIcon
-                                          sx={{
-                                            fontSize: 14,
-                                            mr: 0.5,
-                                            color: themeColors.accent,
-                                          }}
-                                        />
-                                        <Typography variant="caption">
-                                          {article.views}
-                                        </Typography>
-                                      </Box>
-                                    </Box>
-                                  </Box>
-                                </CardContent>
-                              </CardActionArea>
-                            </Card>
-                          </Grid>
-                        ))}
-                      </Grid>
-                    </Paper>
-                  </Grid>
-                </Grid>
-              )}
-
-              {tabValue === 1 && (
-                <Box>
+            <Box>
+              <Grid spacing={2}>
+                <Grid item xs={14} md={8}>
+                  {/* Self Introduction Section */}
                   <Paper
                     elevation={0}
                     sx={{
-                      p: "3",
+                      p: 3,
+                      mb: 2,
+                      bgcolor: themeColors.cardBg,
+                      borderRadius: 2,
+                      boxShadow: "0 2px 12px rgba(0,0,0,0.04)",
+                    }}
+                  >
+                    <Typography
+                      variant="h6"
+                      fontWeight="bold"
+                      sx={{ mb: 2, display: "flex", alignItems: "center" }}
+                    >
+                      {koreanContent.selfIntro}
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      sx={{
+                        color: themeColors.textSecondary,
+                        lineHeight: 1.7,
+                      }}
+                    >
+                      {koreanContent.introText}
+                    </Typography>
+                  </Paper>
+
+                  {/* Service Introduction Section */}
+                  <Paper
+                    elevation={0}
+                    sx={{
+                      p: 3,
                       mb: 2,
                       bgcolor: themeColors.cardBg,
                       borderRadius: 2,
@@ -980,192 +565,109 @@ const UserProfile: React.FC<UserProfileProps> = ({
                         display: "flex",
                         justifyContent: "space-between",
                         alignItems: "center",
-                        mb: 3,
+                        mb: 2,
                       }}
                     >
-                      <Typography variant="h6" fontWeight="bold">
-                        {koreanContent.articles}
-                      </Typography>
-                      <Button
-                        variant="contained"
-                        startIcon={<AddIcon />}
-                        size="small"
-                        sx={{
-                          bgcolor: themeColors.primary,
-                          color: "#000",
-                          "&:hover": {
-                            bgcolor: themeColors.primaryDark,
-                          },
-                        }}
+                      <Typography
+                        variant="h6"
+                        fontWeight="bold"
+                        sx={{ display: "flex", alignItems: "center" }}
                       >
-                        {koreanContent.newPost}
-                      </Button>
+                        {koreanContent.serviceIntro}
+                      </Typography>
+                    </Box>
+                    <Typography
+                      variant="body2"
+                      sx={{
+                        color: themeColors.textSecondary,
+                        mb: 2,
+                        lineHeight: 1.7,
+                      }}
+                    >
+                      {koreanContent.serviceText}
+                    </Typography>
+
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        width: "100%",
+                        mt: 2,
+                        mb: 1,
+                      }}
+                    >
+                      <Box sx={{ flex: 1 }}>
+                        <Typography variant="caption" fontWeight="medium">
+                          구독자 성장률
+                        </Typography>
+                        <Box sx={{ display: "flex", alignItems: "center" }}>
+                          <Box sx={{ width: "100%", mr: 1 }}>
+                            <LinearProgress
+                              variant="determinate"
+                              value={72}
+                              sx={{
+                                height: 8,
+                                borderRadius: 4,
+                                bgcolor: "rgba(3, 203, 132, 0.1)",
+                                "& .MuiLinearProgress-bar": {
+                                  bgcolor: "#b8dae1",
+                                  borderRadius: 4,
+                                },
+                              }}
+                            />
+                          </Box>
+                          <Typography variant="body2" fontWeight="bold">
+                            72%
+                          </Typography>
+                        </Box>
+                      </Box>
                     </Box>
 
-                    {questionData.map((article) => (
-                      <Card
-                        key={article.id}
-                        sx={{
-                          mb: 3,
-                          boxShadow: "none",
-                          border: `1px solid ${themeColors.border}`,
-                          borderRadius: 2,
-                          transition: "all 0.3s ease",
-                          "&:hover": {
-                            transform: "translateY(-3px)",
-                            boxShadow: "0 8px 20px rgba(0,0,0,0.1)",
-                            borderColor: themeColors.primary,
-                          },
-                        }}
-                      >
-                        <CardMedia
-                          component="img"
-                          height="200"
-                          image={article.thumbnail}
-                          alt={article.title}
-                        />
-                        <CardContent sx={{}}>
-                          <Box
-                            sx={{
-                              display: "flex",
-                              justifyContent: "space-between",
-                              mb: 1,
-                            }}
-                          >
-                            <Box>
-                              {article.tags.map((tag, i) => (
-                                <Chip
-                                  key={i}
-                                  label={tag}
-                                  size="small"
-                                  sx={{
-                                    mr: 0.5,
-                                    mb: 0.5,
-                                    fontSize: "0.75rem",
-                                    bgcolor: `rgba(3, 203, 132, ${
-                                      0.05 + i * 0.05
-                                    })`,
-                                    color: themeColors.primaryDark,
-                                  }}
-                                />
-                              ))}
-                            </Box>
-                            <Typography
-                              variant="caption"
-                              color="text.secondary"
-                            >
-                              {article.date}
-                            </Typography>
-                          </Box>
+                    <Divider sx={{ my: 2 }} />
 
-                          <Typography
-                            variant="h5"
-                            component="div"
-                            fontWeight="bold"
-                            sx={{ mb: 2 }}
-                          >
-                            {article.title}
-                          </Typography>
-
-                          <Typography
-                            variant="body1"
-                            color="text.secondary"
-                            sx={{ mb: 3 }}
-                          >
-                            {article.content}
-                          </Typography>
-
-                          <Box
-                            sx={{
-                              display: "flex",
-                              justifyContent: "space-between",
-                              alignItems: "center",
-                            }}
-                          >
-                            <Box sx={{ display: "flex", gap: 2 }}>
-                              <Box
-                                sx={{
-                                  display: "flex",
-                                  alignItems: "center",
-                                }}
-                              >
-                                <FavoriteIcon
-                                  sx={{
-                                    fontSize: 16,
-                                    mr: 0.5,
-                                    color: themeColors.warning,
-                                  }}
-                                />
-                                <Typography variant="body2">
-                                  {article.likes}
-                                </Typography>
-                              </Box>
-                              <Box
-                                sx={{
-                                  display: "flex",
-                                  alignItems: "center",
-                                }}
-                              >
-                                <CommentIcon
-                                  sx={{
-                                    fontSize: 16,
-                                    mr: 0.5,
-                                    color: themeColors.accent2,
-                                  }}
-                                />
-                                <Typography variant="body2">
-                                  {article.comments}
-                                </Typography>
-                              </Box>
-                              <Box
-                                sx={{
-                                  display: "flex",
-                                  alignItems: "center",
-                                }}
-                              >
-                                <PublicIcon
-                                  sx={{
-                                    fontSize: 16,
-                                    mr: 0.5,
-                                    color: themeColors.accent,
-                                  }}
-                                />
-                                <Typography variant="body2">
-                                  {article.views}
-                                </Typography>
-                              </Box>
-                            </Box>
-
-                            <Box>
-                              <IconButton
-                                size="small"
-                                sx={{ color: themeColors.accent2 }}
-                              >
-                                <BookmarkIcon fontSize="small" />
-                              </IconButton>
-                              <IconButton
-                                size="small"
-                                sx={{ color: themeColors.textSecondary }}
-                              >
-                                <ShareIcon fontSize="small" />
-                              </IconButton>
-                              <IconButton
-                                size="small"
-                                sx={{ color: themeColors.textSecondary }}
-                              >
-                                <MoreVertIcon fontSize="small" />
-                              </IconButton>
-                            </Box>
-                          </Box>
-                        </CardContent>
-                      </Card>
-                    ))}
+                    <Box
+                      sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <Box>
+                        <Typography
+                          variant="caption"
+                          sx={{ color: themeColors.textSecondary }}
+                        >
+                          주간 구독자
+                        </Typography>
+                        <Typography variant="body1" fontWeight="bold">
+                          25,420명
+                        </Typography>
+                      </Box>
+                      <Box>
+                        <Typography
+                          variant="caption"
+                          sx={{ color: themeColors.textSecondary }}
+                        >
+                          오픈율
+                        </Typography>
+                        <Typography variant="body1" fontWeight="bold">
+                          43.8%
+                        </Typography>
+                      </Box>
+                      <Box>
+                        <Typography
+                          variant="caption"
+                          sx={{ color: themeColors.textSecondary }}
+                        >
+                          클릭률
+                        </Typography>
+                        <Typography variant="body1" fontWeight="bold">
+                          16.2%
+                        </Typography>
+                      </Box>
+                    </Box>
                   </Paper>
-                </Box>
-              )}
 
-              {tabValue === 2 && (
-                <Box>
+                  {/* Popular Articles Section */}
                   <Paper
                     elevation={0}
                     sx={{
@@ -1176,124 +678,179 @@ const UserProfile: React.FC<UserProfileProps> = ({
                       boxShadow: "0 2px 12px rgba(0,0,0,0.04)",
                     }}
                   >
-                    <Typography variant="h6" fontWeight="bold" sx={{ mb: 3 }}>
-                      {koreanContent.replies}
-                    </Typography>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        mb: 2,
+                      }}
+                    >
+                      <Typography variant="h6" fontWeight="bold">
+                        {koreanContent.popularPosts}
+                      </Typography>
+                    </Box>
 
-                    {answerData.map((answer, index) => (
-                      <Box key={answer.id} sx={{ mb: 3 }}>
-                        <Paper
-                          elevation={0}
-                          sx={{
-                            p: 3,
-                            border: `1px solid ${themeColors.border}`,
-                            borderRadius: 2,
-                            transition: "all 0.3s ease",
-                            "&:hover": {
-                              borderColor: themeColors.primary,
-                              boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
-                            },
-                          }}
-                        >
-                          <Box
+                    <Grid spacing={2}>
+                      {questionData.map((article) => (
+                        <Grid item xs={12} key={article.id}>
+                          <Card
                             sx={{
                               display: "flex",
-                              justifyContent: "space-between",
-                              mb: 2,
+                              mb: 1,
+                              boxShadow: "none",
+                              border: `1px solid ${themeColors.border}`,
+                              borderRadius: 2,
+                              overflow: "hidden",
+                              transition: "all 0.3s ease",
+                              "&:hover": {
+                                transform: "translateY(-3px)",
+                                boxShadow: "0 6px 12px rgba(0,0,0,0.1)",
+                                borderColor: "#b8dae1",
+                              },
                             }}
                           >
-                            <Typography
-                              variant="subtitle1"
-                              fontWeight="medium"
-                              color="primary"
-                            >
-                              <Link
-                                href="#"
-                                sx={{
-                                  color: "inherit",
-                                  textDecoration: "none",
-                                  "&:hover": { textDecoration: "underline" },
-                                }}
-                              >
-                                {answer.questionTitle}
-                              </Link>
-                            </Typography>
-                            <Typography
-                              variant="caption"
-                              color="text.secondary"
-                            >
-                              {answer.date}
-                            </Typography>
-                          </Box>
-
-                          <Typography
-                            variant="body1"
-                            color="text.secondary"
-                            sx={{ mb: 2 }}
-                          >
-                            {answer.content}
-                          </Typography>
-
-                          <Box
-                            sx={{
-                              display: "flex",
-                              justifyContent: "space-between",
-                              alignItems: "center",
-                            }}
-                          >
-                            <Box sx={{ display: "flex", alignItems: "center" }}>
-                              <Chip
-                                size="small"
-                                label={`질문자: ${answer.questionAuthor}`}
-                                sx={{
-                                  mr: 1,
-                                  fontSize: "0.7rem",
-                                  bgcolor: "rgba(3, 203, 132, 0.08)",
-                                  color: themeColors.primary,
-                                }}
-                              />
-                              {answer.tags.map((tag, i) => (
-                                <Chip
-                                  key={i}
-                                  label={tag}
-                                  size="small"
-                                  sx={{
-                                    mr: 0.5,
-                                    fontSize: "0.7rem",
-                                    bgcolor: "rgba(118, 120, 237, 0.08)",
-                                    color: themeColors.accent2,
-                                  }}
-                                />
-                              ))}
-                            </Box>
-
-                            <Box
+                            <CardActionArea
                               sx={{
                                 display: "flex",
-                                alignItems: "center",
-                                gap: 0.5,
+                                flexDirection: { xs: "column", sm: "row" },
+                                alignItems: "stretch",
+                                height: "100%",
                               }}
                             >
-                              <IconButton
-                                size="small"
-                                sx={{ color: themeColors.warning }}
-                              >
-                                <FavoriteIcon fontSize="small" />
-                              </IconButton>
-                              <Typography variant="body2">
-                                {answer.likes}
-                              </Typography>
-                            </Box>
-                          </Box>
-                        </Paper>
-                        {index < answerData.length - 1 && (
-                          <Divider sx={{ my: 3 }} />
-                        )}
-                      </Box>
-                    ))}
+                              <CardMedia
+                                component="img"
+                                sx={{
+                                  width: { xs: "100%", sm: 140 },
+                                  height: { xs: 140, sm: "auto" },
+                                }}
+                                image={article.thumbnail}
+                                alt={article.title}
+                              />
+                              <CardContent sx={{ flex: 1, p: 2 }}>
+                                <Box sx={{ mb: 1 }}>
+                                  {article.tags.map((tag, i) => (
+                                    <Chip
+                                      key={i}
+                                      label={tag}
+                                      size="small"
+                                      sx={{
+                                        mr: 0.5,
+                                        mb: 0.5,
+                                        fontSize: "0.625rem",
+                                        height: 20,
+                                        bgcolor: `rgba(3, 203, 132, ${
+                                          0.05 + i * 0.05
+                                        })`,
+                                        color: themeColors.primaryDark,
+                                      }}
+                                    />
+                                  ))}
+                                </Box>
+                                <Typography
+                                  variant="subtitle1"
+                                  component="div"
+                                  fontWeight="bold"
+                                  sx={{ mb: 1 }}
+                                >
+                                  {article.title}
+                                </Typography>
+                                <Typography
+                                  variant="body2"
+                                  color="text.secondary"
+                                  sx={{
+                                    mb: 1,
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                    display: "-webkit-box",
+                                    WebkitLineClamp: "2",
+                                    WebkitBoxOrient: "vertical",
+                                  }}
+                                >
+                                  {article.content}
+                                </Typography>
+                                <Box
+                                  sx={{
+                                    display: "flex",
+                                    justifyContent: "space-between",
+                                    mt: 1,
+                                  }}
+                                >
+                                  <Typography
+                                    variant="caption"
+                                    color="text.secondary"
+                                  >
+                                    {article.date}
+                                  </Typography>
+                                  <Box
+                                    sx={{
+                                      display: "flex",
+                                      alignItems: "center",
+                                      gap: 1.5,
+                                    }}
+                                  >
+                                    <Box
+                                      sx={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                      }}
+                                    >
+                                      <FavoriteIcon
+                                        sx={{
+                                          fontSize: 14,
+                                          mr: 0.5,
+                                          color: themeColors.warning,
+                                        }}
+                                      />
+                                      <Typography variant="caption">
+                                        {article.likes}
+                                      </Typography>
+                                    </Box>
+                                    <Box
+                                      sx={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                      }}
+                                    >
+                                      <CommentIcon
+                                        sx={{
+                                          fontSize: 14,
+                                          mr: 0.5,
+                                          color: themeColors.accent2,
+                                        }}
+                                      />
+                                      <Typography variant="caption">
+                                        {article.comments}
+                                      </Typography>
+                                    </Box>
+                                    <Box
+                                      sx={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                      }}
+                                    >
+                                      <PublicIcon
+                                        sx={{
+                                          fontSize: 14,
+                                          mr: 0.5,
+                                          color: themeColors.accent,
+                                        }}
+                                      />
+                                      <Typography variant="caption">
+                                        {article.views}
+                                      </Typography>
+                                    </Box>
+                                  </Box>
+                                </Box>
+                              </CardContent>
+                            </CardActionArea>
+                          </Card>
+                        </Grid>
+                      ))}
+                    </Grid>
                   </Paper>
-                </Box>
-              )}
+                </Grid>
+              </Grid>
             </Box>
           </Box>
         </Box>
