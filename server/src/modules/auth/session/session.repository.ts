@@ -1,15 +1,17 @@
 import { Injectable } from '@nestjs/common';
-import { Repository, DataSource } from 'typeorm';
+import { Repository } from 'typeorm';
 import { UserSession } from './session.entity';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
-export class SessionRepository extends Repository<UserSession> {
-  constructor(private dataSource: DataSource) {
-    super(UserSession, dataSource.createEntityManager());
-  }
+export class SessionRepository {
+  constructor(
+    @InjectRepository(UserSession)
+    private readonly sessionRepository: Repository<UserSession>,
+  ) {}
 
   // 1. save session(로그인)
-  saveSession(
+  async saveSession(
     sessionId: string,
     userId: string,
     provider: string,
@@ -17,16 +19,36 @@ export class SessionRepository extends Repository<UserSession> {
     expiresAt: Date,
     data?: any,
   ): Promise<UserSession> {
-    const session = new UserSession();
-    session.sessionId = sessionId;
-    session.userId = userId;
-    session.provider = provider;
-    session.createdAt = createdAt;
-    session.expiresAt = expiresAt;
-    session.data = data;
-    return this.save(session);
-  }
-  // 2. find session(유저 정보 조회)
+    try {
+      // 기존 세션이 있는지 확인
+      const existingSession = await this.sessionRepository.findOne({
+        where: { sessionId },
+      });
 
-  // 3. clear session(로그아웃)
+      if (existingSession) {
+        // 기존 세션 업데이트
+        existingSession.userId = userId;
+        existingSession.provider = provider;
+        existingSession.createdAt = createdAt;
+        existingSession.expiresAt = expiresAt;
+        existingSession.data = data;
+        return await this.sessionRepository.save(existingSession);
+      }
+
+      // 새 세션 생성
+      const session = this.sessionRepository.create({
+        sessionId,
+        userId,
+        provider,
+        createdAt,
+        expiresAt,
+        data,
+      });
+
+      return await this.sessionRepository.save(session);
+    } catch (error) {
+      console.error('세션 저장 중 오류 발생:', error);
+      throw new Error(`세션 저장에 실패했습니다: ${error.message}`);
+    }
+  }
 }

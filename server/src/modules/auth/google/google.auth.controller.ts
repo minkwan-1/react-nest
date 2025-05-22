@@ -54,30 +54,28 @@ export class GoogleAuthController {
       if (user.isExist) {
         // 8. 기존 사용자일 경우, 세션 로그인 처리
         const viaGoogleUser = await this.usersService.findByEmail(user.email);
-
         const addedProviderViaGoogleUser = { ...viaGoogleUser, provider };
 
-        await this.sessionService.loginWithSession(
-          req,
-          addedProviderViaGoogleUser,
-        );
-        res.send({
-          message: '기존 유저 데이터',
-          user: { ...addedProviderViaGoogleUser, isExist: true },
-        });
-        // // 9. 세션 로그인 처리
-        // (req as any).login(addedProviderViaGoogleUser, () => {
-        //   const user = (req as any).user;
+        try {
+          // 9. SessionService를 사용한 세션 로그인 처리
+          await this.sessionService.loginWithSession(
+            req,
+            addedProviderViaGoogleUser,
+          );
 
-        //   console.log(`세션 ID: ${req.sessionID}`);
-        //   console.log(user);
-
-        //   // 10. 기존 사용자 데이터 반환
-        //   res.send({
-        //     message: '기존 유저 데이터',
-        //     user: { ...addedProviderViaGoogleUser, isExist: true },
-        //   });
-        // });
+          // 10. 기존 사용자 데이터 반환
+          res.send({
+            message: '기존 유저 데이터',
+            user: { ...addedProviderViaGoogleUser, isExist: true },
+            sessionId: req.sessionID, // 세션 ID도 함께 반환
+          });
+        } catch (sessionError) {
+          console.error('세션 로그인 처리 중 오류:', sessionError);
+          throw new HttpException(
+            '세션 처리 중 오류가 발생했습니다',
+            HttpStatus.INTERNAL_SERVER_ERROR,
+          );
+        }
 
         return;
       } else {
