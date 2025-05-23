@@ -12,6 +12,7 @@ import { useAtom } from "jotai";
 import { realUserInfo } from "@atom/auth";
 import { questionsAtom } from "@atom/question";
 import { Verified as VerifiedIcon } from "@mui/icons-material";
+import { man } from "../../images/index";
 
 interface MyInfoProps {
   avatarUrl?: string;
@@ -20,7 +21,7 @@ interface MyInfoProps {
 }
 
 const MyInfo: React.FC<MyInfoProps> = ({
-  avatarUrl = "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=2070&auto=format&fit=crop",
+  avatarUrl = man, // man 이미지를 기본값으로 사용
   reputation = 3842,
   badges = [
     "E-커머스 전문가",

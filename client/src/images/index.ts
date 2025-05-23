@@ -5,4 +5,6 @@ import questions from "./no-questions.svg";
 import Pullim from "./Pullim.png";
 import laptop from "./laptop.png";
 import verification from "./verification.png";
-export { google, kakao, naver, questions, Pullim, laptop, verification };
+import man from "./man.png";
+
+export { google, kakao, naver, questions, Pullim, laptop, verification, man };
