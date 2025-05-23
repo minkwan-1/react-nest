@@ -1,4 +1,6 @@
 import React from "react";
+import { useEffect } from "react";
+import axios from "axios";
 import {
   Box,
   Avatar,
@@ -11,12 +13,7 @@ import {
   Chip,
   Divider,
   IconButton,
-  LinearProgress,
   Badge,
-  Card,
-  CardContent,
-  CardMedia,
-  CardActionArea,
   Tooltip,
 } from "@mui/material";
 
@@ -25,12 +22,15 @@ import {
   Instagram as InstagramIcon,
   LinkedIn as LinkedInIcon,
   GitHub as GitHubIcon,
-  Favorite as FavoriteIcon,
-  Comment as CommentIcon,
   Verified as VerifiedIcon,
   Add as AddIcon,
-  Public as PublicIcon,
 } from "@mui/icons-material";
+
+// Import the CommonCard component and atoms
+import CommonCard from "@components/common/Card";
+import { useAtom } from "jotai";
+import { questionsAtom } from "@atom/question";
+import { realUserInfo } from "@atom/auth";
 
 interface UserProfileProps {
   username: string;
@@ -54,21 +54,44 @@ const UserProfile: React.FC<UserProfileProps> = ({
   ],
 }) => {
   const theme = useTheme();
-  // const isMobile = theme.breakpoints.down("md");
+  const [questions, setQuestions] = useAtom(questionsAtom);
+  const [userInfo] = useAtom(realUserInfo);
+
+  // Fetch questions data like in TestPage
+  useEffect(() => {
+    if (!userInfo?.id) {
+      setQuestions([]);
+      return;
+    }
+
+    const fetchQuestionsByUser = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:3000/questions/user/${userInfo.id}`
+        );
+        setQuestions(response.data);
+      } catch (error) {
+        console.error("Error fetching user's questions:", error);
+      }
+    };
+
+    fetchQuestionsByUser();
+  }, [userInfo, setQuestions]);
 
   // Define theme colors for easy reference
   const themeColors = {
     primary: theme.palette.primary.main,
     primaryDark: "#02b676",
-    background: "#f8f9fa",
+    background: theme.palette.mode === "light" ? "#f8f9fa" : "#121212",
     cardBg: theme.palette.background.paper,
-    border: "#e0e0e0",
+    border: theme.palette.mode === "light" ? "#e0e0e0" : "#333333",
     textPrimary: theme.palette.text.primary,
     textSecondary: theme.palette.text.secondary,
     accent: "#FF9F1C",
     accent2: "#7678ED",
     success: "#2EC4B6",
     warning: "#E71D36",
+    divider: theme.palette.mode === "light" ? "#e0e0e0" : "#424242",
   };
 
   // Translated content for Korean language sections
@@ -81,8 +104,7 @@ const UserProfile: React.FC<UserProfileProps> = ({
       "국내 최대 프로그래밍 Q&A 서비스, Pullim를 운영하고 있는 원민관입니다. 최신 트렌드와 인사이트를 제공합니다.",
     serviceIntro: "서비스 소개",
     serviceText:
-      "Pullim은 국내 최대 규모의 프로그래밍 Q&A 서비스로, '프로그래밍과 개발'에 대한 다양한 이야기들을 다룹니다. 매주 수요일 아침, 최신 트렌드와 업계 전문가의 실질적인 인사이트를 선별하여, 구독자분들의 메일함으로 전해드릴게요.",
-
+      "국내 최대 프로그래밍 Q&A 플랫폼 Pullim(풀림)은 개발자들이 겪는 다양한 문제를 함께 해결하며 성장할 수 있도록 돕는 지식 공유 커뮤니티입니다. 초보부터 전문가까지 누구나 자유롭게 질문하고, 실시간으로 사람과 AI 모두에게 답변을 받을 수 있어 '문제가 풀리는 경험'을 빠르고 깊이 있게 제공합니다. 특히 상세 페이지에서는 기존 답변을 기반으로 AI가 추가 설명이나 예제를 실시간 생성해 주는 기능도 제공되어, 복잡한 개념도 더 쉽게 이해할 수 있습니다. 코드 한 줄의 고민도 함께 나누는 풀림에서, 더 나은 개발자로 성장해 보세요.",
     socialMedia: "소셜 미디어",
     followers: "팔로워",
     following: "팔로잉",
@@ -91,7 +113,7 @@ const UserProfile: React.FC<UserProfileProps> = ({
     activity: "최근 활동",
     subscriptions: "구독 신청",
     badges: "획득한 배지",
-    popularPosts: "인기 게시물",
+    popularPosts: "나의 질문",
     recentActivity: "최근 활동",
     recommendedTopics: "추천 토픽",
     achievements: "업적",
@@ -110,51 +132,14 @@ const UserProfile: React.FC<UserProfileProps> = ({
     subscribeNewsletter: "뉴스레터 구독하기",
   };
 
-  // Sample article and answer data
-  const questionData = [
-    {
-      id: 1,
-      title: "MZ세대의 쇼핑 트렌드와 브랜드 충성도에 관한 분석",
-      author: "김트렌드",
-      date: "2025-03-15",
-      content:
-        "최근 MZ세대의 소비 패턴이 급변하고 있습니다. 가격보다 가치를 중시하는 소비 성향과 SNS를 통한 구매 결정 방식에 대해 알아봅시다.",
-      thumbnail:
-        "https://images.unsplash.com/photo-1607083206968-13611e3d76db?w=500&auto=format&fit=crop&q=60",
-      comments: 56,
-      views: 3240,
-      likes: 178,
-      tags: ["MZ세대", "소비트렌드", "브랜드마케팅"],
-    },
-    {
-      id: 2,
-      title: "2025년 예상되는 D2C 브랜드의 성장 전략",
-      author: "김트렌드",
-      date: "2025-02-28",
-      content:
-        "미들맨을 거치지 않고 소비자에게 직접 판매하는 D2C 브랜드들의 성공 전략과 앞으로의 시장 전망에 대해 심층 분석합니다.",
-      thumbnail:
-        "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=500&auto=format&fit=crop&q=60",
-      comments: 43,
-      views: 2850,
-      likes: 142,
-      tags: ["D2C", "이커머스", "브랜딩"],
-    },
-    {
-      id: 3,
-      title: "라이브 커머스의 진화: 인플루언서 마케팅과의 시너지",
-      author: "김트렌드",
-      date: "2025-01-05",
-      content:
-        "라이브 커머스와 인플루언서 마케팅의 결합이 만들어내는 새로운 쇼핑 경험과 판매 전략에 대해 알아봅니다.",
-      thumbnail:
-        "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=500&auto=format&fit=crop&q=60",
-      comments: 37,
-      views: 2135,
-      likes: 98,
-      tags: ["라이브커머스", "인플루언서", "소셜미디어"],
-    },
-  ];
+  // Sample article data adapted for CommonCard
+  const questionData = questions || [];
+
+  // User data for CommonCard - use real userInfo
+  const userData = {
+    id: userInfo?.id || 1,
+    name: userInfo?.name || username,
+  };
 
   // Sample interest tags
   const interestTags = [
@@ -171,21 +156,47 @@ const UserProfile: React.FC<UserProfileProps> = ({
     "DevOps",
   ];
 
-  // Sample analytics data
-  const analyticsData = {
-    articles: 28,
-    comments: 142,
-    likes: 876,
-    views: 24509,
+  // Event handlers for CommonCard
+  const handleCardClick = (questionId: number | string) => {
+    console.log("Card clicked:", questionId);
+    // Add navigation logic here
+  };
+
+  const handleAnswerClick = (questionId: number | string) => {
+    console.log("Answer clicked:", questionId);
+    // Add answer logic here
+  };
+
+  const handleLikeClick = (questionId: number | string) => {
+    console.log("Like clicked:", questionId);
+    // Add like logic here
+  };
+
+  const handleBookmarkClick = (questionId: number | string) => {
+    console.log("Bookmark clicked:", questionId);
+    // Add bookmark logic here
   };
 
   return (
-    <Box sx={{ minHeight: "100vh" }}>
+    <Box
+      sx={{
+        minHeight: "100vh",
+        bgcolor: themeColors.background,
+      }}
+    >
       {/* Header Banner */}
       <Box
         sx={{
           position: "relative",
           height: { xs: 50, md: 100 },
+          bgcolor:
+            theme.palette.mode === "light"
+              ? "linear-gradient(135deg, #b8dae1 0%, #ccaee3 100%)"
+              : "linear-gradient(135deg, #1e3a3f 0%, #0d4f3c 100%)",
+          background:
+            theme.palette.mode === "light"
+              ? "linear-gradient(135deg, #b8dae1 0%, #ccaee3 100%)"
+              : "linear-gradient(135deg, #1e3a3f 0%, #0d4f3c 100%)",
         }}
       />
 
@@ -214,8 +225,15 @@ const UserProfile: React.FC<UserProfileProps> = ({
               alignItems: "center",
               textAlign: "center",
               borderRadius: 2,
-              boxShadow: "0 2px 12px rgba(0,0,0,0.08)",
+              boxShadow:
+                theme.palette.mode === "light"
+                  ? "0 2px 12px rgba(0,0,0,0.08)"
+                  : "0 2px 12px rgba(0,0,0,0.3)",
               position: "relative",
+              border:
+                theme.palette.mode === "dark"
+                  ? `1px solid ${themeColors.border}`
+                  : "none",
             }}
           >
             <Badge
@@ -225,32 +243,42 @@ const UserProfile: React.FC<UserProfileProps> = ({
                 <Tooltip title="인증된 프로필">
                   <VerifiedIcon
                     sx={{
-                      backgroundColor: "white",
+                      backgroundColor: themeColors.cardBg,
                       borderRadius: "50%",
                       color: "#b8dae1",
                       width: 24,
                       height: 24,
                       padding: "2px",
+                      border:
+                        theme.palette.mode === "dark"
+                          ? `2px solid ${themeColors.border}`
+                          : "2px solid white",
                     }}
                   />
                 </Tooltip>
               }
             >
               <Avatar
-                alt={username}
+                alt={userInfo?.name || username}
                 src={avatarUrl}
                 sx={{
                   width: 120,
                   height: 120,
                   mb: 2,
-                  border: "4px solid white",
-                  boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
+                  border:
+                    theme.palette.mode === "light"
+                      ? "4px solid white"
+                      : `4px solid ${themeColors.cardBg}`,
+                  boxShadow:
+                    theme.palette.mode === "light"
+                      ? "0 2px 8px rgba(0,0,0,0.15)"
+                      : "0 2px 8px rgba(0,0,0,0.4)",
                 }}
               />
             </Badge>
 
             <Typography variant="h5" fontWeight="bold" sx={{ mb: 0.5 }}>
-              {username}
+              {userInfo?.name || username}
             </Typography>
 
             <Typography
@@ -267,11 +295,12 @@ const UserProfile: React.FC<UserProfileProps> = ({
                 startIcon={<AddIcon />}
                 sx={{
                   bgcolor: "#b8dae1",
-                  color: "#000",
+                  color: theme.palette.mode === "light" ? "#000" : "#fff",
                   borderRadius: 3,
                   fontWeight: "bold",
                   "&:hover": {
                     bgcolor: "#02b676",
+                    color: "#fff",
                   },
                 }}
               >
@@ -309,54 +338,15 @@ const UserProfile: React.FC<UserProfileProps> = ({
               </Box>
               <Box sx={{ textAlign: "center" }}>
                 <Typography variant="h6" fontWeight="bold" color="text.primary">
-                  {analyticsData.articles}
+                  {questionData.length}
                 </Typography>
                 <Typography variant="caption">글</Typography>
               </Box>
             </Box>
 
-            <Divider sx={{ width: "100%", mb: 2 }} />
-
-            <Typography
-              variant="subtitle2"
-              fontWeight="bold"
-              sx={{ width: "100%", textAlign: "left", mb: 1 }}
-            >
-              {koreanContent.stats}
-            </Typography>
-
-            <Grid container spacing={2} sx={{ mb: 3 }}>
-              <Grid item xs={6}>
-                <Tooltip title="게시물 조회수">
-                  <Box sx={{ textAlign: "center" }}>
-                    <PublicIcon
-                      fontSize="small"
-                      sx={{ color: themeColors.accent2, mb: 0.5 }}
-                    />
-                    <Typography variant="body2" fontWeight="bold">
-                      {analyticsData.views.toLocaleString()}
-                    </Typography>
-                    <Typography variant="caption">조회</Typography>
-                  </Box>
-                </Tooltip>
-              </Grid>
-              <Grid item xs={6}>
-                <Tooltip title="받은 좋아요">
-                  <Box sx={{ textAlign: "center" }}>
-                    <FavoriteIcon
-                      fontSize="small"
-                      sx={{ color: themeColors.warning, mb: 0.5 }}
-                    />
-                    <Typography variant="body2" fontWeight="bold">
-                      {analyticsData.likes}
-                    </Typography>
-                    <Typography variant="caption">좋아요</Typography>
-                  </Box>
-                </Tooltip>
-              </Grid>
-            </Grid>
-
-            <Divider sx={{ width: "100%", mb: 2 }} />
+            <Divider
+              sx={{ width: "100%", mb: 2, bgcolor: themeColors.divider }}
+            />
 
             <Typography
               variant="subtitle2"
@@ -387,9 +377,15 @@ const UserProfile: React.FC<UserProfileProps> = ({
                     color: themeColors.textSecondary,
                     fontSize: "0.75rem",
                     "&:hover": {
-                      backgroundColor: "rgba(3, 203, 132, 0.08)",
-                      borderColor: themeColors.primary,
-                      color: themeColors.primaryDark,
+                      backgroundColor:
+                        theme.palette.mode === "light"
+                          ? "rgba(3, 203, 132, 0.08)"
+                          : "rgba(184, 218, 225, 0.1)",
+                      borderColor: "#b8dae1",
+                      color:
+                        theme.palette.mode === "light"
+                          ? themeColors.primaryDark
+                          : "#b8dae1",
                     },
                   }}
                 />
@@ -399,8 +395,14 @@ const UserProfile: React.FC<UserProfileProps> = ({
                   label={`+${interestTags.length - 8}`}
                   size="small"
                   sx={{
-                    bgcolor: "rgba(3, 203, 132, 0.08)",
-                    color: themeColors.primary,
+                    bgcolor:
+                      theme.palette.mode === "light"
+                        ? "rgba(3, 203, 132, 0.08)"
+                        : "rgba(184, 218, 225, 0.1)",
+                    color:
+                      theme.palette.mode === "light"
+                        ? themeColors.primary
+                        : "#b8dae1",
                     fontSize: "0.75rem",
                   }}
                 />
@@ -430,7 +432,12 @@ const UserProfile: React.FC<UserProfileProps> = ({
                 size="small"
                 sx={{
                   color: "#E4405F",
-                  "&:hover": { bgcolor: "rgba(228, 64, 95, 0.1)" },
+                  "&:hover": {
+                    bgcolor:
+                      theme.palette.mode === "light"
+                        ? "rgba(228, 64, 95, 0.1)"
+                        : "rgba(228, 64, 95, 0.2)",
+                  },
                 }}
               >
                 <InstagramIcon fontSize="small" />
@@ -439,7 +446,12 @@ const UserProfile: React.FC<UserProfileProps> = ({
                 size="small"
                 sx={{
                   color: "#0A66C2",
-                  "&:hover": { bgcolor: "rgba(10, 102, 194, 0.1)" },
+                  "&:hover": {
+                    bgcolor:
+                      theme.palette.mode === "light"
+                        ? "rgba(10, 102, 194, 0.1)"
+                        : "rgba(10, 102, 194, 0.2)",
+                  },
                 }}
               >
                 <LinkedInIcon fontSize="small" />
@@ -447,8 +459,13 @@ const UserProfile: React.FC<UserProfileProps> = ({
               <IconButton
                 size="small"
                 sx={{
-                  color: "#333",
-                  "&:hover": { bgcolor: "rgba(51, 51, 51, 0.1)" },
+                  color: theme.palette.mode === "light" ? "#333" : "#fff",
+                  "&:hover": {
+                    bgcolor:
+                      theme.palette.mode === "light"
+                        ? "rgba(51, 51, 51, 0.1)"
+                        : "rgba(255, 255, 255, 0.1)",
+                  },
                 }}
               >
                 <GitHubIcon fontSize="small" />
@@ -470,7 +487,14 @@ const UserProfile: React.FC<UserProfileProps> = ({
                       mb: 2,
                       bgcolor: themeColors.cardBg,
                       borderRadius: 2,
-                      boxShadow: "0 2px 12px rgba(0,0,0,0.04)",
+                      boxShadow:
+                        theme.palette.mode === "light"
+                          ? "0 2px 12px rgba(0,0,0,0.04)"
+                          : "0 2px 12px rgba(0,0,0,0.2)",
+                      border:
+                        theme.palette.mode === "dark"
+                          ? `1px solid ${themeColors.border}`
+                          : "none",
                     }}
                   >
                     <Typography
@@ -499,7 +523,14 @@ const UserProfile: React.FC<UserProfileProps> = ({
                       mb: 2,
                       bgcolor: themeColors.cardBg,
                       borderRadius: 2,
-                      boxShadow: "0 2px 12px rgba(0,0,0,0.04)",
+                      boxShadow:
+                        theme.palette.mode === "light"
+                          ? "0 2px 12px rgba(0,0,0,0.04)"
+                          : "0 2px 12px rgba(0,0,0,0.2)",
+                      border:
+                        theme.palette.mode === "dark"
+                          ? `1px solid ${themeColors.border}`
+                          : "none",
                     }}
                   >
                     <Box
@@ -528,88 +559,9 @@ const UserProfile: React.FC<UserProfileProps> = ({
                     >
                       {koreanContent.serviceText}
                     </Typography>
-
-                    <Box
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        width: "100%",
-                        mt: 2,
-                        mb: 1,
-                      }}
-                    >
-                      <Box sx={{ flex: 1 }}>
-                        <Typography variant="caption" fontWeight="medium">
-                          구독자 성장률
-                        </Typography>
-                        <Box sx={{ display: "flex", alignItems: "center" }}>
-                          <Box sx={{ width: "100%", mr: 1 }}>
-                            <LinearProgress
-                              variant="determinate"
-                              value={72}
-                              sx={{
-                                height: 8,
-                                borderRadius: 4,
-                                bgcolor: "rgba(3, 203, 132, 0.1)",
-                                "& .MuiLinearProgress-bar": {
-                                  bgcolor: "#b8dae1",
-                                  borderRadius: 4,
-                                },
-                              }}
-                            />
-                          </Box>
-                          <Typography variant="body2" fontWeight="bold">
-                            72%
-                          </Typography>
-                        </Box>
-                      </Box>
-                    </Box>
-
-                    <Divider sx={{ my: 2 }} />
-
-                    <Box
-                      sx={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                      }}
-                    >
-                      <Box>
-                        <Typography
-                          variant="caption"
-                          sx={{ color: themeColors.textSecondary }}
-                        >
-                          주간 구독자
-                        </Typography>
-                        <Typography variant="body1" fontWeight="bold">
-                          25,420명
-                        </Typography>
-                      </Box>
-                      <Box>
-                        <Typography
-                          variant="caption"
-                          sx={{ color: themeColors.textSecondary }}
-                        >
-                          오픈율
-                        </Typography>
-                        <Typography variant="body1" fontWeight="bold">
-                          43.8%
-                        </Typography>
-                      </Box>
-                      <Box>
-                        <Typography
-                          variant="caption"
-                          sx={{ color: themeColors.textSecondary }}
-                        >
-                          클릭률
-                        </Typography>
-                        <Typography variant="body1" fontWeight="bold">
-                          16.2%
-                        </Typography>
-                      </Box>
-                    </Box>
                   </Paper>
 
-                  {/* Popular Articles Section */}
+                  {/* Popular Articles Section with CommonCard */}
                   <Paper
                     elevation={0}
                     sx={{
@@ -617,7 +569,14 @@ const UserProfile: React.FC<UserProfileProps> = ({
                       mb: 2,
                       bgcolor: themeColors.cardBg,
                       borderRadius: 2,
-                      boxShadow: "0 2px 12px rgba(0,0,0,0.04)",
+                      boxShadow:
+                        theme.palette.mode === "light"
+                          ? "0 2px 12px rgba(0,0,0,0.04)"
+                          : "0 2px 12px rgba(0,0,0,0.2)",
+                      border:
+                        theme.palette.mode === "dark"
+                          ? `1px solid ${themeColors.border}`
+                          : "none",
                     }}
                   >
                     <Box
@@ -633,163 +592,37 @@ const UserProfile: React.FC<UserProfileProps> = ({
                       </Typography>
                     </Box>
 
-                    <Grid spacing={2}>
-                      {questionData.map((article) => (
-                        <Grid item xs={12} key={article.id}>
-                          <Card
-                            sx={{
-                              display: "flex",
-                              mb: 1,
-                              boxShadow: "none",
-                              border: `1px solid ${themeColors.border}`,
-                              borderRadius: 2,
-                              overflow: "hidden",
-                              transition: "all 0.3s ease",
-                              "&:hover": {
-                                transform: "translateY(-3px)",
-                                boxShadow: "0 6px 12px rgba(0,0,0,0.1)",
-                                borderColor: "#b8dae1",
-                              },
-                            }}
+                    <Box
+                      sx={{ display: "flex", flexDirection: "column", gap: 2 }}
+                    >
+                      {questionData.length > 0 ? (
+                        questionData.map((question) => (
+                          <CommonCard
+                            key={question.id}
+                            question={question}
+                            user={userData}
+                            onCardClick={handleCardClick}
+                            onAnswerClick={handleAnswerClick}
+                            onLikeClick={handleLikeClick}
+                            onBookmarkClick={handleBookmarkClick}
+                            showActions={true}
+                          />
+                        ))
+                      ) : (
+                        <Box sx={{ textAlign: "center", py: 4 }}>
+                          <Typography
+                            variant="h6"
+                            color="text.secondary"
+                            sx={{ mb: 1 }}
                           >
-                            <CardActionArea
-                              sx={{
-                                display: "flex",
-                                flexDirection: { xs: "column", sm: "row" },
-                                alignItems: "stretch",
-                                height: "100%",
-                              }}
-                            >
-                              <CardMedia
-                                component="img"
-                                sx={{
-                                  width: { xs: "100%", sm: 140 },
-                                  height: { xs: 140, sm: "auto" },
-                                }}
-                                image={article.thumbnail}
-                                alt={article.title}
-                              />
-                              <CardContent sx={{ flex: 1, p: 2 }}>
-                                <Box sx={{ mb: 1 }}>
-                                  {article.tags.map((tag, i) => (
-                                    <Chip
-                                      key={i}
-                                      label={tag}
-                                      size="small"
-                                      sx={{
-                                        mr: 0.5,
-                                        mb: 0.5,
-                                        fontSize: "0.625rem",
-                                        height: 20,
-                                        bgcolor: `rgba(3, 203, 132, ${
-                                          0.05 + i * 0.05
-                                        })`,
-                                        color: themeColors.primaryDark,
-                                      }}
-                                    />
-                                  ))}
-                                </Box>
-                                <Typography
-                                  variant="subtitle1"
-                                  component="div"
-                                  fontWeight="bold"
-                                  sx={{ mb: 1 }}
-                                >
-                                  {article.title}
-                                </Typography>
-                                <Typography
-                                  variant="body2"
-                                  color="text.secondary"
-                                  sx={{
-                                    mb: 1,
-                                    overflow: "hidden",
-                                    textOverflow: "ellipsis",
-                                    display: "-webkit-box",
-                                    WebkitLineClamp: "2",
-                                    WebkitBoxOrient: "vertical",
-                                  }}
-                                >
-                                  {article.content}
-                                </Typography>
-                                <Box
-                                  sx={{
-                                    display: "flex",
-                                    justifyContent: "space-between",
-                                    mt: 1,
-                                  }}
-                                >
-                                  <Typography
-                                    variant="caption"
-                                    color="text.secondary"
-                                  >
-                                    {article.date}
-                                  </Typography>
-                                  <Box
-                                    sx={{
-                                      display: "flex",
-                                      alignItems: "center",
-                                      gap: 1.5,
-                                    }}
-                                  >
-                                    <Box
-                                      sx={{
-                                        display: "flex",
-                                        alignItems: "center",
-                                      }}
-                                    >
-                                      <FavoriteIcon
-                                        sx={{
-                                          fontSize: 14,
-                                          mr: 0.5,
-                                          color: themeColors.warning,
-                                        }}
-                                      />
-                                      <Typography variant="caption">
-                                        {article.likes}
-                                      </Typography>
-                                    </Box>
-                                    <Box
-                                      sx={{
-                                        display: "flex",
-                                        alignItems: "center",
-                                      }}
-                                    >
-                                      <CommentIcon
-                                        sx={{
-                                          fontSize: 14,
-                                          mr: 0.5,
-                                          color: themeColors.accent2,
-                                        }}
-                                      />
-                                      <Typography variant="caption">
-                                        {article.comments}
-                                      </Typography>
-                                    </Box>
-                                    <Box
-                                      sx={{
-                                        display: "flex",
-                                        alignItems: "center",
-                                      }}
-                                    >
-                                      <PublicIcon
-                                        sx={{
-                                          fontSize: 14,
-                                          mr: 0.5,
-                                          color: themeColors.accent,
-                                        }}
-                                      />
-                                      <Typography variant="caption">
-                                        {article.views}
-                                      </Typography>
-                                    </Box>
-                                  </Box>
-                                </Box>
-                              </CardContent>
-                            </CardActionArea>
-                          </Card>
-                        </Grid>
-                      ))}
-                    </Grid>
+                            아직 등록된 질문이 없습니다
+                          </Typography>
+                          <Typography variant="body2" color="text.secondary">
+                            첫 번째 질문을 등록해보세요!
+                          </Typography>
+                        </Box>
+                      )}
+                    </Box>
                   </Paper>
                 </Grid>
               </Grid>

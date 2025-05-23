@@ -1,21 +1,15 @@
 import { useEffect } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 import { PageContainer } from "@components/layout/common";
 import {
   Box,
-  Card,
-  CardContent,
   Typography,
   Stack,
-  Avatar,
-  IconButton,
-  Button,
+  Card,
+  CardContent,
   useTheme,
 } from "@mui/material";
-import CommentOutlinedIcon from "@mui/icons-material/CommentOutlined";
-import ThumbUpOutlinedIcon from "@mui/icons-material/ThumbUpOutlined";
-import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
+import QuestionCard from "@components/common/Card";
 
 import { useAtom } from "jotai";
 import { questionsAtom } from "@atom/question";
@@ -24,7 +18,6 @@ import { realUserInfo } from "@atom/auth";
 const TestPage = () => {
   const [questions, setQuestions] = useAtom(questionsAtom);
   const [userInfo] = useAtom(realUserInfo);
-  const navigate = useNavigate();
   const theme = useTheme();
 
   useEffect(() => {
@@ -64,25 +57,25 @@ const TestPage = () => {
     );
   }
 
-  // 간단한 HTML 태그 제거 함수
-  const stripHtml = (html: string) => {
-    const tmp = document.createElement("div");
-    tmp.innerHTML = html;
-    return tmp.textContent || tmp.innerText || "";
+  // 커스텀 이벤트 핸들러들
+  const handleCardClick = (questionId: number | string) => {
+    console.log("Card clicked:", questionId);
+    // 필요시 커스텀 로직 추가
   };
 
-  // 글자수 제한된 내용 일부 반환
-  const getExcerpt = (htmlContent: string, maxLength = 100) => {
-    const text = stripHtml(htmlContent);
-    if (text.length <= maxLength) return text;
-    return text.slice(0, maxLength) + "...";
+  const handleAnswerClick = (questionId: number | string) => {
+    console.log("Answer clicked:", questionId);
+    // 필요시 커스텀 로직 추가
   };
 
-  // HTML 컨텐츠에서 첫 번째 이미지 URL 추출
-  const extractImageFromContent = (htmlContent: string): string | null => {
-    const imgRegex = /<img[^>]+src=["']([^"']+)["'][^>]*>/i;
-    const match = htmlContent.match(imgRegex);
-    return match ? match[1] : null;
+  const handleLikeClick = (questionId: number | string) => {
+    console.log("Like clicked:", questionId);
+    // 좋아요 API 호출 등
+  };
+
+  const handleBookmarkClick = (questionId: number | string) => {
+    console.log("Bookmark clicked:", questionId);
+    // 북마크 API 호출 등
   };
 
   return (
@@ -95,209 +88,16 @@ const TestPage = () => {
         <Stack spacing={3}>
           {questions.length > 0 ? (
             questions.map((question) => (
-              <Card
+              <QuestionCard
                 key={question.id}
-                sx={{
-                  borderRadius: 2,
-                  boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
-                  transition: "all 0.3s",
-                  "&:hover": {
-                    boxShadow: "0 5px 15px rgba(0,0,0,0.1)",
-                    transform: "translateY(-2px)",
-                    backgroundColor:
-                      theme.palette.mode === "light" ? "#F5F5F5" : "#4F4F4F",
-                  },
-                  backgroundColor:
-                    theme.palette.mode === "light" ? "#ffffff" : "#333333",
-                  border:
-                    theme.palette.mode === "light"
-                      ? "1px solid #F0F0F0"
-                      : "none",
-                }}
-              >
-                <CardContent sx={{ p: 3 }}>
-                  {/* 프로필 섹션 */}
-                  <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-                    <Avatar
-                      sx={{
-                        width: 28,
-                        height: 28,
-                        mr: 1,
-                        bgcolor: "#b8dae1",
-                        fontSize: "14px",
-                        fontWeight: "bold",
-                      }}
-                    >
-                      {userInfo.name?.charAt(0) || "U"}
-                    </Avatar>
-                    <Typography
-                      variant="body2"
-                      sx={{
-                        fontWeight: 500,
-                        color: theme.palette.text.primary,
-                      }}
-                    >
-                      {userInfo.name}
-                    </Typography>
-                    <Typography
-                      variant="body2"
-                      sx={{ mx: 1, color: "#BDBDBD" }}
-                    >
-                      •
-                    </Typography>
-                    <Typography
-                      variant="body2"
-                      sx={{ color: theme.palette.text.primary }}
-                    >
-                      {new Date(
-                        question.createdAt || Date.now()
-                      ).toLocaleDateString("ko-KR")}
-                    </Typography>
-                  </Box>
-
-                  {/* 질문 제목 & 내용 */}
-                  <Box
-                    sx={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      gap: 3,
-                    }}
-                  >
-                    <Box sx={{ flex: 1 }}>
-                      <Typography
-                        variant="h6"
-                        sx={{
-                          fontWeight: "bold",
-                          mb: 1.5,
-                          fontSize: "18px",
-                          lineHeight: 1.4,
-                          color: "#1976d2",
-                          cursor: "pointer",
-                          "&:hover": { textDecoration: "underline" },
-                        }}
-                        onClick={() => navigate(`/questions/${question.id}`)}
-                      >
-                        {question.title}
-                      </Typography>
-
-                      <Typography
-                        variant="body2"
-                        sx={{
-                          color: theme.palette.text.secondary,
-                          mb: 2.5,
-                          display: "-webkit-box",
-                          WebkitLineClamp: 2,
-                          WebkitBoxOrient: "vertical",
-                          overflow: "hidden",
-                          textOverflow: "ellipsis",
-                          lineHeight: 1.5,
-                          whiteSpace: "pre-wrap",
-                        }}
-                      >
-                        {getExcerpt(question.content, 100)}
-                      </Typography>
-
-                      {/* 답변, 좋아요, 북마크 */}
-                      <Box sx={{ display: "flex", alignItems: "center" }}>
-                        <Button
-                          size="small"
-                          sx={{
-                            color: "#b8dae1",
-                            fontWeight: 500,
-                            textTransform: "none",
-                            "&:hover": {
-                              color: "#02a770",
-                              backgroundColor: "rgba(3, 203, 132, 0.05)",
-                            },
-                            pl: 0,
-                            borderRadius: 6,
-                          }}
-                          startIcon={
-                            <CommentOutlinedIcon sx={{ fontSize: 18 }} />
-                          }
-                          onClick={() => navigate(`/questions/${question.id}`)}
-                        >
-                          답변하기
-                        </Button>
-
-                        <Box sx={{ flexGrow: 1 }} />
-
-                        <Box sx={{ display: "flex", alignItems: "center" }}>
-                          <IconButton
-                            size="small"
-                            aria-label="좋아요"
-                            sx={{ color: "#757575" }}
-                          >
-                            <ThumbUpOutlinedIcon fontSize="small" />
-                          </IconButton>
-                          <Typography
-                            variant="body2"
-                            sx={{ color: "#757575", mr: 2 }}
-                          >
-                            {question.likes || 0}
-                          </Typography>
-                          <IconButton
-                            size="small"
-                            aria-label="저장"
-                            sx={{ color: "#757575" }}
-                          >
-                            <BookmarkBorderIcon fontSize="small" />
-                          </IconButton>
-                        </Box>
-                      </Box>
-                    </Box>
-
-                    {/* 썸네일 (question.thumbnail 또는 컨텐츠에서 추출) */}
-                    {(() => {
-                      const thumbnailSrc =
-                        question.thumbnail ||
-                        extractImageFromContent(question.content);
-                      return (
-                        thumbnailSrc && (
-                          <Box
-                            sx={{
-                              flexShrink: 0,
-                              display: { xs: "none", sm: "block" },
-                            }}
-                          >
-                            <Box
-                              sx={{
-                                width: "140px",
-                                height: "100px",
-                                borderRadius: "8px",
-                                overflow: "hidden",
-                                boxShadow: "0 3px 8px rgba(0,0,0,0.1)",
-                              }}
-                            >
-                              <img
-                                src={thumbnailSrc}
-                                alt={question.title}
-                                style={{
-                                  width: "100%",
-                                  height: "100%",
-                                  objectFit: "cover",
-                                  transition: "transform 0.6s",
-                                }}
-                                onMouseOver={(e) =>
-                                  (e.currentTarget.style.transform =
-                                    "scale(1.05)")
-                                }
-                                onMouseOut={(e) =>
-                                  (e.currentTarget.style.transform = "scale(1)")
-                                }
-                                onError={(e) => {
-                                  // 이미지 로드 실패 시 숨김
-                                  e.currentTarget.style.display = "none";
-                                }}
-                              />
-                            </Box>
-                          </Box>
-                        )
-                      );
-                    })()}
-                  </Box>
-                </CardContent>
-              </Card>
+                question={question}
+                user={userInfo}
+                onCardClick={handleCardClick}
+                onAnswerClick={handleAnswerClick}
+                onLikeClick={handleLikeClick}
+                onBookmarkClick={handleBookmarkClick}
+                showActions={true}
+              />
             ))
           ) : (
             <Card
