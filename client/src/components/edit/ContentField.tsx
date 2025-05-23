@@ -41,7 +41,7 @@ const ContentField: React.FC<ContentFieldProps> = ({ content, setContent }) => {
             height: "16px",
             borderRadius: "2px",
             marginRight: "10px",
-            background: `linear-gradient(to bottom, ${mainColor}, #02b279)`,
+            background: `linear-gradient(to bottom, ${mainColor}, #ccaee3)`,
           },
         }}
       >
@@ -202,7 +202,7 @@ const ContentField: React.FC<ContentFieldProps> = ({ content, setContent }) => {
                 height: "14px",
                 borderRadius: "2px",
                 marginRight: "8px",
-                background: `linear-gradient(to bottom, ${mainColor}, #02b279)`,
+                background: `linear-gradient(to bottom, ${mainColor}, #ccaee3)`,
               },
             }}
           >

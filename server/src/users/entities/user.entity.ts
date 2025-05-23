@@ -1,11 +1,12 @@
-// src/users/entities/user.entity.ts
 import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
 } from 'typeorm';
+import { Question } from 'src/modules/questions/questions.entity';
 
 @Entity('users')
 export class User {
@@ -26,4 +27,7 @@ export class User {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @OneToMany(() => Question, (question) => question.user)
+  questions: Question[];
 }

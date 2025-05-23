@@ -3,6 +3,7 @@ import axios from "axios";
 import { imageService } from "../service/imageService";
 import { useAtom } from "jotai";
 import { realUserInfo } from "@atom/auth";
+import { questionsAtom } from "@atom/question";
 
 interface UseQuestionFormProps {
   onSuccess?: () => void;
@@ -21,7 +22,24 @@ export const useQuestionForm = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [userInfo] = useAtom(realUserInfo);
+  const [questions, setQuestions] = useAtom(questionsAtom);
   console.log(userInfo);
+
+  console.log(questions);
+
+  // 특정 유저 질문 조회
+  // useEffect(() => {
+  //   const fetchQuestions = async () => {
+  //     try {
+  //       const response = await axios.get("http://localhost:3000/questions");
+  //       setQuestions(response.data);
+  //     } catch (error) {
+  //       console.error("Error fetching questions:", error);
+  //     }
+  //   };
+
+  //   fetchQuestions();
+  // }, []);
 
   // 태그 입력 변경 핸들러
   const handleTagsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -45,7 +63,9 @@ export const useQuestionForm = ({
         userId: userInfo?.id,
       });
 
-      console.log("Question submitted:", response.data);
+      // 응답을 전역 상태에 저장 (localStorage에 자동 저장됨)
+      setQuestions([...questions, response.data]);
+
       alert("Question submitted successfully!");
 
       setTitle("");

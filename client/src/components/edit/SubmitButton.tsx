@@ -20,7 +20,7 @@ const SubmitButton: React.FC<SubmitButtonProps> = ({
         endIcon={!isSubmitting && <SendIcon />}
         sx={{
           position: "relative",
-          background: `linear-gradient(135deg, ${mainColor} 0%, #02b279 100%)`,
+          background: `linear-gradient(135deg, ${mainColor} 0%, #ccaee3 100%)`,
           color: "white",
           textTransform: "none",
           fontWeight: 700,
@@ -30,7 +30,7 @@ const SubmitButton: React.FC<SubmitButtonProps> = ({
           transition: "all 0.3s ease",
           boxShadow: `0 4px 12px ${alpha(mainColor, 0.3)}`,
           "&:hover": {
-            background: `linear-gradient(135deg, ${mainColor} 20%, #02b279 100%)`,
+            background: `linear-gradient(135deg, ${mainColor} 20%, #ccaee3 100%)`,
             boxShadow: `0 6px 20px ${alpha(mainColor, 0.5)}`,
             transform: "translateY(-2px)",
           },
@@ -39,7 +39,7 @@ const SubmitButton: React.FC<SubmitButtonProps> = ({
             boxShadow: `0 2px 8px ${alpha(mainColor, 0.3)}`,
           },
           "&.Mui-disabled": {
-            background: `linear-gradient(135deg, ${mainColor} 0%, #02b279 100%)`,
+            background: `linear-gradient(135deg, ${mainColor} 0%, #ccaee3 100%)`,
             opacity: 0.7,
             color: "white",
           },

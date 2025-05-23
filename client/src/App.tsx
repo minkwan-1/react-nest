@@ -15,6 +15,7 @@ import {
   AskAIPage,
   SignUpPage,
   SignInPage,
+  TestPage,
 } from "./pages";
 
 const App = () => {
@@ -38,6 +39,7 @@ const App = () => {
       <Route path="/ask-ai" element={<AskAIPage />} />
       <Route path="/sign-up" element={<SignUpPage />} />
       <Route path="/sign-in" element={<SignInPage />} />
+      <Route path="/test" element={<TestPage />} />
     </Routes>
   );
 };

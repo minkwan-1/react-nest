@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { User } from 'src/users/entities/user.entity';
 
 @Entity()
 export class Question {
@@ -17,27 +18,27 @@ export class Question {
   @Column()
   userId: string;
 
-  @Column()
-  askedBy: string;
+  // @Column()
+  // askedBy: string;
 
-  @Column()
-  createdAt: Date;
+  // @Column()
+  // createdAt: Date;
 
-  @Column()
-  updatedAt: Date;
+  // @Column()
+  // updatedAt: Date;
 
-  @Column()
-  upVoteCount: number;
+  // @Column()
+  // upVoteCount: number;
 
-  @Column()
-  downVoteCount: number;
+  // @Column()
+  // downVoteCount: number;
 
-  @Column()
-  answerCount: number;
+  // @Column()
+  // answerCount: number;
 
-  @Column()
-  viewCount: number;
+  // @Column()
+  // viewCount: number;
 
-  // @Column('simple-array', { nullable: true })
-  // images: string[]; // 이미지 URL 배열 추가
+  @ManyToOne(() => User, (user) => user.questions, { nullable: true })
+  user: User;
 }

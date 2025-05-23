@@ -113,7 +113,7 @@ const TermsAndPrivacyPage = () => {
                   fontWeight: 800,
                   marginBottom: "20px",
                   fontSize: { xs: "28px", sm: "36px" },
-                  background: `linear-gradient(135deg, ${mainColor} 0%, #02b279 100%)`,
+                  background: `linear-gradient(135deg, ${mainColor} 0%, #ccaee3 100%)`,
                   backgroundClip: "text",
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
@@ -130,7 +130,7 @@ const TermsAndPrivacyPage = () => {
                     width: "60px",
                     height: "4px",
                     borderRadius: "2px",
-                    background: `linear-gradient(90deg, ${mainColor} 0%, #02b279 100%)`,
+                    background: `linear-gradient(90deg, ${mainColor} 0%, #ccaee3 100%)`,
                   },
                 }}
               >
@@ -242,7 +242,7 @@ const TermsAndPrivacyPage = () => {
                 >
                   <Button
                     sx={{
-                      background: `linear-gradient(135deg, ${mainColor} 0%, #02b279 100%)`,
+                      background: `linear-gradient(135deg, ${mainColor} 0%, #ccaee3 100%)`,
                       color: "white",
                       textTransform: "none",
                       fontWeight: 700,
@@ -253,7 +253,7 @@ const TermsAndPrivacyPage = () => {
                       transition: "all 0.3s ease",
                       boxShadow: `0 4px 15px ${alpha(mainColor, 0.3)}`,
                       "&:hover": {
-                        background: `linear-gradient(135deg, ${mainColor} 20%, #02b279 100%)`,
+                        background: `linear-gradient(135deg, ${mainColor} 20%, #ccaee3 100%)`,
                         boxShadow: `0 8px 25px ${alpha(mainColor, 0.5)}`,
                         transform: "translateY(-3px)",
                       },

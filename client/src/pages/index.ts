@@ -16,6 +16,7 @@ import TagPage from "./TagPage";
 import AskAIPage from "./AskAIPage";
 import SignUpPage from "./SignUpPage";
 import SignInPage from "./SignInPage";
+import TestPage from "./TestPage";
 
 export {
   HomePage,
@@ -36,4 +37,5 @@ export {
   AskAIPage,
   SignUpPage,
   SignInPage,
+  TestPage,
 };

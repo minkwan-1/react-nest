@@ -8,9 +8,11 @@ import { Question } from './questions.entity';
 import { QuestionsService } from './questions.service';
 import { QuestionsController } from './questions.controller';
 
+import { UsersModule } from 'src/users/users.module';
+
 @Module({
   // TypeORM에 Question 엔티티 등록
-  imports: [TypeOrmModule.forFeature([Question])],
+  imports: [TypeOrmModule.forFeature([Question]), UsersModule],
 
   // REST API 라우팅 처리
   controllers: [QuestionsController],

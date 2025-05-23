@@ -83,7 +83,7 @@ const CheckAgreeSection = ({
               color: isAgreed
                 ? isDarkMode
                   ? mainColor
-                  : "#02b279"
+                  : "#ccaee3"
                 : isDarkMode
                 ? alpha("#fff", 0.7)
                 : alpha("#000", 0.7),

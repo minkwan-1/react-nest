@@ -20,7 +20,7 @@ const TermSection = ({
         sx={{
           fontWeight: 700,
           fontSize: { xs: "18px", sm: "20px" },
-          color: isDarkMode ? mainColor : "#02b279",
+          color: isDarkMode ? mainColor : "#ccaee3",
           mb: 2,
           display: "flex",
           alignItems: "center",
@@ -31,7 +31,7 @@ const TermSection = ({
             height: "16px",
             borderRadius: "2px",
             marginRight: "10px",
-            background: `linear-gradient(to bottom, ${mainColor}, #02b279)`,
+            background: `linear-gradient(to bottom, ${mainColor}, #ccaee3)`,
           },
         }}
       >

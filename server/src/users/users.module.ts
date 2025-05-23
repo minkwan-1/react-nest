@@ -16,6 +16,6 @@ import { UsersService } from './users.service';
   providers: [UsersService, UsersRepository],
 
   // 외부에서 UsersService를 사용할 수 있도록 export
-  exports: [UsersService],
+  exports: [UsersService, UsersRepository],
 })
 export class UsersModule {}

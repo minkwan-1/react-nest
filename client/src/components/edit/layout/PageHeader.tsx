@@ -22,7 +22,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
         sx={{
           fontWeight: 800,
           fontSize: { xs: "28px", sm: "36px" },
-          background: `linear-gradient(135deg, ${mainColor} 0%, #02b279 100%)`,
+          background: `linear-gradient(135deg, ${mainColor} 0%, #ccaee3 100%)`,
           backgroundClip: "text",
           WebkitBackgroundClip: "text",
           WebkitTextFillColor: "transparent",
@@ -38,7 +38,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
             width: "60px",
             height: "4px",
             borderRadius: "2px",
-            background: `linear-gradient(90deg, ${mainColor} 0%, #02b279 100%)`,
+            background: `linear-gradient(90deg, ${mainColor} 0%, #ccaee3 100%)`,
           },
         }}
       >

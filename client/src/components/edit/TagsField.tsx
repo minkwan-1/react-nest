@@ -35,7 +35,7 @@ const TagsField: React.FC<TagsFieldProps> = ({ tags, handleTagsChange }) => {
             height: "16px",
             borderRadius: "2px",
             marginRight: "10px",
-            background: `linear-gradient(to bottom, ${mainColor}, #02b279)`,
+            background: `linear-gradient(to bottom, ${mainColor}, #ccaee3)`,
           },
         }}
       >
