@@ -6,18 +6,14 @@ import {
   CircularProgress,
   Chip,
   Avatar,
-  Button,
   Paper,
   Stack,
   alpha,
-  useTheme,
+  // useTheme,
 } from "@mui/material";
-import { InfoIcon } from "lucide-react";
-import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import CodeIcon from "@mui/icons-material/Code";
 
 // 샘플 데이터 (코드 스니펫 추가)
 const sampleQuestion = {
@@ -222,7 +218,7 @@ const MainContent = () => {
   const { id } = useParams();
   const [question, setQuestion] = useState<Question | null>(null);
   const [loading, setLoading] = useState(true);
-  const theme = useTheme();
+  // const theme = useTheme();
 
   useEffect(() => {
     // API 호출 시뮬레이션
@@ -447,251 +443,6 @@ const MainContent = () => {
                 </Box>
               </Paper>
             </Box>
-          </Box>
-
-          {/* 답변 섹션 헤더 */}
-          <Box
-            sx={{
-              mt: 6,
-              mb: 4,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}
-          >
-            <Typography
-              variant="h5"
-              sx={{
-                fontWeight: 700,
-                color: themeColors.textPrimary,
-                display: "flex",
-                alignItems: "center",
-                gap: 1,
-              }}
-            >
-              <ChatBubbleOutlineIcon />
-              {question.answers.length}개의 답변
-            </Typography>
-
-            <Box>
-              <Button
-                variant="outlined"
-                sx={{
-                  borderColor: "#b8dae1",
-                  color: alpha(theme.palette.text.secondary, 0.7),
-                  "&:hover": {
-                    borderColor: "#b8dae1",
-                    backgroundColor: alpha(themeColors.primary, 0.05),
-                  },
-                }}
-              >
-                최신순
-              </Button>
-            </Box>
-          </Box>
-
-          {/* 답변 목록 */}
-          {question.answers.map((answer) => (
-            <Box
-              key={answer.id}
-              sx={{
-                mb: 4,
-                position: "relative",
-              }}
-            >
-              {answer.isAccepted && (
-                <Box
-                  sx={{
-                    position: "absolute",
-                    top: -12,
-                    right: 16,
-                    zIndex: 1,
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 0.5,
-                    bgcolor: alpha(themeColors.accepted, 0.1),
-                    color: themeColors.accepted,
-                    py: 0.5,
-                    px: 1.5,
-                    borderRadius: 16,
-                    fontWeight: 600,
-                    fontSize: "0.75rem",
-                    boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
-                    border: `1px solid ${alpha(themeColors.accepted, 0.3)}`,
-                  }}
-                >
-                  <CheckCircleIcon fontSize="small" />
-                  채택된 답변
-                </Box>
-              )}
-
-              <Box
-                sx={{
-                  bgcolor: answer.isAccepted
-                    ? alpha(themeColors.accepted, 0.03)
-                    : "transparent",
-                  borderRadius: 2,
-                  p: { xs: 2, sm: 0 },
-                }}
-              >
-                {/* 답변 내용 */}
-                <Box sx={{ flex: 1 }}>
-                  <Paper
-                    elevation={0}
-                    sx={{
-                      p: 3,
-                      borderRadius: 2,
-                      bgcolor: themeColors.background,
-                      border: `1px solid ${
-                        answer.isAccepted
-                          ? alpha(themeColors.accepted, 0.5)
-                          : themeColors.borderLight
-                      }`,
-                      "& p": {
-                        mb: 2,
-                        color: themeColors.textPrimary,
-                        lineHeight: 1.7,
-                      },
-                      "& code": {
-                        fontFamily: "monospace",
-                        backgroundColor: alpha(themeColors.code.bg, 0.7),
-                        padding: "2px 4px",
-                        borderRadius: "4px",
-                        fontSize: "0.9em",
-                      },
-                      "& ul, & ol": {
-                        pl: 3,
-                        mb: 2,
-                        "& li": {
-                          mb: 1,
-                        },
-                      },
-                    }}
-                  >
-                    <div dangerouslySetInnerHTML={{ __html: answer.content }} />
-                  </Paper>
-
-                  {/* 답변 작성자 정보 */}
-                  <Box
-                    sx={{
-                      display: "flex",
-                      justifyContent: "flex-end",
-                      mt: 2,
-                    }}
-                  >
-                    <Paper
-                      elevation={0}
-                      sx={{
-                        p: 2,
-                        backgroundColor: themeColors.surface,
-                        borderRadius: 2,
-                        border: `1px solid ${themeColors.borderLight}`,
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 2,
-                      }}
-                    >
-                      <Avatar
-                        src={answer.author.avatarUrl}
-                        alt={answer.author.username}
-                        sx={{
-                          width: 40,
-                          height: 40,
-                          border: answer.isAccepted
-                            ? `2px solid ${themeColors.accepted}`
-                            : `2px solid ${themeColors.primary}`,
-                        }}
-                      />
-                      <Box>
-                        <Typography
-                          variant="body1"
-                          sx={{
-                            fontWeight: 600,
-                            color: themeColors.textPrimary,
-                          }}
-                        >
-                          {answer.author.username}
-                        </Typography>
-                        <Typography
-                          variant="caption"
-                          sx={{
-                            color: themeColors.textSecondary,
-                            display: "flex",
-                            alignItems: "center",
-                            gap: 0.5,
-                          }}
-                        >
-                          <AccessTimeIcon sx={{ fontSize: 14 }} />
-                          {formatDate(answer.createdAt)}
-                        </Typography>
-                      </Box>
-                    </Paper>
-                  </Box>
-                </Box>
-              </Box>
-            </Box>
-          ))}
-
-          {/* 답변 작성 섹션 */}
-          <Box sx={{ my: 6 }}>
-            <Typography
-              variant="h5"
-              sx={{
-                fontWeight: 700,
-                mb: 3,
-                color: themeColors.textPrimary,
-                display: "flex",
-                alignItems: "center",
-                gap: 1,
-              }}
-            >
-              <CodeIcon sx={{ color: "#b8dae1" }} /> {/* 아이콘 색상 변경 */}
-              답변 작성하기
-            </Typography>
-            <Paper
-              variant="outlined"
-              sx={{
-                p: 3,
-                borderRadius: 2,
-                borderColor: "#e2f7f0", // 테두리 색상을 연한 청록색으로 변경
-              }}
-            >
-              <Typography
-                variant="body2"
-                sx={{
-                  mb: 3,
-                  color: themeColors.textSecondary,
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 1,
-                  bgcolor: "#e2f7f0", // 배경색을 연한 청록색으로 변경
-                  p: 2,
-                  borderRadius: 1,
-                }}
-              >
-                <InfoIcon style={{ color: "#b8dae1" }} />{" "}
-                {/* 아이콘 색상 변경 */}
-                마크다운을 지원합니다. Ctrl+B로 굵게, Ctrl+I로 기울임체를 사용할
-                수 있습니다. 코드 블록은 ```로 감싸주세요.
-              </Typography>
-
-              <Button
-                variant="contained"
-                size="large"
-                sx={{
-                  mt: 2,
-                  bgcolor: "#b8dae1", // 버튼 배경색 변경
-                  "&:hover": {
-                    bgcolor: "#02b676", // 호버 시 약간 더 진한 청록색
-                  },
-                  px: 4,
-                  py: 1.5,
-                  fontWeight: 600,
-                }}
-              >
-                답변 등록
-              </Button>
-            </Paper>
           </Box>
         </>
       )}
