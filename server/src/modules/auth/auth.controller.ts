@@ -8,11 +8,8 @@ export class AuthController {
 
   @Get('me')
   async getMe(@Req() req: Request) {
-    const result = await this.sessionService.findWithSession(req);
-
-    console.log('세션 기반 로그인 정보: ', result);
-
-    return result;
+    const user = await this.sessionService.findWithSession(req);
+    return user;
   }
 
   @Get('logout')
