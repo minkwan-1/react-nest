@@ -1,10 +1,14 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PassportModule } from '@nestjs/passport';
+
+// 엔터티 및 리포지토리
 import { UserSession } from './session.entity';
-import { SessionController } from './session.controller';
-import { SessionService } from './session.service';
 import { SessionRepository } from './session.repository';
+
+// 서비스 및 컨트롤러
+import { SessionService } from './session.service';
+import { SessionController } from './session.controller';
 
 @Module({
   imports: [
