@@ -12,7 +12,7 @@ export class QuestionsService {
     private readonly usersRepository: UsersRepository,
   ) {}
 
-  // 1. 질문 생성
+  // [1] 질문 생성
   async create(
     title: string,
     content: string,
@@ -32,7 +32,7 @@ export class QuestionsService {
     return await this.questionsRepository.save(newQuestion);
   }
 
-  // 2. 특정 유저의 질문 조회
+  // [2] 특정 유저의 질문 조회
   async findAllByUser(userId: string): Promise<Question[]> {
     const user = await this.usersRepository.findById(userId);
     if (!user) throw new NotFoundException('존재하지 않는 유저입니다.');
