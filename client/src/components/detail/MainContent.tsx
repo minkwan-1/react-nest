@@ -9,162 +9,13 @@ import {
   Paper,
   Stack,
   alpha,
-  // useTheme,
 } from "@mui/material";
 
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 
-// 샘플 데이터 (코드 스니펫 추가)
-const sampleQuestion = {
-  id: 1,
-  title: "React에서 비동기 데이터 로딩 최적화하는 방법이 궁금합니다",
-  content: `<p>안녕하세요, React로 개발 중인 프로젝트에서 API 호출 시 비동기 데이터 로딩을 최적화하는 방법이 궁금합니다.</p>
-  <p>현재 다음과 같은 방식으로 구현하고 있는데, 더 효율적인 방법이 있을까요?</p>
-  
-  <pre><code class="language-javascript">
-import { useState, useEffect } from 'react';
-
-function DataLoader() {
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch('https://api.example.com/data');
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        const result = await response.json();
-        setData(result);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
-  
-  return (
-    <div>
-      {/* 데이터 표시 로직 */}
-    </div>
-  );
-}
-  </code></pre>
-  
-  <p>특히 여러 API를 동시에 호출해야 하는 경우나, 의존성이 있는 API 호출 시 최적화 방법이 궁금합니다.</p>`,
-  tags: ["React", "JavaScript", "API", "비동기", "성능최적화"],
-  author: {
-    username: "이말년",
-    avatarUrl:
-      "https://i.namu.wiki/i/qGhidfEt7uEejAoCXRN6wRygLL4ePPRkfCdkP6HlhoGhSc6lfM4_Ys3EXO34w3vhO68qom1_XqSEaRkXDI02Sw.webp",
-  },
-  createdAt: "2025-03-23T10:30:00Z",
-  votes: 12,
-  views: 245,
-  answers: [
-    {
-      id: 101,
-      content: `<p>안녕하세요! 현직 프론트엔드 개발자입니다.</p>
-      
-      <p>비동기 데이터 로딩을 효율적으로 처리하는 몇 가지 방법을 공유해 드리겠습니다.</p>
-      
-      <p>먼저, React Query나 SWR 같은 데이터 페칭 라이브러리를 사용하는 것을 추천합니다. 이런 라이브러리들은 캐싱, 백그라운드 업데이트, 에러 핸들링 등을 내장하고 있어 코드를 간결하게 유지하면서도 성능을 최적화할 수 있습니다.</p>
-      
-      <p>React Query 예시:</p>
-      
-      <pre><code class="language-javascript">
-import { useQuery } from 'react-query';
-
-function DataLoader() {
-  const fetchData = async () => {
-    const response = await fetch('https://api.example.com/data');
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
-    return response.json();
-  };
-
-  const { data, isLoading, error } = useQuery('uniqueQueryKey', fetchData, {
-    staleTime: 5 * 60 * 1000, // 5분 동안 데이터를 신선하게 유지
-    cacheTime: 30 * 60 * 1000, // 30분 동안 캐시 유지
-    retry: 3, // 실패 시 3번까지 재시도
-  });
-
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error.message}</div>;
-  
-  return (
-    <div>
-      {/* 데이터 표시 로직 */}
-    </div>
-  );
-}
-      </code></pre>
-      
-      <p>여러 API를 동시에 호출해야 하는 경우에는 Promise.all을 사용하거나, React Query의 useQueries를 활용할 수 있습니다:</p>
-      
-      <pre><code class="language-javascript">
-import { useQueries } from 'react-query';
-
-function MultipleDataLoader() {
-  const results = useQueries([
-    { queryKey: ['todos'], queryFn: fetchTodos },
-    { queryKey: ['users'], queryFn: fetchUsers },
-    { queryKey: ['posts'], queryFn: fetchPosts },
-  ]);
-
-  const isLoading = results.some(result => result.isLoading);
-  const isError = results.some(result => result.isError);
-
-  if (isLoading) return <div>Loading...</div>;
-  if (isError) return <div>Error occurred</div>;
-
-  return (
-    <div>
-      {/* 모든 데이터 표시 */}
-    </div>
-  );
-}
-      </code></pre>
-      
-      <p>의존적인 쿼리의 경우에는 enabled 옵션을 활용하면 됩니다:</p>
-      
-      <pre><code class="language-javascript">
-// 사용자 ID를 먼저 가져온 후, 해당 ID로 상세 정보를 조회
-const { data: userId } = useQuery(['userId'], fetchUserId);
-const { data: userDetails } = useQuery(
-  ['userDetails', userId],
-  () => fetchUserDetails(userId),
-  { enabled: !!userId } // userId가 있을 때만 이 쿼리 실행
-);
-      </code></pre>
-      
-      <p>성능 최적화를 위한 추가 팁:</p>
-      <ul>
-        <li>데이터 변경이 적은 경우 <strong>cacheTime</strong>과 <strong>staleTime</strong>을 적절히 설정하여 네트워크 요청 최소화</li>
-        <li>페이지네이션이나 무한 스크롤이 필요한 경우 <strong>useInfiniteQuery</strong> 활용</li>
-        <li>대량의 데이터는 필요한 부분만 요청하도록 API 설계 (GraphQL 사용 고려)</li>
-      </ul>`,
-      author: {
-        username: "침착맨",
-        avatarUrl:
-          "https://i.namu.wiki/i/9oIWpZPO2EO2pbE2nSwMocGV3RxiATFh07TDx7bZb6I3myioDNSk2GOzOjx8KgHhplg9-6d5zs_1NgRgUkb3jA.webp",
-      },
-      createdAt: "2025-01-22T14:15:00Z",
-      votes: 20,
-      isAccepted: false,
-    },
-  ],
-};
+import { useAtom } from "jotai";
+import { questionsAtom } from "@atom/question";
 
 // 테마 색상
 const themeColors = {
@@ -189,54 +40,54 @@ const themeColors = {
     text: "#374151",
   },
 };
+
 type Question = {
   id: number;
   title: string;
   content: string;
   tags: string[];
-  author: {
-    username: string;
-    avatarUrl: string;
-  };
-  createdAt: string;
-  votes: number;
-  views: number;
-  answers: {
-    id: number;
-    content: string;
-    author: {
-      username: string;
-      avatarUrl: string;
-    };
+  user: {
+    id: string;
+    email: string;
+    name: string;
+    phoneNumber: string;
     createdAt: string;
-    votes: number;
-    isAccepted: boolean;
-  }[];
+  };
+  userId: string;
 };
 
 const MainContent = () => {
   const { id } = useParams();
   const [question, setQuestion] = useState<Question | null>(null);
+  const [questions] = useAtom(questionsAtom);
   const [loading, setLoading] = useState(true);
-  // const theme = useTheme();
+
+  console.log("상세 페이지의 메인 컨텐츠에서 보여줄 데이터: ", questions);
 
   useEffect(() => {
-    // API 호출 시뮬레이션
-    const timer = setTimeout(() => {
-      setQuestion(sampleQuestion);
+    if (!id || !questions || questions.length === 0) {
       setLoading(false);
-    }, 800);
+      return;
+    }
+
+    // URL의 id와 일치하는 질문 찾기
+    const foundQuestion = questions.find((q) => q.id === parseInt(id));
+
+    // API 호출 시뮬레이션 (실제로는 이미 데이터가 있으므로 짧은 딜레이만)
+    const timer = setTimeout(() => {
+      setQuestion(foundQuestion || null);
+      setLoading(false);
+    }, 300);
 
     return () => clearTimeout(timer);
-  }, [id]);
+  }, [id, questions]);
 
-  // 코드 하이라이팅 적용 부분의 타입 에러 해결
+  // 코드 하이라이팅 및 이미지 스타일링 적용
   useEffect(() => {
-    // 코드 하이라이팅 적용
     if (!loading && question) {
+      // 코드 하이라이팅 적용
       document.querySelectorAll("pre code").forEach((block) => {
         if (block && block.parentElement) {
-          // parentElement가 존재하는지 확인
           block.parentElement.style.background = themeColors.code.bg;
           block.parentElement.style.border = `1px solid ${themeColors.code.border}`;
           block.parentElement.style.borderRadius = "6px";
@@ -249,8 +100,19 @@ const MainContent = () => {
           block.parentElement.style.marginTop = "10px";
         }
       });
+
+      // 이미지 스타일링 적용
+      document.querySelectorAll("img").forEach((img) => {
+        img.style.maxWidth = "100%";
+        img.style.height = "auto";
+        img.style.borderRadius = "8px";
+        img.style.marginTop = "8px";
+        img.style.marginBottom = "8px";
+        img.style.border = `1px solid ${themeColors.borderLight}`;
+      });
     }
   }, [loading, question]);
+
   const formatDate = (dateString: string) => {
     const options: Intl.DateTimeFormatOptions = {
       year: "numeric",
@@ -260,6 +122,11 @@ const MainContent = () => {
       minute: "2-digit",
     };
     return new Date(dateString).toLocaleDateString("ko-KR", options);
+  };
+
+  // 사용자 아바타 생성 함수 (이름 첫 글자 사용)
+  const generateAvatarText = (name: string) => {
+    return name.charAt(0).toUpperCase();
   };
 
   return (
@@ -287,9 +154,17 @@ const MainContent = () => {
           <CircularProgress sx={{ color: themeColors.primary }} />
         </Box>
       ) : !question ? (
-        <Typography variant="h5" sx={{ py: 4 }}>
-          질문을 찾을 수 없습니다
-        </Typography>
+        <Box sx={{ py: 4, textAlign: "center" }}>
+          <Typography
+            variant="h5"
+            sx={{ color: themeColors.textSecondary, mb: 2 }}
+          >
+            질문을 찾을 수 없습니다
+          </Typography>
+          <Typography variant="body1" sx={{ color: themeColors.textSecondary }}>
+            요청하신 질문이 존재하지 않거나 삭제되었을 수 있습니다.
+          </Typography>
+        </Box>
       ) : (
         <>
           {/* 질문 헤더 */}
@@ -324,12 +199,14 @@ const MainContent = () => {
               <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
                 <AccessTimeIcon fontSize="small" />
                 <Typography variant="body2">
-                  {formatDate(question.createdAt)}
+                  {formatDate(question.user.createdAt)}
                 </Typography>
               </Box>
               <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
                 <VisibilityIcon fontSize="small" />
-                <Typography variant="body2">조회 {question.views}회</Typography>
+                <Typography variant="body2">
+                  조회 {Math.floor(Math.random() * 500) + 50}회
+                </Typography>
               </Box>
             </Stack>
           </Box>
@@ -365,6 +242,14 @@ const MainContent = () => {
                   padding: "2px 4px",
                   borderRadius: "4px",
                   fontSize: "0.9em",
+                },
+                "& img": {
+                  maxWidth: "100%",
+                  height: "auto",
+                  borderRadius: "8px",
+                  marginTop: "8px",
+                  marginBottom: "8px",
+                  border: `1px solid ${themeColors.borderLight}`,
                 },
               }}
             >
@@ -413,14 +298,17 @@ const MainContent = () => {
                 }}
               >
                 <Avatar
-                  src={question.author.avatarUrl}
-                  alt={question.author.username}
                   sx={{
                     width: 40,
                     height: 40,
-                    border: `2px solid ${themeColors.primary}`,
+                    border: "1px solid #adb5be",
+                    backgroundColor: "#b8dae1",
+                    color: "white",
+                    fontWeight: 600,
                   }}
-                />
+                >
+                  {generateAvatarText(question.user.name)}
+                </Avatar>
                 <Box>
                   <Typography
                     variant="body1"
@@ -429,7 +317,7 @@ const MainContent = () => {
                       color: themeColors.textPrimary,
                     }}
                   >
-                    {question.author.username}
+                    {question.user.name}
                   </Typography>
                   <Typography
                     variant="caption"

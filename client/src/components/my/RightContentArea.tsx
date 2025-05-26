@@ -5,10 +5,12 @@ import MyQuestion from "./MyQuestion";
 import { useAtom } from "jotai";
 import { questionsAtom } from "@atom/question";
 import { realUserInfo } from "@atom/auth";
+import { useNavigate } from "react-router-dom";
 
 const RightContentArea = () => {
   const [questions] = useAtom(questionsAtom);
   const [userInfo] = useAtom(realUserInfo);
+  const navigate = useNavigate();
   const questionData = questions || [];
   const userData = {
     id: userInfo?.id || 1,
@@ -18,6 +20,7 @@ const RightContentArea = () => {
   // Event handlers for CommonCard
   const handleCardClick = (questionId: number | string) => {
     console.log("Card clicked:", questionId);
+    navigate(`/questions/${questionId}`);
     // Add navigation logic here
   };
 

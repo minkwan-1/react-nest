@@ -74,7 +74,8 @@ const QuestionCard = ({
     if (onCardClick) {
       onCardClick(question.id);
     } else {
-      navigate(`/questions/${question.id}`);
+      console.log("실패");
+      // navigate(`/questions/${question.id}`);
     }
   };
 
