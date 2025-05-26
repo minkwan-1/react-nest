@@ -10,7 +10,7 @@ export class SessionRepository {
     private readonly sessionRepository: Repository<UserSession>,
   ) {}
 
-  // 1. saveSession(= 로그인 시 세션 정보를 DB에 저장하는 로직)
+  // [1] 로그인 시 세션 정보를 DB에 저장하거나 업데이트
   async saveSession(
     sessionId: string,
     userId: string,
@@ -20,22 +20,21 @@ export class SessionRepository {
     data?: any,
   ): Promise<UserSession> {
     try {
-      // 기존 세션이 있는지 확인
       const existingSession = await this.sessionRepository.findOne({
         where: { sessionId },
       });
 
       if (existingSession) {
-        // 기존 세션 업데이트
-        existingSession.userId = userId;
-        existingSession.provider = provider;
-        existingSession.createdAt = createdAt;
-        existingSession.expiresAt = expiresAt;
-        existingSession.data = data;
+        Object.assign(existingSession, {
+          userId,
+          provider,
+          createdAt,
+          expiresAt,
+          data,
+        });
         return await this.sessionRepository.save(existingSession);
       }
 
-      // 새 세션 생성
       const session = this.sessionRepository.create({
         sessionId,
         userId,
@@ -47,21 +46,21 @@ export class SessionRepository {
 
       return await this.sessionRepository.save(session);
     } catch (error) {
-      console.error('세션 저장 중 오류 발생:', error);
-      throw new Error(`세션 저장에 실패했습니다: ${error.message}`);
+      console.error('❌ 세션 저장 중 오류:', error);
+      throw new Error(`세션 저장 실패: ${error.message}`);
     }
   }
 
-  // 2. findBySessionId(= protected info 요청시 세션을 찾는 로직)
+  // [2] 세션 ID로 세션 정보 조회
   async findBySessionId(sessionId: string): Promise<UserSession | null> {
     return await this.sessionRepository.findOne({
       where: { sessionId },
     });
   }
 
-  // 3. deleteBySessionId(= 로그아웃 시 세션 삭제)
+  // [3] 로그아웃 시 세션 삭제
   async deleteBySessionId(sessionId: string): Promise<void> {
-    console.log('세션 삭제를 위한 sessionId가 들어왔는지: ', sessionId);
+    console.log('🗑️ 세션 삭제 요청 sessionId:', sessionId);
     await this.sessionRepository.delete({ sessionId });
   }
 }
