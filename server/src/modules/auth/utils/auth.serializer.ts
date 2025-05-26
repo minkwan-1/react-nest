@@ -14,7 +14,7 @@ export class AuthSerializer extends PassportSerializer {
     super();
   }
 
-  // 1. 세션에 저장할 유저 정보
+  // [1] Serializer
   serializeUser(user: any, done: (err: any, id?: any) => void) {
     if (!user || !user.id) {
       return done(new Error('Invalid user object'));
@@ -28,6 +28,7 @@ export class AuthSerializer extends PassportSerializer {
     done(null, sessionData);
   }
 
+  // [2] Deserializer
   async deserializeUser(
     payload: { id: string; provider: string },
     done: (err: any, user?: any) => void,
