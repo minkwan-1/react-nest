@@ -16,7 +16,7 @@ export class NaverAuthService {
 
   constructor(private readonly naverAuthRepository: NaverAuthRepository) {}
 
-  // 1. Naver OAuth 인증 URL 생성
+  // [1] 네이버 인증 URL 생성
   getNaverAuthUrl(): string {
     const state = randomBytes(16).toString('hex');
 
@@ -27,7 +27,7 @@ export class NaverAuthService {
     }
   }
 
-  // 2. 인가 코드로 액세스 토큰을 얻기 위한 메소드
+  // [2] 인가 코드로 액세스 토큰 요청
   async getToken(code: string, state: string): Promise<any> {
     const tokenUrl = 'https://nid.naver.com/oauth2.0/token';
 
@@ -49,7 +49,7 @@ export class NaverAuthService {
     }
   }
 
-  // 3. 액세스 토큰으로 구글 사용자 정보 조회
+  // [3] 액세스 토큰으로 구글 사용자 정보 조회
   async getUserInfo(accessToken: string): Promise<any> {
     const userInfoUrl = 'https://openapi.naver.com/v1/nid/me';
 
@@ -66,7 +66,7 @@ export class NaverAuthService {
     }
   }
 
-  // 4. 기존 사용자 확인 및 신규 사용자 데이터 반환
+  // [4] 기존 사용자 조회 또는 신규 사용자 데이터 반환
   async findUser(userData: any): Promise<FindUserType> {
     try {
       const user = await this.naverAuthRepository.findUser({ id: userData.id });
@@ -97,7 +97,7 @@ export class NaverAuthService {
     }
   }
 
-  // 5. Naver 사용자 정보를 DB에 저장하는 메소드
+  // [5] 신규 사용자 저장
   async createUser(userData: any) {
     return await this.naverAuthRepository.saveUser(userData);
   }
