@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { GoogleAuthService } from './google.auth.service';
-import { UsersService } from 'src/users/users.service';
+import { UsersService } from 'src/modules/users/users.service';
 import { SessionService } from '../session/session.service';
 
 @Controller('auth/google')

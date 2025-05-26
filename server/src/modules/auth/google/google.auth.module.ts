@@ -11,7 +11,7 @@ import { GoogleAuthService } from './google.auth.service';
 import { GoogleAuthController } from './google.auth.controller';
 
 // 3. 의존 모듈
-import { UsersModule } from 'src/users/users.module';
+import { UsersModule } from 'src/modules/users/users.module';
 import { AuthModule } from '../auth.module';
 import { SessionModule } from '../session/session.module';
 

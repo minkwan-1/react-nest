@@ -8,7 +8,7 @@ import { Question } from './questions.entity';
 import { QuestionsService } from './questions.service';
 import { QuestionsController } from './questions.controller';
 
-import { UsersModule } from 'src/users/users.module';
+import { UsersModule } from 'src/modules/users/users.module';
 
 @Module({
   // TypeORM에 Question 엔티티 등록

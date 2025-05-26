@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PassportSerializer } from '@nestjs/passport';
-import { UsersService } from 'src/users/users.service';
+import { UsersService } from 'src/modules/users/users.service';
 import { GoogleAuthService } from '../google/google.auth.service';
 import { NaverAuthService } from '../naver/naver.auth.service';
 

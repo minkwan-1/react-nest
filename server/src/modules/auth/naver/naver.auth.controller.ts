@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { NaverAuthService } from './naver.auth.service';
 import { Request, Response } from 'express';
-import { UsersService } from 'src/users/users.service';
+import { UsersService } from 'src/modules/users/users.service';
 import { SessionService } from '../session/session.service';
 import { HttpException, HttpStatus } from '@nestjs/common';
 

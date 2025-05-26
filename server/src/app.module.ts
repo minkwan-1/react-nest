@@ -9,7 +9,7 @@ import { typeORMConfig } from './configs/typeorm.config';
 // 도메인 모듈
 import { AuthModule } from './modules/auth/auth.module';
 import { PhoneVerificationModule } from './modules/phone/phone-verification.module';
-import { UsersModule } from './users/users.module';
+import { UsersModule } from './modules/users/users.module';
 import { QuestionsModule } from './modules/questions/questions.module';
 import { GeminiModule } from './modules/ai/gemini/gemini.module';
 
