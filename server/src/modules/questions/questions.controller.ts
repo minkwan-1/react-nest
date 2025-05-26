@@ -13,7 +13,7 @@ import { QuestionsService } from './questions.service';
 export class QuestionsController {
   constructor(private readonly questionsService: QuestionsService) {}
 
-  // 1. 질문 생성
+  // [POST] 질문 생성
   @Post()
   async create(
     @Body('title') title: string,
@@ -24,7 +24,7 @@ export class QuestionsController {
     return this.questionsService.create(title, content, tags, userId);
   }
 
-  // 2. 특정 유저의 질문 전체 조회
+  // [GET] 특정 유저의 질문 전체 조회
   @Get('user/:id')
   async findAllByUser(
     @Param('id', ParseUUIDPipe) userId: string,
