@@ -12,4 +12,8 @@ export class CreateUserDto {
   @IsString()
   @IsNotEmpty()
   phoneNumber: string;
+
+  @IsString()
+  @IsNotEmpty()
+  accountID: string;
 }

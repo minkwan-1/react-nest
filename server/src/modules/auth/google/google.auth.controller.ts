@@ -23,9 +23,9 @@ export class GoogleAuthController {
   ) {}
 
   // [GET] 구글 로그인 URL 제공
-  @Get('login')
+  @Get('callback')
   @Redirect()
-  async login() {
+  async callback() {
     const url = this.googleAuthService.getGoogleAuthUrl();
     return { url };
   }
@@ -44,9 +44,10 @@ export class GoogleAuthController {
         tokens.access_token,
       );
       const user = await this.googleAuthService.findUser(userData);
-
+      console.log('회원가입 시의 user: ', user);
+      // 101607928260984472861
       if (user.isExist) {
-        const dbUser = await this.usersService.findByEmail(user.email);
+        const dbUser = await this.usersService.findByAccountID(user.id);
         const mergedUser = { ...dbUser, provider };
 
         try {
@@ -69,9 +70,9 @@ export class GoogleAuthController {
       return res.send({
         message: '신규 유저 데이터',
         user,
-        accessToken: tokens.access_token,
-        refreshToken: tokens.refresh_token,
-        expiresIn: tokens.expires_in,
+        // accessToken: tokens.access_token,
+        // refreshToken: tokens.refresh_token,
+        // expiresIn: tokens.expires_in,
       });
     } catch (err) {
       console.error('인증 처리 중 오류:', err);
@@ -85,14 +86,19 @@ export class GoogleAuthController {
   // [POST] 사용자 정보 저장 (최초 회원가입 처리)
   @Post('user/update')
   async updateUser(@Body() userData: any) {
-    const finalGoogleUser = await this.googleAuthService.createUser(userData);
+    console.log('최종 가입 직전 유저 정보: ', userData);
+    try {
+      const finalGoogleUser = await this.googleAuthService.createUser(userData);
 
-    const finalUser = await this.usersService.create({
-      email: userData.email,
-      name: userData.name,
-      phoneNumber: userData.phoneNumber,
-    });
-
-    return { finalGoogleUser, finalUser };
+      const finalUser = await this.usersService.create({
+        email: userData.email,
+        name: userData.name,
+        accountID: userData.id,
+        phoneNumber: userData.phoneNumber,
+      });
+      return { finalGoogleUser, finalUser };
+    } catch (err) {
+      console.log(err);
+    }
   }
 }

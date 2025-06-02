@@ -24,7 +24,7 @@ const SocialButton = ({
   const handleOAuthLogin = (provider: string): void => {
     console.log("#회원가입 버튼 클릭 시 provider: ", provider);
     try {
-      window.location.href = `http://localhost:3000/auth/${provider}/login`;
+      window.location.href = `http://localhost:3000/auth/${provider}/callback`;
     } catch (error) {
       console.error(`${provider} 로그인 중 오류가 발생했습니다:`, error);
     }

@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import { laptop } from "../../images/index";
+import { laptop1 } from "../../images/index";
 // import { useTheme } from "@mui/material";
 interface ImageSectionProps {
   isMobile?: boolean;
@@ -23,7 +23,7 @@ const ImageSection = ({ isMobile = false }: ImageSectionProps) => {
     >
       <Box
         component="img"
-        src={laptop}
+        src={laptop1}
         alt="Laptop Illustration"
         sx={{
           width: isMobile ? "85%" : "100%",

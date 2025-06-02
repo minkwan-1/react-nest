@@ -18,15 +18,15 @@ const App = () => {
     <Routes>
       <Route path="/" element={<LandingPage />} />
       <Route path="/home" element={<HomePage />} />
-      <Route path="/questions/:id" element={<QuestionDetailPage />} />
       <Route path="/my" element={<MyPage />} />
-      <Route path="/phone" element={<PhoneVerificationPage />} />
-      <Route path="/privacy" element={<TermsAndPrivacyPage />} />
-      <Route path="/edit" element={<QuestionEditPage />} />
-      <Route path="*" element={<NotFoundPage />} />
       <Route path="/redirect" element={<RedirectPage />} />
       <Route path="/sign-up" element={<SignUpPage />} />
       <Route path="/sign-in" element={<SignInPage />} />
+      <Route path="/edit" element={<QuestionEditPage />} />
+      <Route path="/questions/:id" element={<QuestionDetailPage />} />
+      <Route path="/phone" element={<PhoneVerificationPage />} />
+      <Route path="/privacy" element={<TermsAndPrivacyPage />} />
+      <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
 };

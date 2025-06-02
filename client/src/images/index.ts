@@ -6,5 +6,16 @@ import Pullim from "./Pullim.png";
 import laptop from "./laptop.png";
 import verification from "./verification.png";
 import man from "./man.png";
+import laptop1 from "./laptop1.png";
 
-export { google, kakao, naver, questions, Pullim, laptop, verification, man };
+export {
+  google,
+  kakao,
+  naver,
+  questions,
+  Pullim,
+  laptop,
+  verification,
+  man,
+  laptop1,
+};

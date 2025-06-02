@@ -40,14 +40,14 @@ export class AuthSerializer extends PassportSerializer {
         const googleUser = await this.googleAuthService.findUser(payload.id);
         if (!googleUser) return done(null, false);
 
-        user = await this.usersService.findByEmail(googleUser.email);
+        user = await this.usersService.findByAccountID(googleUser.id);
 
         if (user) user.provider = 'google';
       } else if (payload.provider === 'naver') {
         const naverUser = await this.naverAuthService.findUser(payload.id);
         if (!naverUser) return done(null, false);
 
-        user = await this.usersService.findByEmail(naverUser.email);
+        user = await this.usersService.findByAccountID(naverUser.id);
 
         if (user) user.provider = 'naver';
       } else {

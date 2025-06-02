@@ -22,9 +22,9 @@ export class NaverAuthController {
   ) {}
 
   // [GET] 네이버 로그인 URL 제공
-  @Get('login')
+  @Get('callback')
   @Redirect()
-  async login() {
+  async callback() {
     const naverAuthUrl = this.naverAuthService.getNaverAuthUrl();
     return { url: naverAuthUrl };
   }
@@ -46,13 +46,15 @@ export class NaverAuthController {
       );
 
       const foundUser = await this.naverAuthService.findUser(userData);
+      console.log('회원가입 시 네이버 유저 정보: ', foundUser);
 
       if (foundUser.isExist) {
-        const viaNaverUser = await this.usersService.findByEmail(
-          foundUser.email,
+        const viaNaverUser = await this.usersService.findByAccountID(
+          foundUser.id,
         );
+        console.log('1', viaNaverUser);
         const addedProviderViaNaverUser = { ...viaNaverUser, provider };
-
+        console.log('2', addedProviderViaNaverUser);
         try {
           await this.sessionService.loginWithSession(
             req,
@@ -98,6 +100,7 @@ export class NaverAuthController {
     const parseFinalUser = {
       email: userData.email,
       name: userData.name,
+      accountID: userData.id,
       phoneNumber: userData.phoneNumber,
     };
 

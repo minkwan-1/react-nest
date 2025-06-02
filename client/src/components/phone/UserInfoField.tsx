@@ -2,11 +2,12 @@ import { Box, Typography, Paper, Avatar } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
 import EmailIcon from "@mui/icons-material/Email";
 import { SetStateAction } from "jotai";
-import type { UserInfo } from "@/atom/auth";
+// import type { UserInfo } from "@/atom/auth";
+import type { signupUserInfo } from "@atom/auth";
 
 export interface UserInfoFieldProps {
-  userInfo: UserInfo | null;
-  setUserInfo: (userInfo: SetStateAction<UserInfo | null>) => void;
+  userInfo: signupUserInfo | null;
+  setUserInfo: (userInfo: SetStateAction<signupUserInfo | null>) => void;
 }
 
 const UserInfoField = ({ userInfo }: UserInfoFieldProps) => {

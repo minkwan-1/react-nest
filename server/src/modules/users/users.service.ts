@@ -13,8 +13,8 @@ export class UsersService {
   }
 
   // [2] 이메일로 유저 조회
-  async findByEmail(email: string): Promise<User | null> {
-    return this.usersRepository.findOneByEmail(email);
+  async findByAccountID(accountID: string): Promise<User | null> {
+    return this.usersRepository.findOneByAccountID(accountID);
   }
 
   // [3] ID로 유저 조회

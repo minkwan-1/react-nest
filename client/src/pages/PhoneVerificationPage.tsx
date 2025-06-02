@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Box } from "@mui/material";
 import { PageContainer, ComponentWrapper } from "../components/layout/common";
 import { useAtom } from "jotai";
-import { signupUserInfo, completeUserInfo } from "@atom/auth";
+import { signupUserInfo } from "@atom/auth";
 import { handleCompleteSignupWithAPI } from "../api/auth/auth";
 
 import {
@@ -17,7 +17,6 @@ import SignupButton from "@components/phone/SignupButton";
 const PhoneVerificationPage = () => {
   const [userInfo, setUserInfo] = useAtom(signupUserInfo);
 
-  const [, setNewUserInfo] = useAtom(completeUserInfo);
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState<"info" | "success" | "error">(
     "info"
@@ -71,12 +70,11 @@ const PhoneVerificationPage = () => {
       ...userInfo,
       phoneNumber,
       isExist: true,
+      id: userInfo?.id,
+      email: userInfo?.email,
+      name: userInfo?.name,
       provider: userInfo.provider,
     };
-    // Only call setNewUserInfo if it exists
-    if (setNewUserInfo) {
-      setNewUserInfo(newCompleteUserInfo);
-    }
 
     // 로딩 상태 활성화
     setIsLoading(true);

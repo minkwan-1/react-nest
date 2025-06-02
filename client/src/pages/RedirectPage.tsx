@@ -21,6 +21,7 @@ const RedirectPage = () => {
   const navigate = useNavigate();
   const code = query.get("code");
   const provider = query.get("provider");
+
   const [userInfo, setUserInfo] = useAtom(signupUserInfo);
 
   const { mutate: authorizationMutate } = usePostAuthorizationMutate();

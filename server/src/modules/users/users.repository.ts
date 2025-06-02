@@ -17,12 +17,12 @@ export class UsersRepository {
 
   // 유저 생성
   async create(createUserDto: CreateUserDto): Promise<User> {
-    const { email, name, phoneNumber } = createUserDto;
+    const { email, name, phoneNumber, accountID } = createUserDto;
 
-    const emailExists = await this.findOneByEmail(email);
-    if (emailExists) {
-      throw new ConflictException('이미 등록된 이메일입니다.');
-    }
+    // const accountIDExists = await this.findOneByAccountID(accountID);
+    // if (accountIDExists) {
+    //   throw new ConflictException('이미 등록된 이메일입니다.');
+    // }
 
     const phoneExists = await this.findOneByPhoneNumber(phoneNumber);
     if (phoneExists) {
@@ -30,7 +30,12 @@ export class UsersRepository {
     }
 
     try {
-      const user = this.repository.create({ email, name, phoneNumber });
+      const user = this.repository.create({
+        email,
+        name,
+        phoneNumber,
+        accountID,
+      });
       return await this.repository.save(user);
     } catch (error) {
       console.error('User creation error:', error);
@@ -41,8 +46,8 @@ export class UsersRepository {
   }
 
   // 이메일로 유저 검색
-  async findOneByEmail(email: string): Promise<User | null> {
-    return this.repository.findOne({ where: { email } });
+  async findOneByAccountID(accountID: string): Promise<User | null> {
+    return this.repository.findOne({ where: { accountID } });
   }
 
   // ID로 유저 검색
