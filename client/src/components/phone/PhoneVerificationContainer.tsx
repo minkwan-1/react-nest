@@ -41,7 +41,7 @@ const PhoneVerificationContainer: React.FC<PhoneVerificationContainerProps> = ({
   const [messageState, setMessageState] = useState({
     open: false,
     message: "",
-    type: "info" as "info" | "success" | "error",
+    type: "info" as "info" | "success" | "error" | "warning",
     isExistingUser: false,
     isSignupComplete: false,
   });

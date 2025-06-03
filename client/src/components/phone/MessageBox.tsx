@@ -18,7 +18,7 @@ import { useNavigate } from "react-router-dom";
 
 interface MessageBoxProps {
   message: string;
-  messageType: "info" | "success" | "error";
+  messageType: "info" | "success" | "error" | "warning";
   open: boolean;
   onClose: () => void;
   autoHideDuration?: number;
@@ -38,12 +38,6 @@ const MessageBox = ({
   const navigate = useNavigate();
   const keyColor = "#b8dae1";
 
-  const icons = {
-    info: <InfoOutlinedIcon sx={{ fontSize: 48 }} />,
-    success: <CheckCircleOutlineIcon sx={{ fontSize: 48 }} />,
-    error: <ErrorOutlineIcon sx={{ fontSize: 48 }} />,
-  };
-
   const colors = {
     info: {
       main: keyColor,
@@ -60,6 +54,18 @@ const MessageBox = ({
       light: `${keyColor}30`,
       gradient: `linear-gradient(135deg, ${keyColor}15, ${keyColor}05)`,
     },
+    warning: {
+      main: keyColor,
+      light: `${keyColor}30`,
+      gradient: `linear-gradient(135deg, ${keyColor}15, ${keyColor}05)`,
+    },
+  };
+
+  const icons = {
+    info: <InfoOutlinedIcon sx={{ fontSize: 48 }} />,
+    success: <CheckCircleOutlineIcon sx={{ fontSize: 48 }} />,
+    error: <ErrorOutlineIcon sx={{ fontSize: 48 }} />,
+    warning: <InfoOutlinedIcon sx={{ fontSize: 48 }} />, // 적절한 warning 아이콘 사용 가능
   };
 
   const titles = {
@@ -70,6 +76,7 @@ const MessageBox = ({
       ? "회원가입 완료"
       : "인증 완료",
     error: "오류 발생",
+    warning: "주의",
   };
 
   const handleButtonClick = () => {
