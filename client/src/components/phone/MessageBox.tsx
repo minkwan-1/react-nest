@@ -22,8 +22,8 @@ interface MessageBoxProps {
   open: boolean;
   onClose: () => void;
   autoHideDuration?: number;
-  isExistingUser?: boolean; // 기존 유저인지 여부
-  isSignupComplete?: boolean; // 회원가입 완료인지 여부
+  isExistingUser?: boolean;
+  isSignupComplete?: boolean;
 }
 
 const MessageBox = ({
@@ -73,11 +73,8 @@ const MessageBox = ({
   };
 
   const handleButtonClick = () => {
-    if ((isExistingUser || isSignupComplete) && messageType === "success") {
-      navigate("/sign-in");
-    } else {
-      onClose();
-    }
+    navigate("/sign-in");
+    onClose();
   };
 
   const getButtonText = () => {
