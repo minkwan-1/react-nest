@@ -2,7 +2,6 @@ import { Box, Typography, Paper, Avatar } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
 import EmailIcon from "@mui/icons-material/Email";
 import { SetStateAction } from "jotai";
-// import type { UserInfo } from "@/atom/auth";
 import type { signupUserInfo } from "@atom/auth";
 
 export interface UserInfoFieldProps {

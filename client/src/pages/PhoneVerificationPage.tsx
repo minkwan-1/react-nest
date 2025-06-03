@@ -1,101 +1,63 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { Box } from "@mui/material";
 import { PageContainer, ComponentWrapper } from "../components/layout/common";
 import { useAtom } from "jotai";
 import { signupUserInfo } from "@atom/auth";
 import { handleCompleteSignupWithAPI } from "../api/auth/auth";
-
-import {
-  PhoneVerificationTitle,
-  UserInfoField,
-  PhoneNumberField,
-  VerificationInput,
-  MessageBox,
-} from "@components/phone";
-import SignupButton from "@components/phone/SignupButton";
+import { PhoneVerificationContainer } from "@components/phone";
 
 const PhoneVerificationPage = () => {
   const [userInfo, setUserInfo] = useAtom(signupUserInfo);
 
-  const [message, setMessage] = useState("");
-  const [messageType, setMessageType] = useState<"info" | "success" | "error">(
-    "info"
-  );
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [isVerified, setIsVerified] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  // userInfo가 변경될 때마다 localStorage에 저장
+  useEffect(() => {
+    if (userInfo) {
+      localStorage.setItem("userInfo", JSON.stringify(userInfo));
+    }
+  }, []);
 
-  // Load user info from localStorage when component mounts
+  // 컴포넌트 마운트 시 localStorage에서 userInfo 불러오기
   useEffect(() => {
     const storedUserInfo = localStorage.getItem("userInfo");
     if (storedUserInfo) {
-      try {
-        const parsedUserInfo = JSON.parse(storedUserInfo);
-        setUserInfo(parsedUserInfo);
-      } catch (error) {
-        console.error("Error parsing stored user info:", error);
-      }
+      const parsedUserInfo = JSON.parse(storedUserInfo);
+      setUserInfo(parsedUserInfo);
     }
-  }, [setUserInfo]);
+  }, []);
 
-  // 성공 메시지 처리 함수
-  const handleSuccess = (successMessage: string) => {
-    setMessage(successMessage);
-    setMessageType("success");
-  };
-
-  // 에러 메시지 처리 함수
-  const handleError = (errorMessage: string) => {
-    setMessage(errorMessage);
-    setMessageType("error");
-  };
-
-  // 전화번호 설정 함수
-  const handlePhoneNumberChange = (newPhoneNumber: string) => {
-    setPhoneNumber(newPhoneNumber);
-  };
-
-  // 인증 완료 처리 함수
-  const handleVerified = () => {
-    setIsVerified(true);
-    handleSuccess("전화번호 인증이 완료되었습니다. 회원가입을 완료해주세요.");
-  };
-
-  // 최종 가입
+  // 최종 회원가입 완료 처리 함수
   const handleCompleteSignup = async () => {
-    if (!userInfo) return handleError("유저 정보가 없습니다.");
-    if (!phoneNumber) return handleError("전화번호를 입력해 주세요.");
+    if (!userInfo) {
+      throw new Error("유저 정보가 없습니다.");
+    }
 
-    const newCompleteUserInfo = {
-      ...userInfo,
-      phoneNumber,
-      isExist: true,
-      id: userInfo?.id,
-      email: userInfo?.email,
-      name: userInfo?.name,
-      provider: userInfo.provider,
-    };
-
-    // 로딩 상태 활성화
-    setIsLoading(true);
-
-    console.log("#최종 인증 완료 유저 데이터: ", newCompleteUserInfo);
+    if (!userInfo.phoneNumber) {
+      throw new Error("전화번호 인증이 완료되지 않았습니다.");
+    }
 
     try {
-      // API를 통해 회원가입 처리
+      const newCompleteUserInfo = {
+        ...userInfo,
+        isExist: true,
+        id: userInfo?.id,
+        email: userInfo?.email,
+        name: userInfo?.name,
+        phoneNumber: userInfo.phoneNumber,
+        provider: userInfo.provider,
+      };
+
       const result = await handleCompleteSignupWithAPI(newCompleteUserInfo);
 
-      if (result.success) {
-        handleSuccess("회원가입이 성공적으로 완료되었습니다.");
-        // 회원가입 성공 후 추가 처리 (페이지 이동은 SignupButton에서 처리)
-      } else {
-        handleError(result.message || "회원가입 중 오류가 발생했습니다.");
+      if (!result.success) {
+        throw new Error(result.message || "회원가입 중 오류가 발생했습니다.");
       }
+
+      localStorage.removeItem("userInfo");
+
+      return;
     } catch (error) {
       console.error("회원가입 처리 중 오류:", error);
-      handleError("회원가입 처리 중 오류가 발생했습니다.");
-    } finally {
-      setIsLoading(false);
+      throw error;
     }
   };
 
@@ -103,29 +65,11 @@ const PhoneVerificationPage = () => {
     <PageContainer>
       <ComponentWrapper sx={{ maxWidth: "600px" }}>
         <Box sx={{ padding: 4 }}>
-          <PhoneVerificationTitle />
-          <UserInfoField userInfo={userInfo} setUserInfo={setUserInfo} />
-          <PhoneNumberField
-            onSuccess={handleSuccess}
-            onError={handleError}
-            onPhoneNumberChange={handlePhoneNumberChange}
+          <PhoneVerificationContainer
+            userInfo={userInfo}
+            setUserInfo={setUserInfo}
+            onSignupComplete={handleCompleteSignup}
           />
-          <VerificationInput
-            phoneNumber={phoneNumber}
-            onSuccess={handleSuccess}
-            onError={handleError}
-            onVerified={handleVerified}
-          />
-
-          {/* 인증 완료 시 회원가입 버튼 표시 */}
-          {isVerified && (
-            <SignupButton
-              onClick={handleCompleteSignup}
-              isLoading={isLoading}
-            />
-          )}
-
-          <MessageBox message={message} messageType={messageType} />
         </Box>
       </ComponentWrapper>
     </PageContainer>

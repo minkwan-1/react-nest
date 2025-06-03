@@ -18,20 +18,23 @@ interface PhoneNumberFieldProps {
   onSuccess: (message: string) => void;
   onError: (message: string) => void;
   onPhoneNumberChange: (phoneNumber: string) => void;
+  onCodeSent: () => void;
+  onExistingUser: () => void;
 }
 
 const PhoneNumberField = ({
   onSuccess,
   onError,
   onPhoneNumberChange,
+  onCodeSent,
+  onExistingUser,
 }: PhoneNumberFieldProps) => {
   const theme = useTheme();
-  const keyColor = "#b8dae1"; // 키 컬러 정의
+  const keyColor = "#b8dae1";
   const [phoneNumber, setPhoneNumber] = useState("");
   const [isSending, setIsSending] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
 
-  // 전화번호 유효성 검사 (국가 코드 포함 + 숫자 형식 확인)
   const isValidPhoneNumber = (number: string) => {
     const trimmed = number.replace(/\s+/g, "");
     return /^\+\d{10,15}$/.test(trimmed);
@@ -39,12 +42,10 @@ const PhoneNumberField = ({
 
   const isValidFormat = phoneNumber ? isValidPhoneNumber(phoneNumber) : true;
 
-  // 전화번호 입력 시 부모 컴포넌트로 전달
   useEffect(() => {
     onPhoneNumberChange(phoneNumber);
   }, [phoneNumber, onPhoneNumberChange]);
 
-  // 디바운싱 함수 (300ms 지연 적용)
   const debounce = <T extends unknown[]>(
     func: (...args: T) => void,
     delay: number
@@ -74,14 +75,28 @@ const PhoneNumberField = ({
         toPhoneNumber: phoneNumber.trim(),
       });
 
+      // 응답에서 기존 유저 여부 확인
+      if (response.data.isExistingUser) {
+        onExistingUser();
+        return;
+      }
+
       onSuccess(response.data.message || "인증 코드가 발송되었습니다!");
+      onCodeSent();
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
         if (!error.response) {
           onError("네트워크 연결에 실패했습니다. 인터넷을 확인해주세요.");
         } else {
+          // 409 상태코드는 이미 존재하는 유저를 의미
+          if (error.response.status === 409) {
+            onExistingUser();
+            return;
+          }
+
           const errorMessage =
             error.response.data?.message || "인증 코드 발송에 실패했습니다.";
+
           onError(errorMessage);
         }
       } else {
@@ -92,87 +107,85 @@ const PhoneNumberField = ({
     }
   };
 
-  // 디바운싱 적용된 핸들러
   const debouncedSendCode = useCallback(debounce(sendCode, 300), [phoneNumber]);
 
-  // 다크모드 감지
   const isDarkMode = theme.palette.mode === "dark";
   const borderColor = isDarkMode ? `${keyColor}40` : `${keyColor}30`;
 
   return (
-    <Paper
-      elevation={0}
-      sx={{
-        mb: 4,
-        p: 3,
-        borderRadius: 3,
-        border: "1px solid",
-        borderColor: borderColor,
-        backgroundColor: theme.palette.background.paper,
-      }}
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
     >
-      <Typography
-        variant="subtitle1"
-        fontWeight={600}
-        sx={{ mb: 2, color: keyColor }}
+      <Paper
+        elevation={0}
+        sx={{
+          mb: 4,
+          p: 3,
+          borderRadius: 3,
+          border: "1px solid",
+          borderColor: borderColor,
+          backgroundColor: theme.palette.background.paper,
+        }}
       >
-        휴대폰 번호 인증
-      </Typography>
-
-      <Box sx={{ mb: 2, position: "relative" }}>
-        <TextField
-          fullWidth
-          label="휴대폰 번호"
-          placeholder="+821012345678"
-          value={phoneNumber}
-          onChange={(e) => setPhoneNumber(e.target.value)}
-          onFocus={() => setIsFocused(true)}
-          onBlur={() => setIsFocused(false)}
-          margin="normal"
-          variant="outlined"
-          error={phoneNumber !== "" && !isValidFormat}
-          helperText={
-            phoneNumber !== "" && !isValidFormat
-              ? "올바른 형식의 전화번호를 입력해주세요. (예: +821012345678)"
-              : " "
-          }
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <PhoneIcon
-                  sx={{
-                    color: isFocused ? keyColor : "action.active",
-                    transition: "color 0.3s",
-                  }}
-                />
-              </InputAdornment>
-            ),
-            sx: {
-              borderRadius: 2,
-              transition: "all 0.3s",
-              "&.Mui-focused": {
-                boxShadow: `0 0 0 2px ${keyColor}40`,
-              },
-            },
-          }}
-          sx={{
-            "& .MuiOutlinedInput-root": {
-              transition: "all 0.3s",
-              "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                borderColor: keyColor,
-              },
-            },
-            "& .MuiInputLabel-root.Mui-focused": {
-              color: keyColor,
-            },
-          }}
-        />
-
-        <motion.div
-          initial={{ opacity: 0, y: 5 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3 }}
+        <Typography
+          variant="subtitle1"
+          fontWeight={600}
+          sx={{ mb: 2, color: keyColor }}
         >
+          휴대폰 번호 인증
+        </Typography>
+
+        <Box sx={{ mb: 2, position: "relative" }}>
+          <TextField
+            fullWidth
+            label="휴대폰 번호"
+            placeholder="+821012345678"
+            value={phoneNumber}
+            onChange={(e) => setPhoneNumber(e.target.value)}
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
+            margin="normal"
+            variant="outlined"
+            error={phoneNumber !== "" && !isValidFormat}
+            helperText={
+              phoneNumber !== "" && !isValidFormat
+                ? "올바른 형식의 전화번호를 입력해주세요. (예: +821012345678)"
+                : " "
+            }
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <PhoneIcon
+                    sx={{
+                      color: isFocused ? keyColor : "action.active",
+                      transition: "color 0.3s",
+                    }}
+                  />
+                </InputAdornment>
+              ),
+              sx: {
+                borderRadius: 2,
+                transition: "all 0.3s",
+                "&.Mui-focused": {
+                  boxShadow: `0 0 0 2px ${keyColor}40`,
+                },
+              },
+            }}
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                transition: "all 0.3s",
+                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                  borderColor: keyColor,
+                },
+              },
+              "& .MuiInputLabel-root.Mui-focused": {
+                color: keyColor,
+              },
+            }}
+          />
+
           <Button
             variant="contained"
             onClick={debouncedSendCode}
@@ -192,6 +205,10 @@ const PhoneNumberField = ({
                 boxShadow: `0 12px 20px ${keyColor}40`,
                 transform: "translateY(-2px)",
               },
+              "&.Mui-disabled": {
+                bgcolor: theme.palette.mode === "dark" ? "#464646" : "#e0e0e0",
+                color: theme.palette.mode === "dark" ? "#8a8a8a" : "#a6a6a6",
+              },
               transition: "all 0.3s",
             }}
             endIcon={!isSending && <SendIcon />}
@@ -202,17 +219,17 @@ const PhoneNumberField = ({
               "인증 코드 발송"
             )}
           </Button>
-        </motion.div>
-      </Box>
+        </Box>
 
-      <Typography
-        variant="caption"
-        color="text.secondary"
-        sx={{ display: "block", textAlign: "center" }}
-      >
-        국가 코드를 포함한 휴대폰 번호를 입력해주세요
-      </Typography>
-    </Paper>
+        <Typography
+          variant="caption"
+          color="text.secondary"
+          sx={{ display: "block", textAlign: "center" }}
+        >
+          국가 코드를 포함한 휴대폰 번호를 입력해주세요
+        </Typography>
+      </Paper>
+    </motion.div>
   );
 };
 

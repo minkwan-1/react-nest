@@ -1,10 +1,10 @@
-// phone verification components export
 import PhoneVerificationTitle from "./PhoneVerificationTitle";
 import UserInfoField from "./UserInfoField";
 import PhoneNumberField from "./PhoneNumberField";
 import VerificationInput from "./VerificationInput";
 import MessageBox from "./MessageBox";
 import SignupButton from "./SignupButton";
+import PhoneVerificationContainer from "./PhoneVerificationContainer";
 
 export {
   PhoneVerificationTitle,
@@ -13,4 +13,5 @@ export {
   VerificationInput,
   MessageBox,
   SignupButton,
+  PhoneVerificationContainer,
 };

@@ -22,7 +22,7 @@ export class User {
   @Column()
   accountID: string;
 
-  @Column({ unique: true })
+  @Column({ nullable: true })
   phoneNumber: string;
 
   @CreateDateColumn()

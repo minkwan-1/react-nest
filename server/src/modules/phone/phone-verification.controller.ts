@@ -6,9 +6,19 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { PhoneVerificationService } from './phone-verification.service';
+import { UsersService } from '../users/users.service';
 
 interface SendCodeDto {
   toPhoneNumber: string;
+  userInfo: {
+    id: string;
+    email: string;
+    name: string;
+    phoneNumber: string;
+    createdAt: string;
+    updatedAt: string;
+    provider: string;
+  };
 }
 
 interface VerifyCodeDto {
@@ -20,6 +30,7 @@ interface VerifyCodeDto {
 export class PhoneVerificationController {
   constructor(
     private readonly phoneVerificationService: PhoneVerificationService,
+    private readonly usersService: UsersService,
   ) {}
 
   // [POST] 인증 코드 전송 요청
@@ -28,6 +39,15 @@ export class PhoneVerificationController {
     @Body() body: SendCodeDto,
   ): Promise<{ message: string; sid?: string }> {
     const { toPhoneNumber } = body;
+
+    const existingUser =
+      await this.usersService.findByPhoneNumber(toPhoneNumber);
+    if (existingUser) {
+      return {
+        message:
+          '이미 가입된 휴대폰 번호입니다. 다른 로그인 방법을 이용해주세요.',
+      };
+    }
 
     try {
       return await this.phoneVerificationService.sendVerificationCode(

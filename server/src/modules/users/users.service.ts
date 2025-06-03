@@ -21,4 +21,9 @@ export class UsersService {
   async findById(id: string): Promise<User | null> {
     return this.usersRepository.findById(id);
   }
+
+  // [4] 휴대전화번호로 유저 조회
+  async findByPhoneNumber(phoneNumber: string): Promise<User | null> {
+    return this.usersRepository.findOneByPhoneNumber(phoneNumber);
+  }
 }

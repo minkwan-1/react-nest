@@ -44,8 +44,7 @@ export class GoogleAuthController {
         tokens.access_token,
       );
       const user = await this.googleAuthService.findUser(userData);
-      console.log('회원가입 시의 user: ', user);
-      // 101607928260984472861
+      // 로그인 처리
       if (user.isExist) {
         const dbUser = await this.usersService.findByAccountID(user.id);
         const mergedUser = { ...dbUser, provider };
@@ -66,13 +65,10 @@ export class GoogleAuthController {
           );
         }
       }
-
+      // user의 정보로 db를 뒤질 수 있나
       return res.send({
         message: '신규 유저 데이터',
         user,
-        // accessToken: tokens.access_token,
-        // refreshToken: tokens.refresh_token,
-        // expiresIn: tokens.expires_in,
       });
     } catch (err) {
       console.error('인증 처리 중 오류:', err);

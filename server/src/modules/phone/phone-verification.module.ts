@@ -9,8 +9,10 @@ import { PhoneVerificationRepository } from './phone-verification.repository';
 import { PhoneVerificationService } from './phone-verification.service';
 import { PhoneVerificationController } from './phone-verification.controller';
 
+import { UsersModule } from '../users/users.module';
+
 @Module({
-  imports: [TypeOrmModule.forFeature([PhoneVerification])],
+  imports: [TypeOrmModule.forFeature([PhoneVerification]), UsersModule],
 
   controllers: [PhoneVerificationController],
 
