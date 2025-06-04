@@ -11,6 +11,7 @@ import {
   LandingPage,
   SignUpPage,
   SignInPage,
+  ModifyQuestionPage,
 } from "./pages";
 
 const App = () => {
@@ -27,6 +28,7 @@ const App = () => {
       <Route path="/phone" element={<PhoneVerificationPage />} />
       <Route path="/privacy" element={<TermsAndPrivacyPage />} />
       <Route path="*" element={<NotFoundPage />} />
+      <Route path="/modify/:id" element={<ModifyQuestionPage />} />
     </Routes>
   );
 };

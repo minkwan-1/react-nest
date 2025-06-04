@@ -13,6 +13,7 @@ import CommentOutlinedIcon from "@mui/icons-material/CommentOutlined";
 import ThumbUpOutlinedIcon from "@mui/icons-material/ThumbUpOutlined";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 
 interface Question {
   id: number | string;
@@ -263,6 +264,17 @@ const QuestionCard = ({
                   >
                     <DeleteOutlineIcon fontSize="small" />
                   </IconButton>
+                  <IconButton
+                    size="small"
+                    aria-label="수정"
+                    sx={{ color: "#757575" }}
+                    onClick={() => {
+                      navigate(`/questions/edit/${question.id}`);
+                    }}
+                  >
+                    <EditOutlinedIcon fontSize="small" />
+                  </IconButton>
+
                   <IconButton
                     size="small"
                     aria-label="좋아요"

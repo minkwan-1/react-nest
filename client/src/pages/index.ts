@@ -9,6 +9,7 @@ import LandingPage from "./LandingPage";
 import RedirectPage from "./RedirectPage";
 import SignUpPage from "./SignUpPage";
 import SignInPage from "./SignInPage";
+import ModifyQuestionPage from "./ModifyQuestionPage";
 
 export {
   HomePage,
@@ -22,4 +23,5 @@ export {
   RedirectPage,
   SignUpPage,
   SignInPage,
+  ModifyQuestionPage,
 };
