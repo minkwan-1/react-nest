@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  ForbiddenException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Question } from './questions.entity';
@@ -38,9 +42,30 @@ export class QuestionsService {
     if (!user) throw new NotFoundException('존재하지 않는 유저입니다.');
 
     return this.questionsRepository.find({
-      where: { user: { id: user.id } },
+      where: { userId: userId }, // user relation 대신 userId 직접 사용
       relations: ['user'],
-      // order: { createdAt: 'DESC' },
+      order: { id: 'DESC' }, // id로 내림차순 정렬 (최신순)
     });
+  }
+
+  // [3] 질문 삭제
+  async delete(questionId: number, userId: string): Promise<void> {
+    // 질문 존재 여부 확인
+    const question = await this.questionsRepository.findOne({
+      where: { id: questionId }, // number 타입
+      relations: ['user'],
+    });
+
+    if (!question) {
+      throw new NotFoundException('존재하지 않는 질문입니다.');
+    }
+
+    // 질문 작성자 권한 확인 (userId 필드로 비교)
+    if (question.userId !== userId) {
+      throw new ForbiddenException('질문을 삭제할 권한이 없습니다.');
+    }
+
+    // 질문 삭제
+    await this.questionsRepository.remove(question);
   }
 }

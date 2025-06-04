@@ -12,6 +12,7 @@ import {
 import CommentOutlinedIcon from "@mui/icons-material/CommentOutlined";
 import ThumbUpOutlinedIcon from "@mui/icons-material/ThumbUpOutlined";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
 interface Question {
   id: number | string;
@@ -96,6 +97,33 @@ const QuestionCard = ({
   const handleBookmarkClick = () => {
     if (onBookmarkClick) {
       onBookmarkClick(question.id);
+    }
+  };
+
+  const handleDeleteClick = async () => {
+    try {
+      const res = await fetch(
+        `http://localhost:3000/questions/${question.id}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ userId: user.id }), // 권한 확인용
+        }
+      );
+
+      if (!res.ok) {
+        throw new Error(`삭제 실패: ${res.status}`);
+      }
+
+      // 204 No Content이므로 json() 호출 ❌
+      alert("질문이 삭제되었습니다.");
+      // 페이지 새로고침 또는 목록 갱신
+      // window.location.reload();
+    } catch (error) {
+      console.error("삭제 에러:", error);
+      alert("삭제 중 오류가 발생했습니다.");
     }
   };
 
@@ -221,6 +249,22 @@ const QuestionCard = ({
                 <Box sx={{ display: "flex", alignItems: "center" }}>
                   <IconButton
                     size="small"
+                    aria-label="저장"
+                    sx={{ color: "#757575" }}
+                    onClick={handleBookmarkClick}
+                  >
+                    <BookmarkBorderIcon fontSize="small" />
+                  </IconButton>
+                  <IconButton
+                    size="small"
+                    aria-label="삭제"
+                    sx={{ color: "#757575" }}
+                    onClick={handleDeleteClick}
+                  >
+                    <DeleteOutlineIcon fontSize="small" />
+                  </IconButton>
+                  <IconButton
+                    size="small"
                     aria-label="좋아요"
                     sx={{ color: "#757575" }}
                     onClick={handleLikeClick}
@@ -230,14 +274,6 @@ const QuestionCard = ({
                   <Typography variant="body2" sx={{ color: "#757575", mr: 2 }}>
                     {question.likes || 0}
                   </Typography>
-                  <IconButton
-                    size="small"
-                    aria-label="저장"
-                    sx={{ color: "#757575" }}
-                    onClick={handleBookmarkClick}
-                  >
-                    <BookmarkBorderIcon fontSize="small" />
-                  </IconButton>
                 </Box>
               </Box>
             )}

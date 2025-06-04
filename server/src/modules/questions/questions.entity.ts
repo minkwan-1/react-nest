@@ -18,27 +18,6 @@ export class Question {
   @Column()
   userId: string;
 
-  // @Column()
-  // askedBy: string;
-
-  // @Column()
-  // createdAt: Date;
-
-  // @Column()
-  // updatedAt: Date;
-
-  // @Column()
-  // upVoteCount: number;
-
-  // @Column()
-  // downVoteCount: number;
-
-  // @Column()
-  // answerCount: number;
-
-  // @Column()
-  // viewCount: number;
-
   @ManyToOne(() => User, (user) => user.questions, { nullable: true })
   user: User;
 }

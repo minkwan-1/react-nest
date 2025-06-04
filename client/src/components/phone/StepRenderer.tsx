@@ -34,13 +34,14 @@ export const StepRenderer: React.FC<StepRendererProps> = ({
   handleSignupComplete,
 }) => {
   // 기존 유저 처리 함수
+  // src/components/StepRenderer.tsx
   const handleExistingUserDetected = () => {
     showMessage(
       "이미 가입된 휴대폰 번호입니다. 로그인 페이지로 이동합니다.",
       "warning",
-      true // isExistingUser를 true로 설정
+      true // ✅ isExistingUser
     );
-    handleExistingUser(); // 기존 핸들러도 호출
+    handleExistingUser(); // ✅ 실제 처리는 이 함수가 함
   };
 
   switch (currentStep) {

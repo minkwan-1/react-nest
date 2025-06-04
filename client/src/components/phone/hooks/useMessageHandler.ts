@@ -29,13 +29,18 @@ export const useMessageHandler = () => {
 
   const closeMessage = () => {
     setMessageState((prev) => ({ ...prev, open: false }));
-    if (messageState.isExistingUser || messageState.isSignupComplete) {
+
+    // ✅ warning type도 sign-in으로 이동
+    if (
+      messageState.isExistingUser ||
+      messageState.isSignupComplete ||
+      messageState.type === "warning"
+    ) {
       setTimeout(() => {
         navigate("/sign-in");
       }, 300);
     }
   };
-
   return {
     messageState,
     showMessage,

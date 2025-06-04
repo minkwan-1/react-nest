@@ -5,6 +5,10 @@ import {
   Get,
   Param,
   ParseUUIDPipe,
+  ParseIntPipe,
+  Delete,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 import { Question } from './questions.entity';
 import { QuestionsService } from './questions.service';
@@ -30,5 +34,15 @@ export class QuestionsController {
     @Param('id', ParseUUIDPipe) userId: string,
   ): Promise<Question[]> {
     return this.questionsService.findAllByUser(userId);
+  }
+
+  // [DELETE] 질문 삭제
+  @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async delete(
+    @Param('id', ParseIntPipe) questionId: number, // number 타입으로 변경
+    @Body('userId') userId: string, // 권한 확인용
+  ): Promise<void> {
+    return this.questionsService.delete(questionId, userId);
   }
 }
