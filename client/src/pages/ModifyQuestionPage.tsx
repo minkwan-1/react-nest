@@ -1,5 +1,6 @@
-// import { useParams } from "react-router-dom";
-import { Suspense } from "react";
+import { useParams } from "react-router-dom";
+
+import { Suspense, useState, useEffect } from "react";
 import ReactQuill from "react-quill";
 import { PageContainer, ComponentWrapper } from "@components/layout/common";
 import {
@@ -16,11 +17,34 @@ import {
 import { BackgroundElements, PageHeader } from "@components/modify";
 
 const ModifyQuestionPage = () => {
-  //   const { id } = useParams();
   const theme = useTheme();
   const mainColor = "#b8dae1";
   const isDarkMode = theme.palette.mode === "dark";
+  const { id } = useParams(); // /modify/:id
+  const [question, setQuestion] = useState(null);
+  const [loading, setLoading] = useState(true);
 
+  useEffect(() => {
+    const fetchQuestion = async () => {
+      try {
+        const response = await fetch(`http://localhost:3000/questions/${id}`);
+        if (!response.ok) throw new Error("질문을 불러올 수 없습니다.");
+        const data = await response.json();
+        setQuestion(data);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchQuestion();
+  }, [id]);
+
+  if (loading) return <div>로딩 중...</div>;
+  if (!question) return <div>질문 데이터를 불러오지 못했습니다.</div>;
+
+  console.log("modify page에서 단일 question 확인: ", question);
   return (
     <PageContainer>
       <ComponentWrapper>

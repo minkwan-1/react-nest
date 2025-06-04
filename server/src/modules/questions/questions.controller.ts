@@ -45,4 +45,10 @@ export class QuestionsController {
   ): Promise<void> {
     return this.questionsService.delete(questionId, userId);
   }
+
+  // [GET] 질문 단일 조회
+  @Get(':id')
+  async findOne(@Param('id', ParseIntPipe) id: number): Promise<Question> {
+    return this.questionsService.findOne(id);
+  }
 }

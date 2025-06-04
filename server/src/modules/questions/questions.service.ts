@@ -68,4 +68,18 @@ export class QuestionsService {
     // 질문 삭제
     await this.questionsRepository.remove(question);
   }
+
+  // [4] 질문 단일 조회
+  async findOne(id: number): Promise<Question> {
+    const question = await this.questionsRepository.findOne({
+      where: { id },
+      relations: ['user'],
+    });
+
+    if (!question) {
+      throw new NotFoundException('질문이 존재하지 않습니다.');
+    }
+
+    return question;
+  }
 }
