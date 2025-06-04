@@ -1,29 +1,12 @@
-import { useEffect } from "react";
 import { Box } from "@mui/material";
 import { PageContainer, ComponentWrapper } from "../components/layout/common";
-import { useAtom } from "jotai";
-import { signupUserInfo } from "@atom/auth";
+
 import { handleCompleteSignupWithAPI } from "../api/auth/auth";
 import { PhoneVerificationContainer } from "@components/phone";
+import { useSyncUserInfo } from "@components/phone/hooks/useSyncUserInfo";
 
 const PhoneVerificationPage = () => {
-  const [userInfo, setUserInfo] = useAtom(signupUserInfo);
-
-  // userInfo가 변경될 때마다 localStorage에 저장
-  useEffect(() => {
-    if (userInfo) {
-      localStorage.setItem("userInfo", JSON.stringify(userInfo));
-    }
-  }, []);
-
-  // 컴포넌트 마운트 시 localStorage에서 userInfo 불러오기
-  useEffect(() => {
-    const storedUserInfo = localStorage.getItem("userInfo");
-    if (storedUserInfo) {
-      const parsedUserInfo = JSON.parse(storedUserInfo);
-      setUserInfo(parsedUserInfo);
-    }
-  }, []);
+  const [userInfo, setUserInfo] = useSyncUserInfo();
 
   // 최종 회원가입 완료 처리 함수
   const handleCompleteSignup = async () => {

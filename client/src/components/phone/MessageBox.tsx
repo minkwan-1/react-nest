@@ -80,8 +80,16 @@ const MessageBox = ({
   };
 
   const handleButtonClick = () => {
-    navigate("/sign-in");
-    onClose();
+    console.log("인증코드 발송버튼 클릭 후 등장하는 모달에서 버튼 클릭");
+    console.log(isExistingUser);
+    console.log(isSignupComplete);
+    console.log(messageType);
+
+    if (messageType === "warning") {
+      navigate("/sign-in");
+    } else {
+      onClose();
+    }
   };
 
   const getButtonText = () => {

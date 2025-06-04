@@ -8,31 +8,51 @@ import {
   CircularProgress,
 } from "@mui/material";
 import HowToRegIcon from "@mui/icons-material/HowToReg";
-import { useNavigate } from "react-router-dom";
 
 interface SignupButtonProps {
-  onClick?: () => void;
+  onClick?: () => Promise<boolean> | boolean | Promise<void> | void; // 유연한 타입
+  onSuccess?: (message: string) => void;
+  onError?: (message: string) => void;
   isLoading?: boolean;
   disabled?: boolean;
 }
 
 const SignupButton: React.FC<SignupButtonProps> = ({
   onClick,
+  onSuccess,
+  onError,
   isLoading = false,
   disabled = false,
 }) => {
   const theme = useTheme();
   const keyColor = "#b8dae1";
-  const navigate = useNavigate();
 
   const handleSignup = async () => {
     try {
+      let result: boolean | void = true;
+
       if (onClick) {
-        await onClick();
+        result = await onClick();
       }
-      navigate("/sign-in");
+
+      // void인 경우 성공으로 간주, false인 경우만 실패로 처리
+      if (result !== false) {
+        // 성공 시 축하 메시지 표시
+        if (onSuccess) {
+          onSuccess(
+            "🎉🎊 축하합니다! 🎊🎉\n회원가입이 성공적으로 완료되었습니다!\n\n환영합니다! 이제 모든 서비스를 이용하실 수 있습니다.\n잠시 후 로그인 페이지로 이동합니다."
+          );
+        }
+      }
     } catch (error) {
       console.error("Signup error:", error);
+      if (onError) {
+        const errorMessage =
+          error instanceof Error
+            ? error.message
+            : "회원가입 중 오류가 발생했습니다.";
+        onError(errorMessage);
+      }
     }
   };
 

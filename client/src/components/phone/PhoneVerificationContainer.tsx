@@ -164,6 +164,10 @@ const PhoneVerificationContainer: React.FC<PhoneVerificationContainerProps> = ({
         return (
           <SignupButton
             onClick={handleSignupComplete}
+            onSuccess={(message) =>
+              showMessage(message, "success", false, true)
+            }
+            onError={(message) => showMessage(message, "error")}
             isLoading={isSignupLoading}
             disabled={!isVerified}
           />
