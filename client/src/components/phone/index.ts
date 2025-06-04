@@ -5,6 +5,7 @@ import VerificationInput from "./VerificationInput";
 import MessageBox from "./MessageBox";
 import SignupButton from "./SignupButton";
 import PhoneVerificationContainer from "./PhoneVerificationContainer";
+import { StepRenderer } from "./StepRenderer";
 
 export {
   PhoneVerificationTitle,
@@ -14,4 +15,5 @@ export {
   MessageBox,
   SignupButton,
   PhoneVerificationContainer,
+  StepRenderer,
 };
