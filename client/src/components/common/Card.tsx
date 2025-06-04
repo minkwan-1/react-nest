@@ -269,7 +269,7 @@ const QuestionCard = ({
                     aria-label="수정"
                     sx={{ color: "#757575" }}
                     onClick={() => {
-                      navigate(`/questions/edit/${question.id}`);
+                      navigate(`/modify/${question.id}`);
                     }}
                   >
                     <EditOutlinedIcon fontSize="small" />

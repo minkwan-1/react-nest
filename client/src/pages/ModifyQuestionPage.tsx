@@ -1,5 +1,8 @@
+import { useParams } from "react-router-dom";
+
 const ModifyQuestionPage = () => {
-  return <div>글 수정 페이지</div>;
+  const { id } = useParams();
+  return <div>글 수정 페이지 - ID: {id}</div>;
 };
 
 export default ModifyQuestionPage;
