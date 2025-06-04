@@ -10,7 +10,6 @@ const PhoneVerificationTitle = ({
   step,
   totalSteps,
 }: PhoneVerificationTitleProps) => {
-  // 각 단계별 제목 정의
   const stepTitles = {
     1: "안전한 서비스 이용을 위해 휴대폰 번호를 인증해 주세요",
     2: "전송된 인증 코드를 입력해 주세요",

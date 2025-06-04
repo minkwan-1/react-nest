@@ -17,6 +17,7 @@ import { motion } from "framer-motion";
 interface PhoneNumberFieldProps {
   onSuccess: (message: string) => void;
   onError: (message: string) => void;
+  onWarning?: (message: string) => void; // warning 콜백 추가
   onPhoneNumberChange: (phoneNumber: string) => void;
   onCodeSent: () => void;
   onExistingUser: () => void;
@@ -25,6 +26,7 @@ interface PhoneNumberFieldProps {
 const PhoneNumberField = ({
   onSuccess,
   onError,
+  onWarning, // warning 콜백 추가
   onPhoneNumberChange,
   onCodeSent,
   onExistingUser,
@@ -58,6 +60,7 @@ const PhoneNumberField = ({
   };
 
   const sendCode = async () => {
+    console.log("111111111111");
     if (!phoneNumber.trim()) {
       onError("전화번호를 입력해주세요.");
       return;
@@ -77,6 +80,12 @@ const PhoneNumberField = ({
 
       // 응답에서 기존 유저 여부 확인
       if (response.data.isExistingUser) {
+        // 기존 유저일 때 warning 메시지 표시
+        if (onWarning) {
+          onWarning(
+            "이미 가입된 휴대폰 번호입니다. 로그인 페이지로 이동합니다."
+          );
+        }
         onExistingUser();
         return;
       }
@@ -90,6 +99,12 @@ const PhoneNumberField = ({
         } else {
           // 409 상태코드는 이미 존재하는 유저를 의미
           if (error.response.status === 409) {
+            // 기존 유저일 때 warning 메시지 표시
+            if (onWarning) {
+              onWarning(
+                "이미 가입된 휴대폰 번호입니다. 로그인 페이지로 이동합니다."
+              );
+            }
             onExistingUser();
             return;
           }

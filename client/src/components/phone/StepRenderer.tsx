@@ -8,7 +8,7 @@ interface StepRendererProps {
   isSignupLoading: boolean;
   showMessage: (
     msg: string,
-    type: "success" | "error",
+    type: "success" | "error" | "warning", // warning 타입 추가
     isExistingUser?: boolean,
     isSignupComplete?: boolean
   ) => void;
@@ -33,6 +33,16 @@ export const StepRenderer: React.FC<StepRendererProps> = ({
   handleResendCode,
   handleSignupComplete,
 }) => {
+  // 기존 유저 처리 함수
+  const handleExistingUserDetected = () => {
+    showMessage(
+      "이미 가입된 휴대폰 번호입니다. 로그인 페이지로 이동합니다.",
+      "warning",
+      true // isExistingUser를 true로 설정
+    );
+    handleExistingUser(); // 기존 핸들러도 호출
+  };
+
   switch (currentStep) {
     case 1:
       return (
@@ -41,7 +51,7 @@ export const StepRenderer: React.FC<StepRendererProps> = ({
           onError={(msg) => showMessage(msg, "error")}
           onPhoneNumberChange={handlePhoneNumberChange}
           onCodeSent={handleCodeSent}
-          onExistingUser={handleExistingUser}
+          onExistingUser={handleExistingUserDetected} // 수정된 핸들러 사용
         />
       );
     case 2:

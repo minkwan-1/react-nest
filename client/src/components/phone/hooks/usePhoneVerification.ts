@@ -40,7 +40,7 @@ export const usePhoneVerification = ({
 
   const showMessage = (
     message: string,
-    type: MessageType = "info",
+    type: MessageType,
     isExistingUser = false,
     isSignupComplete = false
   ) => {
@@ -76,7 +76,7 @@ export const usePhoneVerification = ({
   const handleExistingUser = () => {
     showMessage(
       "이미 가입된 회원입니다. 로그인 페이지로 이동합니다.",
-      "success",
+      "warning",
       true
     );
   };
