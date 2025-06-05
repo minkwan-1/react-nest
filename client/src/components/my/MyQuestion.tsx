@@ -42,27 +42,12 @@ const MyQuestion: React.FC<MyQuestionProps> = ({
 
   // Korean content
   const koreanContent = {
-    popularPosts: "나의 질문",
+    popularPosts: "내가 작성한 질문",
   };
 
   return (
-    <Paper
-      elevation={0}
-      sx={{
-        p: 3,
-        mb: 2,
-        bgcolor: themeColors.cardBg,
-        borderRadius: 2,
-        boxShadow:
-          theme.palette.mode === "light"
-            ? "0 2px 12px rgba(0,0,0,0.04)"
-            : "0 2px 12px rgba(0,0,0,0.2)",
-        border:
-          theme.palette.mode === "dark"
-            ? `1px solid ${themeColors.border}`
-            : "none",
-      }}
-    >
+    <>
+      {" "}
       <Box
         sx={{
           display: "flex",
@@ -74,34 +59,61 @@ const MyQuestion: React.FC<MyQuestionProps> = ({
         <Typography variant="h6" fontWeight="bold">
           {koreanContent.popularPosts}
         </Typography>
-      </Box>
+      </Box>{" "}
+      <Paper
+        elevation={0}
+        sx={{
+          p: 3,
+          mb: 2,
+          bgcolor: themeColors.cardBg,
+          borderRadius: 2,
 
-      <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-        {questionData.length > 0 ? (
-          questionData.map((question) => (
-            <CommonCard
-              key={question.id}
-              question={question}
-              user={userData}
-              onCardClick={onCardClick}
-              onAnswerClick={onAnswerClick}
-              onLikeClick={onLikeClick}
-              onBookmarkClick={onBookmarkClick}
-              showActions={true}
-            />
-          ))
-        ) : (
-          <Box sx={{ textAlign: "center", py: 4 }}>
-            <Typography variant="h6" color="text.secondary" sx={{ mb: 1 }}>
-              아직 등록된 질문이 없습니다
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              첫 번째 질문을 등록해보세요!
-            </Typography>
-          </Box>
-        )}
-      </Box>
-    </Paper>
+          boxShadow:
+            theme.palette.mode === "light"
+              ? "0 2px 12px rgba(0,0,0,0.04)"
+              : "0 2px 12px rgba(0,0,0,0.2)",
+
+          border:
+            theme.palette.mode === "dark"
+              ? `1px solid ${themeColors.border}`
+              : "none",
+          height: "56vh",
+          overflowY: "auto",
+        }}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 2,
+          }}
+        >
+          {questionData.length > 0 ? (
+            questionData.map((question) => (
+              <CommonCard
+                key={question.id}
+                question={question}
+                user={userData}
+                onCardClick={onCardClick}
+                onAnswerClick={onAnswerClick}
+                onLikeClick={onLikeClick}
+                onBookmarkClick={onBookmarkClick}
+                showActions={true}
+              />
+            ))
+          ) : (
+            <Box sx={{ textAlign: "center", py: 4 }}>
+              <Typography variant="h6" color="text.secondary" sx={{ mb: 1 }}>
+                아직 등록된 질문이 없습니다
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                첫 번째 질문을 등록해보세요!
+              </Typography>
+            </Box>
+          )}
+        </Box>
+      </Paper>
+    </>
   );
 };
 

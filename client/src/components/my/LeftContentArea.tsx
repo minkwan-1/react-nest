@@ -1,4 +1,5 @@
-import { Box, Divider, useTheme } from "@mui/material";
+import { Box, Divider, useTheme, IconButton, Tooltip } from "@mui/material";
+import { Edit } from "@mui/icons-material";
 import InterestArea from "./InterestArea";
 import SocialMedia from "./SocialMedia";
 import MyInfo from "./MyInfo";
@@ -17,6 +18,7 @@ const LeftContentArea = () => {
     textSecondary: theme.palette.text.secondary,
     divider: theme.palette.mode === "light" ? "#e0e0e0" : "#424242",
   };
+
   return (
     <Box
       sx={{
@@ -42,7 +44,31 @@ const LeftContentArea = () => {
     >
       <MyInfo />
 
-      <button onClick={() => navigate("/my/edit")}>프로필 편집</button>
+      <Tooltip title="프로필 편집" arrow>
+        <IconButton
+          onClick={() => navigate("/my/edit")}
+          sx={{
+            mt: 1,
+            mb: 2,
+            bgcolor: "#b8dae1",
+            color: "white",
+            width: 40,
+            height: 40,
+            "&:hover": {
+              // bgcolor: themeColors.primaryDark,
+              transform: "scale(1.05)",
+            },
+            transition: "all 0.2s ease-in-out",
+            boxShadow:
+              theme.palette.mode === "light"
+                ? "0 2px 8px rgba(0,0,0,0.15)"
+                : "0 2px 8px rgba(0,0,0,0.4)",
+          }}
+        >
+          <Edit fontSize="small" />
+        </IconButton>
+      </Tooltip>
+
       <Divider sx={{ width: "100%", mb: 2, bgcolor: themeColors.divider }} />
 
       <InterestArea />

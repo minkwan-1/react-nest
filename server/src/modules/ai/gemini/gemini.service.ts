@@ -1,36 +1,45 @@
 import { Injectable } from '@nestjs/common';
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import fetch from 'node-fetch';
 
 @Injectable()
-export class GoogleGenerativeAIService {
-  private genAI: GoogleGenerativeAI;
+export class OpenAIService {
+  private readonly apiKey: string;
 
   constructor() {
-    const apiKey = process.env.GEMINI_API_KEY;
-
-    if (!apiKey) {
-      throw new Error('API Key is required');
+    this.apiKey = process.env.OPENAI_API_KEY;
+    if (!this.apiKey) {
+      throw new Error('OpenAI API Key is required');
     }
-
-    this.genAI = new GoogleGenerativeAI(apiKey);
   }
 
-  // [1] 콘텐츠 생성 메소드
   async generateContent(prompt: string): Promise<string> {
     try {
-      const model = this.genAI.getGenerativeModel({
-        model: 'gemini-1.5-pro',
-      });
+      const response = await fetch(
+        'https://api.openai.com/v1/chat/completions',
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${this.apiKey}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            model: 'gpt-3.5-turbo',
+            messages: [{ role: 'user', content: prompt }],
+          }),
+        },
+      );
 
-      const result = await model.generateContent(prompt);
-      const response = result.response;
-      const text = response.text();
+      const data = await response.json();
 
-      return text;
+      if (data.choices && data.choices.length > 0) {
+        return data.choices[0].message.content.trim();
+      } else {
+        throw new Error('No response from OpenAI');
+      }
     } catch (error) {
-      console.error('Google Generative AI Error:', error);
+      console.error('OpenAI GPT-3.5 Error:', error);
       throw new Error(
-        `Failed to generate content from Google Generative AI: ${error.message}`,
+        `Failed to generate content from OpenAI: ${error.message}`,
       );
     }
   }

@@ -7,9 +7,9 @@ const SelfIntroduction = () => {
     overview: "소개",
     articles: "작성한 아티클",
     replies: "작성한 댓글",
-    selfIntro: "자기 소개",
+    selfIntro: "한 줄 소개",
     introText:
-      "국내 최대 프로그래밍 Q&A 서비스, Pullim를 운영하고 있는 원민관입니다. 최신 트렌드와 인사이트를 제공합니다.",
+      "프로그래밍 Q&A 서비스, Pullim을 운영하고 있는 원민관입니다. 서비스를 통해 최신 개발 트렌드와 인사이트를 제공합니다.",
     serviceIntro: "서비스 소개",
     serviceText:
       "국내 최대 프로그래밍 Q&A 플랫폼 Pullim(풀림)은 개발자들이 겪는 다양한 문제를 함께 해결하며 성장할 수 있도록 돕는 지식 공유 커뮤니티입니다. 초보부터 전문가까지 누구나 자유롭게 질문하고, 실시간으로 사람과 AI 모두에게 답변을 받을 수 있어 '문제가 풀리는 경험'을 빠르고 깊이 있게 제공합니다. 특히 상세 페이지에서는 기존 답변을 기반으로 AI가 추가 설명이나 예제를 실시간 생성해 주는 기능도 제공되어, 복잡한 개념도 더 쉽게 이해할 수 있습니다. 코드 한 줄의 고민도 함께 나누는 풀림에서, 더 나은 개발자로 성장해 보세요.",
@@ -56,23 +56,8 @@ const SelfIntroduction = () => {
   };
 
   return (
-    <Paper
-      elevation={0}
-      sx={{
-        p: 3,
-        mb: 2,
-        bgcolor: themeColors.cardBg,
-        borderRadius: 2,
-        boxShadow:
-          theme.palette.mode === "light"
-            ? "0 2px 12px rgba(0,0,0,0.04)"
-            : "0 2px 12px rgba(0,0,0,0.2)",
-        border:
-          theme.palette.mode === "dark"
-            ? `1px solid ${themeColors.border}`
-            : "none",
-      }}
-    >
+    <>
+      {" "}
       <Typography
         variant="h6"
         fontWeight="bold"
@@ -80,16 +65,34 @@ const SelfIntroduction = () => {
       >
         {koreanContent.selfIntro}
       </Typography>
-      <Typography
-        variant="body2"
+      <Paper
+        elevation={0}
         sx={{
-          color: themeColors.textSecondary,
-          lineHeight: 1.7,
+          p: 3,
+          mb: 2,
+          bgcolor: themeColors.cardBg,
+          borderRadius: 2,
+          boxShadow:
+            theme.palette.mode === "light"
+              ? "0 2px 12px rgba(0,0,0,0.04)"
+              : "0 2px 12px rgba(0,0,0,0.2)",
+          border:
+            theme.palette.mode === "dark"
+              ? `1px solid ${themeColors.border}`
+              : "none",
         }}
       >
-        {koreanContent.introText}
-      </Typography>
-    </Paper>
+        <Typography
+          variant="body2"
+          sx={{
+            color: themeColors.textSecondary,
+            lineHeight: 1.7,
+          }}
+        >
+          {koreanContent.introText}
+        </Typography>
+      </Paper>
+    </>
   );
 };
 
