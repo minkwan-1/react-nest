@@ -19,6 +19,7 @@ const LeftContentArea = () => {
     <Box
       sx={{
         width: { xs: "100%", md: "320px" },
+        height: "620px",
         p: 3,
         bgcolor: themeColors.cardBg,
         display: "flex",

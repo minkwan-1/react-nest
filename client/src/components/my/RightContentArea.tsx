@@ -1,6 +1,6 @@
 import { Box, Grid } from "@mui/material";
 import SelfIntroduction from "./SelfIntroduction";
-import ServiceIntroduction from "./ServiceIntroduction";
+
 import MyQuestion from "./MyQuestion";
 import { useAtom } from "jotai";
 import { questionsAtom } from "@atom/question";
@@ -39,16 +39,13 @@ const RightContentArea = () => {
     // Add bookmark logic here
   };
   return (
-    <Box sx={{ flex: 1, p: 0, borderRadius: 2 }}>
+    <Box sx={{ flex: 1, p: 0, borderRadius: 2, overflowY: "scroll" }}>
       {/* Content Sections */}
       <Box>
         <Grid spacing={2}>
           <Grid item xs={14} md={8}>
             {/* Self Introduction Section */}
             <SelfIntroduction />
-
-            {/* Service Introduction Section */}
-            <ServiceIntroduction />
 
             {/* My Questions Section - Now using separated component */}
             <MyQuestion

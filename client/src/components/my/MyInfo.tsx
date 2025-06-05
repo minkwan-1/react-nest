@@ -1,13 +1,6 @@
 import React, { useEffect } from "react";
 import axios from "axios";
-import {
-  Box,
-  Avatar,
-  Typography,
-  Badge,
-  Tooltip,
-  useTheme,
-} from "@mui/material";
+import { Avatar, Typography, Badge, Tooltip, useTheme } from "@mui/material";
 import { useAtom } from "jotai";
 import { realUserInfo } from "@atom/auth";
 import { questionsAtom } from "@atom/question";
@@ -20,21 +13,11 @@ interface MyInfoProps {
   badges?: string[];
 }
 
-const MyInfo: React.FC<MyInfoProps> = ({
-  avatarUrl = man, // man 이미지를 기본값으로 사용
-  reputation = 3842,
-  badges = [
-    "E-커머스 전문가",
-    "뉴스레터 마스터",
-    "소셜 인플루언서",
-    "트렌드 분석가",
-  ],
-}) => {
+const MyInfo: React.FC<MyInfoProps> = ({ avatarUrl = man }) => {
   const theme = useTheme();
   const [userInfo] = useAtom(realUserInfo);
-  const [questions, setQuestions] = useAtom(questionsAtom);
+  const [, setQuestions] = useAtom(questionsAtom);
 
-  // Fetch questions data
   useEffect(() => {
     if (!userInfo?.id) {
       setQuestions([]);
@@ -65,15 +48,6 @@ const MyInfo: React.FC<MyInfoProps> = ({
     textSecondary: theme.palette.text.secondary,
     divider: theme.palette.mode === "light" ? "#e0e0e0" : "#424242",
   };
-
-  // Korean content translations
-  const koreanContent = {
-    followers: "팔로워",
-    following: "팔로잉",
-  };
-
-  // Use questions data
-  const questionData = questions || [];
 
   return (
     <>
@@ -128,38 +102,6 @@ const MyInfo: React.FC<MyInfoProps> = ({
       >
         Frontend Developer
       </Typography>
-
-      <Box
-        sx={{
-          display: "flex",
-          width: "100%",
-          justifyContent: "center",
-          mb: 3,
-          color: themeColors.textSecondary,
-          gap: 3,
-        }}
-      >
-        <Box sx={{ textAlign: "center" }}>
-          <Typography variant="h6" fontWeight="bold" color="text.primary">
-            {reputation > 1000
-              ? Math.floor(reputation / 100) / 10 + "K"
-              : reputation}
-          </Typography>
-          <Typography variant="caption">{koreanContent.followers}</Typography>
-        </Box>
-        <Box sx={{ textAlign: "center" }}>
-          <Typography variant="h6" fontWeight="bold" color="text.primary">
-            {badges.length * 12}
-          </Typography>
-          <Typography variant="caption">{koreanContent.following}</Typography>
-        </Box>
-        <Box sx={{ textAlign: "center" }}>
-          <Typography variant="h6" fontWeight="bold" color="text.primary">
-            {questionData.length}
-          </Typography>
-          <Typography variant="caption">글</Typography>
-        </Box>
-      </Box>
     </>
   );
 };
