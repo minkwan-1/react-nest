@@ -62,6 +62,7 @@ export class QuestionsController {
     @Body('tags') tags: string[],
     @Body('userId') userId: string,
   ): Promise<Question> {
+    console.log({ questionId, title, content, tags, userId });
     return this.questionsService.update(
       questionId,
       title,

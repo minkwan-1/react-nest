@@ -1,8 +1,6 @@
-// 2. 컨텐츠 데이터 수정 반영되는지 확인
-// 3. 백엔드 UPDATE API 개발
-
+// pages/ModifyQuestionPage.tsx
 import { useParams } from "react-router-dom";
-import { Suspense, useState, useEffect } from "react";
+import { Suspense } from "react";
 import ReactQuill from "react-quill";
 import { PageContainer, ComponentWrapper } from "@components/layout/common";
 import {
@@ -17,99 +15,63 @@ import {
   Button,
 } from "@mui/material";
 import { BackgroundElements, PageHeader } from "@components/modify";
-
-interface Question {
-  id: number;
-  title: string;
-  content: string;
-  tags: string[];
-  userId: string;
-  createdAt: string;
-  updatedAt: string;
-}
+import { useModifyQuestion } from "@components/modify/hooks/useModifyQuestion";
 
 const ModifyQuestionPage = () => {
   const theme = useTheme();
   const mainColor = "#b8dae1";
   const isDarkMode = theme.palette.mode === "dark";
   const { id } = useParams();
-  const [question, setQuestion] = useState<Question | null>(null);
-  const [loading, setLoading] = useState(true);
 
-  // 기존 코드에 추가
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
-  const [tags, setTags] = useState<string[]>([]);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  // 데이터 로드 후 상태 초기화 (기존 useEffect 수정)
-  useEffect(() => {
-    const fetchQuestion = async () => {
-      try {
-        const response = await fetch(`http://localhost:3000/questions/${id}`);
-        if (!response.ok) throw new Error("질문을 불러올 수 없습니다.");
-        const data = await response.json();
-        setQuestion(data);
-
-        // 🔥 추가: 데이터 로드 후 폼 상태 초기화
-        setTitle(data.title);
-        setContent(data.content);
-        setTags(data.tags);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchQuestion();
-  }, [id]);
-
-  // 🔥 새로 추가할 제출 핸들러
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-
-    try {
-      const response = await fetch(
-        `http://localhost:3000/questions/modify/${id}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            title,
-            content,
-            tags,
-          }),
-        }
-      );
-
-      if (!response.ok) throw new Error("질문 수정에 실패했습니다.");
-
-      alert("질문이 성공적으로 수정되었습니다!");
-      // 필요시 페이지 이동 로직 추가
-    } catch (error) {
-      console.error(error);
-      alert("질문 수정 중 오류가 발생했습니다.");
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  const handleTagsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const input = e.target.value;
-    setTags(input.split(",").map((tag) => tag.trim()));
-  };
-
-  console.log("로딩 여부 확인: ", loading);
-  console.log("modify page에서 단일 question 확인: ", question);
-  console.log("변경 후 데이터", {
+  // 커스텀 훅 사용
+  const {
+    question,
+    loading,
+    isSubmitting,
     title,
     content,
     tags,
-  });
+    setTitle,
+    setContent,
+    handleTagsChange,
+    handleSubmit,
+    isFormValid,
+  } = useModifyQuestion({ questionId: id });
+
+  console.log("로딩 여부 확인: ", loading);
+  console.log("modify page에서 단일 question 확인: ", question);
+  console.log("변경 후 데이터", { title, content, tags });
+
+  // 로딩 중일 때
+  if (loading) {
+    return (
+      <PageContainer>
+        <ComponentWrapper>
+          <Container maxWidth="lg" disableGutters>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                minHeight: "50vh",
+              }}
+            >
+              <CircularProgress size={40} sx={{ color: mainColor }} />
+              <Typography
+                sx={{
+                  ml: 2,
+                  color: isDarkMode ? alpha("#fff", 0.7) : alpha("#000", 0.6),
+                }}
+              >
+                질문을 불러오는 중...
+              </Typography>
+            </Box>
+          </Container>
+        </ComponentWrapper>
+      </PageContainer>
+    );
+  }
+
   return (
     <PageContainer>
       <ComponentWrapper>
@@ -172,11 +134,11 @@ const ModifyQuestionPage = () => {
                     제목
                   </Typography>
                   <TextField
-                    // label="질문의 제목을 입력하세요"
                     fullWidth
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                     required
+                    placeholder="질문의 제목을 입력하세요"
                     sx={{
                       "& .MuiOutlinedInput-root": {
                         borderRadius: "10px",
@@ -195,14 +157,6 @@ const ModifyQuestionPage = () => {
                         "&.Mui-focused fieldset": {
                           borderColor: mainColor,
                           borderWidth: "2px",
-                        },
-                      },
-                      "& .MuiInputLabel-root": {
-                        color: isDarkMode
-                          ? alpha("#fff", 0.7)
-                          : alpha("#000", 0.6),
-                        "&.Mui-focused": {
-                          color: mainColor,
                         },
                       },
                       "& .MuiInputBase-input": {
@@ -370,74 +324,14 @@ const ModifyQuestionPage = () => {
                       }
                     >
                       <ReactQuill
-                        // ref={quillRef}
                         value={content}
                         onChange={setContent}
-                        // modules={modules}
                         theme="snow"
                         placeholder="질문 내용을 자세히 작성하세요..."
                         style={{ borderRadius: "8px", marginBottom: "20px" }}
                       />
                     </Suspense>
                   </Box>
-
-                  {/* Preview Section - Only visible when there's content */}
-                  {/* {content && (
-                    <Box
-                      sx={{
-                        mt: 4,
-                        p: 3,
-                        borderRadius: "12px",
-                        backgroundColor: isDarkMode
-                          ? alpha("#fff", 0.03)
-                          : alpha("#f9f9f9", 0.7),
-                        border: `1px solid ${
-                          isDarkMode ? alpha("#fff", 0.1) : alpha("#000", 0.1)
-                        }`,
-                        transition: "all 0.2s ease",
-                      }}
-                    >
-                      <Typography
-                        variant="subtitle1"
-                        gutterBottom
-                        sx={{
-                          fontWeight: 600,
-                          color: mainColor,
-                          mb: 2,
-                          display: "flex",
-                          alignItems: "center",
-                          "&::before": {
-                            content: '""',
-                            display: "inline-block",
-                            width: "3px",
-                            height: "14px",
-                            borderRadius: "2px",
-                            marginRight: "8px",
-                            background: `linear-gradient(to bottom, ${mainColor}, #ccaee3)`,
-                          },
-                        }}
-                      >
-                        미리보기
-                      </Typography>
-                      <div
-                        className="ql-editor"
-                        dangerouslySetInnerHTML={{
-                          __html: DOMPurify.sanitize(content),
-                        }}
-                        style={{
-                          overflow: "hidden",
-                          whiteSpace: "pre-wrap",
-                          maxHeight: "300px",
-                          overflowY: "auto",
-                          padding: "8px",
-                          borderRadius: "8px",
-                          backgroundColor: isDarkMode
-                            ? alpha("#fff", 0.01)
-                            : alpha("#fff", 0.5),
-                        }}
-                      />
-                    </Box>
-                  )} */}
                 </Box>
 
                 {/* tags */}
@@ -512,127 +406,52 @@ const ModifyQuestionPage = () => {
                       },
                     }}
                   />
-
-                  {/* {tags.length > 0 && (
-                    <Box
-                      sx={{ display: "flex", flexWrap: "wrap", gap: 1, mt: 2 }}
-                    >
-                      {tags.map(
-                        (tag, index) =>
-                          tag && (
-                            <Chip
-                              key={index}
-                              label={tag}
-                              sx={{
-                                backgroundColor: isDarkMode
-                                  ? alpha(mainColor, 0.15)
-                                  : alpha(mainColor, 0.08),
-                                color: isDarkMode
-                                  ? alpha("#fff", 0.9)
-                                  : alpha("#000", 0.8),
-                                borderRadius: "8px",
-                                fontWeight: 500,
-                                border: `1px solid ${
-                                  isDarkMode
-                                    ? alpha(mainColor, 0.3)
-                                    : alpha(mainColor, 0.2)
-                                }`,
-                                transition: "all 0.2s ease",
-                                "&:hover": {
-                                  backgroundColor: isDarkMode
-                                    ? alpha(mainColor, 0.25)
-                                    : alpha(mainColor, 0.15),
-                                  boxShadow: `0 2px 5px ${alpha(
-                                    mainColor,
-                                    0.2
-                                  )}`,
-                                },
-                              }}
-                            />
-                          )
-                      )}
-                    </Box>
-                  )} */}
                 </Box>
-                {/* buttons */}
+
+                {/* submit button */}
                 <Box
                   sx={{
                     display: "flex",
-                    justifyContent: "space-between",
+                    justifyContent: "flex-end",
                     alignItems: "center",
                     mt: 4,
                     flexDirection: { xs: "column", sm: "row" },
                     gap: { xs: 2, sm: 0 },
                   }}
                 >
-                  {/* preview button */}
-                  <Box display="flex" justifyContent="flex-start">
-                    <Button
-                      variant="outlined"
-                      //   onClick={() => setPreviewMode(!previewMode)}
-                      //   startIcon={
-                      //     previewMode ? <VisibilityOffIcon /> : <VisibilityIcon />
-                      //   }
-                      sx={{
-                        border: `1px solid ${alpha(mainColor, 0.5)}`,
-                        color: mainColor,
-                        backgroundColor: isDarkMode
-                          ? alpha("#fff", 0.05)
-                          : alpha(mainColor, 0.05),
-                        borderRadius: "10px",
-                        padding: "8px 16px",
-                        textTransform: "none",
-                        fontWeight: 600,
-                        transition: "all 0.3s ease",
-                        "&:hover": {
-                          backgroundColor: isDarkMode
-                            ? alpha(mainColor, 0.15)
-                            : alpha(mainColor, 0.1),
-                          borderColor: mainColor,
-                          boxShadow: `0 2px 8px ${alpha(mainColor, 0.2)}`,
-                        },
-                      }}
-                    >
-                      {/* {previewMode ? "편집 모드" : "미리보기"} */}
-                      미리보기
-                    </Button>
-                  </Box>
-                  {/* submit button */}
-                  <Box>
-                    <Button
-                      type="submit"
-                      variant="contained"
-                      disabled={isSubmitting} // ✅ 로딩 상태 연결
-                      sx={{
-                        position: "relative",
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    disabled={isSubmitting || !isFormValid}
+                    sx={{
+                      position: "relative",
+                      background: `linear-gradient(135deg, ${mainColor} 0%, #ccaee3 100%)`,
+                      color: "white",
+                      textTransform: "none",
+                      fontWeight: 700,
+                      padding: "10px 24px",
+                      borderRadius: "10px",
+                      fontSize: "15px",
+                      transition: "all 0.3s ease",
+                      boxShadow: `0 4px 12px ${alpha(mainColor, 0.3)}`,
+                      "&:hover": {
+                        background: `linear-gradient(135deg, ${mainColor} 20%, #ccaee3 100%)`,
+                        boxShadow: `0 6px 20px ${alpha(mainColor, 0.5)}`,
+                        transform: "translateY(-2px)",
+                      },
+                      "&:active": {
+                        transform: "translateY(0)",
+                        boxShadow: `0 2px 8px ${alpha(mainColor, 0.3)}`,
+                      },
+                      "&.Mui-disabled": {
                         background: `linear-gradient(135deg, ${mainColor} 0%, #ccaee3 100%)`,
+                        opacity: 0.7,
                         color: "white",
-                        textTransform: "none",
-                        fontWeight: 700,
-                        padding: "10px 24px",
-                        borderRadius: "10px",
-                        fontSize: "15px",
-                        transition: "all 0.3s ease",
-                        boxShadow: `0 4px 12px ${alpha(mainColor, 0.3)}`,
-                        "&:hover": {
-                          background: `linear-gradient(135deg, ${mainColor} 20%, #ccaee3 100%)`,
-                          boxShadow: `0 6px 20px ${alpha(mainColor, 0.5)}`,
-                          transform: "translateY(-2px)",
-                        },
-                        "&:active": {
-                          transform: "translateY(0)",
-                          boxShadow: `0 2px 8px ${alpha(mainColor, 0.3)}`,
-                        },
-                        "&.Mui-disabled": {
-                          background: `linear-gradient(135deg, ${mainColor} 0%, #ccaee3 100%)`,
-                          opacity: 0.7,
-                          color: "white",
-                        },
-                      }}
-                    >
-                      {isSubmitting ? "수정 중..." : "질문 수정하기"}
-                    </Button>
-                  </Box>
+                      },
+                    }}
+                  >
+                    {isSubmitting ? "수정 중..." : "질문 수정하기"}
+                  </Button>
                 </Box>
               </form>
             </Paper>
