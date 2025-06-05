@@ -1,4 +1,3 @@
-// 1. 기존 데이터 띄우기
 // 2. 기존 데이터로부터의 변경 사항을 새로운 상태로 반영
 // 3. 변경된 데이터를 백엔드로 전송
 
@@ -37,8 +36,13 @@ const ModifyQuestionPage = () => {
   const [question, setQuestion] = useState<Question | null>(null);
   const [loading, setLoading] = useState(true);
 
-  //   const [title, setTitle] = useState("");
+  // 기존 코드에 추가
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [tags, setTags] = useState<string[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // 데이터 로드 후 상태 초기화 (기존 useEffect 수정)
   useEffect(() => {
     const fetchQuestion = async () => {
       try {
@@ -46,6 +50,11 @@ const ModifyQuestionPage = () => {
         if (!response.ok) throw new Error("질문을 불러올 수 없습니다.");
         const data = await response.json();
         setQuestion(data);
+
+        // 🔥 추가: 데이터 로드 후 폼 상태 초기화
+        setTitle(data.title);
+        setContent(data.content);
+        setTags(data.tags);
       } catch (error) {
         console.error(error);
       } finally {
@@ -56,8 +65,48 @@ const ModifyQuestionPage = () => {
     fetchQuestion();
   }, [id]);
 
+  // 🔥 새로 추가할 제출 핸들러
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch(`http://localhost:3000/questions/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          title,
+          content,
+          tags,
+        }),
+      });
+
+      if (!response.ok) throw new Error("질문 수정에 실패했습니다.");
+
+      alert("질문이 성공적으로 수정되었습니다!");
+      // 필요시 페이지 이동 로직 추가
+    } catch (error) {
+      console.error(error);
+      alert("질문 수정 중 오류가 발생했습니다.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleTagsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const input = e.target.value;
+    setTags(input.split(",").map((tag) => tag.trim()));
+  };
+
   console.log("로딩 여부 확인: ", loading);
   console.log("modify page에서 단일 question 확인: ", question);
+  console.log("변경 후 데이터", {
+    title,
+    content,
+    tags,
+  });
   return (
     <PageContainer>
       <ComponentWrapper>
@@ -95,7 +144,7 @@ const ModifyQuestionPage = () => {
                 overflow: "hidden",
               }}
             >
-              <form>
+              <form onSubmit={handleSubmit}>
                 {/* title area */}
                 <Box sx={{ mb: 3 }}>
                   <Typography
@@ -122,8 +171,8 @@ const ModifyQuestionPage = () => {
                   <TextField
                     // label="질문의 제목을 입력하세요"
                     fullWidth
-                    value={question?.title}
-                    // onChange={(e) => setTitle(e.target.value)}
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
                     required
                     sx={{
                       "& .MuiOutlinedInput-root": {
@@ -319,8 +368,8 @@ const ModifyQuestionPage = () => {
                     >
                       <ReactQuill
                         // ref={quillRef}
-                        value={question?.content}
-                        // onChange={onChange}
+                        value={content}
+                        onChange={setContent}
                         // modules={modules}
                         theme="snow"
                         placeholder="질문 내용을 자세히 작성하세요..."
@@ -415,8 +464,8 @@ const ModifyQuestionPage = () => {
                   <TextField
                     label="태그 (쉼표로 구분)"
                     fullWidth
-                    value={question?.tags.join(", ")}
-                    // onChange={handleTagsChange}
+                    value={tags.join(", ")}
+                    onChange={handleTagsChange}
                     helperText="태그를 쉼표(,)로 구분하여 입력하세요"
                     FormHelperTextProps={{
                       sx: {
@@ -550,8 +599,7 @@ const ModifyQuestionPage = () => {
                     <Button
                       type="submit"
                       variant="contained"
-                      //   disabled={isSubmitting}
-                      //   endIcon={!isSubmitting && <SendIcon />}
+                      disabled={isSubmitting} // ✅ 로딩 상태 연결
                       sx={{
                         position: "relative",
                         background: `linear-gradient(135deg, ${mainColor} 0%, #ccaee3 100%)`,
@@ -579,25 +627,7 @@ const ModifyQuestionPage = () => {
                         },
                       }}
                     >
-                      {/* {isSubmitting ? (
-                        <>
-                          <CircularProgress
-                            size={24}
-                            sx={{
-                              color: "white",
-                              position: "absolute",
-                              left: "50%",
-                              marginLeft: "-12px",
-                            }}
-                          />
-                          <span style={{ visibility: "hidden" }}>
-                            질문 등록하기
-                          </span>
-                        </>
-                      ) : (
-                        "질문 등록하기"
-                      )} */}
-                      질문 등록하기
+                      {isSubmitting ? "수정 중..." : "질문 수정하기"}
                     </Button>
                   </Box>
                 </Box>
