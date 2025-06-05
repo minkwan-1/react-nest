@@ -9,6 +9,7 @@ import {
   Delete,
   HttpCode,
   HttpStatus,
+  Put,
 } from '@nestjs/common';
 import { Question } from './questions.entity';
 import { QuestionsService } from './questions.service';
@@ -50,5 +51,23 @@ export class QuestionsController {
   @Get(':id')
   async findOne(@Param('id', ParseIntPipe) id: number): Promise<Question> {
     return this.questionsService.findOne(id);
+  }
+
+  // [PUT] 질문 단일 수정
+  @Put('modify/:id')
+  async update(
+    @Param('id', ParseIntPipe) questionId: number,
+    @Body('title') title: string,
+    @Body('content') content: string,
+    @Body('tags') tags: string[],
+    @Body('userId') userId: string,
+  ): Promise<Question> {
+    return this.questionsService.update(
+      questionId,
+      title,
+      content,
+      tags,
+      userId,
+    );
   }
 }

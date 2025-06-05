@@ -1,5 +1,5 @@
-// 2. 기존 데이터로부터의 변경 사항을 새로운 상태로 반영
-// 3. 변경된 데이터를 백엔드로 전송
+// 2. 컨텐츠 데이터 수정 반영되는지 확인
+// 3. 백엔드 UPDATE API 개발
 
 import { useParams } from "react-router-dom";
 import { Suspense, useState, useEffect } from "react";
@@ -71,17 +71,20 @@ const ModifyQuestionPage = () => {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch(`http://localhost:3000/questions/${id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          title,
-          content,
-          tags,
-        }),
-      });
+      const response = await fetch(
+        `http://localhost:3000/questions/modify/${id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            title,
+            content,
+            tags,
+          }),
+        }
+      );
 
       if (!response.ok) throw new Error("질문 수정에 실패했습니다.");
 

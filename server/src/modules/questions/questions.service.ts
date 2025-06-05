@@ -82,4 +82,37 @@ export class QuestionsService {
 
     return question;
   }
+
+  // [5] 질문 수정
+  async update(
+    questionId: number,
+    title: string,
+    content: string,
+    tags: string[],
+    userId: string,
+  ): Promise<Question> {
+    // 질문 존재 여부 확인
+    const question = await this.questionsRepository.findOne({
+      where: { id: questionId },
+      relations: ['user'],
+    });
+
+    if (!question) {
+      throw new NotFoundException('존재하지 않는 질문입니다.');
+    }
+
+    // 질문 작성자 권한 확인
+    if (question.userId !== userId) {
+      throw new ForbiddenException('질문을 수정할 권한이 없습니다.');
+    }
+
+    // 질문 정보 업데이트
+    question.title = title;
+    question.content = content;
+    question.tags = tags;
+    // question.updatedAt = new Date();
+
+    // 저장 후 반환
+    return await this.questionsRepository.save(question);
+  }
 }
