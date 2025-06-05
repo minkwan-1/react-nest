@@ -12,6 +12,7 @@ import {
   SignUpPage,
   SignInPage,
   ModifyQuestionPage,
+  MyInfoEditPage,
 } from "./pages";
 
 const App = () => {
@@ -29,6 +30,7 @@ const App = () => {
       <Route path="/privacy" element={<TermsAndPrivacyPage />} />
       <Route path="*" element={<NotFoundPage />} />
       <Route path="/modify/:id" element={<ModifyQuestionPage />} />
+      <Route path="/my/edit" element={<MyInfoEditPage />} />
     </Routes>
   );
 };

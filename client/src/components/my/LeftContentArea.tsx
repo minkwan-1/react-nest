@@ -2,9 +2,11 @@ import { Box, Divider, useTheme } from "@mui/material";
 import InterestArea from "./InterestArea";
 import SocialMedia from "./SocialMedia";
 import MyInfo from "./MyInfo";
+import { useNavigate } from "react-router-dom";
 
 const LeftContentArea = () => {
   const theme = useTheme();
+  const navigate = useNavigate();
   const themeColors = {
     primary: theme.palette.primary.main,
     primaryDark: "#02b676",
@@ -40,6 +42,7 @@ const LeftContentArea = () => {
     >
       <MyInfo />
 
+      <button onClick={() => navigate("/my/edit")}>프로필 편집</button>
       <Divider sx={{ width: "100%", mb: 2, bgcolor: themeColors.divider }} />
 
       <InterestArea />
