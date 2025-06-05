@@ -1,5 +1,8 @@
-import { useParams } from "react-router-dom";
+// 1. 기존 데이터 띄우기
+// 2. 기존 데이터로부터의 변경 사항을 새로운 상태로 반영
+// 3. 변경된 데이터를 백엔드로 전송
 
+import { useParams } from "react-router-dom";
 import { Suspense, useState, useEffect } from "react";
 import ReactQuill from "react-quill";
 import { PageContainer, ComponentWrapper } from "@components/layout/common";
@@ -16,13 +19,25 @@ import {
 } from "@mui/material";
 import { BackgroundElements, PageHeader } from "@components/modify";
 
+interface Question {
+  id: number;
+  title: string;
+  content: string;
+  tags: string[];
+  userId: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 const ModifyQuestionPage = () => {
   const theme = useTheme();
   const mainColor = "#b8dae1";
   const isDarkMode = theme.palette.mode === "dark";
-  const { id } = useParams(); // /modify/:id
-  const [question, setQuestion] = useState(null);
+  const { id } = useParams();
+  const [question, setQuestion] = useState<Question | null>(null);
   const [loading, setLoading] = useState(true);
+
+  //   const [title, setTitle] = useState("");
 
   useEffect(() => {
     const fetchQuestion = async () => {
@@ -41,9 +56,7 @@ const ModifyQuestionPage = () => {
     fetchQuestion();
   }, [id]);
 
-  if (loading) return <div>로딩 중...</div>;
-  if (!question) return <div>질문 데이터를 불러오지 못했습니다.</div>;
-
+  console.log("로딩 여부 확인: ", loading);
   console.log("modify page에서 단일 question 확인: ", question);
   return (
     <PageContainer>
@@ -107,9 +120,9 @@ const ModifyQuestionPage = () => {
                     제목
                   </Typography>
                   <TextField
-                    label="질문의 제목을 입력하세요"
+                    // label="질문의 제목을 입력하세요"
                     fullWidth
-                    // value={title}
+                    value={question?.title}
                     // onChange={(e) => setTitle(e.target.value)}
                     required
                     sx={{
@@ -306,7 +319,7 @@ const ModifyQuestionPage = () => {
                     >
                       <ReactQuill
                         // ref={quillRef}
-                        // value={value}
+                        value={question?.content}
                         // onChange={onChange}
                         // modules={modules}
                         theme="snow"
@@ -402,7 +415,7 @@ const ModifyQuestionPage = () => {
                   <TextField
                     label="태그 (쉼표로 구분)"
                     fullWidth
-                    // value={tags.join(", ")}
+                    value={question?.tags.join(", ")}
                     // onChange={handleTagsChange}
                     helperText="태그를 쉼표(,)로 구분하여 입력하세요"
                     FormHelperTextProps={{
