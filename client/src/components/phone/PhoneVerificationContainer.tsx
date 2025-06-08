@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Container } from "@mui/material";
 import {
-  PhoneVerificationTitle,
+  StepIndicator,
   UserInfoField,
   MessageBox,
   StepRenderer,
@@ -53,7 +53,7 @@ const PhoneVerificationContainer: React.FC<PhoneVerificationContainerProps> = ({
       <Container maxWidth="sm">
         <Box sx={{ py: 4 }}>
           {/* step indicator로 컴포넌트명 변경 */}
-          <PhoneVerificationTitle step={currentStep} totalSteps={3} />
+          <StepIndicator step={currentStep} totalSteps={3} />
           <UserInfoField userInfo={userInfo} setUserInfo={setUserInfo} />
           <StepRenderer
             currentStep={currentStep}

@@ -1,4 +1,4 @@
-import PhoneVerificationTitle from "./PhoneVerificationTitle";
+import StepIndicator from "./StepIndicator";
 import UserInfoField from "./UserInfoField";
 import PhoneNumberField from "./PhoneNumberField";
 import VerificationInput from "./VerificationInput";
@@ -8,7 +8,7 @@ import PhoneVerificationContainer from "./PhoneVerificationContainer";
 import { StepRenderer } from "./StepRenderer";
 
 export {
-  PhoneVerificationTitle,
+  StepIndicator,
   UserInfoField,
   PhoneNumberField,
   VerificationInput,

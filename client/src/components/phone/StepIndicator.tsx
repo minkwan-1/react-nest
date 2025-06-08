@@ -1,15 +1,12 @@
 import { Box, Typography } from "@mui/material";
 import { verification1 } from "../../images/index";
 
-interface PhoneVerificationTitleProps {
+interface StepIndicatorProps {
   step: number;
   totalSteps: number;
 }
 
-const PhoneVerificationTitle = ({
-  step,
-  totalSteps,
-}: PhoneVerificationTitleProps) => {
+const StepIndicator = ({ step, totalSteps }: StepIndicatorProps) => {
   const stepTitles = {
     1: "안전한 서비스 이용을 위해 휴대폰 번호를 인증해 주세요",
     2: "전송된 인증 코드를 입력해 주세요",
@@ -92,4 +89,4 @@ const PhoneVerificationTitle = ({
   );
 };
 
-export default PhoneVerificationTitle;
+export default StepIndicator;
