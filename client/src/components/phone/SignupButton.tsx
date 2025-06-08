@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Button,
   Paper,
@@ -10,10 +10,9 @@ import {
 import HowToRegIcon from "@mui/icons-material/HowToReg";
 
 interface SignupButtonProps {
-  onClick?: () => Promise<boolean> | boolean | Promise<void> | void; // 유연한 타입
+  onClick?: () => Promise<boolean> | boolean | Promise<void> | void;
   onSuccess?: (message: string) => void;
   onError?: (message: string) => void;
-  isLoading?: boolean;
   disabled?: boolean;
 }
 
@@ -21,13 +20,17 @@ const SignupButton: React.FC<SignupButtonProps> = ({
   onClick,
   onSuccess,
   onError,
-  isLoading = false,
   disabled = false,
 }) => {
   const theme = useTheme();
   const keyColor = "#b8dae1";
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSignup = async () => {
+    if (disabled) return;
+
+    setIsLoading(true);
+
     try {
       let result: boolean | void = true;
 
@@ -53,6 +56,8 @@ const SignupButton: React.FC<SignupButtonProps> = ({
             : "회원가입 중 오류가 발생했습니다.";
         onError(errorMessage);
       }
+    } finally {
+      setIsLoading(false);
     }
   };
 

@@ -21,7 +21,6 @@ interface VerificationInputProps {
   phoneNumber: string;
   onSuccess: (message: string) => void;
   onError: (message: string) => void;
-  onVerified: () => void;
   onResendCode: () => void;
 }
 
@@ -29,7 +28,6 @@ const VerificationInput = ({
   phoneNumber,
   onSuccess,
   onError,
-  onVerified,
   onResendCode,
 }: VerificationInputProps) => {
   const theme = useTheme();
@@ -89,15 +87,12 @@ const VerificationInput = ({
       );
 
       const message = response.data.message || "전화번호가 인증되었습니다!";
-      console.log("메세지 타입 체크: ", response.data.type);
+      console.log("인증 응답:", response.data);
+
       if (response.data.type === "invalid") {
         onError(message);
       } else {
         onSuccess(message);
-      }
-
-      if (response.status === 201 || response.status === 200) {
-        onVerified();
       }
     } catch (error: unknown) {
       if (axios.isAxiosError(error) && error.response) {
@@ -162,7 +157,6 @@ const VerificationInput = ({
             mb: 2,
           }}
         >
-          {/* 제목: '인증 코드 확인' */}
           <Typography
             variant="subtitle1"
             fontWeight={600}
@@ -171,9 +165,7 @@ const VerificationInput = ({
             인증 코드 확인
           </Typography>
 
-          {/* 우측: 타이머 or 새로고침 버튼 */}
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            {/* 타이머 표시: 타이머가 활성화되어 있을 때만 표시 */}
             {timerActive && (
               <Typography
                 variant="body2"
@@ -186,7 +178,6 @@ const VerificationInput = ({
               </Typography>
             )}
 
-            {/* 타이머가 0일 경우: 새로고침 아이콘 노출 */}
             {timeLeft === 0 && (
               <IconButton
                 onClick={handleResendCode}
@@ -220,13 +211,11 @@ const VerificationInput = ({
                 <LockIcon sx={{ color: "action.active" }} />
               </InputAdornment>
             ),
-
             endAdornment: verificationCode.length === 6 && (
               <InputAdornment position="end">
                 <CheckCircleIcon sx={{ color: successColor }} />
               </InputAdornment>
             ),
-
             sx: {
               borderRadius: 2,
               letterSpacing: "0.2em",
@@ -290,7 +279,7 @@ const VerificationInput = ({
           )}
         </Button>
 
-        {/* 안내 메시지: 코드 입력 안내 */}
+        {/* 안내 메시지 */}
         <Typography
           variant="caption"
           color="text.secondary"
