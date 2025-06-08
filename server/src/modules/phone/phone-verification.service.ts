@@ -61,7 +61,7 @@ export class PhoneVerificationService {
   async verifyCode(
     phoneNumber: string,
     verificationCode: string,
-  ): Promise<{ message: string }> {
+  ): Promise<{ message: string; type?: 'invalid' | 'success' }> {
     console.log('인증 코드 확인 중 - 전화번호:', phoneNumber);
 
     if (!phoneNumber || !verificationCode) {
@@ -90,6 +90,7 @@ export class PhoneVerificationService {
       if (verificationCode !== storedVerification.code) {
         return {
           message: '유효하지 않은 인증 코드입니다. 다시 시도해 주세요.',
+          type: 'invalid',
         };
       }
 

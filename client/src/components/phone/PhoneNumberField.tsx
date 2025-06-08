@@ -39,7 +39,8 @@ const PhoneNumberField = ({
 
   const isValidPhoneNumber = (number: string) => {
     const trimmed = number.replace(/\s+/g, "");
-    return /^\+\d{10,15}$/.test(trimmed);
+    // return /^\+\d{10,15}$/.test(trimmed);
+    return trimmed;
   };
 
   const isValidFormat = phoneNumber ? isValidPhoneNumber(phoneNumber) : true;
@@ -75,7 +76,7 @@ const PhoneNumberField = ({
 
     try {
       const response = await axios.post("http://localhost:3000/api/send-code", {
-        toPhoneNumber: phoneNumber.trim(),
+        toPhoneNumber: `+82${phoneNumber.trim()}`,
       });
 
       // 응답에서 기존 유저 여부 확인
@@ -156,7 +157,7 @@ const PhoneNumberField = ({
           <TextField
             fullWidth
             label="휴대폰 번호"
-            placeholder="+821012345678"
+            placeholder="01012345678"
             value={phoneNumber}
             onChange={(e) => setPhoneNumber(e.target.value)}
             onFocus={() => setIsFocused(true)}
@@ -166,7 +167,7 @@ const PhoneNumberField = ({
             error={phoneNumber !== "" && !isValidFormat}
             helperText={
               phoneNumber !== "" && !isValidFormat
-                ? "올바른 형식의 전화번호를 입력해주세요. (예: +821012345678)"
+                ? "올바른 형식의 전화번호를 입력해주세요. (예: 01012345678)"
                 : " "
             }
             InputProps={{

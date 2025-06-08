@@ -29,6 +29,7 @@ export class PhoneVerificationRepository {
   async findByPhoneNumber(
     phoneNumber: string,
   ): Promise<PhoneVerification | null> {
+    console.log('findByPhoneNumber의 전화번호: ', phoneNumber);
     return await this.repo.findOne({
       where: { phoneNumber },
     });

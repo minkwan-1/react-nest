@@ -84,12 +84,17 @@ const VerificationInput = ({
         "http://localhost:3000/api/verify-code",
         {
           verificationCode: verificationCode,
-          phoneNumber: phoneNumber,
+          phoneNumber: `+82${phoneNumber}`,
         }
       );
 
       const message = response.data.message || "전화번호가 인증되었습니다!";
-      onSuccess(message);
+      console.log("메세지 타입 체크: ", response.data.type);
+      if (response.data.type === "invalid") {
+        onError(message);
+      } else {
+        onSuccess(message);
+      }
 
       if (response.status === 201 || response.status === 200) {
         onVerified();

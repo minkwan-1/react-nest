@@ -5,50 +5,54 @@ import {
   Box,
   Avatar,
   Stack,
-  // Chip,
+  Chip,
   IconButton,
   Paper,
-  // Button,
+  Button,
   useTheme,
   Fade,
   Grow,
 } from "@mui/material";
-// import AddIcon from "@mui/icons-material/Add";
+import AddIcon from "@mui/icons-material/Add";
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
-// import { useState } from "react";
+import { useState } from "react";
 
 const keyColor = "#b8dae1";
-// const lightKeyColor = "#f0f8fa";
+const lightKeyColor = "#f0f8fa";
 const darkKeyColor = "#2a4a4f";
 const gradientBg = "linear-gradient(135deg, #b8dae1 0%, #9bc5cc 100%)";
 
 const MyInfoEditPage = () => {
   const theme = useTheme();
 
-  // const [interests, setInterests] = useState<string[]>(["React", "Node.js"]);
-  // const [interestInput, setInterestInput] = useState("");
-  // const [socialLinks, setSocialLinks] = useState<string[]>([""]);
+  const [job, setJob] = useState("");
 
-  // const handleAddInterest = () => {
-  //   if (interestInput.trim()) {
-  //     setInterests([...interests, interestInput.trim()]);
-  //     setInterestInput("");
-  //   }
-  // };
+  console.log(job);
 
-  // const handleDeleteInterest = (interestToDelete: string) => {
-  //   setInterests(interests.filter((i) => i !== interestToDelete));
-  // };
+  const [interests, setInterests] = useState<string[]>(["React", "Node.js"]);
+  const [interestInput, setInterestInput] = useState("");
+  const [socialLinks, setSocialLinks] = useState<string[]>([""]);
 
-  // const handleSocialLinkChange = (index: number, value: string) => {
-  //   const updated = [...socialLinks];
-  //   updated[index] = value;
-  //   setSocialLinks(updated);
-  // };
+  const handleAddInterest = () => {
+    if (interestInput.trim()) {
+      setInterests([...interests, interestInput.trim()]);
+      setInterestInput("");
+    }
+  };
 
-  // const handleAddSocialLink = () => {
-  //   setSocialLinks([...socialLinks, ""]);
-  // };
+  const handleDeleteInterest = (interestToDelete: string) => {
+    setInterests(interests.filter((i) => i !== interestToDelete));
+  };
+
+  const handleSocialLinkChange = (index: number, value: string) => {
+    const updated = [...socialLinks];
+    updated[index] = value;
+    setSocialLinks(updated);
+  };
+
+  const handleAddSocialLink = () => {
+    setSocialLinks([...socialLinks, ""]);
+  };
 
   return (
     <PageContainer>
@@ -160,7 +164,7 @@ const MyInfoEditPage = () => {
 
                   <Box flex={1}>
                     <Stack spacing={2.5}>
-                      <TextField
+                      {/* <TextField
                         fullWidth
                         label="이름"
                         variant="outlined"
@@ -187,11 +191,13 @@ const MyInfoEditPage = () => {
                             color: keyColor,
                           },
                         }}
-                      />
+                      /> */}
                       <TextField
                         fullWidth
-                        label="소속"
+                        label="직업"
                         variant="outlined"
+                        value={job}
+                        onChange={(e) => setJob(e.target.value)}
                         sx={{
                           "& .MuiOutlinedInput-root": {
                             borderRadius: 2,
@@ -220,7 +226,7 @@ const MyInfoEditPage = () => {
             </Grow>
 
             {/* 관심 분야 */}
-            {/* <Grow in timeout={1200}>
+            <Grow in timeout={1200}>
               <Paper
                 elevation={0}
                 sx={{
@@ -349,10 +355,10 @@ const MyInfoEditPage = () => {
                   </IconButton>
                 </Stack>
               </Paper>
-            </Grow> */}
+            </Grow>
 
             {/* 소셜 미디어 링크 */}
-            {/* <Grow in timeout={1400}>
+            <Grow in timeout={1400}>
               <Paper
                 elevation={0}
                 sx={{
@@ -461,10 +467,10 @@ const MyInfoEditPage = () => {
                   </Button>
                 </Stack>
               </Paper>
-            </Grow> */}
+            </Grow>
 
             {/* 자기소개 */}
-            {/* <Grow in timeout={1600}>
+            <Grow in timeout={1600}>
               <Paper
                 elevation={0}
                 sx={{
@@ -541,10 +547,10 @@ const MyInfoEditPage = () => {
                   }}
                 />
               </Paper>
-            </Grow> */}
+            </Grow>
 
             {/* 저장 버튼 */}
-            {/* <Grow in timeout={1800}>
+            <Grow in timeout={1800}>
               <Box textAlign="center" mb={5}>
                 <Button
                   variant="contained"
@@ -585,7 +591,7 @@ const MyInfoEditPage = () => {
                   저장하기
                 </Button>
               </Box>
-            </Grow> */}
+            </Grow>
           </Box>
         </Fade>
       </ComponentWrapper>

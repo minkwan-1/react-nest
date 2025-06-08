@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Box, Container } from "@mui/material";
 import {
   PhoneVerificationTitle,
@@ -38,34 +38,47 @@ const PhoneVerificationContainer: React.FC<PhoneVerificationContainerProps> = ({
     showMessage,
   } = usePhoneVerification({ userInfo, setUserInfo, onSignupComplete });
 
+  // const testArray = [1, 2, 3];
+  // const [step, setStep] = useState([]);
+  // const [stepIndex, setStepIndex] = useState(0);
+
+  // const currentStep = step[stepIndex];
+
+  // const handleStep = (stepIndex) => {
+  //   setStepIndex(stepIndex + 1);
+  // };
+
   return (
-    <Container maxWidth="sm">
-      <Box sx={{ py: 4 }}>
-        <PhoneVerificationTitle step={currentStep} totalSteps={3} />
-        <UserInfoField userInfo={userInfo} setUserInfo={setUserInfo} />
-        <StepRenderer
-          currentStep={currentStep}
-          phoneNumber={phoneNumber}
-          isVerified={isVerified}
-          isSignupLoading={isSignupLoading}
-          showMessage={showMessage}
-          handlePhoneNumberChange={handlePhoneNumberChange}
-          handleCodeSent={handleCodeSent}
-          handleExistingUser={handleExistingUser}
-          handleVerificationSuccess={handleVerificationSuccess}
-          handleResendCode={handleResendCode}
-          handleSignupComplete={handleSignupComplete}
-        />
-        <MessageBox
-          message={messageState.message}
-          messageType={messageState.type}
-          open={messageState.open}
-          onClose={closeMessage}
-          isExistingUser={messageState.isExistingUser}
-          isSignupComplete={messageState.isSignupComplete}
-        />
-      </Box>
-    </Container>
+    <>
+      <Container maxWidth="sm">
+        <Box sx={{ py: 4 }}>
+          {/* step indicator로 컴포넌트명 변경 */}
+          <PhoneVerificationTitle step={currentStep} totalSteps={3} />
+          <UserInfoField userInfo={userInfo} setUserInfo={setUserInfo} />
+          <StepRenderer
+            currentStep={currentStep}
+            phoneNumber={phoneNumber}
+            isVerified={isVerified}
+            isSignupLoading={isSignupLoading}
+            showMessage={showMessage}
+            handlePhoneNumberChange={handlePhoneNumberChange}
+            handleCodeSent={handleCodeSent}
+            handleExistingUser={handleExistingUser}
+            handleVerificationSuccess={handleVerificationSuccess}
+            handleResendCode={handleResendCode}
+            handleSignupComplete={handleSignupComplete}
+          />
+        </Box>
+      </Container>
+      <MessageBox
+        message={messageState.message}
+        messageType={messageState.type}
+        open={messageState.open}
+        onClose={closeMessage}
+        isExistingUser={messageState.isExistingUser}
+        isSignupComplete={messageState.isSignupComplete}
+      />
+    </>
   );
 };
 
