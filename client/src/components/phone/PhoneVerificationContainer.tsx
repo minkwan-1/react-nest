@@ -3,13 +3,14 @@ import { Box, Container } from "@mui/material";
 import {
   StepIndicator,
   UserInfoField,
-  MessageBox,
-  StepRenderer,
+  // MessageBox,
+  // StepRenderer,
 } from "./index";
 import type { signupUserInfo } from "@atom/auth";
 import { SetStateAction } from "jotai";
 
 import { usePhoneVerification } from "./hooks/usePhoneVerification";
+import { PhoneNumberField } from "./index";
 
 interface PhoneVerificationContainerProps {
   userInfo: signupUserInfo | null;
@@ -24,18 +25,18 @@ const PhoneVerificationContainer: React.FC<PhoneVerificationContainerProps> = ({
 }) => {
   const {
     currentStep,
-    phoneNumber,
-    isVerified,
-    isSignupLoading,
-    messageState,
-    closeMessage,
-    handlePhoneNumberChange,
-    handleCodeSent,
-    handleExistingUser,
-    handleVerificationSuccess,
-    handleResendCode,
-    handleSignupComplete,
-    showMessage,
+    // phoneNumber,
+    // isVerified,
+    // isSignupLoading,
+    // messageState,
+    // closeMessage,
+    // handlePhoneNumberChange,
+    // handleCodeSent,
+    // handleExistingUser,
+    // handleVerificationSuccess,
+    // handleResendCode,
+    // handleSignupComplete,
+    // showMessage,
   } = usePhoneVerification({ userInfo, setUserInfo, onSignupComplete });
 
   // const testArray = [1, 2, 3];
@@ -55,7 +56,8 @@ const PhoneVerificationContainer: React.FC<PhoneVerificationContainerProps> = ({
           {/* step indicator로 컴포넌트명 변경 */}
           <StepIndicator step={currentStep} totalSteps={3} />
           <UserInfoField userInfo={userInfo} setUserInfo={setUserInfo} />
-          <StepRenderer
+          <PhoneNumberField />
+          {/* <StepRenderer
             currentStep={currentStep}
             phoneNumber={phoneNumber}
             isVerified={isVerified}
@@ -67,17 +69,17 @@ const PhoneVerificationContainer: React.FC<PhoneVerificationContainerProps> = ({
             handleVerificationSuccess={handleVerificationSuccess}
             handleResendCode={handleResendCode}
             handleSignupComplete={handleSignupComplete}
-          />
+          /> */}
         </Box>
       </Container>
-      <MessageBox
+      {/* <MessageBox
         message={messageState.message}
         messageType={messageState.type}
         open={messageState.open}
         onClose={closeMessage}
         isExistingUser={messageState.isExistingUser}
         isSignupComplete={messageState.isSignupComplete}
-      />
+      /> */}
     </>
   );
 };
