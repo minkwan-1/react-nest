@@ -9,7 +9,6 @@ import {
   QuestionDetailPage,
   RedirectPage,
   LandingPage,
-  SignUpPage,
   SignInPage,
   ModifyQuestionPage,
   MyInfoEditPage,
@@ -22,7 +21,6 @@ const App = () => {
       <Route path="/home" element={<HomePage />} />
       <Route path="/my" element={<MyPage />} />
       <Route path="/redirect" element={<RedirectPage />} />
-      <Route path="/sign-up" element={<SignUpPage />} />
       <Route path="/sign-in" element={<SignInPage />} />
       <Route path="/edit" element={<QuestionEditPage />} />
       <Route path="/questions/:id" element={<QuestionDetailPage />} />
