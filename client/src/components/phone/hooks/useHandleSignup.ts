@@ -22,6 +22,7 @@ export const useHandleSignup = () => {
       }
 
       localStorage.removeItem("userInfo");
+
       return;
     } catch (error) {
       console.error("회원가입 처리 중 오류:", error);

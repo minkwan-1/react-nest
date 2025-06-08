@@ -9,7 +9,7 @@ const GlobalActionButton = () => {
 
   const handleClick = () => {
     if (!userInfo) {
-      navigate("/sign-in");
+      navigate("/start");
     } else {
       console.log("edit으로");
       navigate("/edit");

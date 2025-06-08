@@ -9,7 +9,7 @@ const StartButton = () => {
     if (location.pathname === "/") {
       navigate("/home");
     } else {
-      navigate("/sign-in");
+      navigate("/start");
     }
   };
 

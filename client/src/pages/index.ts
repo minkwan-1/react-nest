@@ -7,7 +7,7 @@ import QuestionEditPage from "./QuestionEditPage";
 import QuestionDetailPage from "./QuestionDetailPage";
 import LandingPage from "./LandingPage";
 import RedirectPage from "./RedirectPage";
-import SignInPage from "./SignInPage";
+import StartPage from "./StartPage";
 import ModifyQuestionPage from "./ModifyQuestionPage";
 import MyInfoEditPage from "./MyInfoEditPage";
 
@@ -21,7 +21,7 @@ export {
   QuestionDetailPage,
   LandingPage,
   RedirectPage,
-  SignInPage,
+  StartPage,
   ModifyQuestionPage,
   MyInfoEditPage,
 };

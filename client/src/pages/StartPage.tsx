@@ -3,7 +3,7 @@ import SignInSocialButtons from "../components/sign-in/SignInSocialButtons";
 import BackgroundImage from "../components/sign-in/BackgroundImage";
 import BenefitsList from "@components/sign-in/BenefitsList";
 
-const SignUpPage = () => {
+const StartPage = () => {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
   const isMediumScreen = useMediaQuery(theme.breakpoints.between("sm", "md"));
@@ -57,4 +57,4 @@ const SignUpPage = () => {
   );
 };
 
-export default SignUpPage;
+export default StartPage;

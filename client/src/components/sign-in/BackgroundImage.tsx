@@ -147,7 +147,7 @@ const BackgroundImage = () => {
             }),
           }}
         >
-          다시 오신 것을 환영합니다!
+          Pullim에 오신 것을 환영합니다!
         </Typography>
 
         <Typography

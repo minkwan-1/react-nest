@@ -37,7 +37,7 @@ export const useMessageHandler = () => {
       messageState.type === "warning"
     ) {
       setTimeout(() => {
-        navigate("/sign-in");
+        navigate("/start");
       }, 300);
     }
   };

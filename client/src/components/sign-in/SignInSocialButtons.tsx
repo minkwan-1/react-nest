@@ -25,7 +25,7 @@ const SignInSocialButtons = () => {
           ...theme.applyStyles("dark", { color: "#f5f5f5" }),
         }}
       >
-        소셜 계정으로 Pullim 로그인하기
+        소셜 계정으로 Pullim 시작하기
       </Typography>
       <Typography
         variant="body1"
@@ -36,7 +36,7 @@ const SignInSocialButtons = () => {
           ...theme.applyStyles("dark", { color: "#b0b0b0" }),
         }}
       >
-        소셜 계정으로 빠르게 로그인하고 질문을 시작하세요
+        소셜 계정으로 빠르게 Pullim을 이용해 보세요
       </Typography>
 
       {/* Google 로그인 버튼 */}
@@ -72,7 +72,7 @@ const SignInSocialButtons = () => {
           }),
         }}
       >
-        구글로 로그인하기
+        구글로 시작하기
       </Button>
 
       {/* Naver 로그인 버튼 */}
@@ -105,7 +105,7 @@ const SignInSocialButtons = () => {
           }),
         }}
       >
-        네이버로 로그인하기
+        네이버로 시작하기
       </Button>
 
       {/* 구분선 */}

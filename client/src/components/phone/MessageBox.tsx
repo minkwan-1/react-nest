@@ -86,7 +86,7 @@ const MessageBox = ({
     console.log(messageType);
 
     if (messageType === "warning") {
-      navigate("/sign-in");
+      navigate("/start");
     } else {
       onClose();
     }

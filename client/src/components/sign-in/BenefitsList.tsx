@@ -26,7 +26,7 @@ const BenefitsList = () => {
           }),
         }}
       >
-        소셜 계정으로 Pullim 로그인
+        소셜 계정으로 Pullim 시작
       </Typography>
 
       {benefits.map((benefit, index) => (
