@@ -40,7 +40,7 @@ const LandingTitle = () => {
         문제를 해결하고, 지식을 넓히세요.
       </Typography>
 
-      {/* 새로운 버튼 섹션 추가 */}
+      {/* 리퀴드 글래스 버튼 섹션 */}
       <Box
         sx={{
           display: "flex",
@@ -55,45 +55,115 @@ const LandingTitle = () => {
           sx={{
             py: { xs: 1.2, md: 1.5 },
             px: { xs: 3, md: 4 },
-            borderRadius: "8px",
+            borderRadius: "16px",
             fontWeight: "600",
             fontSize: { xs: "14px", md: "16px" },
             textTransform: "none",
-            bgcolor: "#b8dae1",
+            position: "relative",
+            overflow: "hidden",
+            background:
+              "linear-gradient(135deg, rgba(184, 218, 225, 0.9) 0%, rgba(184, 218, 225, 0.7) 100%)",
+            backdropFilter: "blur(12px)",
+            border: "1px solid rgba(255, 255, 255, 0.2)",
+            boxShadow:
+              "0 8px 32px rgba(0, 0, 0, 0.1), 0 4px 16px rgba(184, 218, 225, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.3)",
+            color: "#fff",
+            transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+            "&::before": {
+              content: '""',
+              position: "absolute",
+              top: 0,
+              left: "-100%",
+              width: "100%",
+              height: "100%",
+              background:
+                "linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent)",
+              transition: "left 0.5s ease",
+            },
             "&:hover": {
-              bgcolor: "#02a76f",
+              background:
+                "linear-gradient(135deg, rgba(184, 218, 225, 1) 0%, rgba(150, 195, 203, 0.9) 100%)",
+              transform: "translateY(-2px)",
+              boxShadow:
+                "0 12px 40px rgba(0, 0, 0, 0.15), 0 6px 20px rgba(184, 218, 225, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.4)",
+              "&::before": {
+                left: "100%",
+              },
+            },
+            "&:active": {
+              transform: "translateY(0px)",
+              boxShadow:
+                "0 4px 16px rgba(0, 0, 0, 0.1), 0 2px 8px rgba(184, 218, 225, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2)",
             },
           }}
           onClick={() => navigate("/sign-up")}
         >
           시작하기
         </Button>
+
         <Button
           variant="outlined"
           size="large"
           sx={{
             py: { xs: 1.2, md: 1.5 },
             px: { xs: 3, md: 4 },
-            borderRadius: "8px",
+            borderRadius: "16px",
             fontWeight: "600",
             fontSize: { xs: "14px", md: "16px" },
             textTransform: "none",
+            position: "relative",
+            overflow: "hidden",
+            background: "rgba(255, 255, 255, 0.1)",
+            backdropFilter: "blur(12px)",
+            transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+            "&::before": {
+              content: '""',
+              position: "absolute",
+              top: 0,
+              left: "-100%",
+              width: "100%",
+              height: "100%",
+              background:
+                "linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent)",
+              transition: "left 0.5s ease",
+            },
             ...theme.applyStyles("light", {
-              borderColor: "#b8dae1",
-              color: "#b8dae1",
+              border: "1px solid rgba(184, 218, 225, 0.4)",
+              color: "#7ba8b5",
+              boxShadow:
+                "0 8px 32px rgba(0, 0, 0, 0.08), 0 4px 16px rgba(184, 218, 225, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.6)",
               "&:hover": {
-                borderColor: "#02a76f",
-                bgcolor: "rgba(3, 203, 132, 0.04)",
+                background: "rgba(184, 218, 225, 0.2)",
+                border: "1px solid rgba(184, 218, 225, 0.6)",
+                color: "#5a8b95",
+                transform: "translateY(-2px)",
+                boxShadow:
+                  "0 12px 40px rgba(0, 0, 0, 0.12), 0 6px 20px rgba(184, 218, 225, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.7)",
+                "&::before": {
+                  left: "100%",
+                },
               },
             }),
             ...theme.applyStyles("dark", {
-              borderColor: "#00ae74",
-              color: "#00ae74",
+              border: "1px solid rgba(184, 218, 225, 0.4)",
+              color: "#b8dae1",
+              boxShadow:
+                "0 8px 32px rgba(0, 0, 0, 0.3), 0 4px 16px rgba(184, 218, 225, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1)",
               "&:hover": {
-                borderColor: "#00775a",
-                bgcolor: "rgba(0, 174, 116, 0.04)",
+                background: "rgba(184, 218, 225, 0.2)",
+                border: "1px solid rgba(184, 218, 225, 0.6)",
+                color: "#d4e9ed",
+                transform: "translateY(-2px)",
+                boxShadow:
+                  "0 12px 40px rgba(0, 0, 0, 0.4), 0 6px 20px rgba(184, 218, 225, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2)",
+                "&::before": {
+                  left: "100%",
+                },
               },
             }),
+            "&:active": {
+              transform: "translateY(0px)",
+            },
           }}
           onClick={() => navigate("/home")}
         >
