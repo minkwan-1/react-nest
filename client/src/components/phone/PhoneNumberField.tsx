@@ -15,6 +15,7 @@ import {
 } from "@mui/material";
 import PhoneIcon from "@mui/icons-material/Phone";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import ErrorIcon from "@mui/icons-material/Error";
 import axios from "axios";
 import { motion } from "framer-motion";
 import type { signupUserInfo } from "@atom/auth";
@@ -36,7 +37,13 @@ const PhoneNumberField = ({
   const [phoneNumber, setPhoneNumber] = useState("");
   const [isSending, setIsSending] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
-  const [showModal, setShowModal] = useState(false); // 모달 표시 상태
+  // 모달 상태를 객체로 통합 관리
+  const [modal, setModal] = useState({
+    open: false,
+    type: "success" as "success" | "error",
+    title: "",
+    message: "",
+  });
 
   // 컴포넌트 마운트 시 userInfo에서 전화번호 불러오기
   useEffect(() => {
@@ -138,10 +145,23 @@ const PhoneNumberField = ({
         }
       });
 
-      // next() 함수 대신 모달을 표시
-      setShowModal(true);
+      // next() 함수 대신 성공 모달을 표시
+      setModal({
+        open: true,
+        type: "success",
+        title: "인증 코드 전송 완료",
+        message: `${phoneNumber}로 인증 코드가 전송되었습니다.`,
+      });
     } catch (error: unknown) {
       console.log("휴대전화번호 전송 인증 에러:", error);
+
+      // 실패 모달을 표시
+      setModal({
+        open: true,
+        type: "error",
+        title: "인증 코드 전송 실패",
+        message: "인증 코드 전송에 실패했습니다. 다시 시도해주세요.",
+      });
     } finally {
       setIsSending(false);
     }
@@ -149,13 +169,14 @@ const PhoneNumberField = ({
 
   // 모달 내 다음 단계 버튼 핸들러
   const handleNextStep = () => {
-    setShowModal(false);
+    setModal({ ...modal, open: false });
     onNext();
   };
 
   // 디바운스된 sendCode 함수
   const debouncedSendCode = useCallback(debounce(sendCode, 300), [
     phoneNumber,
+    setModal,
     setUserInfo,
   ]);
 
@@ -284,8 +305,8 @@ const PhoneNumberField = ({
 
       {/* 성공 모달 */}
       <Dialog
-        open={showModal}
-        onClose={() => setShowModal(false)}
+        open={modal.open}
+        onClose={() => setModal({ ...modal, open: false })}
         PaperProps={{
           sx: {
             borderRadius: 3,
@@ -295,45 +316,73 @@ const PhoneNumberField = ({
         }}
       >
         <DialogTitle sx={{ textAlign: "center", pb: 1 }}>
-          <CheckCircleIcon
-            sx={{
-              fontSize: 48,
-              color: keyColor,
-              mb: 1,
-            }}
-          />
+          {modal.type === "success" ? (
+            <CheckCircleIcon
+              sx={{
+                fontSize: 48,
+                color: keyColor,
+                mb: 1,
+              }}
+            />
+          ) : (
+            <ErrorIcon
+              sx={{
+                fontSize: 48,
+                color: "error.main",
+                mb: 1,
+              }}
+            />
+          )}
           <Typography variant="h6" fontWeight={600}>
-            인증 코드 전송 완료
+            {modal.title}
           </Typography>
         </DialogTitle>
 
         <DialogContent sx={{ textAlign: "center", py: 1 }}>
           <Typography variant="body2" color="text.secondary">
-            {phoneNumber}로 인증 코드가 전송되었습니다.
+            {modal.message}
           </Typography>
-          <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-            다음 단계에서 인증 코드를 입력해주세요.
-          </Typography>
+          {modal.type === "success" && (
+            <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+              다음 단계에서 인증 코드를 입력해주세요.
+            </Typography>
+          )}
         </DialogContent>
 
         <DialogActions sx={{ justifyContent: "center", pt: 2 }}>
-          <Button
-            onClick={handleNextStep}
-            variant="contained"
-            sx={{
-              px: 4,
-              py: 1.5,
-              borderRadius: 2,
-              textTransform: "none",
-              fontWeight: 600,
-              bgcolor: keyColor,
-              "&:hover": {
-                bgcolor: `${keyColor}e0`,
-              },
-            }}
-          >
-            다음 단계로
-          </Button>
+          {modal.type === "success" ? (
+            <Button
+              onClick={handleNextStep}
+              variant="contained"
+              sx={{
+                px: 4,
+                py: 1.5,
+                borderRadius: 2,
+                textTransform: "none",
+                fontWeight: 600,
+                bgcolor: keyColor,
+                "&:hover": {
+                  bgcolor: `${keyColor}e0`,
+                },
+              }}
+            >
+              다음 단계로
+            </Button>
+          ) : (
+            <Button
+              onClick={() => setModal({ ...modal, open: false })}
+              variant="outlined"
+              sx={{
+                px: 4,
+                py: 1.5,
+                borderRadius: 2,
+                textTransform: "none",
+                fontWeight: 600,
+              }}
+            >
+              닫기
+            </Button>
+          )}
         </DialogActions>
       </Dialog>
     </>
