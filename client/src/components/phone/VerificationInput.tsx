@@ -36,7 +36,7 @@ const VerificationInput = ({
   const [isVerifying, setIsVerifying] = useState(false);
   const [timeLeft, setTimeLeft] = useState(300);
   const [timerActive, setTimerActive] = useState(true);
-
+  // ㅇ
   useEffect(() => {
     let timer: NodeJS.Timeout;
 
