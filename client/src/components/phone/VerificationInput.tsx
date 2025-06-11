@@ -20,6 +20,7 @@ import LockIcon from "@mui/icons-material/Lock";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import axios from "axios";
 import { motion } from "framer-motion";
+import ErrorIcon from "@mui/icons-material/Error";
 
 interface VerificationInputProps {
   phoneNumber: string;
@@ -78,24 +79,27 @@ const VerificationInput = ({
     setModal({ ...modal, open: false });
     onNext();
   };
-
   const handleVerifyCode = async () => {
-    // if (!verificationCode) {
-    //   onError("인증 코드를 입력해주세요.");
-    //   return;
-    // }
+    console.log("🔐 인증 코드 확인 요청 시작");
+    console.log("📱 입력된 전화번호:", phoneNumber);
+    console.log("🔢 입력된 인증 코드:", verificationCode);
 
-    // if (!phoneNumber) {
-    //   onError("전화번호를 먼저 입력해주세요.");
-    //   return;
-    // }
+    if (!verificationCode) {
+      console.warn("⚠️ 인증 코드 미입력");
+      return;
+    }
 
-    // if (timeLeft === 0) {
-    //   onError("인증 시간이 만료되었습니다. 새로운 인증 코드를 요청해주세요.");
-    //   return;
-    // }
+    if (!phoneNumber) {
+      console.warn("⚠️ 전화번호 미입력");
+      return;
+    }
 
-    // setIsVerifying(true);
+    if (timeLeft === 0) {
+      console.warn("⏰ 인증 시간 초과");
+      return;
+    }
+
+    setIsVerifying(true);
 
     try {
       const response = await axios.post(
@@ -106,34 +110,33 @@ const VerificationInput = ({
         }
       );
 
-      const message = response.data.message || "전화번호가 인증되었습니다!";
-      console.log("인증 응답:", response.data);
-      console.log("인증 메세지", message);
+      const { status, message } = response.data;
 
-      // 성공에 대한 모달 처리
-      setModal({
-        open: true,
-        type: "success",
-        title: "인증 코드 전송 완료",
-        message: `전화번호가 인증되었습니다.`,
-      });
+      console.log("✅ 서버 응답 수신:", response.data);
 
-      // if (response.data.type === "invalid") {
-      //   onError(message);
-      // } else {
-      //   onSuccess(message);
-      // }
+      if (status === "success") {
+        console.log("🎉 인증 성공!");
+        setModal({
+          open: true,
+          type: "success",
+          title: "인증 성공",
+          message: message || "전화번호가 인증되었습니다.",
+        });
+      } else {
+        console.warn("❌ 인증 실패:", message);
+        setModal({
+          open: true,
+          type: "error",
+          title: "인증 실패",
+          message:
+            message || "인증 코드가 올바르지 않습니다. 다시 시도해주세요.",
+        });
+      }
     } catch (error: unknown) {
-      console.log(error);
-      // if (axios.isAxiosError(error) && error.response) {
-      //   const errorMessage =
-      //     error.response.data?.message || "인증에 실패했습니다.";
-      //   onError(errorMessage);
-      // } else {
-      //   onError("인증에 실패했습니다. 다시 시도해주세요.");
-      // }
+      console.error("🚨 인증 요청 중 오류 발생:", error);
     } finally {
       setIsVerifying(false);
+      console.log("🔁 인증 프로세스 종료");
     }
   };
 
@@ -331,20 +334,21 @@ const VerificationInput = ({
           )}
         </Paper>
       </motion.div>
-      {/* 성공 모달 */}
-      {modal.type === "success" && (
-        <Dialog
-          open={modal.open}
-          onClose={() => setModal({ ...modal, open: false })}
-          PaperProps={{
-            sx: {
-              borderRadius: 3,
-              p: 2,
-              minWidth: 300,
-            },
-          }}
-        >
-          <DialogTitle sx={{ textAlign: "center", pb: 1 }}>
+
+      {/* 모달 */}
+      <Dialog
+        open={modal.open}
+        onClose={() => setModal({ ...modal, open: false })}
+        PaperProps={{
+          sx: {
+            borderRadius: 3,
+            p: 2,
+            minWidth: 300,
+          },
+        }}
+      >
+        <DialogTitle sx={{ textAlign: "center", pb: 1 }}>
+          {modal.type === "success" ? (
             <CheckCircleIcon
               sx={{
                 fontSize: 48,
@@ -352,21 +356,33 @@ const VerificationInput = ({
                 mb: 1,
               }}
             />
-            <Typography variant="h6" fontWeight={600}>
-              {modal.title}
-            </Typography>
-          </DialogTitle>
+          ) : (
+            <ErrorIcon
+              sx={{
+                fontSize: 48,
+                color: "error.main",
+                mb: 1,
+              }}
+            />
+          )}
+          <Typography variant="h6" fontWeight={600}>
+            {modal.title}
+          </Typography>
+        </DialogTitle>
 
-          <DialogContent sx={{ textAlign: "center", py: 1 }}>
-            <Typography variant="body2" color="text.secondary">
-              {modal.message}
-            </Typography>
+        <DialogContent sx={{ textAlign: "center", py: 1 }}>
+          <Typography variant="body2" color="text.secondary">
+            {modal.message}
+          </Typography>
+          {modal.type === "success" && (
             <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
               최종 회원가입을 완료해주세요.
             </Typography>
-          </DialogContent>
+          )}
+        </DialogContent>
 
-          <DialogActions sx={{ justifyContent: "center", pt: 2 }}>
+        <DialogActions sx={{ justifyContent: "center", pt: 2 }}>
+          {modal.type === "success" ? (
             <Button
               onClick={handleNextStep}
               variant="contained"
@@ -384,9 +400,23 @@ const VerificationInput = ({
             >
               마지막 단계로
             </Button>
-          </DialogActions>
-        </Dialog>
-      )}
+          ) : (
+            <Button
+              onClick={() => setModal({ ...modal, open: false })}
+              variant="outlined"
+              sx={{
+                px: 4,
+                py: 1.5,
+                borderRadius: 2,
+                textTransform: "none",
+                fontWeight: 600,
+              }}
+            >
+              닫기
+            </Button>
+          )}
+        </DialogActions>
+      </Dialog>
     </>
   );
 };
