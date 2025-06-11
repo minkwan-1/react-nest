@@ -28,7 +28,7 @@ function PhoneVerificationContainer(props: PhoneVerificationContainerProps) {
   const { currentStep, stepIndex, nextStep } = useStep(steps);
 
   // 인증 성공 여부 저장
-  const [isVerified, setIsVerified] = useState(false);
+  // const [isVerified, setIsVerified] = useState(false);
 
   // 사용자에게 보여줄 메시지 상태 (성공 / 에러)
   const [message, setMessage] = useState({
@@ -44,7 +44,7 @@ function PhoneVerificationContainer(props: PhoneVerificationContainerProps) {
   // 인증번호 검증 성공 시 → 메시지 표시 후 다음 단계로 자동 이동
   const handleVerificationSuccess = (successMessage: string) => {
     setMessage({ text: successMessage, type: "success" });
-    setIsVerified(true);
+    // setIsVerified(true);
     setTimeout(() => {
       nextStep();
     }, 1000); // 1초 후 다음 단계로 자동 진행
@@ -90,7 +90,7 @@ function PhoneVerificationContainer(props: PhoneVerificationContainerProps) {
             onClick={onSignupComplete}
             onSuccess={(msg) => setMessage({ text: msg, type: "success" })}
             onError={(msg) => setMessage({ text: msg, type: "error" })}
-            disabled={!isVerified}
+            // disabled={!isVerified}
           />
         );
 

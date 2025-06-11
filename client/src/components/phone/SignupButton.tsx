@@ -22,14 +22,14 @@ const SignupButton: React.FC<SignupButtonProps> = ({
   onClick,
   onSuccess,
   onError,
-  disabled = false,
+  // disabled = false,
 }) => {
   const theme = useTheme();
   const keyColor = "#b8dae1";
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSignup = async () => {
-    if (disabled) return;
+    // if (disabled) return;
 
     setIsLoading(true);
 
@@ -94,7 +94,7 @@ const SignupButton: React.FC<SignupButtonProps> = ({
         variant="contained"
         onClick={handleSignup}
         fullWidth
-        disabled={isLoading || disabled}
+        // disabled={isLoading || disabled}
         sx={{
           mt: 2,
           height: "50px",
