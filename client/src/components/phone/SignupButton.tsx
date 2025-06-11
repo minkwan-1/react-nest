@@ -16,6 +16,8 @@ interface SignupButtonProps {
   disabled?: boolean;
 }
 
+// signup button disabled부터 작업
+
 const SignupButton: React.FC<SignupButtonProps> = ({
   onClick,
   onSuccess,
