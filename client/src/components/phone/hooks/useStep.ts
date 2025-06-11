@@ -13,6 +13,8 @@ type UseStepReturn<T> = {
 export function useStep<T>(steps: readonly T[]): UseStepReturn<T> {
   const [stepIndex, setStepIndex] = useState(0);
 
+  console.log("현재 스텝 인덱스", stepIndex);
+
   const nextStep = () => {
     setStepIndex((prev) => Math.min(prev + 1, steps.length - 1));
   };

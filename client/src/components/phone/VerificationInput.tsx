@@ -9,6 +9,10 @@ import {
   InputAdornment,
   useTheme,
   IconButton,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
 } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import VerifiedIcon from "@mui/icons-material/Verified";
@@ -22,13 +26,17 @@ interface VerificationInputProps {
   onSuccess: (message: string) => void;
   onError: (message: string) => void;
   onResendCode: () => void;
+  onNext: () => void;
 }
+
+// verification input에 대한 modal 처리 로직 구현
 
 const VerificationInput = ({
   phoneNumber,
-  onSuccess,
-  onError,
+  // onSuccess,
+  // onError,
   onResendCode,
+  onNext,
 }: VerificationInputProps) => {
   const theme = useTheme();
   const keyColor = "#b8dae1";
@@ -36,7 +44,13 @@ const VerificationInput = ({
   const [isVerifying, setIsVerifying] = useState(false);
   const [timeLeft, setTimeLeft] = useState(300);
   const [timerActive, setTimerActive] = useState(true);
-  // ㅇ
+  const [modal, setModal] = useState({
+    open: false,
+    type: "success" as "success" | "error",
+    title: "",
+    message: "",
+  });
+
   useEffect(() => {
     let timer: NodeJS.Timeout;
 
@@ -59,23 +73,29 @@ const VerificationInput = ({
     return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
   };
 
+  // 모달 내 다음 단계 버튼 핸들러
+  const handleNextStep = () => {
+    setModal({ ...modal, open: false });
+    onNext();
+  };
+
   const handleVerifyCode = async () => {
-    if (!verificationCode) {
-      onError("인증 코드를 입력해주세요.");
-      return;
-    }
+    // if (!verificationCode) {
+    //   onError("인증 코드를 입력해주세요.");
+    //   return;
+    // }
 
-    if (!phoneNumber) {
-      onError("전화번호를 먼저 입력해주세요.");
-      return;
-    }
+    // if (!phoneNumber) {
+    //   onError("전화번호를 먼저 입력해주세요.");
+    //   return;
+    // }
 
-    if (timeLeft === 0) {
-      onError("인증 시간이 만료되었습니다. 새로운 인증 코드를 요청해주세요.");
-      return;
-    }
+    // if (timeLeft === 0) {
+    //   onError("인증 시간이 만료되었습니다. 새로운 인증 코드를 요청해주세요.");
+    //   return;
+    // }
 
-    setIsVerifying(true);
+    // setIsVerifying(true);
 
     try {
       const response = await axios.post(
@@ -88,20 +108,30 @@ const VerificationInput = ({
 
       const message = response.data.message || "전화번호가 인증되었습니다!";
       console.log("인증 응답:", response.data);
+      console.log("인증 메세지", message);
 
-      if (response.data.type === "invalid") {
-        onError(message);
-      } else {
-        onSuccess(message);
-      }
+      // 성공에 대한 모달 처리
+      setModal({
+        open: true,
+        type: "success",
+        title: "인증 코드 전송 완료",
+        message: `전화번호가 인증되었습니다.`,
+      });
+
+      // if (response.data.type === "invalid") {
+      //   onError(message);
+      // } else {
+      //   onSuccess(message);
+      // }
     } catch (error: unknown) {
-      if (axios.isAxiosError(error) && error.response) {
-        const errorMessage =
-          error.response.data?.message || "인증에 실패했습니다.";
-        onError(errorMessage);
-      } else {
-        onError("인증에 실패했습니다. 다시 시도해주세요.");
-      }
+      console.log(error);
+      // if (axios.isAxiosError(error) && error.response) {
+      //   const errorMessage =
+      //     error.response.data?.message || "인증에 실패했습니다.";
+      //   onError(errorMessage);
+      // } else {
+      //   onError("인증에 실패했습니다. 다시 시도해주세요.");
+      // }
     } finally {
       setIsVerifying(false);
     }
@@ -132,174 +162,232 @@ const VerificationInput = ({
     timeLeft === 0;
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-    >
-      <Paper
-        elevation={0}
-        sx={{
-          mb: 4,
-          p: 3,
-          borderRadius: 3,
-          border: "1px solid",
-          borderColor: borderColor,
-          backgroundColor: theme.palette.background.paper,
-        }}
+    <>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
       >
-        {/* 상단: 제목 + 타이머 or 새로고침 아이콘 */}
-        <Box
+        <Paper
+          elevation={0}
           sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            mb: 2,
+            mb: 4,
+            p: 3,
+            borderRadius: 3,
+            border: "1px solid",
+            borderColor: borderColor,
+            backgroundColor: theme.palette.background.paper,
           }}
         >
-          <Typography
-            variant="subtitle1"
-            fontWeight={600}
-            sx={{ color: keyColor }}
+          {/* 상단: 제목 + 타이머 or 새로고침 아이콘 */}
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              mb: 2,
+            }}
           >
-            인증 코드 확인
-          </Typography>
+            <Typography
+              variant="subtitle1"
+              fontWeight={600}
+              sx={{ color: keyColor }}
+            >
+              인증 코드 확인
+            </Typography>
 
-          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            {timerActive && (
-              <Typography
-                variant="body2"
-                sx={{
-                  color: timeLeft < 60 ? "error.main" : "text.secondary",
-                  fontWeight: timeLeft < 60 ? 600 : 400,
-                }}
-              >
-                {formatTime()}
-              </Typography>
-            )}
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+              {timerActive && (
+                <Typography
+                  variant="body2"
+                  sx={{
+                    color: timeLeft < 60 ? "error.main" : "text.secondary",
+                    fontWeight: timeLeft < 60 ? 600 : 400,
+                  }}
+                >
+                  {formatTime()}
+                </Typography>
+              )}
 
-            {timeLeft === 0 && (
-              <IconButton
-                onClick={handleResendCode}
-                size="small"
-                sx={{
-                  color: keyColor,
-                  "&:hover": {
-                    bgcolor: `${keyColor}20`,
-                  },
-                }}
-              >
-                <RefreshIcon />
-              </IconButton>
-            )}
+              {timeLeft === 0 && (
+                <IconButton
+                  onClick={handleResendCode}
+                  size="small"
+                  sx={{
+                    color: keyColor,
+                    "&:hover": {
+                      bgcolor: `${keyColor}20`,
+                    },
+                  }}
+                >
+                  <RefreshIcon />
+                </IconButton>
+              )}
+            </Box>
           </Box>
-        </Box>
 
-        {/* 인증 코드 입력 필드 */}
-        <TextField
-          fullWidth
-          label="인증 코드"
-          placeholder="6자리 코드 입력"
-          value={verificationCode}
-          onChange={handleCodeChange}
-          margin="normal"
-          variant="outlined"
-          type="text"
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <LockIcon sx={{ color: "action.active" }} />
-              </InputAdornment>
-            ),
-            endAdornment: verificationCode.length === 6 && (
-              <InputAdornment position="end">
-                <CheckCircleIcon sx={{ color: successColor }} />
-              </InputAdornment>
-            ),
-            sx: {
+          {/* 인증 코드 입력 필드 */}
+          <TextField
+            fullWidth
+            label="인증 코드"
+            placeholder="6자리 코드 입력"
+            value={verificationCode}
+            onChange={handleCodeChange}
+            margin="normal"
+            variant="outlined"
+            type="text"
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <LockIcon sx={{ color: "action.active" }} />
+                </InputAdornment>
+              ),
+              endAdornment: verificationCode.length === 6 && (
+                <InputAdornment position="end">
+                  <CheckCircleIcon sx={{ color: successColor }} />
+                </InputAdornment>
+              ),
+              sx: {
+                borderRadius: 2,
+                letterSpacing: "0.2em",
+                fontWeight: 500,
+                transition: "all 0.3s",
+                "&.Mui-focused": {
+                  boxShadow: `0 0 0 2px ${keyColor}40`,
+                },
+              },
+            }}
+            inputProps={{
+              inputMode: "numeric",
+              pattern: "[0-9]*",
+              maxLength: 6,
+            }}
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                transition: "all 0.3s",
+                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                  borderColor: keyColor,
+                },
+              },
+              "& .MuiInputLabel-root.Mui-focused": {
+                color: keyColor,
+              },
+            }}
+          />
+
+          {/* 인증 확인 버튼 */}
+          <Button
+            variant="contained"
+            onClick={handleVerifyCode}
+            disabled={isButtonDisabled}
+            fullWidth
+            sx={{
+              mt: 2,
+              mb: 1,
+              height: "50px",
               borderRadius: 2,
-              letterSpacing: "0.2em",
-              fontWeight: 500,
-              transition: "all 0.3s",
-              "&.Mui-focused": {
-                boxShadow: `0 0 0 2px ${keyColor}40`,
+              textTransform: "none",
+              fontWeight: 600,
+              bgcolor: keyColor,
+              boxShadow: `0 8px 16px ${keyColor}30`,
+              "&:hover": {
+                bgcolor: `${keyColor}e0`,
+                boxShadow: `0 12px 20px ${keyColor}40`,
+                transform: "translateY(-2px)",
               },
-            },
-          }}
-          inputProps={{
-            inputMode: "numeric",
-            pattern: "[0-9]*",
-            maxLength: 6,
-          }}
-          sx={{
-            "& .MuiOutlinedInput-root": {
-              transition: "all 0.3s",
-              "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                borderColor: keyColor,
+              "&.Mui-disabled": {
+                bgcolor: theme.palette.mode === "dark" ? "#464646" : "#e0e0e0",
+                color: theme.palette.mode === "dark" ? "#8a8a8a" : "#a6a6a6",
               },
-            },
-            "& .MuiInputLabel-root.Mui-focused": {
-              color: keyColor,
-            },
-          }}
-        />
+              transition: "all 0.3s",
+            }}
+            endIcon={!isVerifying && <VerifiedIcon />}
+          >
+            {isVerifying ? (
+              <CircularProgress size={24} color="inherit" />
+            ) : (
+              "인증 확인"
+            )}
+          </Button>
 
-        {/* 인증 확인 버튼 */}
-        <Button
-          variant="contained"
-          onClick={handleVerifyCode}
-          disabled={isButtonDisabled}
-          fullWidth
-          sx={{
-            mt: 2,
-            mb: 1,
-            height: "50px",
-            borderRadius: 2,
-            textTransform: "none",
-            fontWeight: 600,
-            bgcolor: keyColor,
-            boxShadow: `0 8px 16px ${keyColor}30`,
-            "&:hover": {
-              bgcolor: `${keyColor}e0`,
-              boxShadow: `0 12px 20px ${keyColor}40`,
-              transform: "translateY(-2px)",
-            },
-            "&.Mui-disabled": {
-              bgcolor: theme.palette.mode === "dark" ? "#464646" : "#e0e0e0",
-              color: theme.palette.mode === "dark" ? "#8a8a8a" : "#a6a6a6",
-            },
-            transition: "all 0.3s",
-          }}
-          endIcon={!isVerifying && <VerifiedIcon />}
-        >
-          {isVerifying ? (
-            <CircularProgress size={24} color="inherit" />
-          ) : (
-            "인증 확인"
-          )}
-        </Button>
-
-        {/* 안내 메시지 */}
-        <Typography
-          variant="caption"
-          color="text.secondary"
-          sx={{ display: "block", textAlign: "center", mt: 1 }}
-        >
-          SMS로 전송된 6자리 코드를 입력하세요
-        </Typography>
-
-        {/* 시간 만료 시 안내 메시지 */}
-        {timeLeft === 0 && (
+          {/* 안내 메시지 */}
           <Typography
             variant="caption"
-            color="error"
+            color="text.secondary"
             sx={{ display: "block", textAlign: "center", mt: 1 }}
           >
-            인증 시간이 만료되었습니다. 새로고침 버튼을 클릭해 주세요.
+            SMS로 전송된 6자리 코드를 입력하세요
           </Typography>
-        )}
-      </Paper>
-    </motion.div>
+
+          {/* 시간 만료 시 안내 메시지 */}
+          {timeLeft === 0 && (
+            <Typography
+              variant="caption"
+              color="error"
+              sx={{ display: "block", textAlign: "center", mt: 1 }}
+            >
+              인증 시간이 만료되었습니다. 새로고침 버튼을 클릭해 주세요.
+            </Typography>
+          )}
+        </Paper>
+      </motion.div>
+      {/* 성공 모달 */}
+      {modal.type === "success" && (
+        <Dialog
+          open={modal.open}
+          onClose={() => setModal({ ...modal, open: false })}
+          PaperProps={{
+            sx: {
+              borderRadius: 3,
+              p: 2,
+              minWidth: 300,
+            },
+          }}
+        >
+          <DialogTitle sx={{ textAlign: "center", pb: 1 }}>
+            <CheckCircleIcon
+              sx={{
+                fontSize: 48,
+                color: keyColor,
+                mb: 1,
+              }}
+            />
+            <Typography variant="h6" fontWeight={600}>
+              {modal.title}
+            </Typography>
+          </DialogTitle>
+
+          <DialogContent sx={{ textAlign: "center", py: 1 }}>
+            <Typography variant="body2" color="text.secondary">
+              {modal.message}
+            </Typography>
+            <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+              최종 회원가입을 완료해주세요.
+            </Typography>
+          </DialogContent>
+
+          <DialogActions sx={{ justifyContent: "center", pt: 2 }}>
+            <Button
+              onClick={handleNextStep}
+              variant="contained"
+              sx={{
+                px: 4,
+                py: 1.5,
+                borderRadius: 2,
+                textTransform: "none",
+                fontWeight: 600,
+                bgcolor: keyColor,
+                "&:hover": {
+                  bgcolor: `${keyColor}e0`,
+                },
+              }}
+            >
+              마지막 단계로
+            </Button>
+          </DialogActions>
+        </Dialog>
+      )}
+    </>
   );
 };
 

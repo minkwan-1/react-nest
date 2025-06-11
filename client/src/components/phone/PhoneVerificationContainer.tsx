@@ -37,7 +37,7 @@ function PhoneVerificationContainer(props: PhoneVerificationContainerProps) {
   });
 
   // 전화번호 인증 요청 성공 시 → 다음 단계로 이동
-  const handlePhoneNumberSuccess = () => {
+  const handleNextStep = () => {
     nextStep();
   };
 
@@ -67,7 +67,7 @@ function PhoneVerificationContainer(props: PhoneVerificationContainerProps) {
       case "phone":
         return (
           <PhoneNumberField
-            onNext={handlePhoneNumberSuccess}
+            onNext={handleNextStep}
             userInfo={userInfo}
             setUserInfo={setUserInfo}
           />
@@ -76,6 +76,7 @@ function PhoneVerificationContainer(props: PhoneVerificationContainerProps) {
       case "verify":
         return (
           <VerificationInput
+            onNext={handleNextStep}
             phoneNumber={userInfo?.phoneNumber || ""}
             onSuccess={handleVerificationSuccess}
             onError={handleVerificationError}

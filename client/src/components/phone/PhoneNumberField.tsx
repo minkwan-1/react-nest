@@ -149,7 +149,7 @@ const PhoneNumberField = ({
       setModal({
         open: true,
         type: "success",
-        title: "인증 코드 전송 완료",
+        title: "인증 코드 요청 완료",
         message: `${phoneNumber}로 인증 코드가 전송되었습니다.`,
       });
     } catch (error: unknown) {
