@@ -104,7 +104,7 @@ const QuestionCard = ({
   const handleDeleteClick = async () => {
     try {
       const res = await fetch(
-        `http://localhost:3000/questions/${question.id}`,
+        `http://localhost:3000/questions/delete/${question.id}`,
         {
           method: "DELETE",
           headers: {

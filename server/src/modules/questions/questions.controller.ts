@@ -38,7 +38,7 @@ export class QuestionsController {
   }
 
   // [DELETE] 질문 삭제
-  @Delete(':id')
+  @Delete('delete/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
   async delete(
     @Param('id', ParseIntPipe) questionId: number, // number 타입으로 변경
