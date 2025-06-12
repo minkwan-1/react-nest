@@ -12,6 +12,7 @@ import { PhoneVerificationModule } from './modules/phone/phone-verification.modu
 import { UsersModule } from './modules/users/users.module';
 import { QuestionsModule } from './modules/questions/questions.module';
 import { OpenAIModule } from './modules/ai/gemini/gemini.module';
+import { SelfIntroModule } from './modules/self-intro/self-intro.module';
 
 // 전역 필터
 import { CatchEverythingFilter } from './filters/catch-everything.filter';
@@ -29,6 +30,7 @@ import { HttpExceptionFilter } from './filters/http-exceptions.filter';
     UsersModule,
     QuestionsModule,
     OpenAIModule,
+    SelfIntroModule,
   ],
   providers: [
     // 전역 필터
