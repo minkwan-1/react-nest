@@ -5,6 +5,8 @@ import { NaverUser } from 'src/modules/auth/naver/naver.auth.entity';
 import { PhoneVerification } from 'src/modules/phone/phone-verification.entity';
 import { User } from 'src/modules/users/entities/user.entity';
 import { UserSession } from 'src/modules/auth/session/session.entity';
+import { SelfIntro } from 'src/modules/self-intro/self-intro.entity';
+
 export const typeORMConfig: TypeOrmModuleOptions = {
   type: 'postgres',
   host: 'localhost',
@@ -19,6 +21,7 @@ export const typeORMConfig: TypeOrmModuleOptions = {
     PhoneVerification,
     User,
     UserSession,
+    SelfIntro,
   ],
   synchronize: true, // 개발 환경에서만 true (프로덕션에서는 false로 설정)
 };

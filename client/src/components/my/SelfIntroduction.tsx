@@ -48,7 +48,7 @@ const SelfIntroduction = () => {
     if (selfIntro.length > MAX_LENGTH) return; // 최대 길이 초과 방지
     setSaving(true);
     try {
-      await axios.put("/api/user/self-intro", { selfIntro }); // API 저장 요청
+      await axios.put("http://localhost:3000/self-intro", { selfIntro }); // API 저장 요청
       setEditing(false); // 저장 후 편집 종료
     } catch (error) {
       console.error("소개 저장 실패:", error);
