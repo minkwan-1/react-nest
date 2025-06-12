@@ -470,7 +470,7 @@ const MyInfoEditPage = () => {
             </Grow>
 
             {/* 자기소개 */}
-            <Grow in timeout={1600}>
+            {/* <Grow in timeout={1600}>
               <Paper
                 elevation={0}
                 sx={{
@@ -547,7 +547,7 @@ const MyInfoEditPage = () => {
                   }}
                 />
               </Paper>
-            </Grow>
+            </Grow> */}
 
             {/* 저장 버튼 */}
             <Grow in timeout={1800}>

@@ -1,70 +1,87 @@
-import { Paper, Typography, useTheme } from "@mui/material";
+import { useState, useEffect } from "react";
+import {
+  Paper,
+  Typography,
+  useTheme,
+  TextField,
+  IconButton,
+  Box,
+  CircularProgress,
+  Tooltip,
+} from "@mui/material";
+import { Edit, Check, Close } from "@mui/icons-material";
+import axios from "axios";
+import { realUserInfo } from "@atom/auth";
+import { useAtom } from "jotai";
+
+const MAX_LENGTH = 80; // 한 줄 소개 최대 글자 수
 
 const SelfIntroduction = () => {
   const theme = useTheme();
 
-  const koreanContent = {
-    overview: "소개",
-    articles: "작성한 아티클",
-    replies: "작성한 댓글",
-    selfIntro: "한 줄 소개",
-    introText:
-      "프로그래밍 Q&A 서비스, Pullim을 운영하고 있는 원민관입니다. 서비스를 통해 최신 개발 트렌드와 인사이트를 제공합니다.",
-    serviceIntro: "서비스 소개",
-    serviceText:
-      "국내 최대 프로그래밍 Q&A 플랫폼 Pullim(풀림)은 개발자들이 겪는 다양한 문제를 함께 해결하며 성장할 수 있도록 돕는 지식 공유 커뮤니티입니다. 초보부터 전문가까지 누구나 자유롭게 질문하고, 실시간으로 사람과 AI 모두에게 답변을 받을 수 있어 '문제가 풀리는 경험'을 빠르고 깊이 있게 제공합니다. 특히 상세 페이지에서는 기존 답변을 기반으로 AI가 추가 설명이나 예제를 실시간 생성해 주는 기능도 제공되어, 복잡한 개념도 더 쉽게 이해할 수 있습니다. 코드 한 줄의 고민도 함께 나누는 풀림에서, 더 나은 개발자로 성장해 보세요.",
-    socialMedia: "소셜 미디어",
-    followers: "팔로워",
-    following: "팔로잉",
-    stats: "활동 통계",
-    interests: "관심 분야",
-    activity: "최근 활동",
-    subscriptions: "구독 신청",
-    badges: "획득한 배지",
-    popularPosts: "나의 질문",
-    recentActivity: "최근 활동",
-    recommendedTopics: "추천 토픽",
-    achievements: "업적",
-    insight: "최근 인사이트",
-    newsletter: "뉴스레터 구독하기",
-    memberSince: "가입일",
-    lastActive: "최근 활동",
-    viewProfile: "프로필 보기",
-    editProfile: "프로필 수정",
-    messageMe: "메시지 보내기",
-    copyChat: "카피챗",
-    viewAll: "전체보기",
-    trending: "트렌딩",
-    search: "검색",
-    newPost: "새 글쓰기",
-    subscribeNewsletter: "뉴스레터 구독하기",
+  // 🔹 상태 선언
+  const [selfIntro, setSelfIntro] = useState(""); // 자기소개 텍스트 상태
+  const [editing, setEditing] = useState(false); // 편집 모드 여부
+  const [loading, setLoading] = useState(true); // 초기 로딩 상태
+  const [saving, setSaving] = useState(false); // 저장 중 여부
+  const [user] = useAtom(realUserInfo); // 사용자 정보 (jotai atom 사용)
+
+  console.log(user); // 사용자 정보 콘솔 출력 (디버깅용)
+
+  // 🔹 컴포넌트 마운트 시 자기소개 데이터 불러오기
+  useEffect(() => {
+    const fetchSelfIntro = async () => {
+      try {
+        const res = await axios.get("/api/user/self-intro"); // API 호출
+        setSelfIntro(res.data.selfIntro || ""); // 결과가 없을 경우 빈 문자열로 설정
+      } catch (error) {
+        console.error("소개 불러오기 실패:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchSelfIntro();
+  }, []);
+
+  // 🔹 저장 처리
+  const handleSave = async () => {
+    if (selfIntro.length > MAX_LENGTH) return; // 최대 길이 초과 방지
+    setSaving(true);
+    try {
+      await axios.put("/api/user/self-intro", { selfIntro }); // API 저장 요청
+      setEditing(false); // 저장 후 편집 종료
+    } catch (error) {
+      console.error("소개 저장 실패:", error);
+    } finally {
+      setSaving(false);
+    }
   };
 
+  // 🔹 초기화 및 편집 종료 처리
+  const handleClear = () => {
+    setSelfIntro(""); // 입력 값 초기화
+    setEditing(false); // 편집 모드 종료
+  };
+
+  // 🔹 테마에 따라 색상 구성
   const themeColors = {
-    primary: theme.palette.primary.main,
-    primaryDark: "#02b676",
-    background: theme.palette.mode === "light" ? "#f8f9fa" : "#121212",
     cardBg: theme.palette.background.paper,
     border: theme.palette.mode === "light" ? "#e0e0e0" : "#333333",
-    textPrimary: theme.palette.text.primary,
     textSecondary: theme.palette.text.secondary,
-    accent: "#FF9F1C",
-    accent2: "#7678ED",
-    success: "#2EC4B6",
-    warning: "#E71D36",
-    divider: theme.palette.mode === "light" ? "#e0e0e0" : "#424242",
   };
 
   return (
     <>
-      {" "}
+      {/* 🔹 제목 */}
       <Typography
         variant="h6"
         fontWeight="bold"
         sx={{ mb: 2, display: "flex", alignItems: "center" }}
       >
-        {koreanContent.selfIntro}
+        한 줄 소개
       </Typography>
+
+      {/* 🔹 카드 UI */}
       <Paper
         elevation={0}
         sx={{
@@ -82,15 +99,61 @@ const SelfIntroduction = () => {
               : "none",
         }}
       >
-        <Typography
-          variant="body2"
-          sx={{
-            color: themeColors.textSecondary,
-            lineHeight: 1.7,
-          }}
-        >
-          {koreanContent.introText}
-        </Typography>
+        {/* 🔹 로딩 상태 */}
+        {loading ? (
+          <CircularProgress size={20} />
+        ) : (
+          <Box display="flex" alignItems="center" gap={1}>
+            {/* 🔹 편집 모드 */}
+            {editing ? (
+              <>
+                <TextField
+                  variant="standard"
+                  fullWidth
+                  value={selfIntro}
+                  onChange={(e) => setSelfIntro(e.target.value)}
+                  inputProps={{ maxLength: MAX_LENGTH }}
+                  helperText={`${selfIntro.length} / ${MAX_LENGTH}자`}
+                />
+                {/* 저장 버튼 */}
+                <Tooltip title="저장">
+                  <span>
+                    <IconButton
+                      onClick={handleSave}
+                      disabled={saving || selfIntro.length === 0}
+                    >
+                      {saving ? <CircularProgress size={20} /> : <Check />}
+                    </IconButton>
+                  </span>
+                </Tooltip>
+                {/* 초기화 버튼 */}
+                <Tooltip title="초기화 후 닫기">
+                  <span>
+                    <IconButton onClick={handleClear} disabled={saving}>
+                      <Close />
+                    </IconButton>
+                  </span>
+                </Tooltip>
+              </>
+            ) : (
+              <>
+                {/* 🔹 읽기 모드 텍스트 출력 */}
+                <Typography
+                  variant="body2"
+                  sx={{ color: themeColors.textSecondary, flexGrow: 1 }}
+                >
+                  {selfIntro || "아직 작성된 소개가 없습니다."}
+                </Typography>
+                {/* 편집 버튼 */}
+                <Tooltip title="편집">
+                  <IconButton onClick={() => setEditing(true)}>
+                    <Edit />
+                  </IconButton>
+                </Tooltip>
+              </>
+            )}
+          </Box>
+        )}
       </Paper>
     </>
   );
