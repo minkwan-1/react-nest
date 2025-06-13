@@ -16,6 +16,8 @@ import {
 import AddIcon from "@mui/icons-material/Add";
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
 import { useState } from "react";
+import { realUserInfo } from "@atom/auth";
+import { useAtom } from "jotai";
 
 const keyColor = "#b8dae1";
 const lightKeyColor = "#f0f8fa";
@@ -33,9 +35,13 @@ const MyInfoEditPage = () => {
   const [interestInput, setInterestInput] = useState("");
   // 소셜 미디어 링크 상태 정의
   const [socialLinks, setSocialLinks] = useState<string[]>([""]);
+  // 유저 전역 상태
+  const [userInfo] = useAtom(realUserInfo);
+  const userId = userInfo?.id;
 
   // 상태 로깅
-  console.log({ 1: job, 2: interests, 3: socialLinks });
+  console.log(userId);
+  console.log({ job, interests, socialLinks, userId });
 
   // 관심 분야 추가 핸들러
   const handleAddInterest = () => {
