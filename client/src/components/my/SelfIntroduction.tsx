@@ -65,7 +65,7 @@ const SelfIntroduction = () => {
   };
 
   const handleClear = () => {
-    setSelfIntro("");
+    // setSelfIntro("");
     setEditing(false);
   };
 
@@ -160,7 +160,7 @@ const SelfIntroduction = () => {
                   </IconButton>
                 </span>
               </Tooltip>
-              <Tooltip title="초기화 후 닫기">
+              <Tooltip title="닫기">
                 <span>
                   <IconButton onClick={handleClear} disabled={saving}>
                     <Close />

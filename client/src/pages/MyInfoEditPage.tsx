@@ -25,14 +25,19 @@ const gradientBg = "linear-gradient(135deg, #b8dae1 0%, #9bc5cc 100%)";
 const MyInfoEditPage = () => {
   const theme = useTheme();
 
+  // 직업 상태 정의
   const [job, setJob] = useState("");
-
-  console.log(job);
-
+  // 관심 분야 상태 정의
   const [interests, setInterests] = useState<string[]>(["React", "Node.js"]);
+  // 관심 분야 입력 필드 상태 정의
   const [interestInput, setInterestInput] = useState("");
+  // 소셜 미디어 링크 상태 정의
   const [socialLinks, setSocialLinks] = useState<string[]>([""]);
 
+  // 상태 로깅
+  console.log({ 1: job, 2: interests, 3: socialLinks });
+
+  // 관심 분야 추가 핸들러
   const handleAddInterest = () => {
     if (interestInput.trim()) {
       setInterests([...interests, interestInput.trim()]);
@@ -40,16 +45,19 @@ const MyInfoEditPage = () => {
     }
   };
 
+  // 관심 분야 삭제 핸들러
   const handleDeleteInterest = (interestToDelete: string) => {
     setInterests(interests.filter((i) => i !== interestToDelete));
   };
 
+  // 소셜 링크 입력값 변경 핸들러
   const handleSocialLinkChange = (index: number, value: string) => {
     const updated = [...socialLinks];
     updated[index] = value;
     setSocialLinks(updated);
   };
 
+  // 소셜 링크 필드 추가 핸들러
   const handleAddSocialLink = () => {
     setSocialLinks([...socialLinks, ""]);
   };
@@ -121,6 +129,7 @@ const MyInfoEditPage = () => {
               >
                 <Stack direction="row" spacing={4} alignItems="center">
                   <Box position="relative">
+                    {/* 아바타 - 현재는 하드코딩 */}
                     <Avatar
                       sx={{
                         width: 100,
@@ -142,6 +151,7 @@ const MyInfoEditPage = () => {
                     >
                       M
                     </Avatar>
+                    {/* 아바타 등록 버튼 - 현재는 동작 X */}
                     <IconButton
                       sx={{
                         position: "absolute",
@@ -161,37 +171,9 @@ const MyInfoEditPage = () => {
                       <PhotoCameraIcon fontSize="small" />
                     </IconButton>
                   </Box>
-
+                  {/* job 입력 필드 */}
                   <Box flex={1}>
                     <Stack spacing={2.5}>
-                      {/* <TextField
-                        fullWidth
-                        label="이름"
-                        variant="outlined"
-                        sx={{
-                          "& .MuiOutlinedInput-root": {
-                            borderRadius: 2,
-                            transition: "all 0.2s ease",
-                            ...(theme.palette.mode === "dark" && {
-                              bgcolor: theme.palette.background.default,
-                            }),
-                            "&:hover": {
-                              "& > fieldset": {
-                                borderColor: keyColor,
-                              },
-                            },
-                            "&.Mui-focused": {
-                              "& > fieldset": {
-                                borderColor: keyColor,
-                                borderWidth: 2,
-                              },
-                            },
-                          },
-                          "& .MuiInputLabel-root.Mui-focused": {
-                            color: keyColor,
-                          },
-                        }}
-                      /> */}
                       <TextField
                         fullWidth
                         label="직업"
@@ -468,86 +450,6 @@ const MyInfoEditPage = () => {
                 </Stack>
               </Paper>
             </Grow>
-
-            {/* 자기소개 */}
-            {/* <Grow in timeout={1600}>
-              <Paper
-                elevation={0}
-                sx={{
-                  p: 4,
-                  mb: 4,
-                  borderRadius: 3,
-                  border: `1px solid ${theme.palette.divider}`,
-                  background:
-                    theme.palette.mode === "dark"
-                      ? `linear-gradient(145deg, ${theme.palette.background.paper} 0%, ${theme.palette.background.default} 100%)`
-                      : "linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%)",
-                  transition: "all 0.3s ease",
-                  "&:hover": {
-                    boxShadow:
-                      theme.palette.mode === "dark"
-                        ? "0 8px 25px rgba(0,0,0,0.3)"
-                        : "0 8px 25px rgba(0,0,0,0.1)",
-                    transform: "translateY(-2px)",
-                  },
-                }}
-              >
-                <Typography
-                  variant="h6"
-                  gutterBottom
-                  sx={{
-                    fontWeight: 600,
-                    color: theme.palette.text.primary,
-                    mb: 3,
-                    display: "flex",
-                    alignItems: "center",
-                    "&::before": {
-                      content: '""',
-                      width: 4,
-                      height: 20,
-                      bgcolor: keyColor,
-                      borderRadius: 2,
-                      mr: 2,
-                    },
-                  }}
-                >
-                  자기소개
-                </Typography>
-
-                <TextField
-                  fullWidth
-                  multiline
-                  rows={6}
-                  variant="outlined"
-                  placeholder="자신에 대해 자유롭게 소개해보세요. 경험, 목표, 관심사 등을 포함해주세요."
-                  sx={{
-                    "& .MuiOutlinedInput-root": {
-                      borderRadius: 2,
-                      bgcolor:
-                        theme.palette.mode === "dark"
-                          ? theme.palette.background.default
-                          : lightKeyColor,
-                      transition: "all 0.2s ease",
-                      "&:hover": {
-                        "& > fieldset": {
-                          borderColor: keyColor,
-                        },
-                      },
-                      "&.Mui-focused": {
-                        "& > fieldset": {
-                          borderColor: keyColor,
-                          borderWidth: 2,
-                        },
-                      },
-                      "& textarea": {
-                        fontSize: "0.95rem",
-                        lineHeight: 1.6,
-                      },
-                    },
-                  }}
-                />
-              </Paper>
-            </Grow> */}
 
             {/* 저장 버튼 */}
             <Grow in timeout={1800}>

@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 const LeftContentArea = () => {
   const theme = useTheme();
   const navigate = useNavigate();
+
   const themeColors = {
     primary: theme.palette.primary.main,
     primaryDark: "#02b676",
@@ -44,18 +45,27 @@ const LeftContentArea = () => {
     >
       <MyInfo />
 
-      <Tooltip title="프로필 편집" arrow>
+      <Divider sx={{ width: "100%", mb: 2, bgcolor: themeColors.divider }} />
+
+      <InterestArea />
+
+      <Divider sx={{ width: "100%", mb: 2 }} />
+
+      <SocialMedia />
+
+      {/* ▶ 우측 하단 고정된 편집 버튼 */}
+      <Tooltip title="프로필 편집" arrow placement="top">
         <IconButton
           onClick={() => navigate("/my/edit")}
           sx={{
-            mt: 1,
-            mb: 2,
+            position: "absolute",
+            bottom: 16,
+            right: 16,
             bgcolor: "#b8dae1",
             color: "white",
             width: 40,
             height: 40,
             "&:hover": {
-              // bgcolor: themeColors.primaryDark,
               transform: "scale(1.05)",
             },
             transition: "all 0.2s ease-in-out",
@@ -68,14 +78,6 @@ const LeftContentArea = () => {
           <Edit fontSize="small" />
         </IconButton>
       </Tooltip>
-
-      <Divider sx={{ width: "100%", mb: 2, bgcolor: themeColors.divider }} />
-
-      <InterestArea />
-
-      <Divider sx={{ width: "100%", mb: 2 }} />
-
-      <SocialMedia />
     </Box>
   );
 };
