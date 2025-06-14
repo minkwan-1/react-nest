@@ -15,7 +15,7 @@ export class MyInfoController {
       interests: string[];
       socialLinks: string[];
     },
-  ): Promise<{ message: string }> {
+  ) {
     const { userId, job, interests, socialLinks } = body;
 
     await this.myInfoService.upsert(userId, job, interests, socialLinks);

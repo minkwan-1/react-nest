@@ -30,4 +30,10 @@ export class MyInfoService {
       await this.myInfoRepository.save({ userId, ...newMyInfo });
     }
   }
+
+  // myInfo 찾기
+  async find(userId: string): Promise<MyInfo | null> {
+    const entry = await this.myInfoRepository.findOne({ where: { userId } });
+    return entry;
+  }
 }
