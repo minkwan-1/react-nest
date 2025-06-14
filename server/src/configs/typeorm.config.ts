@@ -6,6 +6,7 @@ import { PhoneVerification } from 'src/modules/phone/phone-verification.entity';
 import { User } from 'src/modules/users/entities/user.entity';
 import { UserSession } from 'src/modules/auth/session/session.entity';
 import { SelfIntro } from 'src/modules/self-intro/self-intro.entity';
+import { MyInfo } from 'src/modules/myInfo/myInfo.entity';
 
 export const typeORMConfig: TypeOrmModuleOptions = {
   type: 'postgres',
@@ -22,6 +23,7 @@ export const typeORMConfig: TypeOrmModuleOptions = {
     User,
     UserSession,
     SelfIntro,
+    MyInfo,
   ],
   synchronize: true, // 개발 환경에서만 true (프로덕션에서는 false로 설정)
 };
