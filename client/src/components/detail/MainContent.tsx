@@ -9,10 +9,12 @@ import {
   Paper,
   Stack,
   alpha,
+  Divider,
 } from "@mui/material";
 
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+import SmartToyIcon from "@mui/icons-material/SmartToy";
 
 import { useAtom } from "jotai";
 import { questionsAtom } from "@atom/question";
@@ -39,6 +41,11 @@ const themeColors = {
     border: "#E5E7EB",
     text: "#374151",
   },
+  ai: {
+    bg: "#F0F9FF",
+    border: "#BAE6FD",
+    accent: "#0EA5E9",
+  },
 };
 
 type Question = {
@@ -62,7 +69,48 @@ const MainContent = () => {
   const [questions] = useAtom(questionsAtom);
   const [loading, setLoading] = useState(true);
 
+  // AI 답변 관련 상태
+  const [aiAnswer, setAiAnswer] = useState<string>("");
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiAnswerGenerated, setAiAnswerGenerated] = useState(false);
+
   console.log("상세 페이지의 메인 컨텐츠에서 보여줄 데이터: ", questions);
+
+  // AI 답변 생성 함수
+  const generateAiAnswer = async (questionData: Question) => {
+    setAiLoading(true);
+    try {
+      const response = await fetch(
+        `http://localhost:3000/api/ai-answer/${questionData.id}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            title: questionData.title,
+            content: questionData.content,
+          }),
+        }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        setAiAnswer(data.answer);
+        setAiAnswerGenerated(true);
+      } else {
+        throw new Error("AI 답변 생성에 실패했습니다.");
+      }
+    } catch (error) {
+      console.error("AI 답변 생성 오류:", error);
+      setAiAnswer(
+        "죄송합니다. AI 답변을 생성하는 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요."
+      );
+      setAiAnswerGenerated(true);
+    } finally {
+      setAiLoading(false);
+    }
+  };
 
   useEffect(() => {
     if (!id || !questions || questions.length === 0) {
@@ -77,6 +125,11 @@ const MainContent = () => {
     const timer = setTimeout(() => {
       setQuestion(foundQuestion || null);
       setLoading(false);
+
+      // 질문이 있으면 자동으로 AI 답변 생성
+      if (foundQuestion) {
+        generateAiAnswer(foundQuestion);
+      }
     }, 300);
 
     return () => clearTimeout(timer);
@@ -331,6 +384,107 @@ const MainContent = () => {
                 </Box>
               </Paper>
             </Box>
+          </Box>
+
+          {/* AI 답변 섹션 */}
+          <Box sx={{ mt: 4 }}>
+            <Divider sx={{ mb: 3 }} />
+
+            {aiLoading && (
+              <Paper
+                elevation={0}
+                sx={{
+                  p: 3,
+                  borderRadius: 2,
+                  bgcolor: themeColors.ai.bg,
+                  border: `2px solid ${themeColors.ai.border}`,
+                  textAlign: "center",
+                }}
+              >
+                <CircularProgress
+                  size={30}
+                  sx={{ color: themeColors.ai.accent, mb: 2 }}
+                />
+                <Typography
+                  variant="body1"
+                  sx={{
+                    color: themeColors.ai.accent,
+                    fontWeight: 600,
+                  }}
+                >
+                  AI가 답변을 생성하고 있습니다...
+                </Typography>
+              </Paper>
+            )}
+
+            {aiAnswerGenerated && !aiLoading && (
+              <Paper
+                elevation={0}
+                sx={{
+                  p: 3,
+                  borderRadius: 2,
+                  bgcolor: themeColors.ai.bg,
+                  border: `2px solid ${themeColors.ai.border}`,
+                  position: "relative",
+                }}
+              >
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 1,
+                    mb: 2,
+                  }}
+                >
+                  <SmartToyIcon
+                    sx={{
+                      color: themeColors.ai.accent,
+                      fontSize: "1.5rem",
+                    }}
+                  />
+                  <Typography
+                    variant="h6"
+                    sx={{
+                      color: themeColors.ai.accent,
+                      fontWeight: 600,
+                    }}
+                  >
+                    AI 답변
+                  </Typography>
+                </Box>
+
+                <Typography
+                  variant="body1"
+                  sx={{
+                    color: themeColors.textPrimary,
+                    lineHeight: 1.7,
+                    whiteSpace: "pre-wrap",
+                  }}
+                >
+                  {aiAnswer}
+                </Typography>
+
+                <Box
+                  sx={{
+                    mt: 2,
+                    pt: 2,
+                    borderTop: `1px solid ${alpha(themeColors.ai.border, 0.5)}`,
+                  }}
+                >
+                  <Typography
+                    variant="caption"
+                    sx={{
+                      color: themeColors.textSecondary,
+                      fontStyle: "italic",
+                    }}
+                  >
+                    * 이 답변은 AI에 의해 생성되었습니다. 참고용으로만
+                    사용하시고, 실제 개발 시에는 공식 문서나 신뢰할 수 있는
+                    자료를 확인해주세요.
+                  </Typography>
+                </Box>
+              </Paper>
+            )}
           </Box>
         </>
       )}
