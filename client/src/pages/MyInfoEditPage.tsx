@@ -18,6 +18,7 @@ import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
 import { useState } from "react";
 import { realUserInfo } from "@atom/auth";
 import { useAtom } from "jotai";
+import axios from "axios";
 
 const keyColor = "#b8dae1";
 const lightKeyColor = "#f0f8fa";
@@ -66,6 +67,24 @@ const MyInfoEditPage = () => {
   // 소셜 링크 필드 추가 핸들러
   const handleAddSocialLink = () => {
     setSocialLinks([...socialLinks, ""]);
+  };
+
+  // my info 최종 등록
+  const handleSave = async () => {
+    if (!userId) return;
+
+    try {
+      await axios.post("http://localhost:3000/my-info", {
+        userId,
+        job,
+        interests,
+        socialLinks,
+      });
+      alert("저장되었습니다.");
+    } catch (err) {
+      console.log("저장 실패: ", err);
+      alert("저장 중 오류가 발생했습니다.");
+    }
   };
 
   return (
@@ -461,6 +480,7 @@ const MyInfoEditPage = () => {
             <Grow in timeout={1800}>
               <Box textAlign="center" mb={5}>
                 <Button
+                  onClick={handleSave}
                   variant="contained"
                   size="large"
                   sx={{
