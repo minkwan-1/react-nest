@@ -11,9 +11,10 @@ interface MyInfoProps {
   avatarUrl?: string;
   reputation?: number;
   badges?: string[];
+  job?: string;
 }
 
-const MyInfo: React.FC<MyInfoProps> = ({ avatarUrl = man }) => {
+const MyInfo: React.FC<MyInfoProps> = ({ avatarUrl = man, job }) => {
   const theme = useTheme();
   const [userInfo] = useAtom(realUserInfo);
   const [, setQuestions] = useAtom(questionsAtom);
@@ -93,15 +94,17 @@ const MyInfo: React.FC<MyInfoProps> = ({ avatarUrl = man }) => {
       </Badge>
 
       <Typography variant="h5" fontWeight="bold" sx={{ mb: 0.5 }}>
-        {userInfo?.name || "minkwan won"}
+        {userInfo?.name || "이름 없음"}
       </Typography>
 
-      <Typography
-        variant="body2"
-        sx={{ mb: 2, color: themeColors.textSecondary }}
-      >
-        Frontend Developer
-      </Typography>
+      {job && (
+        <Typography
+          variant="body2"
+          sx={{ mb: 2, color: themeColors.textSecondary }}
+        >
+          {job}
+        </Typography>
+      )}
     </>
   );
 };

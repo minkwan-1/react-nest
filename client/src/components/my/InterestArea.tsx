@@ -1,28 +1,15 @@
 import { Typography, Box, Chip, useTheme } from "@mui/material";
 
-const InterestArea = () => {
+interface InterestAreaProps {
+  interests: string[];
+}
+
+const InterestArea: React.FC<InterestAreaProps> = ({ interests }) => {
   const theme = useTheme();
 
   const koreanContent = {
-    followers: "팔로워",
-    following: "팔로잉",
     interests: "관심 분야",
-    socialMedia: "소셜 미디어",
   };
-
-  const interestTags = [
-    "Full-stack Development",
-    "NestJS",
-    "TypeScript",
-    "ReactJS",
-    "NextJS",
-    "Git",
-    "AWS",
-    "CI/CD",
-    "Software Architecture",
-    "Test Automation",
-    "DevOps",
-  ];
 
   const themeColors = {
     primary: theme.palette.primary.main,
@@ -55,7 +42,7 @@ const InterestArea = () => {
           width: "100%",
         }}
       >
-        {interestTags.slice(0, 8).map((tag, index) => (
+        {interests.slice(0, 8).map((tag, index) => (
           <Chip
             key={index}
             label={tag}
@@ -79,9 +66,9 @@ const InterestArea = () => {
             }}
           />
         ))}
-        {interestTags.length > 8 && (
+        {interests.length > 8 && (
           <Chip
-            label={`+${interestTags.length - 8}`}
+            label={`+${interests.length - 8}`}
             size="small"
             sx={{
               bgcolor:

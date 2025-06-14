@@ -9,11 +9,21 @@ import { useNavigate } from "react-router-dom";
 import { useAtom } from "jotai";
 import { realUserInfo } from "@atom/auth";
 
+interface MyInfoType {
+  id: string;
+  userId: string;
+  job: string;
+  interests: string[];
+  socialLinks: string[];
+  createdAt: string;
+  updatedAt: string;
+}
+
 const LeftContentArea = () => {
   const theme = useTheme();
   const navigate = useNavigate();
   const [userInfo] = useAtom(realUserInfo);
-  const [myInfo, setMyInfo] = useState(null);
+  const [myInfo, setMyInfo] = useState<MyInfoType | null>(null);
 
   useEffect(() => {
     const fetchMyInfo = async () => {
@@ -74,7 +84,8 @@ const LeftContentArea = () => {
 
       <Divider sx={{ width: "100%", mb: 2 }} />
 
-      <SocialMedia socialLinks={myInfo?.socialLinks || []} />
+      {/* <SocialMedia socialLinks={myInfo?.socialLinks || []} /> */}
+      <SocialMedia />
 
       <Tooltip title="프로필 편집" arrow placement="top">
         <IconButton

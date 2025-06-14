@@ -5,6 +5,7 @@ import {
   GitHub as GitHubIcon,
 } from "@mui/icons-material";
 
+// 나중에
 const SocialMedia = () => {
   const theme = useTheme();
 
