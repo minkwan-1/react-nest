@@ -39,31 +39,11 @@ const MyInfoEditPage = () => {
   // 유저 전역 상태
   const [userInfo] = useAtom(realUserInfo);
   const userId = userInfo?.id;
-  // 로딩 상태 정의
-  // const [loading, setLoading] = useState(true);
   // my info 상태 정의
-  // const [myInfo, setMyInfo] = useState()
 
   // 상태 로깅
   console.log(userId);
   console.log({ job, interests, socialLinks, userId });
-
-  // useEffect(() => {
-  //   const fetchMyInfo = async () => {
-  //     if(!userId){
-  //       setLoading(false)
-  //       return
-  //     }
-
-  //     try{
-  //       setLoading(true)
-  //       const response = await axios.get(
-  //         `http://localhost:3000/self-intro?id=${userId}`
-  //       );
-
-  //     }catch(){}finally{}
-  //   }
-  // }, [userId]);
 
   // 관심 분야 추가 핸들러
   const handleAddInterest = () => {
