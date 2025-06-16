@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryColumn } from 'typeorm';
+import { Entity, Column, PrimaryColumn, OneToOne } from 'typeorm';
+import { User } from 'src/modules/users/entities/user.entity';
 
 @Entity('google_user')
 export class GoogleUser {
@@ -31,4 +32,7 @@ export class GoogleUser {
 
   @Column({ default: false })
   isExist: boolean;
+
+  @OneToOne(() => User, (user) => user.googleAccount)
+  user: User;
 }
