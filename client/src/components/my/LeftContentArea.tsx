@@ -1,6 +1,4 @@
 import { Box, Divider, useTheme, IconButton, Tooltip } from "@mui/material";
-import { useEffect, useState } from "react";
-import axios from "axios";
 import { Edit } from "@mui/icons-material";
 import InterestArea from "./InterestArea";
 import SocialMedia from "./SocialMedia";
@@ -8,38 +6,13 @@ import MyInfo from "./MyInfo";
 import { useNavigate } from "react-router-dom";
 import { useAtom } from "jotai";
 import { realUserInfo } from "@atom/auth";
-
-interface MyInfoType {
-  id: string;
-  userId: string;
-  job: string;
-  interests: string[];
-  socialLinks: string[];
-  createdAt: string;
-  updatedAt: string;
-}
+import useFetchMyInfo from "./hooks/useFetchMyInfo";
 
 const LeftContentArea = () => {
   const theme = useTheme();
   const navigate = useNavigate();
   const [userInfo] = useAtom(realUserInfo);
-  const [myInfo, setMyInfo] = useState<MyInfoType | null>(null);
-
-  useEffect(() => {
-    const fetchMyInfo = async () => {
-      if (!userInfo?.id) return;
-
-      try {
-        const response = await axios.get(
-          `http://localhost:3000/my-info?id=${userInfo.id}`
-        );
-        setMyInfo(response.data?.myInfo);
-      } catch (err) {
-        console.error("프로필 정보 불러오기 실패: ", err);
-      }
-    };
-    fetchMyInfo();
-  }, [userInfo?.id]);
+  const myInfo = useFetchMyInfo(userInfo?.id);
 
   const themeColors = {
     primary: theme.palette.primary.main,
@@ -75,7 +48,6 @@ const LeftContentArea = () => {
             : "none",
       }}
     >
-      {/* ✅ props로 데이터 전달 */}
       <MyInfo job={myInfo?.job} />
 
       <Divider sx={{ width: "100%", mb: 2, bgcolor: themeColors.divider }} />
@@ -84,7 +56,6 @@ const LeftContentArea = () => {
 
       <Divider sx={{ width: "100%", mb: 2 }} />
 
-      {/* <SocialMedia socialLinks={myInfo?.socialLinks || []} /> */}
       <SocialMedia />
 
       <Tooltip title="프로필 편집" arrow placement="top">
