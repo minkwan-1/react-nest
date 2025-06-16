@@ -12,10 +12,11 @@ import {
   useTheme,
   Fade,
   Grow,
+  CircularProgress,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { realUserInfo } from "@atom/auth";
 import { useAtom } from "jotai";
 import axios from "axios";
@@ -26,17 +27,19 @@ const lightKeyColor = "#f0f8fa";
 const darkKeyColor = "#2a4a4f";
 const gradientBg = "linear-gradient(135deg, #b8dae1 0%, #9bc5cc 100%)";
 
+// interface MyInfoType {
+//   id: string;
+//   userId: string;
+//   job: string;
+//   interests: string[];
+//   socialLinks: string[];
+//   createdAt: string;
+//   updatedAt: string;
+// }
+
 const MyInfoEditPage = () => {
   const theme = useTheme();
 
-  // 직업 상태 정의
-  const [job, setJob] = useState("");
-  // 관심 분야 상태 정의
-  const [interests, setInterests] = useState<string[]>(["React", "Node.js"]);
-  // 관심 분야 입력 필드 상태 정의
-  const [interestInput, setInterestInput] = useState("");
-  // 소셜 미디어 링크 상태 정의
-  const [socialLinks, setSocialLinks] = useState<string[]>([""]);
   // 유저 전역 상태
   const [userInfo] = useAtom(realUserInfo);
   const userId = userInfo?.id;
@@ -44,10 +47,44 @@ const MyInfoEditPage = () => {
   // 프로필 정보 가져오기 훅 적용
   const myInfo = useFetchMyInfo(userInfo?.id);
 
+  // 폼 상태 정의
+  const [job, setJob] = useState("");
+  const [interests, setInterests] = useState<string[]>([]);
+  const [interestInput, setInterestInput] = useState("");
+  const [socialLinks, setSocialLinks] = useState<string[]>([""]);
+  const [isInitialized, setIsInitialized] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // 사용자 ID가 있을 때 로딩 상태 설정
+  useEffect(() => {
+    if (userId) {
+      // userId가 있으면 로딩 상태 유지, 없으면 로딩 완료
+      setIsLoading(true);
+    }
+  }, [userId]);
+
+  // 서버에서 받아온 myInfo 데이터로 폼 필드 초기화
+  useEffect(() => {
+    if (userId && myInfo !== null && !isInitialized) {
+      console.log("서버에서 받아온 프로필 정보: ", myInfo);
+
+      // 서버 데이터로 폼 필드 초기화
+      setJob(myInfo?.job || "");
+      setInterests(myInfo?.interests || []);
+      setSocialLinks(myInfo?.socialLinks?.length ? myInfo.socialLinks : [""]);
+      setIsInitialized(true);
+      setIsLoading(false);
+    } else if (userId && myInfo === null) {
+      // myInfo가 null이면 (데이터가 없음) 기본값으로 초기화
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 1000); // 1초 후 로딩 완료 (API 응답 대기)
+    }
+  }, [myInfo, isInitialized, userId]);
+
   // 상태 로깅
   console.log(userId);
   console.log({ job, interests, socialLinks, userId });
-  console.log("프로필 정보 확인: ", myInfo);
 
   // 관심 분야 추가 핸들러
   const handleAddInterest = () => {
@@ -74,30 +111,67 @@ const MyInfoEditPage = () => {
     setSocialLinks([...socialLinks, ""]);
   };
 
-  // my info 최종 등록
+  // 소셜 링크 필드 제거 핸들러
+  const handleRemoveSocialLink = (index: number) => {
+    if (socialLinks.length > 1) {
+      const updated = socialLinks.filter((_, i) => i !== index);
+      setSocialLinks(updated);
+    }
+  };
+
+  // my info 최종 등록/수정 처리
   const handleSave = async () => {
     if (!userId) return;
 
+    // 빈 소셜 링크 필터링
+    const filteredSocialLinks = socialLinks.filter(
+      (link) => link.trim() !== ""
+    );
+
     try {
-      await axios.post("http://localhost:3000/my-info", {
+      const payload = {
         userId,
-        job,
+        job: job.trim(),
         interests,
-        socialLinks,
-      });
-      alert("저장되었습니다.");
+        socialLinks: filteredSocialLinks,
+      };
+
+      console.log("저장할 데이터: ", payload);
+
+      // 등록/수정 모두 동일한 POST 요청으로 처리
+      await axios.post("http://localhost:3000/my-info", payload);
+
+      alert(myInfo ? "정보가 수정되었습니다." : "정보가 저장되었습니다.");
     } catch (err) {
       console.log("저장 실패: ", err);
       alert("저장 중 오류가 발생했습니다.");
     }
   };
 
+  // 로딩 상태 처리
+  if (isLoading) {
+    return (
+      <PageContainer>
+        <ComponentWrapper>
+          <Box
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            minHeight="400px"
+          >
+            <CircularProgress sx={{ color: keyColor }} />
+          </Box>
+        </ComponentWrapper>
+      </PageContainer>
+    );
+  }
+
   return (
     <PageContainer>
       <ComponentWrapper>
         <Fade in timeout={800}>
           <Box>
-            {/* 헤더 */}
+            {/* 헤더 섹션 - 등록/수정 상태에 따라 텍스트 변경 */}
             <Box
               sx={{
                 background: gradientBg,
@@ -120,7 +194,7 @@ const MyInfoEditPage = () => {
                   letterSpacing: "0.5px",
                 }}
               >
-                내 정보 수정
+                {myInfo ? "내 정보 수정" : "내 정보 등록"}
               </Typography>
               <Typography
                 variant="body1"
@@ -130,11 +204,13 @@ const MyInfoEditPage = () => {
                   fontWeight: 300,
                 }}
               >
-                프로필 정보를 업데이트하세요
+                {myInfo
+                  ? "프로필 정보를 업데이트하세요"
+                  : "프로필 정보를 등록하세요"}
               </Typography>
             </Box>
 
-            {/* 프로필 섹션 */}
+            {/* 프로필 섹션 - 아바타와 직업 입력 */}
             <Grow in timeout={1000}>
               <Paper
                 elevation={0}
@@ -176,10 +252,11 @@ const MyInfoEditPage = () => {
                           boxShadow: "0 6px 25px rgba(184, 218, 225, 0.4)",
                         },
                       }}
-                      src="/default-profile.png"
+                      // src={myInfo?.profileImage || "/default-profile.png"}
                       alt="Profile"
                     >
-                      M
+                      {/* 사용자 이름의 첫 글자 표시 */}
+                      {userInfo?.name?.charAt(0)?.toUpperCase() || "U"}
                     </Avatar>
                     {/* 아바타 등록 버튼 - 현재는 동작 X */}
                     <IconButton
@@ -237,7 +314,7 @@ const MyInfoEditPage = () => {
               </Paper>
             </Grow>
 
-            {/* 관심 분야 */}
+            {/* 관심 분야 섹션 */}
             <Grow in timeout={1200}>
               <Paper
                 elevation={0}
@@ -282,45 +359,49 @@ const MyInfoEditPage = () => {
                   관심 분야
                 </Typography>
 
-                <Box sx={{ mb: 3 }}>
-                  <Stack
-                    direction="row"
-                    spacing={1}
-                    flexWrap="wrap"
-                    sx={{ gap: 1.5 }}
-                  >
-                    {interests.map((interest, index) => (
-                      <Chip
-                        key={index}
-                        label={interest}
-                        onDelete={() => handleDeleteInterest(interest)}
-                        sx={{
-                          background:
-                            theme.palette.mode === "dark"
-                              ? `linear-gradient(135deg, ${darkKeyColor} 0%, #1a3b40 100%)`
-                              : gradientBg,
-                          color: "#fff",
-                          fontWeight: 500,
-                          "& .MuiChip-deleteIcon": {
-                            color: "rgba(255,255,255,0.8)",
-                            "&:hover": {
-                              color: "white",
-                            },
-                          },
-                          transition: "all 0.2s ease",
-                          "&:hover": {
-                            transform: "translateY(-1px)",
-                            boxShadow:
+                {/* 등록된 관심 분야 칩 목록 표시 */}
+                {interests.length > 0 && (
+                  <Box sx={{ mb: 3 }}>
+                    <Stack
+                      direction="row"
+                      spacing={1}
+                      flexWrap="wrap"
+                      sx={{ gap: 1.5 }}
+                    >
+                      {interests.map((interest, index) => (
+                        <Chip
+                          key={index}
+                          label={interest}
+                          onDelete={() => handleDeleteInterest(interest)}
+                          sx={{
+                            background:
                               theme.palette.mode === "dark"
-                                ? "0 4px 12px rgba(42, 74, 79, 0.4)"
-                                : "0 4px 12px rgba(184, 218, 225, 0.3)",
-                          },
-                        }}
-                      />
-                    ))}
-                  </Stack>
-                </Box>
+                                ? `linear-gradient(135deg, ${darkKeyColor} 0%, #1a3b40 100%)`
+                                : gradientBg,
+                            color: "#fff",
+                            fontWeight: 500,
+                            "& .MuiChip-deleteIcon": {
+                              color: "rgba(255,255,255,0.8)",
+                              "&:hover": {
+                                color: "white",
+                              },
+                            },
+                            transition: "all 0.2s ease",
+                            "&:hover": {
+                              transform: "translateY(-1px)",
+                              boxShadow:
+                                theme.palette.mode === "dark"
+                                  ? "0 4px 12px rgba(42, 74, 79, 0.4)"
+                                  : "0 4px 12px rgba(184, 218, 225, 0.3)",
+                            },
+                          }}
+                        />
+                      ))}
+                    </Stack>
+                  </Box>
+                )}
 
+                {/* 관심 분야 추가 입력 필드 */}
                 <Stack direction="row" spacing={1.5} alignItems="center">
                   <TextField
                     size="small"
@@ -351,6 +432,7 @@ const MyInfoEditPage = () => {
                   />
                   <IconButton
                     onClick={handleAddInterest}
+                    disabled={!interestInput.trim()}
                     sx={{
                       bgcolor:
                         theme.palette.mode === "dark" ? darkKeyColor : keyColor,
@@ -359,6 +441,10 @@ const MyInfoEditPage = () => {
                         bgcolor:
                           theme.palette.mode === "dark" ? "#1a3b40" : "#a5d1d8",
                         transform: "scale(1.05)",
+                      },
+                      "&:disabled": {
+                        bgcolor: theme.palette.action.disabledBackground,
+                        color: theme.palette.action.disabled,
                       },
                       transition: "all 0.2s ease",
                     }}
@@ -369,7 +455,7 @@ const MyInfoEditPage = () => {
               </Paper>
             </Grow>
 
-            {/* 소셜 미디어 링크 */}
+            {/* 소셜 미디어 링크 섹션 */}
             <Grow in timeout={1400}>
               <Paper
                 elevation={0}
@@ -415,39 +501,62 @@ const MyInfoEditPage = () => {
                 </Typography>
 
                 <Stack spacing={2.5}>
+                  {/* 소셜 링크 입력 필드들 */}
                   {socialLinks.map((link, index) => (
-                    <TextField
+                    <Stack
                       key={index}
-                      fullWidth
-                      placeholder="Github, Blog, LinkedIn 등의 링크를 입력하세요"
-                      value={link}
-                      onChange={(e) =>
-                        handleSocialLinkChange(index, e.target.value)
-                      }
-                      variant="outlined"
-                      size="small"
-                      sx={{
-                        "& .MuiOutlinedInput-root": {
-                          borderRadius: 2,
-                          bgcolor:
-                            theme.palette.mode === "dark"
-                              ? theme.palette.background.default
-                              : lightKeyColor,
-                          transition: "all 0.2s ease",
-                          "&:hover": {
-                            "& > fieldset": {
-                              borderColor: keyColor,
+                      direction="row"
+                      spacing={1}
+                      alignItems="center"
+                    >
+                      <TextField
+                        fullWidth
+                        placeholder="Github, Blog, LinkedIn 등의 링크를 입력하세요"
+                        value={link}
+                        onChange={(e) =>
+                          handleSocialLinkChange(index, e.target.value)
+                        }
+                        variant="outlined"
+                        size="small"
+                        sx={{
+                          "& .MuiOutlinedInput-root": {
+                            borderRadius: 2,
+                            bgcolor:
+                              theme.palette.mode === "dark"
+                                ? theme.palette.background.default
+                                : lightKeyColor,
+                            transition: "all 0.2s ease",
+                            "&:hover": {
+                              "& > fieldset": {
+                                borderColor: keyColor,
+                              },
+                            },
+                            "&.Mui-focused": {
+                              "& > fieldset": {
+                                borderColor: keyColor,
+                              },
                             },
                           },
-                          "&.Mui-focused": {
-                            "& > fieldset": {
-                              borderColor: keyColor,
+                        }}
+                      />
+                      {/* 소셜 링크 제거 버튼 (2개 이상일 때만 표시) */}
+                      {socialLinks.length > 1 && (
+                        <IconButton
+                          onClick={() => handleRemoveSocialLink(index)}
+                          size="small"
+                          sx={{
+                            color: theme.palette.error.main,
+                            "&:hover": {
+                              bgcolor: theme.palette.error.main + "20",
                             },
-                          },
-                        },
-                      }}
-                    />
+                          }}
+                        >
+                          ×
+                        </IconButton>
+                      )}
+                    </Stack>
                   ))}
+                  {/* 소셜 링크 추가 버튼 */}
                   <Button
                     onClick={handleAddSocialLink}
                     variant="outlined"
@@ -481,7 +590,7 @@ const MyInfoEditPage = () => {
               </Paper>
             </Grow>
 
-            {/* 저장 버튼 */}
+            {/* 저장 버튼 섹션 */}
             <Grow in timeout={1800}>
               <Box textAlign="center" mb={5}>
                 <Button
@@ -521,7 +630,8 @@ const MyInfoEditPage = () => {
                     },
                   }}
                 >
-                  저장하기
+                  {/* 등록/수정 상태에 따른 버튼 텍스트 변경 */}
+                  {myInfo ? "수정하기" : "저장하기"}
                 </Button>
               </Box>
             </Grow>
