@@ -171,7 +171,7 @@ const MyInfoEditPage = () => {
       <ComponentWrapper>
         <Fade in timeout={800}>
           <Box>
-            {/* 헤더 섹션 - 등록/수정 상태에 따라 텍스트 변경 */}
+            {/* 헤더 섹션 - component separation 대기 */}
             <Box
               sx={{
                 background: gradientBg,
@@ -210,7 +210,7 @@ const MyInfoEditPage = () => {
               </Typography>
             </Box>
 
-            {/* 프로필 섹션 - 아바타와 직업 입력 */}
+            {/* 프로필 섹션 - component separation 대기 */}
             <Grow in timeout={1000}>
               <Paper
                 elevation={0}
@@ -235,7 +235,6 @@ const MyInfoEditPage = () => {
               >
                 <Stack direction="row" spacing={4} alignItems="center">
                   <Box position="relative">
-                    {/* 아바타 - 현재는 하드코딩 */}
                     <Avatar
                       sx={{
                         width: 100,
@@ -255,10 +254,9 @@ const MyInfoEditPage = () => {
                       // src={myInfo?.profileImage || "/default-profile.png"}
                       alt="Profile"
                     >
-                      {/* 사용자 이름의 첫 글자 표시 */}
                       {userInfo?.name?.charAt(0)?.toUpperCase() || "U"}
                     </Avatar>
-                    {/* 아바타 등록 버튼 - 현재는 동작 X */}
+
                     <IconButton
                       sx={{
                         position: "absolute",
@@ -314,7 +312,7 @@ const MyInfoEditPage = () => {
               </Paper>
             </Grow>
 
-            {/* 관심 분야 섹션 */}
+            {/* 관심 분야 섹션 - component separation 대기 */}
             <Grow in timeout={1200}>
               <Paper
                 elevation={0}
@@ -359,7 +357,6 @@ const MyInfoEditPage = () => {
                   관심 분야
                 </Typography>
 
-                {/* 등록된 관심 분야 칩 목록 표시 */}
                 {interests.length > 0 && (
                   <Box sx={{ mb: 3 }}>
                     <Stack
@@ -401,7 +398,6 @@ const MyInfoEditPage = () => {
                   </Box>
                 )}
 
-                {/* 관심 분야 추가 입력 필드 */}
                 <Stack direction="row" spacing={1.5} alignItems="center">
                   <TextField
                     size="small"
@@ -455,7 +451,7 @@ const MyInfoEditPage = () => {
               </Paper>
             </Grow>
 
-            {/* 소셜 미디어 링크 섹션 */}
+            {/* 소셜 미디어 링크 섹션 - component separation 대기 */}
             <Grow in timeout={1400}>
               <Paper
                 elevation={0}
@@ -501,7 +497,6 @@ const MyInfoEditPage = () => {
                 </Typography>
 
                 <Stack spacing={2.5}>
-                  {/* 소셜 링크 입력 필드들 */}
                   {socialLinks.map((link, index) => (
                     <Stack
                       key={index}
@@ -539,7 +534,7 @@ const MyInfoEditPage = () => {
                           },
                         }}
                       />
-                      {/* 소셜 링크 제거 버튼 (2개 이상일 때만 표시) */}
+
                       {socialLinks.length > 1 && (
                         <IconButton
                           onClick={() => handleRemoveSocialLink(index)}
@@ -556,7 +551,7 @@ const MyInfoEditPage = () => {
                       )}
                     </Stack>
                   ))}
-                  {/* 소셜 링크 추가 버튼 */}
+
                   <Button
                     onClick={handleAddSocialLink}
                     variant="outlined"
@@ -590,7 +585,7 @@ const MyInfoEditPage = () => {
               </Paper>
             </Grow>
 
-            {/* 저장 버튼 섹션 */}
+            {/* 저장 버튼 섹션 - component separation 대기 */}
             <Grow in timeout={1800}>
               <Box textAlign="center" mb={5}>
                 <Button
@@ -630,7 +625,6 @@ const MyInfoEditPage = () => {
                     },
                   }}
                 >
-                  {/* 등록/수정 상태에 따른 버튼 텍스트 변경 */}
                   {myInfo ? "수정하기" : "저장하기"}
                 </Button>
               </Box>
