@@ -19,6 +19,7 @@ import { useState } from "react";
 import { realUserInfo } from "@atom/auth";
 import { useAtom } from "jotai";
 import axios from "axios";
+import useFetchMyInfo from "@components/my/hooks/useFetchMyInfo";
 
 const keyColor = "#b8dae1";
 const lightKeyColor = "#f0f8fa";
@@ -39,11 +40,14 @@ const MyInfoEditPage = () => {
   // 유저 전역 상태
   const [userInfo] = useAtom(realUserInfo);
   const userId = userInfo?.id;
-  // my info 상태 정의
+
+  // 프로필 정보 가져오기 훅 적용
+  const myInfo = useFetchMyInfo(userInfo?.id);
 
   // 상태 로깅
   console.log(userId);
   console.log({ job, interests, socialLinks, userId });
+  console.log("프로필 정보 확인: ", myInfo);
 
   // 관심 분야 추가 핸들러
   const handleAddInterest = () => {
