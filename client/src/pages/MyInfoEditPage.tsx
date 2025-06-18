@@ -20,7 +20,8 @@ import { useState, useEffect } from "react";
 import { realUserInfo } from "@atom/auth";
 import { useAtom } from "jotai";
 import axios from "axios";
-import useFetchMyInfo from "@components/my/hooks/useFetchMyInfo";
+import useFetchMyInfo from "@components/my-info/hooks/useFetchMyInfo";
+import { MyInfoHeader } from "@components/my-info";
 
 const keyColor = "#b8dae1";
 const lightKeyColor = "#f0f8fa";
@@ -172,43 +173,7 @@ const MyInfoEditPage = () => {
         <Fade in timeout={800}>
           <Box>
             {/* 헤더 섹션 - component separation 대기 */}
-            <Box
-              sx={{
-                background: gradientBg,
-                borderRadius: 3,
-                p: 4,
-                mb: 4,
-                color: "white",
-                textAlign: "center",
-                ...(theme.palette.mode === "dark" && {
-                  background: `linear-gradient(135deg, ${darkKeyColor} 0%, #1a3b40 100%)`,
-                  border: `1px solid ${theme.palette.divider}`,
-                }),
-              }}
-            >
-              <Typography
-                variant="h4"
-                fontWeight="700"
-                sx={{
-                  textShadow: "0 2px 4px rgba(0,0,0,0.3)",
-                  letterSpacing: "0.5px",
-                }}
-              >
-                {myInfo ? "내 정보 수정" : "내 정보 등록"}
-              </Typography>
-              <Typography
-                variant="body1"
-                sx={{
-                  mt: 1,
-                  opacity: 0.9,
-                  fontWeight: 300,
-                }}
-              >
-                {myInfo
-                  ? "프로필 정보를 업데이트하세요"
-                  : "프로필 정보를 등록하세요"}
-              </Typography>
-            </Box>
+            <MyInfoHeader />
 
             {/* 프로필 섹션 - component separation 대기 */}
             <Grow in timeout={1000}>

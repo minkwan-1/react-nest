@@ -6,7 +6,7 @@ import MyInfo from "./MyInfo";
 import { useNavigate } from "react-router-dom";
 import { useAtom } from "jotai";
 import { realUserInfo } from "@atom/auth";
-import useFetchMyInfo from "./hooks/useFetchMyInfo";
+import useFetchMyInfo from "../my-info/hooks/useFetchMyInfo";
 
 const LeftContentArea = () => {
   const theme = useTheme();
