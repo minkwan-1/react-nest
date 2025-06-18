@@ -1,12 +1,5 @@
 import { PageContainer, ComponentWrapper } from "@components/layout/common";
-import {
-  Box,
-  Button,
-  useTheme,
-  Fade,
-  Grow,
-  CircularProgress,
-} from "@mui/material";
+import { Box, Fade, CircularProgress } from "@mui/material";
 import { useState, useEffect } from "react";
 import { realUserInfo } from "@atom/auth";
 import { useAtom } from "jotai";
@@ -17,11 +10,10 @@ import {
   ProfileEditSection,
   InterestsSection,
   SocialMediaSection,
+  SaveButton,
 } from "@components/my-info";
 
 const keyColor = "#b8dae1";
-const darkKeyColor = "#2a4a4f";
-const gradientBg = "linear-gradient(135deg, #b8dae1 0%, #9bc5cc 100%)";
 
 // interface MyInfoType {
 //   id: string;
@@ -34,8 +26,6 @@ const gradientBg = "linear-gradient(135deg, #b8dae1 0%, #9bc5cc 100%)";
 // }
 
 const MyInfoEditPage = () => {
-  const theme = useTheme();
-
   // 유저 전역 상태
   const [userInfo] = useAtom(realUserInfo);
   const userId = userInfo?.id;
@@ -191,49 +181,7 @@ const MyInfoEditPage = () => {
             />
 
             {/* 저장 버튼 섹션 - component separation 대기 */}
-            <Grow in timeout={1800}>
-              <Box textAlign="center" mb={5}>
-                <Button
-                  onClick={handleSave}
-                  variant="contained"
-                  size="large"
-                  sx={{
-                    background:
-                      theme.palette.mode === "dark"
-                        ? `linear-gradient(135deg, ${darkKeyColor} 0%, #1a3b40 100%)`
-                        : gradientBg,
-                    color: "white",
-                    fontWeight: "600",
-                    fontSize: "1.1rem",
-                    px: 6,
-                    py: 1.5,
-                    borderRadius: 3,
-                    textTransform: "none",
-                    boxShadow:
-                      theme.palette.mode === "dark"
-                        ? "0 4px 20px rgba(42, 74, 79, 0.4)"
-                        : "0 4px 20px rgba(184, 218, 225, 0.3)",
-                    transition: "all 0.3s ease",
-                    "&:hover": {
-                      background:
-                        theme.palette.mode === "dark"
-                          ? "linear-gradient(135deg, #1a3b40 0%, #0f2b30 100%)"
-                          : "linear-gradient(135deg, #a5d1d8 0%, #8bc0c7 100%)",
-                      transform: "translateY(-2px)",
-                      boxShadow:
-                        theme.palette.mode === "dark"
-                          ? "0 6px 25px rgba(42, 74, 79, 0.5)"
-                          : "0 6px 25px rgba(184, 218, 225, 0.4)",
-                    },
-                    "&:active": {
-                      transform: "translateY(0px)",
-                    },
-                  }}
-                >
-                  {myInfo ? "수정하기" : "저장하기"}
-                </Button>
-              </Box>
-            </Grow>
+            <SaveButton handleSave={handleSave} />
           </Box>
         </Fade>
       </ComponentWrapper>
