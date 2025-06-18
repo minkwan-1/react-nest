@@ -1,19 +1,27 @@
 import { Grow, Box, Button, useTheme } from "@mui/material";
-import { useAtom } from "jotai";
-import { realUserInfo } from "@atom/auth";
-import useFetchMyInfo from "./hooks/useFetchMyInfo";
 
 const darkKeyColor = "#2a4a4f";
 const gradientBg = "linear-gradient(135deg, #b8dae1 0%, #9bc5cc 100%)";
 
-interface SaveButtonProps {
-  handleSave: () => void;
+// MyInfo 타입 정의
+interface MyInfoType {
+  id: string;
+  userId: string;
+  job: string;
+  interests: string[];
+  socialLinks: string[];
+  createdAt: string;
+  updatedAt: string;
 }
 
-const SaveButton = ({ handleSave }: SaveButtonProps) => {
+// Props 타입 정의
+interface SaveButtonProps {
+  handleSave: () => Promise<void>; // Promise<void>로 수정
+  myInfo: MyInfoType | null;
+}
+
+const SaveButton = ({ handleSave, myInfo }: SaveButtonProps) => {
   const theme = useTheme();
-  const [userInfo] = useAtom(realUserInfo);
-  const myInfo = useFetchMyInfo(userInfo?.id);
 
   return (
     <Grow in timeout={1800}>
