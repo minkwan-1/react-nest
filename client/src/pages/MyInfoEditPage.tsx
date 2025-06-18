@@ -1,15 +1,14 @@
 import { PageContainer, ComponentWrapper } from "@components/layout/common";
-import { Box, Fade, CircularProgress } from "@mui/material";
+import { Box, Fade } from "@mui/material";
 import {
   MyInfoHeader,
   ProfileEditSection,
   InterestsSection,
   SocialMediaSection,
   SaveButton,
+  LoadingComponent,
 } from "@components/my-info";
 import useMyInfoForm from "@components/my-info/hooks/useMyInfoForm";
-
-const keyColor = "#b8dae1";
 
 const MyInfoEditPage = () => {
   const {
@@ -34,20 +33,7 @@ const MyInfoEditPage = () => {
 
   // 로딩 상태 처리
   if (isLoading) {
-    return (
-      <PageContainer>
-        <ComponentWrapper>
-          <Box
-            display="flex"
-            justifyContent="center"
-            alignItems="center"
-            minHeight="400px"
-          >
-            <CircularProgress sx={{ color: keyColor }} />
-          </Box>
-        </ComponentWrapper>
-      </PageContainer>
-    );
+    return <LoadingComponent />;
   }
 
   return (

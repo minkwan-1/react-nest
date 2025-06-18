@@ -3,6 +3,7 @@ import ProfileEditSection from "./ProfileEditSection";
 import InterestsSection from "./InterestsSection";
 import SocialMediaSection from "./SocialMediaSection";
 import SaveButton from "./SaveButton";
+import LoadingComponent from "./LoadingComponent";
 
 export {
   MyInfoHeader,
@@ -10,4 +11,5 @@ export {
   InterestsSection,
   SocialMediaSection,
   SaveButton,
+  LoadingComponent,
 };
