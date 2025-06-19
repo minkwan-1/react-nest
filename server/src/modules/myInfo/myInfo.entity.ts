@@ -27,6 +27,10 @@ export class MyInfo {
   @Column({ type: 'text', array: true, default: [] })
   socialLinks: string[];
 
+  // 프로필 이미지 URL 추가
+  @Column({ type: 'varchar', length: 500, nullable: true })
+  profileImageUrl: string;
+
   // 생성일시
   @CreateDateColumn()
   createdAt: Date;
