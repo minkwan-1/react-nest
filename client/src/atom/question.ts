@@ -5,14 +5,15 @@ export interface Question {
   title: string;
   content: string;
   tags: string[];
+  createdAt: string;
+  user: {
+    id: string;
+    email: string;
+    name: string;
+    phoneNumber: string;
+    createdAt: string;
+  };
   userId: string;
-  askedBy: string;
-  createdAt: Date;
-  updatedAt: Date;
-  upVoteCount: number;
-  downVoteCount: number;
-  answerCount: number;
-  viewCount: number;
 }
 
 export const questionsAtom = atomWithStorage<Question[]>("questions", []);

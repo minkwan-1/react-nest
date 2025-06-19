@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import {
   Box,
@@ -7,17 +7,14 @@ import {
   Chip,
   Avatar,
   Paper,
-  Stack,
   alpha,
   Divider,
 } from "@mui/material";
-
-import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import VisibilityIcon from "@mui/icons-material/Visibility";
 import SmartToyIcon from "@mui/icons-material/SmartToy";
 
 import { useAtom } from "jotai";
 import { questionsAtom } from "@atom/question";
+import { DetailQuestionTitle } from "./main-content";
 
 // 테마 색상
 const themeColors = {
@@ -73,12 +70,17 @@ const MainContent = () => {
   const [aiAnswer, setAiAnswer] = useState<string>("");
   const [aiLoading, setAiLoading] = useState(false);
   const [aiAnswerGenerated, setAiAnswerGenerated] = useState(false);
+  const [aiError, setAiError] = useState<string | null>(null);
 
   console.log("상세 페이지의 메인 컨텐츠에서 보여줄 데이터: ", questions);
 
-  // AI 답변 생성 함수
-  const generateAiAnswer = async (questionData: Question) => {
+  // Gemini AI 답변 생성 함수 - useCallback으로 메모이제이션
+  const generateAiAnswer = useCallback(async (questionData: Question) => {
+    console.log("AI 답변 생성 시작:", questionData.id);
     setAiLoading(true);
+    setAiError(null);
+    setAiAnswerGenerated(false);
+
     try {
       const response = await fetch(
         `http://localhost:3000/api/ai-answer/${questionData.id}`,
@@ -94,46 +96,73 @@ const MainContent = () => {
         }
       );
 
+      console.log("AI API 응답 상태:", response.status);
+
       if (response.ok) {
         const data = await response.json();
+        console.log("AI 답변 생성 성공:", data);
         setAiAnswer(data.answer);
         setAiAnswerGenerated(true);
       } else {
-        throw new Error("AI 답변 생성에 실패했습니다.");
+        const errorData = await response.json().catch(() => ({}));
+        console.error("AI API 오류 응답:", errorData);
+        throw new Error(`서버 오류: ${response.status} ${response.statusText}`);
       }
     } catch (error) {
-      console.error("AI 답변 생성 오류:", error);
+      console.error("Gemini AI 답변 생성 오류:", error);
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "알 수 없는 오류가 발생했습니다.";
+
+      setAiError(errorMessage);
       setAiAnswer(
-        "죄송합니다. AI 답변을 생성하는 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요."
+        "죄송합니다. Gemini AI 답변을 생성하는 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요."
       );
       setAiAnswerGenerated(true);
     } finally {
       setAiLoading(false);
     }
-  };
+  }, []);
 
+  // 질문 데이터 로드 및 AI 답변 자동 생성
   useEffect(() => {
+    console.log(
+      "useEffect 실행 - id:",
+      id,
+      "questions 길이:",
+      questions?.length
+    );
+
     if (!id || !questions || questions.length === 0) {
+      console.log("조건 불만족 - 로딩 완료");
       setLoading(false);
       return;
     }
 
     // URL의 id와 일치하는 질문 찾기
     const foundQuestion = questions.find((q) => q.id === parseInt(id));
+    console.log("찾은 질문:", foundQuestion);
 
     // API 호출 시뮬레이션 (실제로는 이미 데이터가 있으므로 짧은 딜레이만)
     const timer = setTimeout(() => {
       setQuestion(foundQuestion || null);
       setLoading(false);
 
-      // 질문이 있으면 자동으로 AI 답변 생성
+      // 질문이 있으면 자동으로 Gemini AI 답변 생성
       if (foundQuestion) {
+        console.log("질문 발견 - AI 답변 생성 시작");
         generateAiAnswer(foundQuestion);
+      } else {
+        console.log("질문을 찾을 수 없음");
       }
     }, 300);
 
-    return () => clearTimeout(timer);
-  }, [id, questions]);
+    return () => {
+      console.log("useEffect 클린업");
+      clearTimeout(timer);
+    };
+  }, [id, questions, generateAiAnswer]);
 
   // 코드 하이라이팅 및 이미지 스타일링 적용
   useEffect(() => {
@@ -165,17 +194,6 @@ const MainContent = () => {
       });
     }
   }, [loading, question]);
-
-  const formatDate = (dateString: string) => {
-    const options: Intl.DateTimeFormatOptions = {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    };
-    return new Date(dateString).toLocaleDateString("ko-KR", options);
-  };
 
   // 사용자 아바타 생성 함수 (이름 첫 글자 사용)
   const generateAvatarText = (name: string) => {
@@ -221,48 +239,7 @@ const MainContent = () => {
       ) : (
         <>
           {/* 질문 헤더 */}
-          <Box
-            sx={{
-              padding: "0 0 24px",
-              borderBottom: `1px solid ${themeColors.borderLight}`,
-            }}
-          >
-            <Typography
-              variant="h4"
-              component="h1"
-              sx={{
-                fontWeight: 700,
-                color: themeColors.textPrimary,
-                mb: 2,
-                fontSize: { xs: "1.5rem", md: "2rem" },
-              }}
-            >
-              {question.title}
-            </Typography>
-
-            <Stack
-              direction="row"
-              spacing={3}
-              sx={{
-                color: themeColors.textSecondary,
-                flexWrap: "wrap",
-                gap: 1,
-              }}
-            >
-              <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-                <AccessTimeIcon fontSize="small" />
-                <Typography variant="body2">
-                  {formatDate(question.user.createdAt)}
-                </Typography>
-              </Box>
-              <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-                <VisibilityIcon fontSize="small" />
-                <Typography variant="body2">
-                  조회 {Math.floor(Math.random() * 500) + 50}회
-                </Typography>
-              </Box>
-            </Stack>
-          </Box>
+          <DetailQuestionTitle />
 
           {/* 질문 내용 */}
           <Box sx={{ mt: 3 }}>
@@ -386,10 +363,11 @@ const MainContent = () => {
             </Box>
           </Box>
 
-          {/* AI 답변 섹션 */}
+          {/* Gemini AI 답변 섹션 */}
           <Box sx={{ mt: 4 }}>
             <Divider sx={{ mb: 3 }} />
 
+            {/* AI 답변 로딩 중 */}
             {aiLoading && (
               <Paper
                 elevation={0}
@@ -412,11 +390,12 @@ const MainContent = () => {
                     fontWeight: 600,
                   }}
                 >
-                  AI가 답변을 생성하고 있습니다...
+                  Gemini AI가 답변을 생성하고 있습니다...
                 </Typography>
               </Paper>
             )}
 
+            {/* AI 답변 완료 */}
             {aiAnswerGenerated && !aiLoading && (
               <Paper
                 elevation={0}
@@ -449,8 +428,16 @@ const MainContent = () => {
                       fontWeight: 600,
                     }}
                   >
-                    AI 답변
+                    Gemini AI 답변
                   </Typography>
+                  {aiError && (
+                    <Chip
+                      label="오류 발생"
+                      size="small"
+                      color="error"
+                      sx={{ ml: 1 }}
+                    />
+                  )}
                 </Box>
 
                 <Typography
@@ -478,9 +465,9 @@ const MainContent = () => {
                       fontStyle: "italic",
                     }}
                   >
-                    * 이 답변은 AI에 의해 생성되었습니다. 참고용으로만
-                    사용하시고, 실제 개발 시에는 공식 문서나 신뢰할 수 있는
-                    자료를 확인해주세요.
+                    * 이 답변은 Google Gemini AI에 의해 생성되었습니다.
+                    참고용으로만 사용하시고, 실제 개발 시에는 공식 문서나 신뢰할
+                    수 있는 자료를 확인해주세요.
                   </Typography>
                 </Box>
               </Paper>

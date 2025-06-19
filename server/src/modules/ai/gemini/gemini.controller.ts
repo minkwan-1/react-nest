@@ -1,13 +1,62 @@
-import { Controller, Post, Body } from '@nestjs/common';
-import { OpenAIService } from './gemini.service';
+import {
+  Controller,
+  Post,
+  Body,
+  Param,
+  HttpException,
+  HttpStatus,
+} from '@nestjs/common';
+import { GeminiService } from './gemini.service';
 
-@Controller('api/ask-ai')
-export class OpenAIController {
-  constructor(private readonly openAIService: OpenAIService) {}
+export interface GenerateAnswerDto {
+  title: string;
+  content: string;
+}
 
-  @Post()
-  async askAI(@Body('prompt') prompt: string): Promise<{ result: string }> {
-    const result = await this.openAIService.generateContent(prompt);
-    return { result };
+export interface GenerateAnswerResponse {
+  answer: string;
+  questionId: string;
+  generatedAt: string;
+}
+
+@Controller('ai-answer')
+export class GeminiController {
+  constructor(private readonly geminiService: GeminiService) {}
+
+  @Post(':questionId')
+  async generateAnswer(
+    @Param('questionId') questionId: string,
+    @Body() body: GenerateAnswerDto,
+  ): Promise<GenerateAnswerResponse> {
+    try {
+      if (!body.title || !body.content) {
+        throw new HttpException(
+          '질문 제목과 내용이 필요합니다.',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+
+      const answer = await this.geminiService.generateAnswer(
+        body.title,
+        body.content,
+      );
+
+      return {
+        answer,
+        questionId,
+        generatedAt: new Date().toISOString(),
+      };
+    } catch (error) {
+      console.error('AI 답변 생성 컨트롤러 오류:', error);
+
+      if (error instanceof HttpException) {
+        throw error;
+      }
+
+      throw new HttpException(
+        'AI 답변 생성 중 오류가 발생했습니다.',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 }

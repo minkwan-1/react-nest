@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
-import { OpenAIService } from './gemini.service';
-import { OpenAIController } from './gemini.controller';
+import { GeminiService } from './gemini.service';
+import { GeminiController } from './gemini.controller';
 
 @Module({
-  controllers: [OpenAIController],
-  providers: [OpenAIService],
+  controllers: [GeminiController],
+  providers: [GeminiService],
+  exports: [GeminiService],
 })
-export class OpenAIModule {}
+export class GeminiModule {}
