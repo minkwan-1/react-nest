@@ -1,10 +1,6 @@
 import { Box } from "@mui/material";
 import { PageContainer } from "@components/layout/common";
-import {
-  SectionDivider,
-  MainContent,
-  SideContent,
-} from "@components/detail/index";
+import { MainContent } from "@components/detail/index";
 
 const QuestionDetailPage = () => {
   return (
@@ -12,26 +8,30 @@ const QuestionDetailPage = () => {
       <Box
         sx={{
           display: "flex",
-          padding: 3,
-          maxWidth: "1200px",
+          flexDirection: { xs: "column", md: "row" },
+          gap: { xs: 2, md: 0 },
+          maxWidth: "1000px",
           mx: "auto",
           width: "100%",
-          height: "calc(100vh - 80px)",
+          minHeight: "calc(100vh - 80px)",
+          height: { xs: "auto", md: "calc(100vh - 80px)" },
           overflow: "hidden",
           position: "relative",
+          // p: { xs: 2, md: 0 },
+          padding: "30px",
         }}
       >
-        {/* 좌우 구분 디바이더 */}
-        <SectionDivider />
-
         {/* 메인 컨텐츠 영역 */}
-        <MainContent />
-
-        {/* 사이드 컨텐츠 */}
-        <SideContent />
+        <Box
+          sx={{
+            flex: { xs: "1 1 auto", md: "1.5 1 0%" },
+            minWidth: 0, // flex 아이템 축소 허용
+            order: { xs: 1, md: 1 },
+          }}
+        >
+          <MainContent />
+        </Box>
       </Box>
-
-      {/* 글로벌 작성 버튼 (우측 하단에 고정) */}
     </PageContainer>
   );
 };

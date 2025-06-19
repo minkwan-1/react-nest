@@ -8,12 +8,16 @@ import {
   Paper,
   alpha,
   Divider,
+  Button,
 } from "@mui/material";
 import SmartToyIcon from "@mui/icons-material/SmartToy";
 
 import { useAtom } from "jotai";
 import { questionsAtom } from "@atom/question";
 import { DetailQuestionTitle, DetailQuestionContent } from "./main-content";
+
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
 // 테마 색상
 const themeColors = {
@@ -65,17 +69,28 @@ const MainContent = () => {
   const [questions] = useAtom(questionsAtom);
   const [loading, setLoading] = useState(true);
 
+  // 사용자 답변 작성 상태
+  const [userAnswer, setUserAnswer] = useState<string>("");
+
   // AI 답변 관련 상태
   const [aiAnswer, setAiAnswer] = useState<string>("");
   const [aiLoading, setAiLoading] = useState(false);
   const [aiAnswerGenerated, setAiAnswerGenerated] = useState(false);
   const [aiError, setAiError] = useState<string | null>(null);
 
-  console.log("상세 페이지의 메인 컨텐츠에서 보여줄 데이터: ", questions);
+  // ReactQuill 툴바 설정
+  const quillModules = {
+    toolbar: [
+      [{ header: [1, 2, 3, false] }],
+      ["bold", "italic", "underline", "strike"],
+      [{ list: "ordered" }, { list: "bullet" }],
+      ["link", "image"],
+      ["clean"],
+    ],
+  };
 
-  // Gemini AI 답변 생성 함수 - useCallback으로 메모이제이션
+  // AI 답변 생성 함수
   const generateAiAnswer = useCallback(async (questionData: Question) => {
-    console.log("AI 답변 생성 시작:", questionData.id);
     setAiLoading(true);
     setAiError(null);
     setAiAnswerGenerated(false);
@@ -95,20 +110,15 @@ const MainContent = () => {
         }
       );
 
-      console.log("AI API 응답 상태:", response.status);
-
       if (response.ok) {
         const data = await response.json();
-        console.log("AI 답변 생성 성공:", data);
         setAiAnswer(data.answer);
         setAiAnswerGenerated(true);
       } else {
-        const errorData = await response.json().catch(() => ({}));
-        console.error("AI API 오류 응답:", errorData);
+        // const errorData = await response.json().catch(() => ({}));
         throw new Error(`서버 오류: ${response.status} ${response.statusText}`);
       }
     } catch (error) {
-      console.error("Gemini AI 답변 생성 오류:", error);
       const errorMessage =
         error instanceof Error
           ? error.message
@@ -116,7 +126,7 @@ const MainContent = () => {
 
       setAiError(errorMessage);
       setAiAnswer(
-        "죄송합니다. Gemini AI 답변을 생성하는 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요."
+        "죄송합니다. AI 답변을 생성하는 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요."
       );
       setAiAnswerGenerated(true);
     } finally {
@@ -124,49 +134,28 @@ const MainContent = () => {
     }
   }, []);
 
-  // 질문 데이터 로드 및 AI 답변 자동 생성
   useEffect(() => {
-    console.log(
-      "useEffect 실행 - id:",
-      id,
-      "questions 길이:",
-      questions?.length
-    );
-
     if (!id || !questions || questions.length === 0) {
-      console.log("조건 불만족 - 로딩 완료");
       setLoading(false);
       return;
     }
 
-    // URL의 id와 일치하는 질문 찾기
     const foundQuestion = questions.find((q) => q.id === parseInt(id));
-    console.log("찾은 질문:", foundQuestion);
 
-    // API 호출 시뮬레이션 (실제로는 이미 데이터가 있으므로 짧은 딜레이만)
     const timer = setTimeout(() => {
       setQuestion(foundQuestion || null);
       setLoading(false);
 
-      // 질문이 있으면 자동으로 Gemini AI 답변 생성
       if (foundQuestion) {
-        console.log("질문 발견 - AI 답변 생성 시작");
         generateAiAnswer(foundQuestion);
-      } else {
-        console.log("질문을 찾을 수 없음");
       }
     }, 300);
 
-    return () => {
-      console.log("useEffect 클린업");
-      clearTimeout(timer);
-    };
+    return () => clearTimeout(timer);
   }, [id, questions, generateAiAnswer]);
 
-  // 코드 하이라이팅 및 이미지 스타일링 적용
   useEffect(() => {
     if (!loading && question) {
-      // 코드 하이라이팅 적용
       document.querySelectorAll("pre code").forEach((block) => {
         if (block && block.parentElement) {
           block.parentElement.style.background = themeColors.code.bg;
@@ -182,7 +171,6 @@ const MainContent = () => {
         }
       });
 
-      // 이미지 스타일링 적용
       document.querySelectorAll("img").forEach((img) => {
         img.style.maxWidth = "100%";
         img.style.height = "auto";
@@ -198,7 +186,7 @@ const MainContent = () => {
     <Box
       sx={{
         flex: 1.5,
-        pr: { xs: "0", sm: "0", md: "3" },
+        pr: { xs: "0", sm: "0", md: "2" },
         overflowY: "auto",
         height: "100%",
         scrollbarWidth: "thin",
@@ -238,11 +226,31 @@ const MainContent = () => {
           {/* 질문 내용 */}
           <DetailQuestionContent />
 
-          {/* Gemini AI 답변 섹션 */}
-          <Box sx={{ mt: 4 }}>
-            <Divider sx={{ mb: 3 }} />
+          {/* 사용자 답변 작성 영역 */}
+          <Box sx={{ mt: 5 }}>
+            <Typography
+              variant="h6"
+              sx={{ mb: 2, color: themeColors.textPrimary }}
+            >
+              답변 작성
+            </Typography>
+            <ReactQuill
+              value={userAnswer}
+              onChange={setUserAnswer}
+              modules={quillModules}
+              theme="snow"
+              style={{ backgroundColor: "#fff", borderRadius: 8 }}
+            />
+            <Box sx={{ mt: 2, textAlign: "right" }}>
+              <Button variant="contained" sx={{ bgcolor: "#b8dae1" }}>
+                답변 등록
+              </Button>
+            </Box>
+          </Box>
 
-            {/* AI 답변 로딩 중 */}
+          {/* Gemini AI 답변 섹션 */}
+          <Box sx={{ mt: 6 }}>
+            <Divider sx={{ mb: 3 }} />
             {aiLoading && (
               <Paper
                 elevation={0}
@@ -270,7 +278,6 @@ const MainContent = () => {
               </Paper>
             )}
 
-            {/* AI 답변 완료 */}
             {aiAnswerGenerated && !aiLoading && (
               <Paper
                 elevation={0}
@@ -303,7 +310,7 @@ const MainContent = () => {
                       fontWeight: 600,
                     }}
                   >
-                    Gemini AI 답변
+                    AI 답변
                   </Typography>
                   {aiError && (
                     <Chip
