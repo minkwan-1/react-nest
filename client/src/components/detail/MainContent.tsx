@@ -9,6 +9,8 @@ import {
   alpha,
   Divider,
   Button,
+  Alert,
+  Snackbar,
 } from "@mui/material";
 import SmartToyIcon from "@mui/icons-material/SmartToy";
 
@@ -72,6 +74,11 @@ const MainContent = () => {
   // 사용자 답변 작성 상태
   const [userAnswer, setUserAnswer] = useState<string>("");
 
+  // 답변 등록 관련 상태
+  const [isSubmittingAnswer, setIsSubmittingAnswer] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [submitSuccess, setSubmitSuccess] = useState(false);
+
   // AI 답변 관련 상태
   const [aiAnswer, setAiAnswer] = useState<string>("");
   const [aiLoading, setAiLoading] = useState(false);
@@ -88,6 +95,55 @@ const MainContent = () => {
       ["clean"],
     ],
   };
+
+  // 답변 등록 함수
+  const handleSubmitAnswer = useCallback(async () => {
+    if (!userAnswer.trim() || !id) {
+      setSubmitError("답변 내용을 입력해주세요.");
+      return;
+    }
+
+    setIsSubmittingAnswer(true);
+    setSubmitError(null);
+
+    try {
+      const response = await fetch(`http://localhost:3000/api/answers`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          questionId: parseInt(id),
+          content: userAnswer,
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log("답변 등록 성공:", data);
+
+        // 성공 시 에디터 초기화 및 성공 메시지 표시
+        setUserAnswer("");
+        setSubmitSuccess(true);
+      } else {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(
+          errorData.message ||
+            `서버 오류: ${response.status} ${response.statusText}`
+        );
+      }
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "알 수 없는 오류가 발생했습니다.";
+
+      console.error("답변 등록 실패:", errorMessage);
+      setSubmitError(errorMessage);
+    } finally {
+      setIsSubmittingAnswer(false);
+    }
+  }, [userAnswer, id]);
 
   // AI 답변 생성 함수
   const generateAiAnswer = useCallback(async (questionData: Question) => {
@@ -115,7 +171,6 @@ const MainContent = () => {
         setAiAnswer(data.answer);
         setAiAnswerGenerated(true);
       } else {
-        // const errorData = await response.json().catch(() => ({}));
         throw new Error(`서버 오류: ${response.status} ${response.statusText}`);
       }
     } catch (error) {
@@ -133,6 +188,12 @@ const MainContent = () => {
       setAiLoading(false);
     }
   }, []);
+
+  // 성공/에러 스낵바 닫기 핸들러
+  const handleCloseSnackbar = () => {
+    setSubmitSuccess(false);
+    setSubmitError(null);
+  };
 
   useEffect(() => {
     if (!id || !questions || questions.length === 0) {
@@ -234,16 +295,50 @@ const MainContent = () => {
             >
               답변 작성
             </Typography>
+
+            {/* 에러 메시지 표시 */}
+            {submitError && (
+              <Alert severity="error" sx={{ mb: 2 }}>
+                {submitError}
+              </Alert>
+            )}
+
             <ReactQuill
               value={userAnswer}
               onChange={setUserAnswer}
               modules={quillModules}
               theme="snow"
-              style={{ backgroundColor: "#fff", borderRadius: 8 }}
+              style={{
+                backgroundColor: "#fff",
+                borderRadius: 8,
+                opacity: isSubmittingAnswer ? 0.6 : 1,
+              }}
+              readOnly={isSubmittingAnswer}
             />
+
             <Box sx={{ mt: 2, textAlign: "right" }}>
-              <Button variant="contained" sx={{ bgcolor: "#b8dae1" }}>
-                답변 등록
+              <Button
+                variant="contained"
+                sx={{
+                  bgcolor: "#b8dae1",
+                  "&:hover": {
+                    bgcolor: "#a0c9d1",
+                  },
+                  "&:disabled": {
+                    bgcolor: "#e0e0e0",
+                  },
+                }}
+                onClick={handleSubmitAnswer}
+                disabled={isSubmittingAnswer || !userAnswer.trim()}
+              >
+                {isSubmittingAnswer ? (
+                  <>
+                    <CircularProgress size={16} sx={{ mr: 1 }} />
+                    등록 중...
+                  </>
+                ) : (
+                  "답변 등록"
+                )}
               </Button>
             </Box>
           </Box>
@@ -355,6 +450,18 @@ const MainContent = () => {
               </Paper>
             )}
           </Box>
+
+          {/* 성공/에러 스낵바 */}
+          <Snackbar
+            open={submitSuccess}
+            autoHideDuration={3000}
+            onClose={handleCloseSnackbar}
+            anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+          >
+            <Alert onClose={handleCloseSnackbar} severity="success">
+              답변이 성공적으로 등록되었습니다!
+            </Alert>
+          </Snackbar>
         </>
       )}
     </Box>
