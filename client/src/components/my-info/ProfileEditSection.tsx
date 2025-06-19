@@ -11,6 +11,7 @@ import {
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
 import { useAtom } from "jotai";
 import { realUserInfo } from "@atom/auth";
+import React, { useRef, useState } from "react";
 
 const keyColor = "#b8dae1";
 const gradientBg = "linear-gradient(135deg, #b8dae1 0%, #9bc5cc 100%)";
@@ -23,6 +24,29 @@ interface ProfileEditSectionProps {
 const ProfileEditSection = ({ job, setJob }: ProfileEditSectionProps) => {
   const theme = useTheme();
   const [userInfo] = useAtom(realUserInfo);
+
+  // 추가
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+
+  // 추가
+  const handleCameraClick = () => {
+    console.log("아이콘 클릭 시 파일 input 열기");
+    fileInputRef?.current?.click();
+  };
+
+  // 추가
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log("선택한 이미지 파일 저장");
+    const file = e.target?.files?.[0];
+    if (file) {
+      setSelectedImage(file);
+      console.log("선택된 파일: ", file);
+    }
+  };
+
+  // 추가
+  console.log("선택된 이미지: ", selectedImage);
 
   return (
     <Grow in timeout={1000}>
@@ -71,7 +95,18 @@ const ProfileEditSection = ({ job, setJob }: ProfileEditSectionProps) => {
               {userInfo?.name?.charAt(0)?.toUpperCase() || "U"}
             </Avatar>
 
+            {/* 추가 */}
+            <input
+              type="file"
+              accept="image/*"
+              ref={fileInputRef}
+              style={{ display: "none" }}
+              onChange={handleFileChange}
+            />
+
             <IconButton
+              // 추가
+              onClick={handleCameraClick}
               sx={{
                 position: "absolute",
                 bottom: -5,
