@@ -1,3 +1,4 @@
 import DetailQuestionTitle from "./DetailQuestionTitle";
+import DetailQuestionContent from "./DetailQuestionContent";
 
-export { DetailQuestionTitle };
+export { DetailQuestionTitle, DetailQuestionContent };
