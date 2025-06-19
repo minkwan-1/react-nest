@@ -12,6 +12,7 @@ import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
 import { useAtom } from "jotai";
 import { realUserInfo } from "@atom/auth";
 import React, { useRef, useState } from "react";
+import axios from "axios";
 
 const keyColor = "#b8dae1";
 const gradientBg = "linear-gradient(135deg, #b8dae1 0%, #9bc5cc 100%)";
@@ -37,12 +38,30 @@ const ProfileEditSection = ({ job, setJob }: ProfileEditSectionProps) => {
   };
 
   // 추가
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  async function getPresignedUrl(
+    filename: string,
+    filetype: string
+  ): Promise<string> {
+    const response = await axios.get("url 추가 예정", {
+      params: { filename, type: filetype },
+    });
+    return response.data.url;
+  }
+
+  // 추가
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     console.log("선택한 이미지 파일 저장");
     const file = e.target?.files?.[0];
     if (file) {
       setSelectedImage(file);
       setPreviewUrl(URL.createObjectURL(file));
+
+      try {
+        const presignedUrl = await getPresignedUrl(file.name, file.type);
+        console.log("presigned URL:", presignedUrl);
+      } catch (err) {
+        console.error("Failed to get presigned URL", err);
+      }
       console.log("선택된 파일: ", file);
     }
   };
