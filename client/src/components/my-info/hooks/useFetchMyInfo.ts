@@ -7,6 +7,7 @@ interface MyInfoType {
   job: string;
   interests: string[];
   socialLinks: string[];
+  profileImageUrl: string;
   createdAt: string;
   updatedAt: string;
 }

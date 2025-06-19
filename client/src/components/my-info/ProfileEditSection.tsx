@@ -8,66 +8,38 @@ import {
   useTheme,
   TextField,
 } from "@mui/material";
-import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
+import PhotoCameraIcon from "@mui/icons-material/Add";
 import { useAtom } from "jotai";
 import { realUserInfo } from "@atom/auth";
-import React, { useRef, useState } from "react";
-import axios from "axios";
+import React from "react";
 
 const keyColor = "#b8dae1";
 const gradientBg = "linear-gradient(135deg, #b8dae1 0%, #9bc5cc 100%)";
 
 interface ProfileEditSectionProps {
+  // 기존 props
   job: string;
   setJob: (job: string) => void;
+
+  // 프로필 이미지 관련 props
+  fileInputRef: React.RefObject<HTMLInputElement>;
+  previewUrl: string | null;
+  isUploading: boolean;
+  handleCameraClick: () => void;
+  handleFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const ProfileEditSection = ({ job, setJob }: ProfileEditSectionProps) => {
+const ProfileEditSection = ({
+  job,
+  setJob,
+  fileInputRef,
+  previewUrl,
+  isUploading,
+  handleCameraClick,
+  handleFileChange,
+}: ProfileEditSectionProps) => {
   const theme = useTheme();
   const [userInfo] = useAtom(realUserInfo);
-
-  // 추가
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const [selectedImage, setSelectedImage] = useState<File | null>(null);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-
-  // 추가
-  const handleCameraClick = () => {
-    console.log("아이콘 클릭 시 파일 input 열기");
-    fileInputRef?.current?.click();
-  };
-
-  // 추가
-  async function getPresignedUrl(
-    filename: string,
-    filetype: string
-  ): Promise<string> {
-    const response = await axios.get("url 추가 예정", {
-      params: { filename, type: filetype },
-    });
-    return response.data.url;
-  }
-
-  // 추가
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log("선택한 이미지 파일 저장");
-    const file = e.target?.files?.[0];
-    if (file) {
-      setSelectedImage(file);
-      setPreviewUrl(URL.createObjectURL(file));
-
-      try {
-        const presignedUrl = await getPresignedUrl(file.name, file.type);
-        console.log("presigned URL:", presignedUrl);
-      } catch (err) {
-        console.error("Failed to get presigned URL", err);
-      }
-      console.log("선택된 파일: ", file);
-    }
-  };
-
-  // 추가
-  console.log("선택된 이미지: ", selectedImage);
 
   return (
     <Grow in timeout={1000}>
@@ -109,28 +81,27 @@ const ProfileEditSection = ({ job, setJob }: ProfileEditSectionProps) => {
                   transform: "scale(1.05)",
                   boxShadow: "0 6px 25px rgba(184, 218, 225, 0.4)",
                 },
+                // 업로드 중일 때 투명도 조절
+                opacity: isUploading ? 0.7 : 1,
               }}
-              // 추가
               src={previewUrl || undefined}
               alt="Profile"
             >
-              {/* 추가 */}
-              {!previewUrl &&
-                (userInfo?.name?.charAt(0)?.toUpperCase() || "U")}{" "}
+              {!previewUrl && (userInfo?.name?.charAt(0)?.toUpperCase() || "U")}
             </Avatar>
 
-            {/* 추가 */}
             <input
               type="file"
               accept="image/*"
               ref={fileInputRef}
               style={{ display: "none" }}
               onChange={handleFileChange}
+              disabled={isUploading}
             />
 
             <IconButton
-              // 추가
               onClick={handleCameraClick}
+              disabled={isUploading}
               sx={{
                 position: "absolute",
                 bottom: -5,
@@ -143,12 +114,37 @@ const ProfileEditSection = ({ job, setJob }: ProfileEditSectionProps) => {
                   bgcolor: "#a5d1d8",
                   transform: "scale(1.1)",
                 },
+                "&:disabled": {
+                  bgcolor: theme.palette.action.disabledBackground,
+                  color: theme.palette.action.disabled,
+                },
                 transition: "all 0.2s ease",
               }}
             >
               <PhotoCameraIcon fontSize="small" />
             </IconButton>
+
+            {/* 업로드 중 표시 */}
+            {isUploading && (
+              <Box
+                sx={{
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                  transform: "translate(-50%, -50%)",
+                  bgcolor: "rgba(0,0,0,0.5)",
+                  color: "white",
+                  px: 1,
+                  py: 0.5,
+                  borderRadius: 1,
+                  fontSize: "0.75rem",
+                }}
+              >
+                업로드 중...
+              </Box>
+            )}
           </Box>
+
           {/* job 입력 필드 */}
           <Box flex={1}>
             <Stack spacing={2.5}>

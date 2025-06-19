@@ -12,7 +12,7 @@ import useMyInfoForm from "@components/my-info/hooks/useMyInfoForm";
 
 const MyInfoEditPage = () => {
   const {
-    // 상태
+    // 기존 상태
     job,
     setJob,
     interests,
@@ -22,14 +22,26 @@ const MyInfoEditPage = () => {
     isLoading,
     myInfo,
 
-    // 핸들러
+    // 프로필 이미지 관련 상태
+    fileInputRef,
+    selectedImage,
+    previewUrl,
+    isUploading,
+
+    // 기존 핸들러
     handleAddInterest,
     handleDeleteInterest,
     handleSocialLinkChange,
     handleAddSocialLink,
     handleRemoveSocialLink,
     handleSave,
+
+    // 프로필 이미지 관련 핸들러
+    handleCameraClick,
+    handleFileChange,
   } = useMyInfoForm();
+
+  console.log(selectedImage);
 
   // 로딩 상태 처리
   if (isLoading) {
@@ -44,8 +56,16 @@ const MyInfoEditPage = () => {
             {/* 헤더 섹션 */}
             <MyInfoHeader />
 
-            {/* 프로필 섹션 */}
-            <ProfileEditSection job={job} setJob={setJob} />
+            {/* 프로필 섹션 - 프로필 이미지 관련 props 추가 */}
+            <ProfileEditSection
+              job={job}
+              setJob={setJob}
+              fileInputRef={fileInputRef}
+              previewUrl={previewUrl}
+              isUploading={isUploading}
+              handleCameraClick={handleCameraClick}
+              handleFileChange={handleFileChange}
+            />
 
             {/* 관심 분야 섹션 */}
             <InterestsSection
