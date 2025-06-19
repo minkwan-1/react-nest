@@ -4,15 +4,14 @@ import {
   Box,
   Typography,
   CircularProgress,
-  Chip,
-  Paper,
-  alpha,
-  Divider,
-  Button,
   Alert,
   Snackbar,
+  Button,
+  Card,
+  CardContent,
+  Avatar,
+  Divider,
 } from "@mui/material";
-import SmartToyIcon from "@mui/icons-material/SmartToy";
 
 import { useAtom } from "jotai";
 import { questionsAtom } from "@atom/question";
@@ -20,6 +19,7 @@ import { DetailQuestionTitle, DetailQuestionContent } from "./main-content";
 
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import { realUserInfo } from "@atom/auth";
 
 // 테마 색상
 const themeColors = {
@@ -43,11 +43,6 @@ const themeColors = {
     border: "#E5E7EB",
     text: "#374151",
   },
-  ai: {
-    bg: "#F0F9FF",
-    border: "#BAE6FD",
-    accent: "#0EA5E9",
-  },
 };
 
 type Question = {
@@ -65,27 +60,32 @@ type Question = {
   userId: string;
 };
 
+type Answer = {
+  id: string;
+  questionId: string;
+  userId: string;
+  content: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
 const MainContent = () => {
   const { id } = useParams();
   const [question, setQuestion] = useState<Question | null>(null);
   const [questions] = useAtom(questionsAtom);
   const [loading, setLoading] = useState(true);
+  const [user] = useAtom(realUserInfo);
 
-  // 사용자 답변 작성 상태
+  // 답변 관련 상태
+  const [answers, setAnswers] = useState<Answer[]>([]);
+  const [answersLoading, setAnswersLoading] = useState(true);
+  const [answersError, setAnswersError] = useState<string | null>(null);
+
   const [userAnswer, setUserAnswer] = useState<string>("");
-
-  // 답변 등록 관련 상태
   const [isSubmittingAnswer, setIsSubmittingAnswer] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [submitSuccess, setSubmitSuccess] = useState(false);
 
-  // AI 답변 관련 상태
-  const [aiAnswer, setAiAnswer] = useState<string>("");
-  const [aiLoading, setAiLoading] = useState(false);
-  const [aiAnswerGenerated, setAiAnswerGenerated] = useState(false);
-  const [aiError, setAiError] = useState<string | null>(null);
-
-  // ReactQuill 툴바 설정
   const quillModules = {
     toolbar: [
       [{ header: [1, 2, 3, false] }],
@@ -96,7 +96,36 @@ const MainContent = () => {
     ],
   };
 
-  // 답변 등록 함수
+  // 답변 목록 가져오기
+  const fetchAnswers = useCallback(async () => {
+    if (!id) return;
+
+    setAnswersLoading(true);
+    setAnswersError(null);
+
+    try {
+      const response = await fetch(
+        `http://localhost:3000/answers/question/${id}`
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        setAnswers(data);
+      } else {
+        throw new Error(`서버 오류: ${response.status} ${response.statusText}`);
+      }
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "답변을 불러오는 중 오류가 발생했습니다.";
+      console.error("답변 로딩 실패:", errorMessage);
+      setAnswersError(errorMessage);
+    } finally {
+      setAnswersLoading(false);
+    }
+  }, [id]);
+
   const handleSubmitAnswer = useCallback(async () => {
     if (!userAnswer.trim() || !id) {
       setSubmitError("답변 내용을 입력해주세요.");
@@ -113,8 +142,9 @@ const MainContent = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          questionId: parseInt(id),
+          questionId: id,
           content: userAnswer,
+          userId: user?.id,
         }),
       });
 
@@ -122,9 +152,10 @@ const MainContent = () => {
         const data = await response.json();
         console.log("답변 등록 성공:", data);
 
-        // 성공 시 에디터 초기화 및 성공 메시지 표시
         setUserAnswer("");
         setSubmitSuccess(true);
+        // 답변 목록 새로고침
+        fetchAnswers();
       } else {
         const errorData = await response.json().catch(() => ({}));
         throw new Error(
@@ -143,56 +174,29 @@ const MainContent = () => {
     } finally {
       setIsSubmittingAnswer(false);
     }
-  }, [userAnswer, id]);
+  }, [userAnswer, id, fetchAnswers]);
 
-  // AI 답변 생성 함수
-  const generateAiAnswer = useCallback(async (questionData: Question) => {
-    setAiLoading(true);
-    setAiError(null);
-    setAiAnswerGenerated(false);
-
-    try {
-      const response = await fetch(
-        `http://localhost:3000/api/ai-answer/${questionData.id}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            title: questionData.title,
-            content: questionData.content,
-          }),
-        }
-      );
-
-      if (response.ok) {
-        const data = await response.json();
-        setAiAnswer(data.answer);
-        setAiAnswerGenerated(true);
-      } else {
-        throw new Error(`서버 오류: ${response.status} ${response.statusText}`);
-      }
-    } catch (error) {
-      const errorMessage =
-        error instanceof Error
-          ? error.message
-          : "알 수 없는 오류가 발생했습니다.";
-
-      setAiError(errorMessage);
-      setAiAnswer(
-        "죄송합니다. AI 답변을 생성하는 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요."
-      );
-      setAiAnswerGenerated(true);
-    } finally {
-      setAiLoading(false);
-    }
-  }, []);
-
-  // 성공/에러 스낵바 닫기 핸들러
   const handleCloseSnackbar = () => {
     setSubmitSuccess(false);
     setSubmitError(null);
+  };
+
+  // 날짜 포맷팅 함수
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("ko-KR", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
+
+  // 사용자 이름 가져오는 함수 (임시로 userId 사용)
+  const getUserName = (userId: string) => {
+    // 실제로는 사용자 정보를 별도로 가져와야 함
+    return `사용자 ${userId.slice(0, 8)}`;
   };
 
   useEffect(() => {
@@ -206,14 +210,17 @@ const MainContent = () => {
     const timer = setTimeout(() => {
       setQuestion(foundQuestion || null);
       setLoading(false);
-
-      if (foundQuestion) {
-        generateAiAnswer(foundQuestion);
-      }
     }, 300);
 
     return () => clearTimeout(timer);
-  }, [id, questions, generateAiAnswer]);
+  }, [id, questions]);
+
+  // 답변 목록 가져오기
+  useEffect(() => {
+    if (id && !loading) {
+      fetchAnswers();
+    }
+  }, [id, loading, fetchAnswers]);
 
   useEffect(() => {
     if (!loading && question) {
@@ -281,13 +288,10 @@ const MainContent = () => {
         </Box>
       ) : (
         <>
-          {/* 질문 헤더 */}
           <DetailQuestionTitle />
-
-          {/* 질문 내용 */}
           <DetailQuestionContent />
 
-          {/* 사용자 답변 작성 영역 */}
+          {/* 답변 작성 섹션 */}
           <Box sx={{ mt: 5 }}>
             <Typography
               variant="h6"
@@ -296,7 +300,6 @@ const MainContent = () => {
               답변 작성
             </Typography>
 
-            {/* 에러 메시지 표시 */}
             {submitError && (
               <Alert severity="error" sx={{ mb: 2 }}>
                 {submitError}
@@ -343,115 +346,135 @@ const MainContent = () => {
             </Box>
           </Box>
 
-          {/* Gemini AI 답변 섹션 */}
-          <Box sx={{ mt: 6 }}>
-            <Divider sx={{ mb: 3 }} />
-            {aiLoading && (
-              <Paper
-                elevation={0}
-                sx={{
-                  p: 3,
-                  borderRadius: 2,
-                  bgcolor: themeColors.ai.bg,
-                  border: `2px solid ${themeColors.ai.border}`,
-                  textAlign: "center",
-                }}
-              >
+          {/* 답변 목록 섹션 */}
+          <Box sx={{ mt: 4 }}>
+            <Typography
+              variant="h6"
+              sx={{ mb: 3, color: themeColors.textPrimary }}
+            >
+              답변 ({answers.length})
+            </Typography>
+
+            {answersLoading ? (
+              <Box sx={{ display: "flex", justifyContent: "center", py: 4 }}>
                 <CircularProgress
-                  size={30}
-                  sx={{ color: themeColors.ai.accent, mb: 2 }}
+                  size={24}
+                  sx={{ color: themeColors.primary }}
                 />
-                <Typography
-                  variant="body1"
-                  sx={{
-                    color: themeColors.ai.accent,
-                    fontWeight: 600,
-                  }}
-                >
-                  Gemini AI가 답변을 생성하고 있습니다...
-                </Typography>
-              </Paper>
-            )}
-
-            {aiAnswerGenerated && !aiLoading && (
-              <Paper
-                elevation={0}
+              </Box>
+            ) : answersError ? (
+              <Alert severity="error" sx={{ mb: 3 }}>
+                {answersError}
+              </Alert>
+            ) : answers.length === 0 ? (
+              <Box
                 sx={{
-                  p: 3,
+                  textAlign: "center",
+                  py: 4,
+                  bgcolor: themeColors.surface,
                   borderRadius: 2,
-                  bgcolor: themeColors.ai.bg,
-                  border: `2px solid ${themeColors.ai.border}`,
-                  position: "relative",
+                  border: `1px solid ${themeColors.borderLight}`,
                 }}
               >
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 1,
-                    mb: 2,
-                  }}
-                >
-                  <SmartToyIcon
-                    sx={{
-                      color: themeColors.ai.accent,
-                      fontSize: "1.5rem",
-                    }}
-                  />
-                  <Typography
-                    variant="h6"
-                    sx={{
-                      color: themeColors.ai.accent,
-                      fontWeight: 600,
-                    }}
-                  >
-                    AI 답변
-                  </Typography>
-                  {aiError && (
-                    <Chip
-                      label="오류 발생"
-                      size="small"
-                      color="error"
-                      sx={{ ml: 1 }}
-                    />
-                  )}
-                </Box>
-
                 <Typography
                   variant="body1"
-                  sx={{
-                    color: themeColors.textPrimary,
-                    lineHeight: 1.7,
-                    whiteSpace: "pre-wrap",
-                  }}
+                  sx={{ color: themeColors.textSecondary }}
                 >
-                  {aiAnswer}
+                  아직 답변이 없습니다. 첫 번째 답변을 작성해보세요!
                 </Typography>
-
-                <Box
-                  sx={{
-                    mt: 2,
-                    pt: 2,
-                    borderTop: `1px solid ${alpha(themeColors.ai.border, 0.5)}`,
-                  }}
-                >
-                  <Typography
-                    variant="caption"
+              </Box>
+            ) : (
+              <Box sx={{ mb: 4 }}>
+                {answers.map((answer) => (
+                  <Card
+                    key={answer.id}
                     sx={{
-                      color: themeColors.textSecondary,
-                      fontStyle: "italic",
+                      mb: 3,
+                      border: `1px solid ${themeColors.borderLight}`,
+                      borderRadius: 2,
+                      boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+                      "&:hover": {
+                        boxShadow: "0 4px 8px rgba(0,0,0,0.15)",
+                      },
                     }}
                   >
-                    * 이 답변은 Google Gemini AI에 의해 생성되었습니다.
-                    참고용으로만 사용하시고, 실제 개발 시에는 공식 문서나 신뢰할
-                    수 있는 자료를 확인해주세요.
-                  </Typography>
-                </Box>
-              </Paper>
+                    <CardContent sx={{ p: 3 }}>
+                      {/* 답변 헤더 */}
+                      <Box
+                        sx={{ display: "flex", alignItems: "center", mb: 2 }}
+                      >
+                        <Avatar
+                          sx={{
+                            width: 32,
+                            height: 32,
+                            bgcolor: themeColors.primary,
+                            mr: 2,
+                            fontSize: "14px",
+                          }}
+                        >
+                          {getUserName(answer.userId).charAt(0)}
+                        </Avatar>
+                        <Box sx={{ flex: 1 }}>
+                          <Typography
+                            variant="subtitle2"
+                            sx={{
+                              color: themeColors.textPrimary,
+                              fontWeight: 600,
+                            }}
+                          >
+                            {getUserName(answer.userId)}
+                          </Typography>
+                          <Typography
+                            variant="caption"
+                            sx={{ color: themeColors.textSecondary }}
+                          >
+                            {formatDate(answer.createdAt)}
+                          </Typography>
+                        </Box>
+                      </Box>
+
+                      <Divider sx={{ mb: 2 }} />
+
+                      {/* 답변 내용 */}
+                      <Box
+                        sx={{
+                          "& .ql-editor": {
+                            padding: 0,
+                            fontSize: "14px",
+                            lineHeight: 1.6,
+                            color: themeColors.textPrimary,
+                          },
+                          "& .ql-editor p": {
+                            marginBottom: "12px",
+                          },
+                          "& .ql-editor ul, & .ql-editor ol": {
+                            paddingLeft: "20px",
+                            marginBottom: "12px",
+                          },
+                          "& .ql-editor h1, & .ql-editor h2, & .ql-editor h3": {
+                            marginBottom: "12px",
+                            fontWeight: 600,
+                          },
+                          "& .ql-editor pre": {
+                            backgroundColor: themeColors.code.bg,
+                            border: `1px solid ${themeColors.code.border}`,
+                            borderRadius: "6px",
+                            padding: "12px",
+                            fontSize: "13px",
+                            fontFamily: "monospace",
+                            overflow: "auto",
+                            marginBottom: "12px",
+                          },
+                        }}
+                        dangerouslySetInnerHTML={{ __html: answer.content }}
+                      />
+                    </CardContent>
+                  </Card>
+                ))}
+              </Box>
             )}
           </Box>
 
-          {/* 성공/에러 스낵바 */}
           <Snackbar
             open={submitSuccess}
             autoHideDuration={3000}

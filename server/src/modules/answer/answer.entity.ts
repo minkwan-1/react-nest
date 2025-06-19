@@ -11,8 +11,11 @@ export class Answer {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ unique: true })
+  @Column()
   questionId: string;
+
+  @Column()
+  userId: string;
 
   @Column()
   content: string;

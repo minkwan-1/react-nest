@@ -1,3 +1,4 @@
+// answer.service.ts
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -10,26 +11,19 @@ export class AnswerService {
     private answerRepository: Repository<Answer>,
   ) {}
 
-  async createOrUpdateAnswer(
-    questionId: string,
-    content: string,
-  ): Promise<Answer> {
-    // 기존 답변 찾기
-    const existingAnswer = await this.answerRepository.findOne({
-      where: { questionId },
-    });
+  async createAnswer(answerData: {
+    questionId: string;
+    content: string;
+    userId: string;
+  }): Promise<Answer> {
+    const newAnswer = this.answerRepository.create(answerData);
+    return await this.answerRepository.save(newAnswer);
+  }
 
-    if (existingAnswer) {
-      // 있으면 업데이트
-      existingAnswer.content = content;
-      return await this.answerRepository.save(existingAnswer);
-    } else {
-      // 없으면 새로 생성
-      const newAnswer = this.answerRepository.create({
-        questionId,
-        content,
-      });
-      return await this.answerRepository.save(newAnswer);
-    }
+  async getAnswersByQuestionId(questionId: string): Promise<Answer[]> {
+    return await this.answerRepository.find({
+      where: { questionId },
+      order: { createdAt: 'ASC' },
+    });
   }
 }
