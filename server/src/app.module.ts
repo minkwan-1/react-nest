@@ -14,6 +14,7 @@ import { QuestionsModule } from './modules/questions/questions.module';
 import { GeminiModule } from './modules/ai/gemini/gemini.module';
 import { SelfIntroModule } from './modules/self-intro/self-intro.module';
 import { MyInfoModule } from './modules/myInfo/myInfo.module';
+import { AnswerModule } from './modules/answer/answer.module';
 
 // 전역 필터
 import { CatchEverythingFilter } from './filters/catch-everything.filter';
@@ -33,6 +34,7 @@ import { HttpExceptionFilter } from './filters/http-exceptions.filter';
     GeminiModule,
     SelfIntroModule,
     MyInfoModule,
+    AnswerModule,
   ],
   providers: [
     // 전역 필터

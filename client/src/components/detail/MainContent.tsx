@@ -107,7 +107,7 @@ const MainContent = () => {
     setSubmitError(null);
 
     try {
-      const response = await fetch(`http://localhost:3000/questions/answers`, {
+      const response = await fetch(`http://localhost:3000/answers`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

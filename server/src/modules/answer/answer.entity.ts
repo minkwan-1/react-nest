@@ -12,7 +12,7 @@ export class Answer {
   id: string;
 
   @Column({ unique: true })
-  userId: string;
+  questionId: string;
 
   @Column()
   content: string;
