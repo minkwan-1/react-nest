@@ -8,38 +8,45 @@ import {
   useTheme,
   TextField,
 } from "@mui/material";
-import PhotoCameraIcon from "@mui/icons-material/Add";
+import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
 import { useAtom } from "jotai";
 import { realUserInfo } from "@atom/auth";
-import React from "react";
 
 const keyColor = "#b8dae1";
 const gradientBg = "linear-gradient(135deg, #b8dae1 0%, #9bc5cc 100%)";
 
 interface ProfileEditSectionProps {
-  // 기존 props
   job: string;
   setJob: (job: string) => void;
-
-  // 프로필 이미지 관련 props
-  fileInputRef: React.RefObject<HTMLInputElement>;
-  previewUrl: string | null;
-  isUploading: boolean;
-  handleCameraClick: () => void;
-  handleFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  profileImageUrl: string;
+  setProfileImageUrl: (url: string) => void;
+  handleProfileImageUpload: (base64Image: string) => Promise<void>;
 }
 
 const ProfileEditSection = ({
   job,
   setJob,
-  fileInputRef,
-  previewUrl,
-  isUploading,
-  handleCameraClick,
-  handleFileChange,
+  profileImageUrl,
+
+  handleProfileImageUpload,
 }: ProfileEditSectionProps) => {
   const theme = useTheme();
   const [userInfo] = useAtom(realUserInfo);
+
+  const handleImageUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = async (e) => {
+        const base64Image = e.target?.result as string;
+        // 기존의 setProfileImageUrl 대신 handleProfileImageUpload 사용
+        await handleProfileImageUpload(base64Image);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   return (
     <Grow in timeout={1000}>
@@ -72,7 +79,7 @@ const ProfileEditSection = ({
                 height: 100,
                 fontSize: "36px",
                 fontWeight: "bold",
-                background: gradientBg,
+                background: profileImageUrl ? "transparent" : gradientBg,
                 color: "white",
                 cursor: "pointer",
                 transition: "all 0.3s ease",
@@ -81,70 +88,43 @@ const ProfileEditSection = ({
                   transform: "scale(1.05)",
                   boxShadow: "0 6px 25px rgba(184, 218, 225, 0.4)",
                 },
-                // 업로드 중일 때 투명도 조절
-                opacity: isUploading ? 0.7 : 1,
               }}
-              src={previewUrl || undefined}
               alt="Profile"
+              src={profileImageUrl}
             >
-              {!previewUrl && (userInfo?.name?.charAt(0)?.toUpperCase() || "U")}
+              {!profileImageUrl &&
+                (userInfo?.name?.charAt(0)?.toUpperCase() || "U")}
             </Avatar>
 
             <input
-              type="file"
               accept="image/*"
-              ref={fileInputRef}
               style={{ display: "none" }}
-              onChange={handleFileChange}
-              disabled={isUploading}
+              id="profile-image-upload"
+              type="file"
+              onChange={handleImageUpload}
             />
-
-            <IconButton
-              onClick={handleCameraClick}
-              disabled={isUploading}
-              sx={{
-                position: "absolute",
-                bottom: -5,
-                right: -5,
-                bgcolor: keyColor,
-                color: "white",
-                width: 32,
-                height: 32,
-                "&:hover": {
-                  bgcolor: "#a5d1d8",
-                  transform: "scale(1.1)",
-                },
-                "&:disabled": {
-                  bgcolor: theme.palette.action.disabledBackground,
-                  color: theme.palette.action.disabled,
-                },
-                transition: "all 0.2s ease",
-              }}
-            >
-              <PhotoCameraIcon fontSize="small" />
-            </IconButton>
-
-            {/* 업로드 중 표시 */}
-            {isUploading && (
-              <Box
+            <label htmlFor="profile-image-upload">
+              <IconButton
+                component="span"
                 sx={{
                   position: "absolute",
-                  top: "50%",
-                  left: "50%",
-                  transform: "translate(-50%, -50%)",
-                  bgcolor: "rgba(0,0,0,0.5)",
+                  bottom: -5,
+                  right: -5,
+                  bgcolor: keyColor,
                   color: "white",
-                  px: 1,
-                  py: 0.5,
-                  borderRadius: 1,
-                  fontSize: "0.75rem",
+                  width: 32,
+                  height: 32,
+                  "&:hover": {
+                    bgcolor: "#a5d1d8",
+                    transform: "scale(1.1)",
+                  },
+                  transition: "all 0.2s ease",
                 }}
               >
-                업로드 중...
-              </Box>
-            )}
+                <PhotoCameraIcon fontSize="small" />
+              </IconButton>
+            </label>
           </Box>
-
           {/* job 입력 필드 */}
           <Box flex={1}>
             <Stack spacing={2.5}>

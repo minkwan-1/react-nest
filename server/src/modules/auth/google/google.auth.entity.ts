@@ -34,5 +34,5 @@ export class GoogleUser {
   isExist: boolean;
 
   @OneToOne(() => User, (user) => user.googleAccount)
-  user: User;
+  user?: User;
 }

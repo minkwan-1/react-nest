@@ -19,14 +19,10 @@ const MyInfoEditPage = () => {
     interestInput,
     setInterestInput,
     socialLinks,
+    profileImageUrl,
+    setProfileImageUrl,
     isLoading,
     myInfo,
-
-    // 프로필 이미지 관련 상태
-    fileInputRef,
-    selectedImage,
-    previewUrl,
-    isUploading,
 
     // 기존 핸들러
     handleAddInterest,
@@ -35,13 +31,8 @@ const MyInfoEditPage = () => {
     handleAddSocialLink,
     handleRemoveSocialLink,
     handleSave,
-
-    // 프로필 이미지 관련 핸들러
-    handleCameraClick,
-    handleFileChange,
+    handleProfileImageUpload,
   } = useMyInfoForm();
-
-  console.log(selectedImage);
 
   // 로딩 상태 처리
   if (isLoading) {
@@ -60,11 +51,9 @@ const MyInfoEditPage = () => {
             <ProfileEditSection
               job={job}
               setJob={setJob}
-              fileInputRef={fileInputRef}
-              previewUrl={previewUrl}
-              isUploading={isUploading}
-              handleCameraClick={handleCameraClick}
-              handleFileChange={handleFileChange}
+              profileImageUrl={profileImageUrl}
+              setProfileImageUrl={setProfileImageUrl}
+              handleProfileImageUpload={handleProfileImageUpload}
             />
 
             {/* 관심 분야 섹션 */}

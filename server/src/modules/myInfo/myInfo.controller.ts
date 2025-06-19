@@ -1,25 +1,13 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Post,
-  Query,
-  UseInterceptors,
-  UploadedFile,
-  BadRequestException,
-  HttpStatus,
-  HttpCode,
-} from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiTags, ApiConsumes, ApiBody, ApiResponse } from '@nestjs/swagger';
+import { Body, Controller, Get, Post, Query, Logger } from '@nestjs/common';
 import { MyInfoService } from './myInfo.service';
 
-@ApiTags('my-info')
 @Controller('my-info')
 export class MyInfoController {
+  private readonly logger = new Logger(MyInfoController.name); // 클래스 이름 기반 로거
+
   constructor(private readonly myInfoService: MyInfoService) {}
 
-  // my info 등록 처리 (프로필 이미지 URL 포함)
+  // my info 등록 처리
   @Post()
   async upsertMyInfo(
     @Body()
@@ -27,100 +15,57 @@ export class MyInfoController {
       userId: string;
       job: string;
       interests: string[];
-      socialLinks: string[];
       profileImageUrl?: string;
+      socialLinks: string[];
     },
   ) {
     const { userId, job, interests, socialLinks, profileImageUrl } = body;
 
-    await this.myInfoService.upsert(
-      userId,
-      job,
-      interests,
-      socialLinks,
-      profileImageUrl,
+    this.logger.log(
+      `업데이트 요청 - userId: ${userId}, job: ${job}, interests: ${JSON.stringify(
+        interests,
+      )}, profileImageUrl: ${profileImageUrl}, socialLinks: ${JSON.stringify(
+        socialLinks,
+      )}`,
     );
 
-    return { message: 'MyInfo successfully upserted.' };
+    try {
+      await this.myInfoService.upsert(
+        userId,
+        job,
+        interests,
+        socialLinks,
+        profileImageUrl,
+      );
+      this.logger.log(`MyInfo upsert 성공 for userId: ${userId}`);
+      return { message: 'MyInfo successfully upserted.' };
+    } catch (error) {
+      this.logger.error(
+        `MyInfo upsert 실패 for userId: ${userId}, 에러: ${error.message}`,
+      );
+      throw error;
+    }
   }
 
   // my info 찾기
   @Get()
   async getMyInfo(@Query('id') userId: string) {
+    this.logger.log(`MyInfo 조회 요청 - userId: ${userId}`);
+
     if (!userId) {
+      this.logger.warn(`userId가 전달되지 않음`);
       return { myInfo: '' };
-    }
-    const myInfo = await this.myInfoService.find(userId);
-
-    return { myInfo };
-  }
-
-  // 프로필 이미지 업로드
-  @Post('upload-image')
-  @HttpCode(HttpStatus.OK)
-  @UseInterceptors(FileInterceptor('profileImage'))
-  @ApiConsumes('multipart/form-data')
-  @ApiBody({
-    description: 'Profile image upload',
-    type: 'multipart/form-data',
-    schema: {
-      type: 'object',
-      properties: {
-        profileImage: {
-          type: 'string',
-          format: 'binary',
-        },
-        userId: {
-          type: 'string',
-        },
-      },
-    },
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Image uploaded successfully',
-    schema: {
-      type: 'object',
-      properties: {
-        imageUrl: { type: 'string' },
-        message: { type: 'string' },
-      },
-    },
-  })
-  async uploadProfileImage(
-    @UploadedFile() file: Express.Multer.File,
-    @Body('userId') userId: string,
-  ) {
-    if (!file) {
-      throw new BadRequestException('프로필 이미지가 필요합니다.');
-    }
-
-    if (!userId) {
-      throw new BadRequestException('사용자 ID가 필요합니다.');
-    }
-
-    // 파일 타입 검증
-    if (!file.mimetype.startsWith('image/')) {
-      throw new BadRequestException('이미지 파일만 업로드 가능합니다.');
-    }
-
-    // 파일 크기 검증 (5MB)
-    if (file.size > 5 * 1024 * 1024) {
-      throw new BadRequestException('파일 크기는 5MB 이하여야 합니다.');
     }
 
     try {
-      const imageUrl = await this.myInfoService.uploadProfileImage(
-        file,
-        userId,
-      );
-
-      return {
-        imageUrl,
-        message: '프로필 이미지가 성공적으로 업로드되었습니다.',
-      };
+      const myInfo = await this.myInfoService.find(userId);
+      this.logger.log(`MyInfo 조회 성공 - userId: ${userId}`);
+      return { myInfo };
     } catch (error) {
-      throw new BadRequestException(`이미지 업로드 실패: ${error.message}`);
+      this.logger.error(
+        `MyInfo 조회 실패 - userId: ${userId}, 에러: ${error.message}`,
+      );
+      throw error;
     }
   }
 }

@@ -6,8 +6,8 @@ interface MyInfoType {
   userId: string;
   job: string;
   interests: string[];
+  profileImageUrl?: string;
   socialLinks: string[];
-  profileImageUrl: string;
   createdAt: string;
   updatedAt: string;
 }

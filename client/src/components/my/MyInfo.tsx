@@ -5,7 +5,6 @@ import { useAtom } from "jotai";
 import { realUserInfo } from "@atom/auth";
 import { questionsAtom } from "@atom/question";
 import { Verified as VerifiedIcon } from "@mui/icons-material";
-import { man } from "../../images/index";
 
 interface MyInfoProps {
   avatarUrl?: string;
@@ -14,7 +13,7 @@ interface MyInfoProps {
   job?: string;
 }
 
-const MyInfo: React.FC<MyInfoProps> = ({ avatarUrl = man, job }) => {
+const MyInfo: React.FC<MyInfoProps> = ({ avatarUrl, job }) => {
   const theme = useTheme();
   const [userInfo] = useAtom(realUserInfo);
   const [, setQuestions] = useAtom(questionsAtom);

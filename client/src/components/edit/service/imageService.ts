@@ -93,25 +93,54 @@ export class ImageService {
 
   // HTML 콘텐츠 내 Base64 이미지를 WebP로 변환하고 S3에 업로드하여 URL로 대체합니다.
   async processContentImages(content: string): Promise<string> {
+    console.log("[processContentImages] 시작, content 길이:", content.length);
+
     const parser = new DOMParser();
 
     const doc = parser.parseFromString(content, "text/html");
+    console.log("[processContentImages] HTML 파싱 완료");
 
     const images = doc.querySelectorAll("img");
+    console.log(`[processContentImages] img 태그 개수: ${images.length}`);
 
-    for (const img of images) {
+    for (const [index, img] of images.entries()) {
+      console.log(
+        `[processContentImages] img #${index} src:`,
+        img.src?.substring(0, 50)
+      );
+
       if (img.src.startsWith("data:image")) {
         try {
+          console.log(
+            `[processContentImages] img #${index} Base64 이미지 발견, 변환 시작`
+          );
           const file = await this.convertBase64ToWebPFileWithFallback(img.src);
+          console.log(
+            `[processContentImages] img #${index} WebP 변환 완료, 파일명: ${file.name}`
+          );
+
           const uploadURL = await this.uploadFileToS3(file);
+          console.log(
+            `[processContentImages] img #${index} S3 업로드 완료, URL: ${uploadURL}`
+          );
+
           img.src = uploadURL;
         } catch (error) {
-          console.error("Error processing image:", error);
+          console.error(
+            `[processContentImages] img #${index} 변환/업로드 중 오류:`,
+            error
+          );
         }
       }
     }
 
-    return doc.getElementsByTagName("body")[0].innerHTML;
+    const result = doc.getElementsByTagName("body")[0].innerHTML;
+    console.log(
+      "[processContentImages] 변환 완료된 콘텐츠 반환, 길이:",
+      result.length
+    );
+
+    return result;
   }
 }
 

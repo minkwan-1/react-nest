@@ -19,6 +19,10 @@ export class MyInfo {
   @Column({ type: 'varchar', length: 100, nullable: true })
   job: string;
 
+  // 프로필 이미지 URL
+  @Column({ type: 'varchar', nullable: true })
+  profileImageUrl: string;
+
   // 관심 분야 (문자열 배열로 저장)
   @Column({ type: 'text', array: true, default: [] })
   interests: string[];
@@ -26,10 +30,6 @@ export class MyInfo {
   // 소셜 링크 (문자열 배열로 저장)
   @Column({ type: 'text', array: true, default: [] })
   socialLinks: string[];
-
-  // 프로필 이미지 URL 추가
-  @Column({ type: 'varchar', length: 500, nullable: true })
-  profileImageUrl: string;
 
   // 생성일시
   @CreateDateColumn()

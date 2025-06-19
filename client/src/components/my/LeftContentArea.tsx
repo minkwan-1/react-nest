@@ -48,7 +48,7 @@ const LeftContentArea = () => {
             : "none",
       }}
     >
-      <MyInfo job={myInfo?.job} />
+      <MyInfo job={myInfo?.job} avatarUrl={myInfo?.profileImageUrl} />
 
       <Divider sx={{ width: "100%", mb: 2, bgcolor: themeColors.divider }} />
 
