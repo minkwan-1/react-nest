@@ -28,6 +28,7 @@ const ProfileEditSection = ({ job, setJob }: ProfileEditSectionProps) => {
   // 추가
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   // 추가
   const handleCameraClick = () => {
@@ -41,6 +42,7 @@ const ProfileEditSection = ({ job, setJob }: ProfileEditSectionProps) => {
     const file = e.target?.files?.[0];
     if (file) {
       setSelectedImage(file);
+      setPreviewUrl(URL.createObjectURL(file));
       console.log("선택된 파일: ", file);
     }
   };
@@ -89,10 +91,13 @@ const ProfileEditSection = ({ job, setJob }: ProfileEditSectionProps) => {
                   boxShadow: "0 6px 25px rgba(184, 218, 225, 0.4)",
                 },
               }}
-              // src={myInfo?.profileImage || "/default-profile.png"}
+              // 추가
+              src={previewUrl || undefined}
               alt="Profile"
             >
-              {userInfo?.name?.charAt(0)?.toUpperCase() || "U"}
+              {/* 추가 */}
+              {!previewUrl &&
+                (userInfo?.name?.charAt(0)?.toUpperCase() || "U")}{" "}
             </Avatar>
 
             {/* 추가 */}
