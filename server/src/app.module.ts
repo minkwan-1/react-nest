@@ -11,7 +11,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { PhoneVerificationModule } from './modules/phone/phone-verification.module';
 import { UsersModule } from './modules/users/users.module';
 import { QuestionsModule } from './modules/questions/questions.module';
-import { GeminiModule } from './modules/ai/gemini/gemini.module';
+import { AiModule } from './modules/ai/ai.module';
 import { SelfIntroModule } from './modules/self-intro/self-intro.module';
 import { MyInfoModule } from './modules/myInfo/myInfo.module';
 import { AnswerModule } from './modules/answer/answer.module';
@@ -31,7 +31,7 @@ import { HttpExceptionFilter } from './filters/http-exceptions.filter';
     PhoneVerificationModule,
     UsersModule,
     QuestionsModule,
-    GeminiModule,
+    AiModule,
     SelfIntroModule,
     MyInfoModule,
     AnswerModule,

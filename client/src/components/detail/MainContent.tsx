@@ -20,6 +20,8 @@ import { DetailQuestionTitle, DetailQuestionContent } from "./main-content";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { realUserInfo } from "@atom/auth";
+import { marked } from "marked";
+import DOMPurify from "dompurify";
 
 // 테마 색상
 const themeColors = {
@@ -42,6 +44,11 @@ const themeColors = {
     bg: "#F8F9FC",
     border: "#E5E7EB",
     text: "#374151",
+  },
+  ai: {
+    primary: "#4F46E5",
+    light: "#EEF2FF",
+    border: "#A5B4FC",
   },
 };
 
@@ -67,6 +74,7 @@ type Answer = {
   content: string;
   createdAt: string;
   updatedAt: string;
+  isAiAnswer?: boolean; // AI 답변 여부를 구분하는 플래그
 };
 
 const MainContent = () => {
@@ -81,6 +89,12 @@ const MainContent = () => {
   const [answersLoading, setAnswersLoading] = useState(true);
   const [answersError, setAnswersError] = useState<string | null>(null);
 
+  // AI 답변 관련 상태
+  const [aiAnswer, setAiAnswer] = useState<Answer | null>(null);
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiError, setAiError] = useState<string | null>(null);
+
+  // 사용자 답변 관련 상태
   const [userAnswer, setUserAnswer] = useState<string>("");
   const [isSubmittingAnswer, setIsSubmittingAnswer] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -95,6 +109,54 @@ const MainContent = () => {
       ["clean"],
     ],
   };
+
+  // AI 답변 가져오기 함수
+  const fetchAiAnswer = useCallback(async () => {
+    if (!question) return;
+
+    setAiLoading(true);
+    setAiError(null);
+
+    try {
+      const response = await fetch(
+        `http://localhost:3000/api/ask-ai?title=${encodeURIComponent(
+          question.title
+        )}&content=${encodeURIComponent(question.content)}`
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+
+        // AI 답변을 Answer 형태로 변환
+        const aiAnswerData: Answer = {
+          id: "ai-answer",
+          questionId: question.id.toString(),
+          userId: "ai-assistant",
+          content: data.data.answer,
+          createdAt: data.data.generatedAt,
+          updatedAt: data.data.generatedAt,
+          isAiAnswer: true,
+        };
+
+        setAiAnswer(aiAnswerData);
+      } else {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(
+          errorData.message ||
+            `서버 오류: ${response.status} ${response.statusText}`
+        );
+      }
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "AI 답변을 불러오는 중 오류가 발생했습니다.";
+      console.error("AI 답변 로딩 실패:", errorMessage);
+      setAiError(errorMessage);
+    } finally {
+      setAiLoading(false);
+    }
+  }, [question]);
 
   // 답변 목록 가져오기
   const fetchAnswers = useCallback(async () => {
@@ -174,7 +236,7 @@ const MainContent = () => {
     } finally {
       setIsSubmittingAnswer(false);
     }
-  }, [userAnswer, id, fetchAnswers]);
+  }, [userAnswer, id, user?.id, fetchAnswers]);
 
   const handleCloseSnackbar = () => {
     setSubmitSuccess(false);
@@ -193,10 +255,353 @@ const MainContent = () => {
     });
   };
 
-  // 사용자 이름 가져오는 함수 (임시로 userId 사용)
-  const getUserName = (userId: string) => {
+  // 마크다운을 HTML로 변환하는 함수
+  const convertMarkdownToHtml = (markdown: string) => {
+    try {
+      // marked 설정
+      marked.setOptions({
+        breaks: true,
+        gfm: true,
+        headerIds: false,
+        mangle: false,
+      });
+
+      // 마크다운을 HTML로 변환
+      const rawHtml = marked(markdown);
+
+      // XSS 방지를 위한 sanitize
+      const cleanHtml = DOMPurify.sanitize(rawHtml, {
+        ALLOWED_TAGS: [
+          "p",
+          "br",
+          "strong",
+          "em",
+          "u",
+          "h1",
+          "h2",
+          "h3",
+          "h4",
+          "h5",
+          "h6",
+          "ul",
+          "ol",
+          "li",
+          "blockquote",
+          "pre",
+          "code",
+          "a",
+          "img",
+          "table",
+          "thead",
+          "tbody",
+          "tr",
+          "th",
+          "td",
+          "hr",
+          "del",
+          "ins",
+        ],
+        ALLOWED_ATTR: ["href", "src", "alt", "title", "target", "rel"],
+      });
+
+      return cleanHtml;
+    } catch (error) {
+      console.error("마크다운 변환 실패:", error);
+      return markdown; // 변환 실패 시 원본 텍스트 반환
+    }
+  };
+
+  // 사용자 이름 가져오는 함수
+  const getUserName = (userId: string, isAi: boolean = false) => {
+    if (isAi || userId === "ai-assistant") return "AI Assistant";
     // 실제로는 사용자 정보를 별도로 가져와야 함
     return `사용자 ${userId.slice(0, 8)}`;
+  };
+
+  // 아바타 색상 가져오기 함수
+  const getAvatarColor = (userId: string, isAi: boolean = false) => {
+    if (isAi || userId === "ai-assistant") return themeColors.ai.primary;
+    return themeColors.primary;
+  };
+
+  // 답변 목록 렌더링 함수
+  const renderAnswers = () => {
+    const allAnswers = [];
+
+    // AI 답변이 있으면 첫 번째로 추가
+    if (aiAnswer) {
+      allAnswers.push(aiAnswer);
+    }
+
+    // 일반 사용자 답변들 추가1
+    allAnswers.push(...answers);
+
+    return allAnswers.map((answer) => (
+      <Card
+        key={answer.id}
+        sx={{
+          mb: 3,
+          border: answer.isAiAnswer
+            ? `2px solid ${themeColors.ai.primary}` // AI 답변은 보라색 테두리
+            : `1px solid ${themeColors.borderLight}`,
+          borderRadius: 2,
+          boxShadow: answer.isAiAnswer
+            ? "0 4px 12px rgba(79, 70, 229, 0.15)" // AI 답변은 특별한 그림자
+            : "0 2px 4px rgba(0,0,0,0.1)",
+          "&:hover": {
+            boxShadow: answer.isAiAnswer
+              ? "0 6px 16px rgba(79, 70, 229, 0.2)"
+              : "0 4px 8px rgba(0,0,0,0.15)",
+          },
+          position: "relative",
+          backgroundColor: answer.isAiAnswer
+            ? themeColors.ai.light
+            : themeColors.background,
+        }}
+      >
+        {/* AI 답변 배지 */}
+        {answer.isAiAnswer && (
+          <Box
+            sx={{
+              position: "absolute",
+              top: 12,
+              right: 12,
+              bgcolor: themeColors.ai.primary,
+              color: "white",
+              px: 1.5,
+              py: 0.5,
+              borderRadius: 1,
+              fontSize: "12px",
+              fontWeight: 600,
+              display: "flex",
+              alignItems: "center",
+              gap: 0.5,
+              zIndex: 1,
+            }}
+          >
+            🤖 AI 답변
+          </Box>
+        )}
+
+        <CardContent sx={{ p: 3 }}>
+          {/* 답변 헤더 */}
+          <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
+            <Avatar
+              sx={{
+                width: 32,
+                height: 32,
+                bgcolor: getAvatarColor(answer.userId, answer.isAiAnswer),
+                mr: 2,
+                fontSize: "14px",
+              }}
+            >
+              {answer.isAiAnswer ? "🤖" : getUserName(answer.userId).charAt(0)}
+            </Avatar>
+            <Box sx={{ flex: 1 }}>
+              <Typography
+                variant="subtitle2"
+                sx={{
+                  color: answer.isAiAnswer
+                    ? themeColors.ai.primary
+                    : themeColors.textPrimary,
+                  fontWeight: 600,
+                }}
+              >
+                {getUserName(answer.userId, answer.isAiAnswer)}
+              </Typography>
+              <Typography
+                variant="caption"
+                sx={{ color: themeColors.textSecondary }}
+              >
+                {formatDate(answer.createdAt)}
+              </Typography>
+            </Box>
+          </Box>
+
+          <Divider sx={{ mb: 2 }} />
+
+          {/* 답변 내용 */}
+          <Box
+            sx={{
+              "& .ql-editor": {
+                padding: 0,
+                fontSize: "14px",
+                lineHeight: 1.6,
+                color: themeColors.textPrimary,
+              },
+              "& .ql-editor p": {
+                marginBottom: "12px",
+              },
+              "& .ql-editor ul, & .ql-editor ol": {
+                paddingLeft: "20px",
+                marginBottom: "12px",
+              },
+              "& .ql-editor h1, & .ql-editor h2, & .ql-editor h3": {
+                marginBottom: "12px",
+                fontWeight: 600,
+              },
+              "& .ql-editor pre": {
+                backgroundColor: themeColors.code.bg,
+                border: `1px solid ${themeColors.code.border}`,
+                borderRadius: "6px",
+                padding: "12px",
+                fontSize: "13px",
+                fontFamily: "monospace",
+                overflow: "auto",
+                marginBottom: "12px",
+              },
+              // 마크다운 스타일링
+              fontSize: "14px",
+              lineHeight: 1.6,
+              color: themeColors.textPrimary,
+              "& h1, & h2, & h3, & h4, & h5, & h6": {
+                marginBottom: "12px",
+                marginTop: "16px",
+                fontWeight: 600,
+                color: themeColors.textPrimary,
+                "&:first-of-type": {
+                  marginTop: 0,
+                },
+              },
+              "& h1": { fontSize: "24px" },
+              "& h2": { fontSize: "20px" },
+              "& h3": { fontSize: "18px" },
+              "& h4": { fontSize: "16px" },
+              "& h5": { fontSize: "14px" },
+              "& h6": { fontSize: "12px" },
+              "& p": {
+                marginBottom: "12px",
+                lineHeight: 1.6,
+                "&:last-child": {
+                  marginBottom: 0,
+                },
+              },
+              "& ul, & ol": {
+                paddingLeft: "20px",
+                marginBottom: "12px",
+                "&:last-child": {
+                  marginBottom: 0,
+                },
+              },
+              "& li": {
+                marginBottom: "4px",
+                lineHeight: 1.5,
+              },
+              "& pre": {
+                backgroundColor: themeColors.code.bg,
+                border: `1px solid ${themeColors.code.border}`,
+                borderRadius: "6px",
+                padding: "12px",
+                fontSize: "13px",
+                fontFamily:
+                  "'Fira Code', 'Monaco', 'Menlo', 'Ubuntu Mono', monospace",
+                overflow: "auto",
+                marginBottom: "12px",
+                marginTop: "8px",
+                lineHeight: 1.4,
+                "&:last-child": {
+                  marginBottom: 0,
+                },
+              },
+              "& code": {
+                backgroundColor: themeColors.code.bg,
+                padding: "2px 6px",
+                borderRadius: "4px",
+                fontSize: "13px",
+                fontFamily:
+                  "'Fira Code', 'Monaco', 'Menlo', 'Ubuntu Mono', monospace",
+                color: themeColors.code.text,
+                border: `1px solid ${themeColors.code.border}`,
+              },
+              "& pre code": {
+                backgroundColor: "transparent",
+                padding: 0,
+                border: "none",
+                color: "inherit",
+              },
+              "& blockquote": {
+                borderLeft: `4px solid ${themeColors.ai.primary}`,
+                paddingLeft: "16px",
+                marginLeft: 0,
+                marginBottom: "12px",
+                marginTop: "8px",
+                color: themeColors.textSecondary,
+                fontStyle: "italic",
+                backgroundColor: answer.isAiAnswer
+                  ? "rgba(79, 70, 229, 0.05)"
+                  : "transparent",
+                paddingTop: "8px",
+                paddingBottom: "8px",
+                borderRadius: "0 4px 4px 0",
+              },
+              "& img": {
+                maxWidth: "100%",
+                height: "auto",
+                borderRadius: "8px",
+                marginTop: "8px",
+                marginBottom: "8px",
+                border: `1px solid ${themeColors.borderLight}`,
+                display: "block",
+              },
+              "& table": {
+                width: "100%",
+                borderCollapse: "collapse",
+                marginBottom: "12px",
+                border: `1px solid ${themeColors.borderLight}`,
+                fontSize: "13px",
+              },
+              "& th, & td": {
+                border: `1px solid ${themeColors.borderLight}`,
+                padding: "8px 12px",
+                textAlign: "left",
+                lineHeight: 1.4,
+              },
+              "& th": {
+                backgroundColor: themeColors.surface,
+                fontWeight: 600,
+                color: themeColors.textPrimary,
+              },
+              "& td": {
+                backgroundColor: themeColors.background,
+              },
+              "& strong": {
+                fontWeight: 600,
+                color: themeColors.textPrimary,
+              },
+              "& em": {
+                fontStyle: "italic",
+              },
+              "& hr": {
+                border: "none",
+                borderTop: `2px solid ${themeColors.borderLight}`,
+                margin: "20px 0",
+              },
+              "& a": {
+                color: themeColors.primary,
+                textDecoration: "none",
+                "&:hover": {
+                  textDecoration: "underline",
+                },
+              },
+              // AI 답변 특별 스타일
+              ...(answer.isAiAnswer && {
+                "& h1, & h2, & h3": {
+                  color: themeColors.ai.primary,
+                },
+                "& strong": {
+                  color: themeColors.ai.primary,
+                },
+              }),
+            }}
+            dangerouslySetInnerHTML={{
+              __html: answer.isAiAnswer
+                ? convertMarkdownToHtml(answer.content)
+                : answer.content,
+            }}
+          />
+        </CardContent>
+      </Card>
+    ));
   };
 
   useEffect(() => {
@@ -221,6 +626,13 @@ const MainContent = () => {
       fetchAnswers();
     }
   }, [id, loading, fetchAnswers]);
+
+  // question이 로드된 후 AI 답변 가져오기
+  useEffect(() => {
+    if (question && !loading) {
+      fetchAiAnswer();
+    }
+  }, [question, loading, fetchAiAnswer]);
 
   useEffect(() => {
     if (!loading && question) {
@@ -352,9 +764,63 @@ const MainContent = () => {
               variant="h6"
               sx={{ mb: 3, color: themeColors.textPrimary }}
             >
-              답변 ({answers.length})
+              답변 ({(aiAnswer ? 1 : 0) + answers.length})
             </Typography>
 
+            {/* AI 답변 로딩 상태 */}
+            {aiLoading && (
+              <Card
+                sx={{
+                  mb: 3,
+                  border: `2px solid ${themeColors.ai.primary}`,
+                  borderRadius: 2,
+                  boxShadow: "0 4px 12px rgba(79, 70, 229, 0.15)",
+                  backgroundColor: themeColors.ai.light,
+                }}
+              >
+                <CardContent sx={{ p: 3, textAlign: "center" }}>
+                  <CircularProgress
+                    size={24}
+                    sx={{ color: themeColors.ai.primary, mb: 2 }}
+                  />
+                  <Typography
+                    variant="body2"
+                    sx={{ color: themeColors.ai.primary, fontWeight: 600 }}
+                  >
+                    🤖 AI가 답변을 생성하고 있습니다...
+                  </Typography>
+                  <Typography
+                    variant="caption"
+                    sx={{
+                      color: themeColors.textSecondary,
+                      display: "block",
+                      mt: 0.5,
+                    }}
+                  >
+                    질문을 분석하고 최적의 답변을 준비 중입니다
+                  </Typography>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* AI 답변 에러 상태 */}
+            {aiError && (
+              <Alert
+                severity="warning"
+                sx={{
+                  mb: 3,
+                  "& .MuiAlert-message": {
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 1,
+                  },
+                }}
+              >
+                🤖 AI 답변 생성 실패: {aiError}
+              </Alert>
+            )}
+
+            {/* 일반 답변 로딩/에러 상태 */}
             {answersLoading ? (
               <Box sx={{ display: "flex", justifyContent: "center", py: 4 }}>
                 <CircularProgress
@@ -364,9 +830,9 @@ const MainContent = () => {
               </Box>
             ) : answersError ? (
               <Alert severity="error" sx={{ mb: 3 }}>
-                {answersError}
+                사용자 답변 로딩 실패: {answersError}
               </Alert>
-            ) : answers.length === 0 ? (
+            ) : !aiAnswer && answers.length === 0 && !aiLoading ? (
               <Box
                 sx={{
                   textAlign: "center",
@@ -384,94 +850,7 @@ const MainContent = () => {
                 </Typography>
               </Box>
             ) : (
-              <Box sx={{ mb: 4 }}>
-                {answers.map((answer) => (
-                  <Card
-                    key={answer.id}
-                    sx={{
-                      mb: 3,
-                      border: `1px solid ${themeColors.borderLight}`,
-                      borderRadius: 2,
-                      boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-                      "&:hover": {
-                        boxShadow: "0 4px 8px rgba(0,0,0,0.15)",
-                      },
-                    }}
-                  >
-                    <CardContent sx={{ p: 3 }}>
-                      {/* 답변 헤더 */}
-                      <Box
-                        sx={{ display: "flex", alignItems: "center", mb: 2 }}
-                      >
-                        <Avatar
-                          sx={{
-                            width: 32,
-                            height: 32,
-                            bgcolor: themeColors.primary,
-                            mr: 2,
-                            fontSize: "14px",
-                          }}
-                        >
-                          {getUserName(answer.userId).charAt(0)}
-                        </Avatar>
-                        <Box sx={{ flex: 1 }}>
-                          <Typography
-                            variant="subtitle2"
-                            sx={{
-                              color: themeColors.textPrimary,
-                              fontWeight: 600,
-                            }}
-                          >
-                            {getUserName(answer.userId)}
-                          </Typography>
-                          <Typography
-                            variant="caption"
-                            sx={{ color: themeColors.textSecondary }}
-                          >
-                            {formatDate(answer.createdAt)}
-                          </Typography>
-                        </Box>
-                      </Box>
-
-                      <Divider sx={{ mb: 2 }} />
-
-                      {/* 답변 내용 */}
-                      <Box
-                        sx={{
-                          "& .ql-editor": {
-                            padding: 0,
-                            fontSize: "14px",
-                            lineHeight: 1.6,
-                            color: themeColors.textPrimary,
-                          },
-                          "& .ql-editor p": {
-                            marginBottom: "12px",
-                          },
-                          "& .ql-editor ul, & .ql-editor ol": {
-                            paddingLeft: "20px",
-                            marginBottom: "12px",
-                          },
-                          "& .ql-editor h1, & .ql-editor h2, & .ql-editor h3": {
-                            marginBottom: "12px",
-                            fontWeight: 600,
-                          },
-                          "& .ql-editor pre": {
-                            backgroundColor: themeColors.code.bg,
-                            border: `1px solid ${themeColors.code.border}`,
-                            borderRadius: "6px",
-                            padding: "12px",
-                            fontSize: "13px",
-                            fontFamily: "monospace",
-                            overflow: "auto",
-                            marginBottom: "12px",
-                          },
-                        }}
-                        dangerouslySetInnerHTML={{ __html: answer.content }}
-                      />
-                    </CardContent>
-                  </Card>
-                ))}
-              </Box>
+              <Box sx={{ mb: 4 }}>{renderAnswers()}</Box>
             )}
           </Box>
 
