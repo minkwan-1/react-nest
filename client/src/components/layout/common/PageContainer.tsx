@@ -1,14 +1,22 @@
 import { ReactNode } from "react";
-import { Box } from "@mui/material";
+import { Box, BoxProps } from "@mui/material";
 import Appbar from "@components/layout/appbar/Appbar";
 
 type LayoutProps = {
   children: ReactNode;
+  sx?: BoxProps["sx"];
 };
 
-const PageContainer = ({ children }: LayoutProps) => {
+const PageContainer = ({ children, sx }: LayoutProps) => {
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        minHeight: "100vh",
+        ...sx,
+      }}
+    >
       <Appbar />
       <Box sx={{ flexGrow: 1 }}>{children}</Box>
     </Box>
