@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 const NotFoundPage = () => {
   const navigate = useNavigate();
   const mainColor = "#b8dae1";
+  const accentColor = "#7fb8c4";
 
   const handleGoLanding = () => {
     navigate("/home");
@@ -56,7 +57,7 @@ const NotFoundPage = () => {
           sx={{
             mb: 2,
             fontSize: { xs: "100px", md: "140px" },
-            background: `linear-gradient(135deg, ${mainColor} 0%, #029e68 100%)`,
+            background: `linear-gradient(135deg, ${mainColor} 0%, ${accentColor} 100%)`,
             backgroundClip: "text",
             textFillColor: "transparent",
             WebkitBackgroundClip: "text",
@@ -95,14 +96,14 @@ const NotFoundPage = () => {
             fontWeight: "bold",
             padding: "12px 30px",
             borderRadius: "50px",
-            background: `linear-gradient(135deg, ${mainColor} 0%, #029e68 100%)`,
+            background: `linear-gradient(135deg, ${mainColor} 0%, ${accentColor} 100%)`,
             color: "white",
-            boxShadow: `0 4px 14px ${mainColor}70`,
+            boxShadow: `0 4px 14px ${accentColor}80`,
             transition: "all 0.3s ease",
             "&:hover": {
-              boxShadow: `0 6px 20px ${mainColor}90`,
+              boxShadow: `0 6px 20px ${accentColor}a0`,
               transform: "translateY(-2px)",
-              background: `linear-gradient(135deg, ${mainColor} 20%, #029e68 100%)`,
+              background: `linear-gradient(135deg, ${mainColor} 20%, ${accentColor} 100%)`,
             },
           }}
         >
