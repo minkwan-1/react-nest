@@ -49,7 +49,7 @@ const LandingPage = () => {
             zIndex: 1,
             width: "100%",
             maxWidth: "1200px",
-            height: "90vh",
+            height: "85vh",
             display: "flex",
             flexDirection: { xs: "column", md: "row" },
 
@@ -78,16 +78,16 @@ const LandingPage = () => {
             },
 
             transition: "all 0.3s ease-in-out",
-            "&:hover": {
-              ...theme.applyStyles("light", {
-                backgroundColor: "rgba(255, 255, 255, 0.95)", // 라이트 모드: 호버 시 더 불투명한 흰색
-                boxShadow: "0 12px 40px rgba(0, 0, 0, 0.4)", // 라이트 모드: 호버 그림자 조정
-              }),
-              ...theme.applyStyles("dark", {
-                backgroundColor: "rgba(25, 25, 25, 0.85)",
-                boxShadow: "0 12px 40px rgba(0, 0, 0, 0.9)",
-              }),
-            },
+            // "&:hover": {
+            //   ...theme.applyStyles("light", {
+            //     backgroundColor: "rgba(255, 255, 255, 0.95)",
+            //     boxShadow: "0 12px 40px rgba(0, 0, 0, 0.4)",
+            //   }),
+            //   ...theme.applyStyles("dark", {
+            //     backgroundColor: "rgba(25, 25, 25, 0.85)",
+            //     boxShadow: "0 12px 40px rgba(0, 0, 0, 0.9)",
+            //   }),
+            // },
           }}
         >
           <MainContent />

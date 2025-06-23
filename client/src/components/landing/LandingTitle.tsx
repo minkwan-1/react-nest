@@ -50,58 +50,6 @@ const LandingTitle = () => {
         }}
       >
         <Button
-          variant="contained"
-          size="large"
-          sx={{
-            py: { xs: 1.2, md: 1.5 },
-            px: { xs: 3, md: 4 },
-            borderRadius: "16px",
-            fontWeight: "600",
-            fontSize: { xs: "14px", md: "16px" },
-            textTransform: "none",
-            position: "relative",
-            overflow: "hidden",
-            background:
-              "linear-gradient(135deg, rgba(184, 218, 225, 0.9) 0%, rgba(184, 218, 225, 0.7) 100%)",
-            backdropFilter: "blur(12px)",
-            border: "1px solid rgba(255, 255, 255, 0.2)",
-            boxShadow:
-              "0 8px 32px rgba(0, 0, 0, 0.1), 0 4px 16px rgba(184, 218, 225, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.3)",
-            color: "#fff",
-            transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-            "&::before": {
-              content: '""',
-              position: "absolute",
-              top: 0,
-              left: "-100%",
-              width: "100%",
-              height: "100%",
-              background:
-                "linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent)",
-              transition: "left 0.5s ease",
-            },
-            "&:hover": {
-              background:
-                "linear-gradient(135deg, rgba(184, 218, 225, 1) 0%, rgba(150, 195, 203, 0.9) 100%)",
-              transform: "translateY(-2px)",
-              boxShadow:
-                "0 12px 40px rgba(0, 0, 0, 0.15), 0 6px 20px rgba(184, 218, 225, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.4)",
-              "&::before": {
-                left: "100%",
-              },
-            },
-            "&:active": {
-              transform: "translateY(0px)",
-              boxShadow:
-                "0 4px 16px rgba(0, 0, 0, 0.1), 0 2px 8px rgba(184, 218, 225, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2)",
-            },
-          }}
-          onClick={() => navigate("/sign-up")}
-        >
-          시작하기
-        </Button>
-
-        <Button
           variant="outlined"
           size="large"
           sx={{

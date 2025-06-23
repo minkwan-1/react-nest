@@ -85,7 +85,7 @@ const QuestionCard = ({
     if (onAnswerClick) {
       onAnswerClick(question.id);
     } else {
-      navigate(`/questions/${question.id}`);
+      console.log("실패");
     }
   };
 
