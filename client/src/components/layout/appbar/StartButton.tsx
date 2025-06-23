@@ -6,11 +6,7 @@ const StartButton = () => {
   const navigate = useNavigate();
 
   const handleButtonClick = () => {
-    if (location.pathname === "/") {
-      navigate("/home");
-    } else {
-      navigate("/start");
-    }
+    navigate("/start");
   };
 
   return (

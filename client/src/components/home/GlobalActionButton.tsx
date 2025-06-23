@@ -53,7 +53,7 @@ const GlobalActionButton = () => {
         }}
       >
         <Button
-          onClick={() => handleClick()}
+          onClick={handleClick}
           variant="contained"
           sx={{
             bgcolor: "#b8dae1",
@@ -61,16 +61,19 @@ const GlobalActionButton = () => {
             width: 64,
             height: 64,
             minWidth: 0,
-            boxShadow: "0 4px 12px rgba(3,203,132,0.5)",
+            boxShadow: "0 4px 12px rgba(184, 218, 225, 0.6)",
             transition: "all 0.3s",
             "&:hover": {
-              bgcolor: "#02a770",
-              boxShadow: "0 6px 16px rgba(3,203,132,0.6)",
+              bgcolor: "#a2cbd4",
+              boxShadow: "0 6px 16px rgba(162, 203, 212, 0.6)",
               transform: "translateY(-2px)",
             },
           }}
         >
-          <Typography variant="h5" sx={{ fontWeight: "bold" }}>
+          <Typography
+            variant="h5"
+            sx={{ fontWeight: "bold", color: "#1e3a4c" }}
+          >
             +
           </Typography>
         </Button>
