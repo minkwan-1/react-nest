@@ -54,16 +54,16 @@ const LandingPage = () => {
             flexDirection: { xs: "column", md: "row" },
 
             ...theme.applyStyles("light", {
-              backgroundColor: "rgba(255, 255, 255, 0.9)", // 라이트 모드: 흰색 배경으로 변경
+              backgroundColor: "rgba(255, 255, 255, 0.6)", // 라이트 모드: 흰색 배경으로 변경
               color: "#1a1a1a", // 라이트 모드: 진한 텍스트 색상
               border: "1px solid rgba(0, 0, 0, 0.1)", // 라이트 모드: 어두운 테두리
               boxShadow: "0 8px 32px rgba(0, 0, 0, 0.3)", // 라이트 모드: 그림자 조정
             }),
             ...theme.applyStyles("dark", {
-              backgroundColor: "rgba(20, 20, 20, 0.7)",
+              backgroundColor: "rgba(20, 20, 20, 0.6)",
               color: theme.palette.text.primary,
               border: "1px solid rgba(255, 255, 255, 0.2)",
-              boxShadow: "0 8px 32px rgba(0, 0, 0, 0.8)",
+              boxShadow: "0 8px 32px rgba(64, 32, 32, 0.8)",
             }),
 
             borderRadius: 3,

@@ -1,16 +1,12 @@
 import { Box } from "@mui/material";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import ThumbUpOutlinedIcon from "@mui/icons-material/ThumbUpOutlined";
 import CommentOutlinedIcon from "@mui/icons-material/CommentOutlined";
-import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import FilteringButton from "./FilteringButton";
 import { useState } from "react";
 
 const FILTER_OPTIONS = [
   { label: "최신순", icon: <AccessTimeIcon sx={{ fontSize: 18 }} /> },
-  { label: "추천순", icon: <ThumbUpOutlinedIcon sx={{ fontSize: 18 }} /> },
   { label: "답변순", icon: <CommentOutlinedIcon sx={{ fontSize: 18 }} /> },
-  { label: "인기순", icon: <TrendingUpIcon sx={{ fontSize: 18 }} /> },
 ];
 
 const FilteringButtons = () => {

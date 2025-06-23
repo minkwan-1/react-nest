@@ -70,10 +70,7 @@ const GlobalActionButton = () => {
             },
           }}
         >
-          <Typography
-            variant="h5"
-            sx={{ fontWeight: "bold", color: "#1e3a4c" }}
-          >
+          <Typography variant="h5" sx={{ fontWeight: "bold", color: "white" }}>
             +
           </Typography>
         </Button>
