@@ -63,7 +63,7 @@ const LandingPage = () => {
               backgroundColor: "rgba(20, 20, 20, 0.6)",
               color: theme.palette.text.primary,
               border: "1px solid rgba(255, 255, 255, 0.2)",
-              boxShadow: "0 8px 32px rgba(64, 32, 32, 0.8)",
+              // boxShadow: "0 8px 32px rgba(64, 32, 32, 0.8)",
             }),
 
             borderRadius: 3,
