@@ -26,48 +26,45 @@ const LogoutButton = () => {
 
   const handleLogout = async () => {
     try {
-      await axios.get("http://localhost:3000/auth/logout", {
+      const res = await axios.get("http://localhost:3000/auth/logout", {
         withCredentials: true,
       });
-
+      console.log("로그아웃 응답:", res);
       navigate("/");
     } catch (err) {
-      console.error("로그아웃 실패: ", err);
+      console.error("로그아웃 실패:", err);
     }
-  };
-
-  // StartButton 스타일을 재사용하기 위한 공통 스타일 객체
-  const baseButtonStyle = {
-    color: "inherit",
-    borderColor: "inherit",
-    borderRadius: 50,
-    px: 3,
-    py: 1,
-    textTransform: "none",
-    fontWeight: 500,
-    ...theme.applyStyles("light", {
-      borderColor: "#00000025",
-      color: "#333",
-      "&:hover": {
-        borderColor: "#00000050",
-        backgroundColor: "rgba(0, 0, 0, 0.04)",
-      },
-    }),
-    ...theme.applyStyles("dark", {
-      borderColor: "#ffffff25",
-      color: "#f0f0f0",
-      "&:hover": {
-        borderColor: "#ffffff50",
-        backgroundColor: "rgba(255, 255, 255, 0.08)",
-      },
-    }),
   };
 
   return (
     <>
       <Button
         variant="outlined"
-        sx={baseButtonStyle}
+        sx={{
+          color: "inherit",
+          borderColor: "inherit",
+          borderRadius: 50,
+          px: 3,
+          py: 1,
+          textTransform: "none",
+          fontWeight: 500,
+          ...theme.applyStyles("light", {
+            borderColor: "#00000025",
+            color: "#333",
+            "&:hover": {
+              borderColor: "#00000050",
+              backgroundColor: "rgba(0, 0, 0, 0.04)",
+            },
+          }),
+          ...theme.applyStyles("dark", {
+            borderColor: "#ffffff25",
+            color: "#f0f0f0",
+            "&:hover": {
+              borderColor: "#ffffff50",
+              backgroundColor: "rgba(255, 255, 255, 0.08)",
+            },
+          }),
+        }}
         onClick={handleButtonClick}
       >
         로그아웃
@@ -104,7 +101,35 @@ const LogoutButton = () => {
         </DialogContent>
 
         <DialogActions sx={{ justifyContent: "center", gap: 2, pb: 2, mt: 1 }}>
-          <Button variant="outlined" onClick={handleClose} sx={baseButtonStyle}>
+          <Button
+            variant="outlined"
+            onClick={handleClose}
+            sx={{
+              color: "inherit",
+              borderColor: "inherit",
+              borderRadius: 50,
+              px: 3,
+              py: 1,
+              textTransform: "none",
+              fontWeight: 500,
+              ...theme.applyStyles("light", {
+                borderColor: "#00000025",
+                color: "#333",
+                "&:hover": {
+                  borderColor: "#00000050",
+                  backgroundColor: "rgba(0, 0, 0, 0.04)",
+                },
+              }),
+              ...theme.applyStyles("dark", {
+                borderColor: "#ffffff25",
+                color: "#f0f0f0",
+                "&:hover": {
+                  borderColor: "#ffffff50",
+                  backgroundColor: "rgba(255, 255, 255, 0.08)",
+                },
+              }),
+            }}
+          >
             아니요, 계속할래요
           </Button>
 
@@ -114,10 +139,35 @@ const LogoutButton = () => {
               handleClose();
               handleLogout();
             }}
-            sx={{
-              ...baseButtonStyle,
-              fontWeight: 600, // 확인 버튼은 조금 더 강조
-            }}
+            sx={
+              {
+                fontWeight: 600,
+                color: "inherit",
+                borderColor: "inherit",
+                borderRadius: 50,
+                px: 3,
+                py: 1,
+                textTransform: "none",
+                ...theme.applyStyles("light", {
+                  borderColor: "#00000025",
+                  color: "#333",
+                  "&:hover": {
+                    borderColor: "#00000050",
+                    backgroundColor: "rgba(0, 0, 0, 0.04)",
+                  },
+                }),
+                ...theme.applyStyles("dark", {
+                  borderColor: "#ffffff25",
+                  color: "#f0f0f0",
+                  "&:hover": {
+                    borderColor: "#ffffff50",
+                    backgroundColor: "rgba(255, 255, 255, 0.08)",
+                  },
+                }),
+              }
+
+              // 확인 버튼은 조금 더 강조
+            }
           >
             네, 로그아웃할게요
           </Button>
