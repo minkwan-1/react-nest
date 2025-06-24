@@ -51,7 +51,6 @@ const LetterGlitch = ({
   const hexToRgb = (hex: string) => {
     const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
     hex = hex.replace(shorthandRegex, (m, r, g, b) => r + r + g + g + b + b);
-
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
     return result
       ? {
@@ -124,7 +123,13 @@ const LetterGlitch = ({
     if (!canvas) return;
 
     const { width, height } = canvas.getBoundingClientRect();
+
     ctx.clearRect(0, 0, width, height);
+
+    // ✅ 검정 배경 먼저 그리기
+    ctx.fillStyle = "#000000";
+    ctx.fillRect(0, 0, width, height);
+
     ctx.font = `${fontSize}px monospace`;
     ctx.textBaseline = "top";
 
@@ -235,7 +240,7 @@ const LetterGlitch = ({
         position: "relative",
         width: "100%",
         height: "100%",
-        backgroundColor: "#000000",
+        backgroundColor: "#000000", // ✅ 컴포넌트 배경도 확실히 검정
         overflow: "hidden",
       }}
       className={className}

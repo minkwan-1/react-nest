@@ -1,3 +1,4 @@
+// questions.service.ts
 import {
   Injectable,
   NotFoundException,
@@ -42,17 +43,16 @@ export class QuestionsService {
     if (!user) throw new NotFoundException('존재하지 않는 유저입니다.');
 
     return this.questionsRepository.find({
-      where: { userId: userId }, // user relation 대신 userId 직접 사용
+      where: { userId: userId },
       relations: ['user'],
-      order: { id: 'DESC' }, // id로 내림차순 정렬 (최신순)
+      order: { id: 'DESC' },
     });
   }
 
   // [3] 질문 삭제
   async delete(questionId: number, userId: string): Promise<void> {
-    // 질문 존재 여부 확인
     const question = await this.questionsRepository.findOne({
-      where: { id: questionId }, // number 타입
+      where: { id: questionId },
       relations: ['user'],
     });
 
@@ -60,12 +60,10 @@ export class QuestionsService {
       throw new NotFoundException('존재하지 않는 질문입니다.');
     }
 
-    // 질문 작성자 권한 확인 (userId 필드로 비교)
     if (question.userId !== userId) {
       throw new ForbiddenException('질문을 삭제할 권한이 없습니다.');
     }
 
-    // 질문 삭제
     await this.questionsRepository.remove(question);
   }
 
@@ -107,8 +105,15 @@ export class QuestionsService {
     question.title = title;
     question.content = content;
     question.tags = tags;
-    // question.updatedAt = new Date();
 
     return await this.questionsRepository.save(question);
+  }
+
+  // [추가] 모든 질문 조회
+  async findAll(): Promise<Question[]> {
+    return this.questionsRepository.find({
+      relations: ['user'],
+      order: { id: 'DESC' },
+    });
   }
 }

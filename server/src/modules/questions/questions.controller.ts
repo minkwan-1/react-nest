@@ -1,3 +1,4 @@
+// questions.controller.ts
 import {
   Controller,
   Post,
@@ -41,8 +42,8 @@ export class QuestionsController {
   @Delete('delete/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
   async delete(
-    @Param('id', ParseIntPipe) questionId: number, // number 타입으로 변경
-    @Body('userId') userId: string, // 권한 확인용
+    @Param('id', ParseIntPipe) questionId: number,
+    @Body('userId') userId: string,
   ): Promise<void> {
     return this.questionsService.delete(questionId, userId);
   }
@@ -70,5 +71,11 @@ export class QuestionsController {
       tags,
       userId,
     );
+  }
+
+  // [추가] 모든 질문 조회
+  @Get()
+  async findAll(): Promise<Question[]> {
+    return this.questionsService.findAll();
   }
 }
