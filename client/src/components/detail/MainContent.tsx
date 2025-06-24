@@ -5,7 +5,6 @@ import {
   Typography,
   CircularProgress,
   Alert,
-  Snackbar,
   Button,
   Card,
   CardContent,
@@ -15,7 +14,11 @@ import {
 
 import { useAtom } from "jotai";
 import { questionsAtom } from "@atom/question";
-import { DetailQuestionTitle, DetailQuestionContent } from "./main-content";
+import {
+  DetailQuestionTitle,
+  DetailQuestionContent,
+  SubmitSuccessSnackbar,
+} from "./main-content";
 
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
@@ -79,7 +82,7 @@ type Answer = {
   content: string;
   createdAt: string;
   updatedAt: string;
-  isAiAnswer?: boolean; // AI 답변 여부를 구분하는 플래그
+  isAiAnswer?: boolean;
 };
 
 const MainContent = () => {
@@ -747,7 +750,7 @@ const MainContent = () => {
           <DetailQuestionTitle />
           <DetailQuestionContent />
 
-          {/* 답변 작성 섹션 - 개선된 스타일링 */}
+          {/* AnswerEditor */}
           <Box sx={{ mt: 6 }}>
             <Typography
               variant="h5"
@@ -847,7 +850,7 @@ const MainContent = () => {
             </Box>
           </Box>
 
-          {/* 답변 목록 섹션 - 개선된 헤더 */}
+          {/* AnswerList */}
           <Box sx={{ mt: 6 }}>
             <Typography
               variant="h5"
@@ -863,7 +866,7 @@ const MainContent = () => {
               💬 답변 목록 ({(aiAnswer ? 1 : 0) + answers.length})
             </Typography>
 
-            {/* AI 답변 로딩 상태 - 개선된 스타일링 */}
+            {/* AILoadingCard */}
             {aiLoading && (
               <Card
                 sx={{
@@ -914,7 +917,7 @@ const MainContent = () => {
               </Card>
             )}
 
-            {/* AI 답변 에러 상태 - 개선된 스타일링 */}
+            {/* AIErrorAlert */}
             {aiError && (
               <Alert
                 severity="warning"
@@ -936,7 +939,7 @@ const MainContent = () => {
               </Alert>
             )}
 
-            {/* 일반 답변 로딩/에러 상태 - 개선된 스타일링 */}
+            {/* AnswerLoadingOrEmpty */}
             {answersLoading ? (
               <Box
                 sx={{
@@ -1011,29 +1014,11 @@ const MainContent = () => {
             )}
           </Box>
 
-          {/* 성공/에러 스낵바 - 개선된 스타일링 */}
-          <Snackbar
-            open={submitSuccess}
-            autoHideDuration={4000}
-            onClose={handleCloseSnackbar}
-            anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-          >
-            <Alert
-              onClose={handleCloseSnackbar}
-              severity="success"
-              sx={{
-                borderRadius: 3,
-                fontWeight: 600,
-                fontSize: "15px",
-                boxShadow: "0 8px 25px rgba(34, 197, 94, 0.3)",
-                "& .MuiAlert-icon": {
-                  fontSize: "20px",
-                },
-              }}
-            >
-              🎉 답변이 성공적으로 등록되었습니다!
-            </Alert>
-          </Snackbar>
+          {/* SubmitSuccessSnackbar */}
+          <SubmitSuccessSnackbar
+            submitSuccess={submitSuccess}
+            handleCloseSnackbar={handleCloseSnackbar}
+          />
         </>
       )}
     </Box>

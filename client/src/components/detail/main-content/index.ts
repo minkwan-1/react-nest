@@ -1,4 +1,5 @@
 import DetailQuestionTitle from "./DetailQuestionTitle";
 import DetailQuestionContent from "./DetailQuestionContent";
+import SubmitSuccessSnackbar from "./SubmitSuccessSnackbar";
 
-export { DetailQuestionTitle, DetailQuestionContent };
+export { DetailQuestionTitle, DetailQuestionContent, SubmitSuccessSnackbar };
