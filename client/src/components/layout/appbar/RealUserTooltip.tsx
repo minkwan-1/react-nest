@@ -3,14 +3,17 @@ import { useNavigate } from "react-router-dom";
 
 interface RealUser {
   name: string;
-  profileImageUrl?: string;
 }
 
 interface RealUserTooltipProps {
   realUser: RealUser;
+  userProfileImage?: string;
 }
 
-const RealUserTooltip = ({ realUser }: RealUserTooltipProps) => {
+const RealUserTooltip = ({
+  realUser,
+  userProfileImage,
+}: RealUserTooltipProps) => {
   const navigate = useNavigate();
 
   return (
@@ -30,9 +33,9 @@ const RealUserTooltip = ({ realUser }: RealUserTooltipProps) => {
             transform: "scale(1.1)",
           },
         }}
-        src={realUser.profileImageUrl}
+        src={userProfileImage || undefined}
       >
-        {realUser.name?.[0] || "?"}
+        {!userProfileImage && (realUser.name?.[0] || "?")}
       </Avatar>
     </Tooltip>
   );

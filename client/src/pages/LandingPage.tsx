@@ -54,16 +54,15 @@ const LandingPage = () => {
             flexDirection: { xs: "column", md: "row" },
 
             ...theme.applyStyles("light", {
-              backgroundColor: "rgba(255, 255, 255, 0.6)", // 라이트 모드: 흰색 배경으로 변경
-              color: "#1a1a1a", // 라이트 모드: 진한 텍스트 색상
-              border: "1px solid rgba(0, 0, 0, 0.1)", // 라이트 모드: 어두운 테두리
-              boxShadow: "0 8px 32px rgba(0, 0, 0, 0.3)", // 라이트 모드: 그림자 조정
+              backgroundColor: "rgba(255, 255, 255, 0.6)",
+              color: "#1a1a1a",
+              border: "1px solid rgba(0, 0, 0, 0.1)",
+              boxShadow: "0 8px 32px rgba(0, 0, 0, 0.3)",
             }),
             ...theme.applyStyles("dark", {
               backgroundColor: "rgba(20, 20, 20, 0.6)",
               color: theme.palette.text.primary,
               border: "1px solid rgba(255, 255, 255, 0.2)",
-              // boxShadow: "0 8px 32px rgba(64, 32, 32, 0.8)",
             }),
 
             borderRadius: 3,
@@ -72,22 +71,12 @@ const LandingPage = () => {
             "& *": {
               textShadow:
                 theme.palette.mode === "light"
-                  ? "0 1px 2px rgba(0, 0, 0, 0.3)" // 라이트 모드: 검은색 텍스트 섀도우로 변경
+                  ? "0 1px 2px rgba(0, 0, 0, 0.3)"
                   : "0 1px 3px rgba(0,0,0,0.8)",
               fontWeight: "500",
             },
 
             transition: "all 0.3s ease-in-out",
-            // "&:hover": {
-            //   ...theme.applyStyles("light", {
-            //     backgroundColor: "rgba(255, 255, 255, 0.95)",
-            //     boxShadow: "0 12px 40px rgba(0, 0, 0, 0.4)",
-            //   }),
-            //   ...theme.applyStyles("dark", {
-            //     backgroundColor: "rgba(25, 25, 25, 0.85)",
-            //     boxShadow: "0 12px 40px rgba(0, 0, 0, 0.9)",
-            //   }),
-            // },
           }}
         >
           <MainContent />

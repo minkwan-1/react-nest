@@ -11,6 +11,7 @@ import {
 import { Box, Container, SxProps, Theme } from "@mui/material";
 import { useAtom } from "jotai";
 import { realUserInfo } from "@atom/auth";
+import useFetchMyInfo from "@components/my-info/hooks/useFetchMyInfo";
 
 interface AppbarProps {
   sx?: SxProps<Theme>;
@@ -18,6 +19,8 @@ interface AppbarProps {
 
 function Appbar({ sx }: AppbarProps) {
   const [realUser, setRealUser] = useAtom(realUserInfo);
+  const myInfo = useFetchMyInfo(realUser?.id);
+  const userProfileImage = myInfo?.profileImageUrl;
 
   // console.log("전역 상태를 사용 중인지?: ", realUser);
 
@@ -61,7 +64,10 @@ function Appbar({ sx }: AppbarProps) {
           <ThemeToggleButton />
           {realUser ? (
             <>
-              <RealUserTooltip realUser={realUser} />
+              <RealUserTooltip
+                realUser={realUser}
+                userProfileImage={userProfileImage}
+              />
               <LogoutButton />
             </>
           ) : (
