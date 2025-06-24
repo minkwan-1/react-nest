@@ -17,7 +17,7 @@ const QuestionDetailPage = () => {
           height: { xs: "auto", md: "calc(100vh - 80px)" },
           overflow: "hidden",
           position: "relative",
-          // p: { xs: 2, md: 0 },
+
           padding: "30px",
         }}
       >

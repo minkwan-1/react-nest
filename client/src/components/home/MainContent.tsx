@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 import { questionData } from "@mock/mockHomePageData";
-import { useEffect } from "react";
+
 import {
   HomePageTitle,
   SearchBar,
@@ -9,17 +9,6 @@ import {
 } from "@components/home/index";
 
 const MainContent = () => {
-  useEffect(() => {
-    fetch("http://localhost:3000/questions")
-      .then((res) => res.json())
-      .then((data) => {
-        console.log("질문 데이터:", data);
-      })
-      .catch((err) => {
-        console.error("질문 데이터 로딩 에러:", err);
-      });
-  }, []);
-
   return (
     <Box
       sx={{

@@ -20,8 +20,8 @@ interface Question {
   author: string;
   date: string;
   title: string;
-  content: string;
-  likes: number;
+  content: string; // HTML 문자열
+  likes?: number; // API에 없으면 optional
   thumbnail: string;
 }
 
@@ -36,9 +36,9 @@ const QuestionCards = ({ question }: QuestionCardsProps) => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 1500); // 1.5초 후에 로딩 해제
+    }, 1500);
 
-    return () => clearTimeout(timer); // 컴포넌트 언마운트 시 타이머 해제
+    return () => clearTimeout(timer);
   }, []);
 
   return (
@@ -54,7 +54,7 @@ const QuestionCards = ({ question }: QuestionCardsProps) => {
           backgroundColor:
             theme.palette.mode === "light" ? "#F5F5F5" : "#4F4F4F",
         },
-        backgroundColor: theme.palette.mode === "light" ? "#ffffff" : "#333333",
+        backgroundColor: theme.palette.mode === "light" ? "#fff" : "#333",
         border: theme.palette.mode === "light" ? "1px solid #F0F0F0" : "none",
       }}
     >
@@ -102,7 +102,7 @@ const QuestionCards = ({ question }: QuestionCardsProps) => {
           )}
         </Box>
 
-        {/* 질문 제목 & 내용 */}
+        {/* 질문 제목 & 내용 (content는 HTML) */}
         <Box sx={{ display: "flex", justifyContent: "space-between", gap: 3 }}>
           <Box sx={{ flex: 1 }}>
             {loading ? (
@@ -124,6 +124,7 @@ const QuestionCards = ({ question }: QuestionCardsProps) => {
                 >
                   {question.title}
                 </Typography>
+
                 <Typography
                   variant="body2"
                   sx={{
@@ -136,9 +137,8 @@ const QuestionCards = ({ question }: QuestionCardsProps) => {
                     textOverflow: "ellipsis",
                     lineHeight: 1.5,
                   }}
-                >
-                  {question.content}
-                </Typography>
+                  dangerouslySetInnerHTML={{ __html: question.content }}
+                />
               </>
             )}
 
@@ -185,7 +185,7 @@ const QuestionCards = ({ question }: QuestionCardsProps) => {
                   <Skeleton width={24} height={16} />
                 ) : (
                   <Typography variant="body2" sx={{ color: "#757575", mr: 2 }}>
-                    {question.likes}
+                    {question.likes ?? 0}
                   </Typography>
                 )}
                 <IconButton
