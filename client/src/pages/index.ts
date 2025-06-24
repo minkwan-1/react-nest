@@ -2,7 +2,7 @@ import HomePage from "./HomePage";
 import MyPage from "./MyPage";
 import PhoneVerificationPage from "./PhoneVerificationPage";
 import NotFoundPage from "./NotFoundPage";
-import TermsAndPrivacyPage from "./TermsAndPrivacyPage";
+
 import QuestionEditPage from "./QuestionEditPage";
 import QuestionDetailPage from "./QuestionDetailPage";
 import LandingPage from "./LandingPage";
@@ -16,7 +16,6 @@ export {
   MyPage,
   PhoneVerificationPage,
   NotFoundPage,
-  TermsAndPrivacyPage,
   QuestionEditPage,
   QuestionDetailPage,
   LandingPage,

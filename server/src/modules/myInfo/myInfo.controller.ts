@@ -3,7 +3,7 @@ import { MyInfoService } from './myInfo.service';
 
 @Controller('my-info')
 export class MyInfoController {
-  private readonly logger = new Logger(MyInfoController.name); // 클래스 이름 기반 로거
+  private readonly logger = new Logger(MyInfoController.name);
 
   constructor(private readonly myInfoService: MyInfoService) {}
 

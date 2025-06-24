@@ -4,11 +4,13 @@ import axios from "axios";
 import { realUserInfo } from "@atom/auth";
 import useFetchMyInfo from "./useFetchMyInfo";
 import { imageService } from "@components/edit/service/imageService";
+import { useNavigate } from "react-router-dom";
 
 const useMyInfoForm = () => {
   // 유저 전역 상태
   const [userInfo] = useAtom(realUserInfo);
   const userId = userInfo?.id;
+  const navigate = useNavigate();
 
   // 프로필 정보 가져오기 훅 적용
   const myInfo = useFetchMyInfo(userId);
@@ -119,6 +121,7 @@ const useMyInfoForm = () => {
 
       await axios.post("http://localhost:3000/my-info", payload);
       alert(myInfo ? "정보가 수정되었습니다." : "정보가 저장되었습니다.");
+      navigate("/my");
     } catch (err) {
       console.log("저장 실패: ", err);
       alert("저장 중 오류가 발생했습니다.");
