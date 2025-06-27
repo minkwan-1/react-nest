@@ -1,4 +1,3 @@
-// pages/ModifyQuestionPage.tsx
 import { useParams } from "react-router-dom";
 import { Suspense } from "react";
 import ReactQuill from "react-quill";
