@@ -97,6 +97,7 @@ const QuestionCard = ({
             {/* Actions */}
             {showActions && (
               <CardActionsSection
+                onCardClick={onCardClick}
                 handleAnswerClick={handleAnswerClick}
                 handleDeleteClick={handleDeleteClick}
                 question={question}
