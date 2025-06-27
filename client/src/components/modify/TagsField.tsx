@@ -2,10 +2,11 @@ import { TextField, alpha, useTheme } from "@mui/material";
 
 interface TagsFieldProps {
   tags: string[];
+  inputValue: string;
   handleTagsChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const TagsField = ({ tags, handleTagsChange }: TagsFieldProps) => {
+const TagsField = ({ handleTagsChange, inputValue }: TagsFieldProps) => {
   const theme = useTheme();
   const mainColor = "#b8dae1";
   const isDarkMode = theme.palette.mode === "dark";
@@ -13,7 +14,7 @@ const TagsField = ({ tags, handleTagsChange }: TagsFieldProps) => {
     <TextField
       label="태그 (쉼표로 구분)"
       fullWidth
-      value={tags.join(", ")}
+      value={inputValue}
       onChange={handleTagsChange}
       helperText="태그를 쉼표(,)로 구분하여 입력하세요"
       FormHelperTextProps={{

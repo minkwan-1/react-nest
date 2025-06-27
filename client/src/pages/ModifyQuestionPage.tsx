@@ -1,7 +1,9 @@
 import { useParams } from "react-router-dom";
+import { useAtom } from "jotai";
+import { realUserInfo } from "@atom/auth";
+
 import { Box, Container } from "@mui/material";
 import { PageContainer, ComponentWrapper } from "@components/layout/common";
-import { useModifyQuestion } from "@components/modify/hooks/useModifyQuestion";
 import {
   BackgroundElements,
   PageHeader,
@@ -9,31 +11,40 @@ import {
   QuestionForm,
 } from "@components/modify";
 
+import {
+  useQuestionDetail,
+  useQuestionForm,
+  useModifyQuestionSubmit,
+} from "@components/modify/hooks/index";
+
 const ModifyQuestionPage = () => {
   const mainColor = "#b8dae1";
   const { id } = useParams();
+  const [userInfo] = useAtom(realUserInfo);
 
-  // 커스텀 훅
+  const { question, loading } = useQuestionDetail(id);
   const {
-    question,
-    loading,
-    isSubmitting,
     title,
-    content,
     setTitle,
-    tags,
+    content,
     setContent,
+    tags,
+    tagsInput,
     handleTagsChange,
-    handleSubmit,
     isFormValid,
-  } = useModifyQuestion({ questionId: id });
+  } = useQuestionForm(question);
 
-  console.log({ loading, question, title, content, tags });
+  const { handleSubmit, isSubmitting } = useModifyQuestionSubmit(
+    id,
+    userInfo?.id,
+    {
+      title,
+      content,
+      tags,
+    }
+  );
 
-  // 로딩 중일 때
-  if (loading) {
-    return <LoadingScreen />;
-  }
+  if (loading) return <LoadingScreen />;
 
   return (
     <PageContainer>
@@ -48,17 +59,12 @@ const ModifyQuestionPage = () => {
               zIndex: 1,
             }}
           >
-            {/* background element */}
             <BackgroundElements mainColor={mainColor} />
-
-            {/* page header */}
             <PageHeader
               title="질문 수정하기"
               subtitle="질문을 더 명확하게 다듬어 커뮤니티의 도움을 받아보세요."
               mainColor={mainColor}
             />
-
-            {/* question form */}
             <QuestionForm
               handleSubmit={handleSubmit}
               title={title}
@@ -66,6 +72,7 @@ const ModifyQuestionPage = () => {
               content={content}
               setContent={setContent}
               tags={tags}
+              tagsInput={tagsInput}
               handleTagsChange={handleTagsChange}
               isSubmitting={isSubmitting}
               isFormValid={isFormValid}
