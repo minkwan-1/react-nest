@@ -20,8 +20,6 @@ interface MyQuestionProps {
   };
   onCardClick: (questionId: number | string) => void;
   onAnswerClick: (questionId: number | string) => void;
-  onLikeClick: (questionId: number | string) => void;
-  onBookmarkClick: (questionId: number | string) => void;
 }
 
 const MyQuestion: React.FC<MyQuestionProps> = ({
@@ -29,8 +27,6 @@ const MyQuestion: React.FC<MyQuestionProps> = ({
   userData,
   onCardClick,
   onAnswerClick,
-  onLikeClick,
-  onBookmarkClick,
 }) => {
   const theme = useTheme();
 
@@ -95,8 +91,6 @@ const MyQuestion: React.FC<MyQuestionProps> = ({
                 user={userData}
                 onCardClick={onCardClick}
                 onAnswerClick={onAnswerClick}
-                onLikeClick={onLikeClick}
-                onBookmarkClick={onBookmarkClick}
                 showActions={true}
               />
             ))

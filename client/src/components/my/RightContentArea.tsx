@@ -29,15 +29,6 @@ const RightContentArea = () => {
     // Add answer logic here
   };
 
-  const handleLikeClick = (questionId: number | string) => {
-    console.log("Like clicked:", questionId);
-    // Add like logic here
-  };
-
-  const handleBookmarkClick = (questionId: number | string) => {
-    console.log("Bookmark clicked:", questionId);
-    // Add bookmark logic here
-  };
   return (
     <Box sx={{ flex: 1, p: 0, borderRadius: 2, overflowY: "scroll" }}>
       {/* Content Sections */}
@@ -53,8 +44,6 @@ const RightContentArea = () => {
               userData={userData}
               onCardClick={handleCardClick}
               onAnswerClick={handleAnswerClick}
-              onLikeClick={handleLikeClick}
-              onBookmarkClick={handleBookmarkClick}
             />
           </Grid>
         </Grid>
