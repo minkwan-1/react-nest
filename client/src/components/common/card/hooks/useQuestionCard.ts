@@ -24,6 +24,9 @@ export const useQuestionCard = ({
   }, [onAnswerClick, questionId]);
 
   const handleDeleteClick = useCallback(async () => {
+    const isConfirmed = window.confirm("정말 이 질문을 삭제하시겠습니까?");
+    if (!isConfirmed) return;
+
     try {
       const res = await fetch(
         `http://localhost:3000/questions/delete/${questionId}`,

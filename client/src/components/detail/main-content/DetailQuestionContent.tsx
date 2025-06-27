@@ -1,35 +1,17 @@
-import { Box, Paper, alpha, Avatar, Typography, Chip } from "@mui/material";
+import {
+  Box,
+  Paper,
+  alpha,
+  Avatar,
+  Typography,
+  Chip,
+  useTheme,
+} from "@mui/material";
 import { useParams } from "react-router-dom";
 import { useAtom } from "jotai";
 import { questionsAtom } from "@atom/question";
 
-const themeColors = {
-  primary: "#3B82F6",
-  primaryLight: "#EFF6FF",
-  primaryDark: "#1E40AF",
-  background: "#FFFFFF",
-  surface: "#F8FAFC",
-  borderLight: "#E2E8F0",
-  textPrimary: "#1E293B",
-  textSecondary: "#64748B",
-  upvote: "#22C55E",
-  downvote: "#EF4444",
-  tag: {
-    bg: "#E0F2FE",
-    text: "#0369A1",
-  },
-  accepted: "#059669",
-  code: {
-    bg: "#F8F9FC",
-    border: "#E5E7EB",
-    text: "#374151",
-  },
-  ai: {
-    bg: "#F0F9FF",
-    border: "#BAE6FD",
-    accent: "#0EA5E9",
-  },
-};
+const generateAvatarText = (name: string) => name.charAt(0).toUpperCase();
 
 type Question = {
   id: number;
@@ -47,15 +29,30 @@ type Question = {
   userId: string;
 };
 
-const generateAvatarText = (name: string) => {
-  return name.charAt(0).toUpperCase();
-};
-
 const DetailQuestionContent = () => {
   const { id } = useParams();
   const [questions] = useAtom(questionsAtom);
+  const theme = useTheme();
+  const mode = theme.palette.mode;
 
-  // URL의 id와 일치하는 질문 찾기
+  const isDark = mode === "dark";
+
+  const colors = {
+    primary: "#3B82F6",
+    primaryDark: "#1E40AF",
+    textPrimary: isDark ? "#F8FAFC" : "#1E293B",
+    textSecondary: isDark ? "#CBD5E1" : "#64748B",
+    background: isDark ? "#1E293B" : "#FFFFFF",
+    surface: isDark ? "#334155" : "#F8FAFC",
+    borderLight: isDark ? "#475569" : "#E2E8F0",
+    tagBg: isDark ? alpha("#E0F2FE", 0.15) : "#E0F2FE",
+    tagText: "#0369A1",
+    codeBg: isDark ? alpha("#1E293B", 0.8) : "#F8F9FC",
+    codeBorder: isDark ? "#334155" : "#E5E7EB",
+    codeText: isDark ? "#E2E8F0" : "#374151",
+    imgBorder: isDark ? "#475569" : "#E2E8F0",
+  };
+
   const question = questions?.find(
     (q: Question) => q.id === parseInt(id || "0")
   );
@@ -63,6 +60,7 @@ const DetailQuestionContent = () => {
   if (!question) {
     return <Typography>질문을 찾을 수 없습니다.</Typography>;
   }
+
   return (
     <Box sx={{ mt: 3 }}>
       <Paper
@@ -70,11 +68,11 @@ const DetailQuestionContent = () => {
         sx={{
           p: 3,
           borderRadius: 2,
-          bgcolor: themeColors.background,
-          border: `1px solid ${themeColors.borderLight}`,
+          bgcolor: colors.background,
+          border: `1px solid ${colors.borderLight}`,
           "& p": {
             mb: 2,
-            color: themeColors.textPrimary,
+            color: colors.textPrimary,
             lineHeight: 1.7,
           },
           "& ul, & ol": {
@@ -85,15 +83,17 @@ const DetailQuestionContent = () => {
             },
           },
           "& strong": {
-            color: themeColors.primaryDark,
+            color: colors.primaryDark,
             fontWeight: 600,
           },
           "& code": {
             fontFamily: "monospace",
-            backgroundColor: alpha(themeColors.code.bg, 0.7),
+            backgroundColor: colors.codeBg,
             padding: "2px 4px",
             borderRadius: "4px",
             fontSize: "0.9em",
+            color: colors.codeText,
+            border: `1px solid ${colors.codeBorder}`,
           },
           "& img": {
             maxWidth: "100%",
@@ -101,7 +101,7 @@ const DetailQuestionContent = () => {
             borderRadius: "8px",
             marginTop: "8px",
             marginBottom: "8px",
-            border: `1px solid ${themeColors.borderLight}`,
+            border: `1px solid ${colors.imgBorder}`,
           },
         }}
       >
@@ -115,13 +115,13 @@ const DetailQuestionContent = () => {
               label={tag}
               size="small"
               sx={{
-                backgroundColor: themeColors.tag.bg,
-                color: themeColors.tag.text,
+                backgroundColor: colors.tagBg,
+                color: colors.tagText,
                 fontWeight: 500,
                 fontSize: "0.75rem",
                 borderRadius: "4px",
                 "&:hover": {
-                  backgroundColor: alpha(themeColors.tag.bg, 0.7),
+                  backgroundColor: alpha(colors.tagBg, 0.7),
                 },
               }}
             />
@@ -130,20 +130,14 @@ const DetailQuestionContent = () => {
       </Paper>
 
       {/* 작성자 정보 */}
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "flex-end",
-          mt: 2,
-        }}
-      >
+      <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
         <Paper
           elevation={0}
           sx={{
             p: 2,
-            backgroundColor: themeColors.surface,
+            backgroundColor: colors.surface,
             borderRadius: 2,
-            border: `1px solid ${themeColors.borderLight}`,
+            border: `1px solid ${colors.borderLight}`,
             display: "flex",
             alignItems: "center",
             gap: 2,
@@ -153,7 +147,7 @@ const DetailQuestionContent = () => {
             sx={{
               width: 40,
               height: 40,
-              border: "1px solid #adb5be",
+              border: `1px solid ${colors.borderLight}`,
               backgroundColor: "#b8dae1",
               color: "white",
               fontWeight: 600,
@@ -164,19 +158,13 @@ const DetailQuestionContent = () => {
           <Box>
             <Typography
               variant="body1"
-              sx={{
-                fontWeight: 600,
-                color: themeColors.textPrimary,
-              }}
+              sx={{ fontWeight: 600, color: colors.textPrimary }}
             >
               {question.user.name}
             </Typography>
             <Typography
               variant="caption"
-              sx={{
-                color: themeColors.textSecondary,
-                display: "block",
-              }}
+              sx={{ color: colors.textSecondary, display: "block" }}
             >
               작성자
             </Typography>

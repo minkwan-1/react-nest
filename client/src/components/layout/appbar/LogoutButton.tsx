@@ -78,6 +78,9 @@ const LogoutButton = () => {
             fontSize: "1.25rem",
             textAlign: "center",
             mt: 1,
+            ...theme.applyStyles("dark", {
+              color: "#f0f0f0",
+            }),
           }}
         >
           정말 로그아웃 하시겠어요?
@@ -92,6 +95,9 @@ const LogoutButton = () => {
               px: 2,
               lineHeight: 1.5,
               userSelect: "none",
+              ...theme.applyStyles("dark", {
+                color: "#f0f0f0",
+              }),
             }}
           >
             로그아웃하면 앱 이용이 종료돼요.

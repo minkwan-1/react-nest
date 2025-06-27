@@ -6,10 +6,11 @@ import {
   Box,
   Button,
   CircularProgress,
+  useTheme,
 } from "@mui/material";
 import ReactQuill from "react-quill";
 
-const themeColors = {
+const baseThemeColors = {
   primary: "#b8dae1",
   primaryLight: "#f0f7f8",
   primaryDark: "#9cc7d0",
@@ -57,6 +58,23 @@ const AnswerEditor = ({
   isSubmittingAnswer,
   handleSubmitAnswer,
 }: AnswerEditorProps) => {
+  const theme = useTheme();
+  const isDarkMode = theme.palette.mode === "dark";
+
+  const themeColors = {
+    ...baseThemeColors,
+    background: isDarkMode ? "#1E293B" : baseThemeColors.background,
+    surface: isDarkMode ? "#334155" : baseThemeColors.surface,
+    textPrimary: isDarkMode ? "#F8FAFC" : baseThemeColors.textPrimary,
+    textSecondary: isDarkMode ? "#94A3B8" : baseThemeColors.textSecondary,
+    code: {
+      ...baseThemeColors.code,
+      bg: isDarkMode ? "#1E293B" : baseThemeColors.code.bg,
+      border: isDarkMode ? "#475569" : baseThemeColors.code.border,
+      text: isDarkMode ? "#E2E8F0" : baseThemeColors.code.text,
+    },
+  };
+
   const quillModules = {
     toolbar: [
       [{ header: [1, 2, 3, false] }],
@@ -66,6 +84,7 @@ const AnswerEditor = ({
       ["clean"],
     ],
   };
+
   return (
     <Box sx={{ mt: 6 }}>
       <Typography
@@ -99,10 +118,15 @@ const AnswerEditor = ({
         sx={{
           border: `2px solid ${themeColors.primary}`,
           borderRadius: 3,
-          boxShadow: "0 4px 20px rgba(184, 218, 225, 0.2)",
+          boxShadow: isDarkMode
+            ? "0 4px 20px rgba(255, 255, 255, 0.1)"
+            : "0 4px 20px rgba(184, 218, 225, 0.2)",
           mb: 3,
+          backgroundColor: themeColors.surface,
           "&:hover": {
-            boxShadow: "0 6px 25px rgba(184, 218, 225, 0.3)",
+            boxShadow: isDarkMode
+              ? "0 6px 25px rgba(255, 255, 255, 0.15)"
+              : "0 6px 25px rgba(184, 218, 225, 0.3)",
           },
           transition: "all 0.3s ease",
         }}
@@ -114,7 +138,8 @@ const AnswerEditor = ({
             modules={quillModules}
             theme="snow"
             style={{
-              backgroundColor: "#fff",
+              backgroundColor: isDarkMode ? "#1e293b" : "#fff",
+              color: isDarkMode ? "#f1f5f9" : "inherit",
               borderRadius: 8,
               opacity: isSubmittingAnswer ? 0.6 : 1,
               minHeight: "200px",
@@ -136,10 +161,14 @@ const AnswerEditor = ({
             py: 1.5,
             borderRadius: 3,
             fontSize: "16px",
-            boxShadow: "0 4px 15px rgba(184, 218, 225, 0.4)",
+            boxShadow: isDarkMode
+              ? "0 4px 15px rgba(255,255,255,0.1)"
+              : "0 4px 15px rgba(184, 218, 225, 0.4)",
             "&:hover": {
               bgcolor: themeColors.primaryDark,
-              boxShadow: "0 6px 20px rgba(184, 218, 225, 0.5)",
+              boxShadow: isDarkMode
+                ? "0 6px 20px rgba(255,255,255,0.15)"
+                : "0 6px 20px rgba(184, 218, 225, 0.5)",
               transform: "translateY(-2px)",
             },
             "&:disabled": {

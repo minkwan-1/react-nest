@@ -1,4 +1,4 @@
-import { Box, Typography, Stack } from "@mui/material";
+import { Box, Typography, Stack, useTheme } from "@mui/material";
 import { useParams } from "react-router-dom";
 import { useAtom } from "jotai";
 import { questionsAtom } from "@atom/question";
@@ -51,6 +51,7 @@ type Question = {
 const DetailQuestionTitle = () => {
   const { id } = useParams();
   const [questions] = useAtom(questionsAtom);
+  const theme = useTheme();
 
   // URL의 id와 일치하는 질문 찾기
   const question = questions?.find(
@@ -89,6 +90,9 @@ const DetailQuestionTitle = () => {
           color: themeColors.textPrimary,
           mb: 2,
           fontSize: { xs: "1.5rem", md: "2rem" },
+          ...theme.applyStyles("dark", {
+            color: "#f0f0f0",
+          }),
         }}
       >
         {question.title}

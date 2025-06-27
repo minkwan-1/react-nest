@@ -17,7 +17,7 @@ interface CardActionsSectionProps {
   question: Question;
   handleAnswerClick: (questionId: number | string) => void;
   handleDeleteClick: () => void;
-  onCardClick: (id: number | string) => void;
+  onCardClick?: (id: number | string) => void;
 }
 
 const CardActionsSection = ({
@@ -43,7 +43,7 @@ const CardActionsSection = ({
           borderRadius: 6,
         }}
         startIcon={<CommentOutlinedIcon sx={{ fontSize: 18 }} />}
-        onClick={() => onCardClick(question.id)}
+        onClick={() => onCardClick && onCardClick(question.id)}
       >
         답변하기
       </Button>

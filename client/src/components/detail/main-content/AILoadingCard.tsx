@@ -1,6 +1,12 @@
-import { Card, CardContent, CircularProgress, Typography } from "@mui/material";
+import {
+  Card,
+  CardContent,
+  CircularProgress,
+  Typography,
+  useTheme,
+} from "@mui/material";
 
-const themeColors = {
+const baseThemeColors = {
   primary: "#b8dae1",
   primaryLight: "#f0f7f8",
   primaryDark: "#9cc7d0",
@@ -34,25 +40,34 @@ const themeColors = {
 };
 
 const AILoadingCard = () => {
+  const theme = useTheme();
+  const isDarkMode = theme.palette.mode === "dark";
+
+  const themeColors = {
+    ...baseThemeColors,
+    ai: {
+      ...baseThemeColors.ai,
+      light: isDarkMode ? "#1e293b" : baseThemeColors.ai.light,
+      border: isDarkMode ? "#334155" : baseThemeColors.ai.border,
+    },
+    textSecondary: isDarkMode ? "#94A3B8" : baseThemeColors.textSecondary,
+  };
+
   return (
     <Card
       sx={{
         mb: 4,
-        border: `2px solid ${themeColors.ai.primary}`,
+        border: `2px solid ${themeColors.ai.border}`,
         borderRadius: 3,
-        boxShadow: "0 4px 20px rgba(133, 193, 204, 0.2)",
+        boxShadow: isDarkMode
+          ? "0 4px 20px rgba(255, 255, 255, 0.08)"
+          : "0 4px 20px rgba(133, 193, 204, 0.2)",
         backgroundColor: themeColors.ai.light,
         animation: "pulse 2s infinite",
         "@keyframes pulse": {
-          "0%": {
-            opacity: 1,
-          },
-          "50%": {
-            opacity: 0.8,
-          },
-          "100%": {
-            opacity: 1,
-          },
+          "0%": { opacity: 1 },
+          "50%": { opacity: 0.8 },
+          "100%": { opacity: 1 },
         },
       }}
     >
