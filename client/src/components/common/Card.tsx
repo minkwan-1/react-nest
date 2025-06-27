@@ -197,7 +197,6 @@ const QuestionCard = ({
                 mb: 1.5,
                 fontSize: "18px",
                 lineHeight: 1.4,
-                color: "#1976d2",
                 cursor: "pointer",
                 "&:hover": { textDecoration: "underline" },
               }}
