@@ -4,7 +4,7 @@
 ---
 
 ## 📘 프로젝트 소개
-**Pullim(풀림)**은 개발자들이  
+Pullim(풀림)은 개발자들이  
 > ✨ 궁금증을 나누고  
 > ✨ 지식을 공유하며  
 > ✨ 함께 성장할 수 있도록  
@@ -91,19 +91,29 @@ server/
 > Pullim의 실제 화면을 통해 사용자 흐름을 확인해보세요.
 
 ### 🖥️ 메인 히어로 섹션
-![메인 소개](public/images/main-hero.png)
+
+<img width="1440" alt="main-hero" src="https://github.com/user-attachments/assets/3dbb311a-2df2-444a-89a1-6bdbe99c6f77" />
 
 ### 🔐 소셜 로그인 화면
-![소셜 로그인](public/images/login-dark.png)
+
+<img width="1440" alt="login-dark" src="https://github.com/user-attachments/assets/470d2a70-4277-484c-8a74-0f3b7e752111" />
+
 
 ### 📋 질문 리스트
-![질문 리스트](public/images/question-list.png)
+
+<img width="1440" alt="question-list" src="https://github.com/user-attachments/assets/84dde02b-32c9-4acb-8892-54fe49abd0a4" />
+
 
 ### 📄 질문 상세 페이지 (AI 답변 포함)
-![질문 상세](public/images/question-detail.png)
+
+<img width="794" alt="question-detail" src="https://github.com/user-attachments/assets/b3e78412-bbd7-40f0-8821-96ccbb0acd9d" />
+
 
 ### 🙋 마이페이지
-![마이페이지](public/images/profile-page.png)
+
+<img width="1440" alt="profile-page" src="https://github.com/user-attachments/assets/ea86152f-3b3f-4ace-a305-b340c92bcf0b" />
+
+
 
 ---
 
@@ -144,5 +154,8 @@ yarn start:dev
 > "혼자 가면 빨리 가지만, 함께 가면 더 멀리 간다."
 
 Pullim은 질문 하나하나에 성장과 배움이 담긴 공간이 되기를 희망합니다.
+
+
+
 
 
