@@ -1,11 +1,9 @@
-
 # 🌐 Pullim  
-> _지식 공유와 AI가 결합된 개발자 Q&A 플랫폼_
+> *지식 공유와 AI가 결합된 개발자 Q&A 플랫폼*
 
 ---
 
 ## 📘 프로젝트 소개
-
 **Pullim(풀림)**은 개발자들이  
 > ✨ 궁금증을 나누고  
 > ✨ 지식을 공유하며  
@@ -36,7 +34,6 @@
 ## ⚙️ 기술 스택
 
 ### 💻 Frontend
-
 - **언어**: TypeScript
 - **프레임워크**: React + Vite
 - **상태 관리**: Jotai
@@ -45,7 +42,6 @@
 - **라우팅**: React Router
 
 ### 🖥️ Backend
-
 - **언어**: TypeScript
 - **프레임워크**: NestJS
 - **DB**: PostgreSQL
@@ -53,7 +49,6 @@
 - **인증**: Passport.js (Google/Naver), JWT, Session 기반
 
 ### 🧰 DevOps & 외부 서비스
-
 - **AI**: Google Generative AI (Gemini)
 - **SMS 인증**: Twilio
 - **이미지 업로드**: AWS S3
@@ -62,23 +57,20 @@
 
 ## 🏗️ 아키텍처
 
-Pullim은 **모노레포 구조**를 기반으로  
-클라이언트와 서버를 분리하여 구성했습니다.
+Pullim은 **모노레포 구조**를 기반으로 클라이언트와 서버를 분리하여 구성했습니다.
 
 ### 📂 Frontend 구조 (`client/`)
-
-```plaintext
+```
 client/
 ├── components/     # 재사용 가능한 UI 컴포넌트
 ├── pages/          # 각 라우트별 페이지 컴포넌트
 ├── api/            # API 호출 함수
 ├── atom/           # 전역 상태 (Jotai)
 ├── hooks/          # 커스텀 훅 (비즈니스 로직)
-````
+```
 
 ### 📂 Backend 구조 (`server/`)
-
-```plaintext
+```
 server/
 ├── modules/        # 기능별 모듈 (auth, users, questions, ...)
 ├── configs/        # 설정 (TypeORM 등)
@@ -88,11 +80,9 @@ server/
 ---
 
 ## 🗂️ 데이터베이스 구조
-
-* PostgreSQL 기반 설계
-* TypeORM으로 모델링
-* ERD는 `pullim.erd.json`을 기반으로 시각화
-
+- PostgreSQL 기반 설계
+- TypeORM으로 모델링
+- ERD는 `pullim.erd.json`을 기반으로 시각화
 
 ---
 
@@ -101,46 +91,31 @@ server/
 > Pullim의 실제 화면을 통해 사용자 흐름을 확인해보세요.
 
 ### 🖥️ 메인 히어로 섹션
-
-<img src="./public/images/main-hero.png" alt="메인 소개" width="700"/>
-
----
+![메인 소개](public/images/main-hero.png)
 
 ### 🔐 소셜 로그인 화면
-
-<img src="./public/images/login-dark.png" alt="소셜 로그인" width="700"/>
-
----
+![소셜 로그인](public/images/login-dark.png)
 
 ### 📋 질문 리스트
-
-<img src="./public/images/question-list.png" alt="질문 리스트" width="700"/>
-
----
+![질문 리스트](public/images/question-list.png)
 
 ### 📄 질문 상세 페이지 (AI 답변 포함)
-
-<img src="./public/images/question-detail.png" alt="질문 상세" width="700"/>
-
----
+![질문 상세](public/images/question-detail.png)
 
 ### 🙋 마이페이지
-
-<img src="./public/images/profile-page.png" alt="마이페이지" width="700"/>
+![마이페이지](public/images/profile-page.png)
 
 ---
 
 ## 🚀 시작하기
 
 ### 1. 프로젝트 클론
-
 ```bash
 git clone https://github.com/minkwan-1/react-nest.git
 cd react-nest
 ```
 
 ### 2. 클라이언트 실행
-
 ```bash
 cd client
 yarn install
@@ -148,7 +123,6 @@ yarn dev
 ```
 
 ### 3. 서버 실행
-
 ```bash
 cd server
 yarn install
@@ -167,11 +141,8 @@ yarn start:dev
 
 ## 🧠 함께 성장하는 개발 문화를 위하여
 
-> “혼자 가면 빨리 가지만,
-> 함께 가면 더 멀리 간다.”
+> "혼자 가면 빨리 가지만, 함께 가면 더 멀리 간다."
 
-Pullim은 질문 하나하나에
-성장과 배움이 담긴 공간이 되기를 희망합니다.
-
+Pullim은 질문 하나하나에 성장과 배움이 담긴 공간이 되기를 희망합니다.
 
 
