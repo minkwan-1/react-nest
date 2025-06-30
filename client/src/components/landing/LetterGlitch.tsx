@@ -1,3 +1,4 @@
+import { useTheme, Box } from "@mui/material";
 import { useRef, useEffect } from "react";
 
 type LetterGlitchProps = {
@@ -24,6 +25,7 @@ const LetterGlitch = ({
   outerVignette = true,
   smooth = true,
 }: LetterGlitchProps) => {
+  const theme = useTheme();
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const animationRef = useRef<number | null>(null);
   const letters = useRef<Letter[]>([]);
@@ -235,12 +237,14 @@ const LetterGlitch = ({
   }, [glitchSpeed, smooth]);
 
   return (
-    <div
-      style={{
+    <Box
+      sx={{
+        ...theme.applyStyles("light", {
+          backgroundColor: "#000000",
+        }),
         position: "relative",
         width: "100%",
         height: "100%",
-        backgroundColor: "#000000", // ✅ 컴포넌트 배경도 확실히 검정
         overflow: "hidden",
       }}
       className={className}
@@ -277,7 +281,7 @@ const LetterGlitch = ({
           }}
         />
       )}
-    </div>
+    </Box>
   );
 };
 

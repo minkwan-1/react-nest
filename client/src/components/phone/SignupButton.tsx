@@ -66,7 +66,7 @@ const SignupButton: React.FC<SignupButtonProps> = ({
           type: "success",
           title: "회원가입 성공",
           message:
-            "회원가입이 완료되었습니다!\n\n풀림(Pullim)에 오신 것을 환영합니다. 이제 자유롭게 질문하고, 답변하며 함께 성장해 보세요!\n잠시 후 로그인 페이지로 이동합니다.",
+            "회원가입이 완료되었습니다!\n\n풀림(Pullim)에 오신 것을 환영합니다. 이제 자유롭게 질문하고, 답변하며 함께 성장해 보세요!",
         });
       }
     } catch (error) {
@@ -173,9 +173,6 @@ const SignupButton: React.FC<SignupButtonProps> = ({
             <Typography variant="body2" color="text.secondary">
               {modal.message}
             </Typography>
-            <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-              로그인하자
-            </Typography>
           </DialogContent>
 
           <DialogActions sx={{ justifyContent: "center", pt: 2 }}>
@@ -194,7 +191,7 @@ const SignupButton: React.FC<SignupButtonProps> = ({
                 },
               }}
             >
-              로그인 ㄱㄱ
+              확인
             </Button>
           </DialogActions>
         </Dialog>

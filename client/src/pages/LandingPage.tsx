@@ -18,11 +18,9 @@ const LandingPage = () => {
           zIndex: 0,
           pointerEvents: "none",
           ...theme.applyStyles("light", {
-            opacity: 0.4,
             filter: "brightness(0.7) contrast(0.8)",
           }),
           ...theme.applyStyles("dark", {
-            opacity: 0.4,
             filter: "brightness(0.7) contrast(0.8)",
           }),
         }}
@@ -54,10 +52,9 @@ const LandingPage = () => {
             flexDirection: { xs: "column", md: "row" },
 
             ...theme.applyStyles("light", {
-              backgroundColor: "rgba(255, 255, 255, 0.6)",
-              color: "#1a1a1a",
-              border: "1px solid rgba(0, 0, 0, 0.1)",
-              boxShadow: "0 8px 32px rgba(0, 0, 0, 0.3)",
+              backgroundColor: "rgba(20, 20, 20, 0.6)",
+              color: theme.palette.text.primary,
+              border: "1px solid rgba(255, 255, 255, 0.2)",
             }),
             ...theme.applyStyles("dark", {
               backgroundColor: "rgba(20, 20, 20, 0.6)",
@@ -69,10 +66,7 @@ const LandingPage = () => {
             padding: { xs: 3, md: 4 },
 
             "& *": {
-              textShadow:
-                theme.palette.mode === "light"
-                  ? "0 1px 2px rgba(0, 0, 0, 0.3)"
-                  : "0 1px 3px rgba(0,0,0,0.8)",
+              textShadow: "0 1px 3px rgba(0,0,0,0.8)",
               fontWeight: "500",
             },
 

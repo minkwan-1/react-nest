@@ -1,6 +1,6 @@
 import { AnswerRendererProps } from "../types";
-
 import { AnswerCard } from "./answer-renderer/index";
+
 export const AnswerRenderer = ({ aiAnswer, answers }: AnswerRendererProps) => {
   const renderAnswers = () => {
     const allAnswers = [];

@@ -3,6 +3,7 @@ import { themeColors } from "../../utils/styleUtils";
 import { AnswerBadgeProps } from "@components/detail/types";
 
 const AnswerBadge = ({ isAiAnswer }: AnswerBadgeProps) => (
+  // 사용자에 실제 유저 이름 적용하려다가 중단
   <Box
     sx={{
       position: "absolute",

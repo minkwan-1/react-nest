@@ -1,33 +1,51 @@
-import { Card, CardContent, Divider } from "@mui/material";
+import { Card, CardContent, Divider, useTheme } from "@mui/material";
 import { themeColors } from "../../utils/styleUtils";
 import { AnswerCardProps } from "@components/detail/types";
 import { AnswerBadge, AnswerHeader, AnswerContent } from "./index";
 
 const AnswerCard = ({ answer }: AnswerCardProps) => {
-  return (
-    <Card
-      sx={{
-        mb: 3,
-        border: answer.isAiAnswer
-          ? `2px solid ${themeColors.ai.primary}`
-          : `2px solid ${themeColors.user.primary}`,
-        borderRadius: 3,
+  const theme = useTheme();
+  const isDarkMode = theme.palette.mode === "dark";
+
+  const getCardStyles = () => {
+    const baseColor = answer.isAiAnswer ? themeColors.ai : themeColors.user;
+
+    return {
+      mb: 3,
+      border: `2px solid ${baseColor.primary}`,
+      borderRadius: 3,
+      boxShadow: answer.isAiAnswer
+        ? isDarkMode
+          ? "0 4px 20px rgba(133, 193, 204, 0.15)"
+          : "0 4px 20px rgba(133, 193, 204, 0.2)"
+        : isDarkMode
+        ? "0 4px 20px rgba(168, 209, 219, 0.15)"
+        : "0 4px 20px rgba(168, 209, 219, 0.2)",
+      "&:hover": {
         boxShadow: answer.isAiAnswer
-          ? "0 4px 20px rgba(133, 193, 204, 0.2)"
-          : "0 4px 20px rgba(168, 209, 219, 0.2)",
-        "&:hover": {
-          boxShadow: answer.isAiAnswer
-            ? "0 8px 25px rgba(133, 193, 204, 0.3)"
-            : "0 8px 25px rgba(168, 209, 219, 0.3)",
-          transform: "translateY(-2px)",
-        },
-        position: "relative",
-        backgroundColor: answer.isAiAnswer
-          ? themeColors.ai.light
-          : themeColors.user.light,
-        transition: "all 0.3s ease",
-      }}
-    >
+          ? isDarkMode
+            ? "0 8px 25px rgba(133, 193, 204, 0.25)"
+            : "0 8px 25px rgba(133, 193, 204, 0.3)"
+          : isDarkMode
+          ? "0 8px 25px rgba(168, 209, 219, 0.25)"
+          : "0 8px 25px rgba(168, 209, 219, 0.3)",
+        transform: "translateY(-2px)",
+      },
+      position: "relative",
+      backgroundColor: isDarkMode ? baseColor.dark : baseColor.light,
+      transition: "all 0.3s ease",
+    };
+  };
+
+  const getDividerColor = () => {
+    const baseColor = answer.isAiAnswer ? themeColors.ai : themeColors.user;
+    return isDarkMode
+      ? `${baseColor.primary}40` // 투명도 적용
+      : baseColor.border;
+  };
+
+  return (
+    <Card sx={getCardStyles()}>
       <AnswerBadge isAiAnswer={answer.isAiAnswer} />
 
       <CardContent sx={{ p: 4 }}>
@@ -36,9 +54,7 @@ const AnswerCard = ({ answer }: AnswerCardProps) => {
         <Divider
           sx={{
             mb: 3,
-            borderColor: answer.isAiAnswer
-              ? themeColors.ai.border
-              : themeColors.user.border,
+            borderColor: getDividerColor(),
             borderWidth: "1px",
           }}
         />
