@@ -1,3 +1,4 @@
+import { realUserInfo } from "@atom/auth";
 import {
   Typography,
   Alert,
@@ -7,8 +8,11 @@ import {
   Button,
   CircularProgress,
   useTheme,
+  Paper,
 } from "@mui/material";
+import { useAtom } from "jotai";
 import ReactQuill from "react-quill";
+import LoginIcon from "@mui/icons-material/Login";
 
 const baseThemeColors = {
   primary: "#b8dae1",
@@ -60,6 +64,7 @@ const AnswerEditor = ({
 }: AnswerEditorProps) => {
   const theme = useTheme();
   const isDarkMode = theme.palette.mode === "dark";
+  const [realUser] = useAtom(realUserInfo);
 
   const themeColors = {
     ...baseThemeColors,
@@ -85,8 +90,57 @@ const AnswerEditor = ({
     ],
   };
 
+  if (!realUser) {
+    return (
+      <Paper
+        elevation={3}
+        sx={{
+          p: 4,
+          mt: 6,
+          textAlign: "center",
+          backgroundColor: themeColors.surface,
+          borderRadius: 3,
+          border: `2px dashed ${themeColors.primary}`,
+        }}
+      >
+        <Typography
+          variant="h6"
+          sx={{ mb: 2, fontWeight: 700, color: themeColors.textPrimary }}
+        >
+          ✋ 답변 작성은 로그인 후에 가능합니다
+        </Typography>
+        <Typography sx={{ mb: 3, color: themeColors.textSecondary }}>
+          지식을 공유하고 싶다면 먼저 로그인해주세요!
+        </Typography>
+        <Button
+          variant="contained"
+          color="primary"
+          startIcon={<LoginIcon />}
+          sx={{
+            fontWeight: 700,
+            px: 4,
+            py: 1.5,
+            borderRadius: 3,
+            bgcolor: themeColors.primary,
+            color: "white",
+            "&:hover": {
+              bgcolor: themeColors.primaryDark,
+            },
+          }}
+          onClick={() => {
+            // 라우터에 따라 로그인 페이지 이동 처리
+            window.location.href = "/start";
+          }}
+        >
+          로그인하러 가기
+        </Button>
+      </Paper>
+    );
+  }
+
   return (
     <Box sx={{ mt: 6 }}>
+      {/* 이하 기존 내용 그대로 유지 */}
       <Typography
         variant="h5"
         sx={{

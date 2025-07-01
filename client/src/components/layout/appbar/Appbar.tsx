@@ -22,6 +22,8 @@ function Appbar({ sx }: AppbarProps) {
   const myInfo = useFetchMyInfo(realUser?.id);
   const userProfileImage = myInfo?.profileImageUrl;
 
+  console.log("유저 로그인 상태 확인: ", realUser);
+
   useEffect(() => {
     const fetchUser = async () => {
       try {
