@@ -45,7 +45,7 @@ const CardActionsSection = ({
         startIcon={<CommentOutlinedIcon sx={{ fontSize: 18 }} />}
         onClick={() => onCardClick && onCardClick(question.id)}
       >
-        답변하기
+        확인하기
       </Button>
 
       <Box sx={{ flexGrow: 1 }} />

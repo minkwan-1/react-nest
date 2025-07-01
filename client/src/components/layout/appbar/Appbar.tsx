@@ -22,8 +22,6 @@ function Appbar({ sx }: AppbarProps) {
   const myInfo = useFetchMyInfo(realUser?.id);
   const userProfileImage = myInfo?.profileImageUrl;
 
-  // console.log("전역 상태를 사용 중인지?: ", realUser);
-
   useEffect(() => {
     const fetchUser = async () => {
       try {
