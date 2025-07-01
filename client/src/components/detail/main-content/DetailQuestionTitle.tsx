@@ -1,4 +1,4 @@
-import { Box, Typography, Stack, useTheme } from "@mui/material";
+import { Box, Typography, Stack, useTheme, Chip, alpha } from "@mui/material";
 import { useParams } from "react-router-dom";
 import { useAtom } from "jotai";
 import { questionsAtom } from "@atom/question";
@@ -13,22 +13,9 @@ const themeColors = {
   borderLight: "#E2E8F0",
   textPrimary: "#1E293B",
   textSecondary: "#64748B",
-  upvote: "#22C55E",
-  downvote: "#EF4444",
   tag: {
     bg: "#E0F2FE",
     text: "#0369A1",
-  },
-  accepted: "#059669",
-  code: {
-    bg: "#F8F9FC",
-    border: "#E5E7EB",
-    text: "#374151",
-  },
-  ai: {
-    bg: "#F0F9FF",
-    border: "#BAE6FD",
-    accent: "#0EA5E9",
   },
 };
 
@@ -52,13 +39,12 @@ const DetailQuestionTitle = () => {
   const { id } = useParams();
   const [questions] = useAtom(questionsAtom);
   const theme = useTheme();
+  const isDark = theme.palette.mode === "dark";
 
-  // URL의 id와 일치하는 질문 찾기
   const question = questions?.find(
     (q: Question) => q.id === parseInt(id || "0")
   );
 
-  // 날짜 포맷팅 함수
   const formatDate = (dateString: string) => {
     const options: Intl.DateTimeFormatOptions = {
       year: "numeric",
@@ -70,10 +56,7 @@ const DetailQuestionTitle = () => {
     return new Date(dateString).toLocaleDateString("ko-KR", options);
   };
 
-  // 질문이 없으면 빈 컴포넌트 반환
-  if (!question) {
-    return null;
-  }
+  if (!question) return null;
 
   return (
     <Box
@@ -90,7 +73,7 @@ const DetailQuestionTitle = () => {
           color: themeColors.textPrimary,
           mb: 2,
           fontSize: { xs: "1.5rem", md: "2rem" },
-          ...theme.applyStyles("dark", {
+          ...theme.applyStyles?.("dark", {
             color: "#f0f0f0",
           }),
         }}
@@ -114,6 +97,31 @@ const DetailQuestionTitle = () => {
           </Typography>
         </Box>
       </Stack>
+
+      {/* 👇 태그 표시 */}
+      <Box sx={{ mt: 2, display: "flex", flexWrap: "wrap", gap: 1 }}>
+        {question.tags.map((tag, index) => (
+          <Chip
+            key={index}
+            label={tag}
+            size="small"
+            sx={{
+              backgroundColor: isDark
+                ? alpha(themeColors.tag.bg, 0.15)
+                : themeColors.tag.bg,
+              color: themeColors.tag.text,
+              fontWeight: 500,
+              fontSize: "0.75rem",
+              borderRadius: "4px",
+              "&:hover": {
+                backgroundColor: isDark
+                  ? alpha(themeColors.tag.bg, 0.3)
+                  : alpha(themeColors.tag.bg, 0.7),
+              },
+            }}
+          />
+        ))}
+      </Box>
     </Box>
   );
 };

@@ -1,12 +1,4 @@
-import {
-  Box,
-  Paper,
-  alpha,
-  Avatar,
-  Typography,
-  Chip,
-  useTheme,
-} from "@mui/material";
+import { Box, Paper, alpha, Avatar, Typography, useTheme } from "@mui/material";
 import { useParams } from "react-router-dom";
 import { useAtom } from "jotai";
 import { questionsAtom } from "@atom/question";
@@ -106,27 +98,6 @@ const DetailQuestionContent = () => {
         }}
       >
         <div dangerouslySetInnerHTML={{ __html: question.content }} />
-
-        {/* 태그 */}
-        <Box sx={{ mt: 4, display: "flex", flexWrap: "wrap", gap: 1 }}>
-          {question.tags.map((tag, index) => (
-            <Chip
-              key={index}
-              label={tag}
-              size="small"
-              sx={{
-                backgroundColor: colors.tagBg,
-                color: colors.tagText,
-                fontWeight: 500,
-                fontSize: "0.75rem",
-                borderRadius: "4px",
-                "&:hover": {
-                  backgroundColor: alpha(colors.tagBg, 0.7),
-                },
-              }}
-            />
-          ))}
-        </Box>
       </Paper>
 
       {/* 작성자 정보 */}
