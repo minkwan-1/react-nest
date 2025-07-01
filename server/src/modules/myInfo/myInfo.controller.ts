@@ -13,16 +13,16 @@ export class MyInfoController {
     @Body()
     body: {
       userId: string;
-      job: string;
+      nickname: string;
       interests: string[];
       profileImageUrl?: string;
       socialLinks: string[];
     },
   ) {
-    const { userId, job, interests, socialLinks, profileImageUrl } = body;
+    const { userId, nickname, interests, socialLinks, profileImageUrl } = body;
 
     this.logger.log(
-      `업데이트 요청 - userId: ${userId}, job: ${job}, interests: ${JSON.stringify(
+      `업데이트 요청 - userId: ${userId}, nickname: ${nickname}, interests: ${JSON.stringify(
         interests,
       )}, profileImageUrl: ${profileImageUrl}, socialLinks: ${JSON.stringify(
         socialLinks,
@@ -32,7 +32,7 @@ export class MyInfoController {
     try {
       await this.myInfoService.upsert(
         userId,
-        job,
+        nickname,
         interests,
         socialLinks,
         profileImageUrl,

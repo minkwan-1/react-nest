@@ -16,16 +16,16 @@ const keyColor = "#b8dae1";
 const gradientBg = "linear-gradient(135deg, #b8dae1 0%, #9bc5cc 100%)";
 
 interface ProfileEditSectionProps {
-  job: string;
-  setJob: (job: string) => void;
+  nickname: string;
+  setNickname: (job: string) => void;
   profileImageUrl: string;
   setProfileImageUrl: (url: string) => void;
   handleProfileImageUpload: (base64Image: string) => Promise<void>;
 }
 
 const ProfileEditSection = ({
-  job,
-  setJob,
+  nickname,
+  setNickname,
   profileImageUrl,
 
   handleProfileImageUpload,
@@ -130,10 +130,10 @@ const ProfileEditSection = ({
             <Stack spacing={2.5}>
               <TextField
                 fullWidth
-                label="직업"
+                label="닉네임"
                 variant="outlined"
-                value={job}
-                onChange={(e) => setJob(e.target.value)}
+                value={nickname}
+                onChange={(e) => setNickname(e.target.value)}
                 sx={{
                   "& .MuiOutlinedInput-root": {
                     borderRadius: 2,

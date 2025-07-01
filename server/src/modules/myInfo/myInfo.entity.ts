@@ -15,9 +15,9 @@ export class MyInfo {
   @Column({ unique: true })
   userId: string;
 
-  // 직업
+  // 닉네임
   @Column({ type: 'varchar', length: 100, nullable: true })
-  job: string;
+  nickname: string;
 
   // 프로필 이미지 URL
   @Column({ type: 'varchar', nullable: true })

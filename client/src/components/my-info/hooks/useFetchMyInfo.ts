@@ -4,7 +4,7 @@ import axios from "axios";
 interface MyInfoType {
   id: string;
   userId: string;
-  job: string;
+  nickname: string;
   interests: string[];
   profileImageUrl?: string;
   socialLinks: string[];

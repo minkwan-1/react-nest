@@ -13,14 +13,14 @@ export class MyInfoService {
   // myInfo 등록 처리
   async upsert(
     userId: string,
-    job: string,
+    nickname: string,
     interests: string[],
     socialLinks: string[],
     profileImageUrl?: string,
   ): Promise<void> {
     const existing = await this.myInfoRepository.findOne({ where: { userId } });
     if (existing) {
-      existing.job = job;
+      existing.nickname = nickname;
       existing.interests = interests;
       existing.socialLinks = socialLinks;
       if (profileImageUrl !== undefined) {
@@ -30,7 +30,7 @@ export class MyInfoService {
       await this.myInfoRepository.save(existing);
     } else {
       const newMyInfo = {
-        job,
+        nickname,
         interests,
         socialLinks,
         profileImageUrl: profileImageUrl || null,

@@ -13,8 +13,8 @@ import useMyInfoForm from "@components/my-info/hooks/useMyInfoForm";
 const MyInfoEditPage = () => {
   const {
     // 기존 상태
-    job,
-    setJob,
+    nickname,
+    setNickname,
     interests,
     interestInput,
     setInterestInput,
@@ -49,8 +49,8 @@ const MyInfoEditPage = () => {
 
             {/* 프로필 섹션 - 프로필 이미지 관련 props 추가 */}
             <ProfileEditSection
-              job={job}
-              setJob={setJob}
+              nickname={nickname}
+              setNickname={setNickname}
               profileImageUrl={profileImageUrl}
               setProfileImageUrl={setProfileImageUrl}
               handleProfileImageUpload={handleProfileImageUpload}

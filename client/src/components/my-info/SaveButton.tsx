@@ -7,7 +7,7 @@ const gradientBg = "linear-gradient(135deg, #b8dae1 0%, #9bc5cc 100%)";
 interface MyInfoType {
   id: string;
   userId: string;
-  job: string;
+  nickname: string;
   interests: string[];
   socialLinks: string[];
   createdAt: string;

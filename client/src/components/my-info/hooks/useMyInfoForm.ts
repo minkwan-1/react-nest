@@ -16,7 +16,7 @@ const useMyInfoForm = () => {
   const myInfo = useFetchMyInfo(userId);
 
   // 폼 상태 정의
-  const [job, setJob] = useState("");
+  const [nickname, setNickname] = useState("");
   const [interests, setInterests] = useState<string[]>([]);
   const [interestInput, setInterestInput] = useState("");
   const [socialLinks, setSocialLinks] = useState<string[]>([""]);
@@ -36,7 +36,7 @@ const useMyInfoForm = () => {
     if (userId && myInfo !== null && !isInitialized) {
       console.log("서버에서 받아온 프로필 정보: ", myInfo);
 
-      setJob(myInfo?.job || "");
+      setNickname(myInfo?.nickname || "");
       setInterests(myInfo?.interests || []);
       setSocialLinks(myInfo?.socialLinks?.length ? myInfo.socialLinks : [""]);
       setProfileImageUrl(myInfo?.profileImageUrl || "");
@@ -111,7 +111,7 @@ const useMyInfoForm = () => {
     try {
       const payload = {
         userId,
-        job: job.trim(),
+        nickname: nickname.trim(),
         interests,
         socialLinks: filteredSocialLinks,
         profileImageUrl,
@@ -130,8 +130,8 @@ const useMyInfoForm = () => {
 
   return {
     // 상태값들
-    job,
-    setJob,
+    nickname,
+    setNickname,
     interests,
     interestInput,
     setInterestInput,
