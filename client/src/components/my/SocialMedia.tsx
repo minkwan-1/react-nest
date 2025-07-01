@@ -1,83 +1,92 @@
-import { Typography, Box, IconButton, useTheme } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Link as MuiLink,
+  Stack,
+  useTheme,
+} from "@mui/material";
 import {
   Instagram as InstagramIcon,
   LinkedIn as LinkedInIcon,
   GitHub as GitHubIcon,
+  Link as DefaultLinkIcon,
 } from "@mui/icons-material";
 
-// 나중에
-const SocialMedia = () => {
-  const theme = useTheme();
+interface SocialMediaProps {
+  socialLink?: string[]; // ✅ optional 처리
+}
 
-  const koreanContent = {
-    followers: "팔로워",
-    following: "팔로잉",
-    interests: "관심 분야",
-    socialMedia: "소셜 미디어",
-  };
+const getIcon = (url: string) => {
+  if (url.includes("instagram.com"))
+    return <InstagramIcon sx={{ color: "#E4405F" }} />;
+  if (url.includes("linkedin.com"))
+    return <LinkedInIcon sx={{ color: "#0A66C2" }} />;
+  if (url.includes("github.com")) return <GitHubIcon sx={{ color: "#333" }} />;
+  return <DefaultLinkIcon color="action" />;
+};
+
+const getDomainLabel = (url: string) => {
+  try {
+    const domain = new URL(url).hostname.replace("www.", "");
+    return domain;
+  } catch {
+    return "링크";
+  }
+};
+
+const SocialMedia = ({ socialLink = [] }: SocialMediaProps) => {
+  const theme = useTheme();
+  const filteredLinks = socialLink.filter((link) => !!link.trim());
+
+  if (filteredLinks.length === 0) return null;
+
   return (
-    <>
+    <Box sx={{ mt: 2, width: "100%" }}>
       <Typography
         variant="subtitle2"
         fontWeight="bold"
-        sx={{ width: "100%", textAlign: "left", mb: 1 }}
+        sx={{ mb: 1, textAlign: "left" }}
       >
-        {koreanContent.socialMedia}
+        소셜 미디어
       </Typography>
 
-      <Box
-        sx={{
-          display: "flex",
-          width: "100%",
-          mb: 2,
-          justifyContent: "flex-start",
-          gap: 1,
-        }}
-      >
-        <IconButton
-          size="small"
-          sx={{
-            color: "#E4405F",
-            "&:hover": {
-              bgcolor:
-                theme.palette.mode === "light"
-                  ? "rgba(228, 64, 95, 0.1)"
-                  : "rgba(228, 64, 95, 0.2)",
-            },
-          }}
-        >
-          <InstagramIcon fontSize="small" />
-        </IconButton>
-        <IconButton
-          size="small"
-          sx={{
-            color: "#0A66C2",
-            "&:hover": {
-              bgcolor:
-                theme.palette.mode === "light"
-                  ? "rgba(10, 102, 194, 0.1)"
-                  : "rgba(10, 102, 194, 0.2)",
-            },
-          }}
-        >
-          <LinkedInIcon fontSize="small" />
-        </IconButton>
-        <IconButton
-          size="small"
-          sx={{
-            color: theme.palette.mode === "light" ? "#333" : "#fff",
-            "&:hover": {
-              bgcolor:
-                theme.palette.mode === "light"
-                  ? "rgba(51, 51, 51, 0.1)"
-                  : "rgba(255, 255, 255, 0.1)",
-            },
-          }}
-        >
-          <GitHubIcon fontSize="small" />
-        </IconButton>
-      </Box>
-    </>
+      <Stack spacing={1} direction="column">
+        {filteredLinks.map((link, index) => (
+          <MuiLink
+            key={index}
+            href={link}
+            target="_blank"
+            rel="noopener noreferrer"
+            underline="hover"
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "flex-start",
+              gap: 1.5,
+              px: 1,
+              py: 0.75,
+              borderRadius: 1,
+              fontSize: "0.95rem",
+              color: theme.palette.text.primary,
+              backgroundColor:
+                theme.palette.mode === "light" ? "#f8f9fa" : "#1e293b",
+              "&:hover": {
+                backgroundColor:
+                  theme.palette.mode === "light"
+                    ? "#f0f4f8"
+                    : "rgba(255,255,255,0.05)",
+              },
+              transition: "background-color 0.2s",
+            }}
+          >
+            {getIcon(link)}
+            <Typography variant="body2" sx={{ fontWeight: 500 }}>
+              {getDomainLabel(link)}
+            </Typography>
+          </MuiLink>
+        ))}
+      </Stack>
+    </Box>
   );
 };
 

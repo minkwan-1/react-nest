@@ -13,6 +13,9 @@ const LeftContentArea = () => {
   const navigate = useNavigate();
   const [userInfo] = useAtom(realUserInfo);
   const myInfo = useFetchMyInfo(userInfo?.id);
+  const socialLink = myInfo?.socialLinks;
+
+  console.log("소셜 링크 확인: ", socialLink);
 
   const themeColors = {
     primary: theme.palette.primary.main,
@@ -56,7 +59,7 @@ const LeftContentArea = () => {
 
       <Divider sx={{ width: "100%", mb: 2 }} />
 
-      <SocialMedia />
+      <SocialMedia socialLink={socialLink} />
 
       <Tooltip title="프로필 편집" arrow placement="top">
         <IconButton
