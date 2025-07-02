@@ -23,16 +23,8 @@ const ModifyQuestionPage = () => {
   const [userInfo] = useAtom(realUserInfo);
 
   const { question, loading } = useQuestionDetail(id);
-  const {
-    title,
-    setTitle,
-    content,
-    setContent,
-    tags,
-    tagsInput,
-    handleTagsChange,
-    isFormValid,
-  } = useQuestionForm(question);
+  const { title, setTitle, content, setContent, tags, setTags, isFormValid } =
+    useQuestionForm(question);
 
   const { handleSubmit, isSubmitting } = useModifyQuestionSubmit(
     id,
@@ -72,8 +64,7 @@ const ModifyQuestionPage = () => {
               content={content}
               setContent={setContent}
               tags={tags}
-              tagsInput={tagsInput}
-              handleTagsChange={handleTagsChange}
+              setTags={setTags}
               isSubmitting={isSubmitting}
               isFormValid={isFormValid}
             />

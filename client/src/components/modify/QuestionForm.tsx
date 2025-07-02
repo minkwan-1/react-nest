@@ -15,8 +15,7 @@ interface QuestionFormProps {
   content: string;
   setContent: (value: string) => void;
   tags: string[];
-  tagsInput: string;
-  handleTagsChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  setTags: (tags: string[]) => void; // 변경됨
   isSubmitting: boolean;
   isFormValid: boolean;
 }
@@ -28,8 +27,7 @@ const QuestionForm = ({
   content,
   setContent,
   tags,
-  tagsInput,
-  handleTagsChange,
+  setTags, // 변경됨
   isSubmitting,
   isFormValid,
 }: QuestionFormProps) => {
@@ -70,11 +68,8 @@ const QuestionForm = ({
         <Box sx={{ mb: 3 }}>
           <SectionTitle title="태그" />
 
-          <TagsField
-            tags={tags}
-            inputValue={tagsInput}
-            handleTagsChange={handleTagsChange}
-          />
+          {/* 변경됨 */}
+          <TagsField tags={tags} setTags={setTags} />
         </Box>
 
         {/* submit button */}
