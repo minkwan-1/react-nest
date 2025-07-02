@@ -13,7 +13,7 @@ import {
 } from "@mui/icons-material";
 
 interface SocialMediaProps {
-  socialLink?: string[]; // ✅ optional 처리
+  socialLink?: string[];
 }
 
 const getIcon = (url: string) => {
