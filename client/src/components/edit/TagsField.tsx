@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Box,
   Typography,
@@ -6,17 +6,37 @@ import {
   Chip,
   useTheme,
   alpha,
+  IconButton,
 } from "@mui/material";
+import { Cancel } from "@mui/icons-material";
 
 interface TagsFieldProps {
   tags: string[];
-  handleTagsChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  setTags: (tags: string[]) => void;
 }
 
-const TagsField: React.FC<TagsFieldProps> = ({ tags, handleTagsChange }) => {
+const TagsField: React.FC<TagsFieldProps> = ({ tags, setTags }) => {
+  const [input, setInput] = useState("");
+  const [isComposing, setIsComposing] = useState(false); // ✅ 한글 조합 중 여부
   const theme = useTheme();
   const isDarkMode = theme.palette.mode === "dark";
   const mainColor = "#b8dae1";
+
+  // ✅ 조합 중이 아닐 때만 Enter로 태그 추가
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && !isComposing && input.trim()) {
+      e.preventDefault();
+      const newTag = input.trim();
+      if (!tags.includes(newTag)) {
+        setTags([...tags, newTag]);
+      }
+      setInput("");
+    }
+  };
+
+  const handleDelete = (tagToDelete: string) => {
+    setTags(tags.filter((tag) => tag !== tagToDelete));
+  };
 
   return (
     <Box sx={{ mb: 3 }}>
@@ -43,11 +63,14 @@ const TagsField: React.FC<TagsFieldProps> = ({ tags, handleTagsChange }) => {
       </Typography>
 
       <TextField
-        label="태그 (쉼표로 구분)"
+        label="태그 입력 후 Enter"
         fullWidth
-        value={tags.join(", ")}
-        onChange={handleTagsChange}
-        helperText="태그를 쉼표(,)로 구분하여 입력하세요"
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+        onKeyDown={handleKeyDown}
+        onCompositionStart={() => setIsComposing(true)} // ✅ 한글 조합 시작
+        onCompositionEnd={() => setIsComposing(false)} // ✅ 한글 조합 종료
+        helperText="Enter 키로 태그를 추가하세요"
         FormHelperTextProps={{
           sx: {
             color: isDarkMode ? alpha("#fff", 0.5) : alpha("#000", 0.6),
@@ -86,34 +109,37 @@ const TagsField: React.FC<TagsFieldProps> = ({ tags, handleTagsChange }) => {
       />
 
       {tags.length > 0 && (
-        <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mt: 2 }}>
-          {tags.map(
-            (tag, index) =>
-              tag && (
-                <Chip
-                  key={index}
-                  label={tag}
-                  sx={{
-                    backgroundColor: isDarkMode
-                      ? alpha(mainColor, 0.15)
-                      : alpha(mainColor, 0.08),
-                    color: isDarkMode ? alpha("#fff", 0.9) : alpha("#000", 0.8),
-                    borderRadius: "8px",
-                    fontWeight: 500,
-                    border: `1px solid ${
-                      isDarkMode ? alpha(mainColor, 0.3) : alpha(mainColor, 0.2)
-                    }`,
-                    transition: "all 0.2s ease",
-                    "&:hover": {
-                      backgroundColor: isDarkMode
-                        ? alpha(mainColor, 0.25)
-                        : alpha(mainColor, 0.15),
-                      boxShadow: `0 2px 5px ${alpha(mainColor, 0.2)}`,
-                    },
-                  }}
-                />
-              )
-          )}
+        <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1.2, mt: 2 }}>
+          {tags.map((tag, index) => (
+            <Chip
+              key={index}
+              label={tag}
+              onDelete={() => handleDelete(tag)}
+              deleteIcon={
+                <IconButton sx={{ p: 0.5 }}>
+                  <Cancel
+                    fontSize="small"
+                    sx={{
+                      color: isDarkMode ? "#ccc" : "#888",
+                      "&:hover": { color: "#f44336" },
+                    }}
+                  />
+                </IconButton>
+              }
+              sx={{
+                backgroundColor: isDarkMode
+                  ? alpha(mainColor, 0.15)
+                  : alpha(mainColor, 0.08),
+                color: isDarkMode ? alpha("#fff", 0.9) : alpha("#000", 0.8),
+                borderRadius: "20px",
+                fontWeight: 500,
+                paddingX: 1,
+                "& .MuiChip-label": {
+                  paddingX: 1.2,
+                },
+              }}
+            />
+          ))}
         </Box>
       )}
     </Box>

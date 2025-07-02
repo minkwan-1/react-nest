@@ -6,11 +6,6 @@ import { realUserInfo } from "@atom/auth";
 import { questionsAtom } from "@atom/question";
 import { useNavigate } from "react-router-dom";
 
-// interface UseQuestionFormProps {
-//   onSuccess?: () => void;
-//   onError?: (error: unknown) => void;
-// }
-
 export const useQuestionForm = () => {
   // state
   const [title, setTitle] = useState("");

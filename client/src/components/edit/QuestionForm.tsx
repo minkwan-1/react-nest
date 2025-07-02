@@ -21,6 +21,7 @@ interface QuestionFormProps {
   isSubmitting?: boolean;
   onSubmit: (e: React.FormEvent) => void;
   mainColor?: string;
+  setTags: (tags: string[]) => void;
 }
 
 export const QuestionForm: React.FC<QuestionFormProps> = ({
@@ -29,7 +30,8 @@ export const QuestionForm: React.FC<QuestionFormProps> = ({
   content,
   setContent,
   tags,
-  handleTagsChange,
+  setTags,
+  // handleTagsChange,
   previewMode,
   setPreviewMode,
   isSubmitting = false,
@@ -62,7 +64,7 @@ export const QuestionForm: React.FC<QuestionFormProps> = ({
           <ContentField content={content} setContent={setContent} />
         )}
 
-        <TagsField tags={tags} handleTagsChange={handleTagsChange} />
+        <TagsField tags={tags} setTags={setTags} />
 
         <Box
           sx={{

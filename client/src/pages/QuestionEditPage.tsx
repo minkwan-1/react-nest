@@ -22,6 +22,7 @@ export default function QuestionEditPage() {
     content,
     setContent,
     tags,
+    setTags,
     previewMode,
     setPreviewMode,
     isSubmitting,
@@ -67,6 +68,7 @@ export default function QuestionEditPage() {
                 content={content}
                 setContent={setContent}
                 tags={tags}
+                setTags={setTags}
                 handleTagsChange={handleTagsChange}
                 previewMode={previewMode}
                 setPreviewMode={setPreviewMode}
