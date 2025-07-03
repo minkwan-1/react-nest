@@ -49,6 +49,9 @@ const QuestionCard = ({
       onAnswerClick,
     });
 
+  const questionId = question.id;
+  const userId = user.id;
+
   return (
     <Card
       sx={{
@@ -101,6 +104,8 @@ const QuestionCard = ({
                 handleAnswerClick={handleAnswerClick}
                 handleDeleteClick={handleDeleteClick}
                 question={question}
+                questionId={questionId}
+                userId={userId}
               />
             )}
           </Box>

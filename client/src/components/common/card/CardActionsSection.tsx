@@ -18,15 +18,20 @@ interface CardActionsSectionProps {
   handleAnswerClick: (questionId: number | string) => void;
   handleDeleteClick: () => void;
   onCardClick?: (id: number | string) => void;
+  questionId: number | string;
+  userId: number | string;
 }
 
 const CardActionsSection = ({
   question,
   //   handleAnswerClick,
+  questionId,
+  userId,
   onCardClick,
   handleDeleteClick,
 }: CardActionsSectionProps) => {
   const navigate = useNavigate();
+  const isOwner = userId === questionId;
   return (
     <Box sx={{ display: "flex", alignItems: "center" }}>
       <Button
@@ -49,27 +54,28 @@ const CardActionsSection = ({
       </Button>
 
       <Box sx={{ flexGrow: 1 }} />
-
-      <Box sx={{ display: "flex", alignItems: "center" }}>
-        <IconButton
-          size="small"
-          aria-label="삭제"
-          sx={{ color: "#757575" }}
-          onClick={handleDeleteClick}
-        >
-          <DeleteOutlineIcon fontSize="small" />
-        </IconButton>
-        <IconButton
-          size="small"
-          aria-label="수정"
-          sx={{ color: "#757575" }}
-          onClick={() => {
-            navigate(`/modify/${question.id}`);
-          }}
-        >
-          <EditOutlinedIcon fontSize="small" />
-        </IconButton>
-      </Box>
+      {isOwner && (
+        <Box sx={{ display: "flex", alignItems: "center" }}>
+          <IconButton
+            size="small"
+            aria-label="삭제"
+            sx={{ color: "#757575" }}
+            onClick={handleDeleteClick}
+          >
+            <DeleteOutlineIcon fontSize="small" />
+          </IconButton>
+          <IconButton
+            size="small"
+            aria-label="수정"
+            sx={{ color: "#757575" }}
+            onClick={() => {
+              navigate(`/modify/${question.id}`);
+            }}
+          >
+            <EditOutlinedIcon fontSize="small" />
+          </IconButton>
+        </Box>
+      )}
     </Box>
   );
 };
