@@ -104,21 +104,15 @@ export const answerService = {
 // AI 답변 관련 API
 export const aiService = {
   // AI 답변 요청
-  getAiAnswer: async (question: Question): Promise<Answer> => {
+  getAiAnswer: async (questionId: number): Promise<Answer> => {
     try {
-      const queryParams = new URLSearchParams({
-        title: question.title,
-        content: question.content,
-      });
-
       const response = await apiRequest<ApiResponse<AiAnswerResponse>>(
-        `${API_BASE_URL}/api/ask-ai?${queryParams}`
+        `${API_BASE_URL}/api/ask-ai/${questionId}` // ✅ id 기반 API 호출
       );
 
-      // AI 답변을 Answer 형태로 변환
       return {
         id: "ai-answer",
-        questionId: question.id.toString(),
+        questionId: questionId.toString(),
         userId: "ai-assistant",
         content: response.data.answer,
         createdAt: response.data.generatedAt,

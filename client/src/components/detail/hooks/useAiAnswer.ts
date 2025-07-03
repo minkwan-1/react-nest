@@ -1,5 +1,6 @@
+// hooks/useAiAnswer.ts
 import { useState, useCallback } from "react";
-import { Answer, Question, UseAiAnswerReturn } from "../types";
+import { Answer, UseAiAnswerReturn } from "../types";
 import { apiService } from "../services/apiService";
 
 export const useAiAnswer = (): UseAiAnswerReturn => {
@@ -7,14 +8,14 @@ export const useAiAnswer = (): UseAiAnswerReturn => {
   const [aiLoading, setAiLoading] = useState(false);
   const [aiError, setAiError] = useState<string | null>(null);
 
-  const fetchAiAnswer = useCallback(async (question: Question) => {
-    if (!question) return;
+  const fetchAiAnswer = useCallback(async (questionId: number) => {
+    if (!questionId) return;
 
     setAiLoading(true);
     setAiError(null);
 
     try {
-      const aiAnswerData = await apiService.ai.getAiAnswer(question);
+      const aiAnswerData = await apiService.ai.getAiAnswer(questionId); // ✅
       setAiAnswer(aiAnswerData);
     } catch (error) {
       const errorMessage =

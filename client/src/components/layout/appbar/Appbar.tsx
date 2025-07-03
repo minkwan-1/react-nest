@@ -60,7 +60,13 @@ function Appbar({ sx }: AppbarProps) {
           <AppbarLogo />
         </Box>
 
-        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: 2,
+          }}
+        >
           <ThemeToggleButton />
           {realUser ? (
             <>

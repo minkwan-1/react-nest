@@ -6,8 +6,32 @@ import { realUserInfo } from "@atom/auth";
 import { questionsAtom } from "@atom/question";
 import { useNavigate } from "react-router-dom";
 
+// ✅ AI 요청 함수
+const fetchAiAnswer = async ({
+  title,
+  content,
+  questionId,
+}: {
+  title: string;
+  content: string;
+  questionId: string;
+}) => {
+  const params = new URLSearchParams({ title, content, questionId });
+
+  const response = await fetch(
+    `http://localhost:3000/api/ask-ai?${params.toString()}`
+  );
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(errorData.message || "AI 답변 요청 실패");
+  }
+
+  const result = await response.json();
+  return result.data; // { answer, generatedAt }
+};
+
 export const useQuestionForm = () => {
-  // state
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [tags, setTags] = useState<string[]>([]);
@@ -25,12 +49,10 @@ export const useQuestionForm = () => {
     title: "",
     message: "",
   });
+
   const navigate = useNavigate();
 
-  console.log(userInfo);
-  console.log(questions);
-
-  // 태그 입력 변경 핸들러
+  // 태그 입력 핸들러
   const handleTagsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const input = e.target.value;
     setTags(input.split(",").map((tag) => tag.trim()));
@@ -39,12 +61,13 @@ export const useQuestionForm = () => {
   // 폼 제출 핸들러
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     setIsSubmitting(true);
 
     try {
+      // 이미지 처리
       const processedContent = await imageService.processContentImages(content);
 
+      // 질문 등록
       const response = await axios.post("http://localhost:3000/questions", {
         title,
         content: processedContent,
@@ -52,12 +75,30 @@ export const useQuestionForm = () => {
         userId: userInfo?.id,
       });
 
-      // 응답을 전역 상태에 저장 (localStorage에 자동 저장됨)
-      setQuestions([...questions, response.data]);
-      console.log("질문 id 체크: ", response.data.id);
+      const createdQuestion = response.data;
 
-      // alert("Question submitted successfully!");
+      // 상태 반영
+      setQuestions([...questions, createdQuestion]);
+      console.log("질문 id 체크: ", createdQuestion.id);
 
+      // ✅ AI 요청
+      const aiData = {
+        title: createdQuestion.title,
+        content: createdQuestion.content,
+        questionId: createdQuestion.id,
+      };
+
+      console.log(aiData);
+
+      try {
+        const aiResponse = await fetchAiAnswer(aiData);
+        console.log("AI 응답:", aiResponse);
+        // 필요한 경우 여기에 저장 로직 추가
+      } catch (error) {
+        console.error("AI 생성 중 오류:", error);
+      }
+
+      // 폼 초기화 및 안내
       setTitle("");
       setContent("");
       setTags([]);
@@ -68,9 +109,7 @@ export const useQuestionForm = () => {
         message: "질문이 성공적으로 등록되었습니다.",
       });
 
-      // 질문 등록 완료 후 navigate
-      navigate(`/questions/${response.data.id}`);
-      // onSuccess();
+      navigate(`/questions/${createdQuestion.id}`);
     } catch (error) {
       console.error("Error submitting question:", error);
 
@@ -84,7 +123,6 @@ export const useQuestionForm = () => {
     }
   };
 
-  // 폼 리셋 함수
   const resetForm = () => {
     setTitle("");
     setContent("");

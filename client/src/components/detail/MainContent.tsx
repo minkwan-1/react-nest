@@ -44,7 +44,7 @@ const MainContent = () => {
   // question이 로드된 후 AI 답변 가져오기
   useEffect(() => {
     if (question && !loading) {
-      fetchAiAnswer(question);
+      fetchAiAnswer(question.id);
     }
   }, [question, loading, fetchAiAnswer]);
 

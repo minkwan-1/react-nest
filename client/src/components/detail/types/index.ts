@@ -60,12 +60,11 @@ export type UseAnswersReturn = {
   answersError: string | null;
   fetchAnswers: () => Promise<void>;
 };
-
 export type UseAiAnswerReturn = {
   aiAnswer: Answer | null;
   aiLoading: boolean;
   aiError: string | null;
-  fetchAiAnswer: (question: Question) => Promise<void>;
+  fetchAiAnswer: (questionId: number) => Promise<void>; // ✅ 기존: (question: Question) => Promise<void>
 };
 
 export type UseAnswerSubmitReturn = {

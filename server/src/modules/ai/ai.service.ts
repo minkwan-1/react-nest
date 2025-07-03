@@ -1,14 +1,18 @@
-// ai.service.ts
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { GoogleGenerativeAI } from '@google/generative-ai';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { AiAnswer } from './ai.entity';
 
 @Injectable()
 export class AiService {
   private genAI: GoogleGenerativeAI;
   private model: any;
 
-  constructor() {
-    // 환경변수에서 API 키를 가져옵니다
+  constructor(
+    @InjectRepository(AiAnswer)
+    private readonly aiAnswerRepository: Repository<AiAnswer>,
+  ) {
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
       throw new Error('GEMINI_API_KEY 환경변수가 설정되지 않았습니다.');
@@ -18,12 +22,15 @@ export class AiService {
     this.model = this.genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
   }
 
-  async generateAnswer(title: string, content: string): Promise<string> {
+  // 1. AI 답변 생성 및 저장
+  async generateAnswer(
+    title: string,
+    content: string,
+    questionId: number,
+  ): Promise<string> {
     try {
-      // 프롬프트 구성
       const prompt = this.buildPrompt(title, content);
 
-      // Gemini API 호출
       const result = await this.model.generateContent(prompt);
       const response = await result.response;
       const aiAnswer = response.text();
@@ -31,6 +38,14 @@ export class AiService {
       if (!aiAnswer || aiAnswer.trim() === '') {
         throw new Error('AI로부터 답변을 받지 못했습니다.');
       }
+
+      // DB에 저장
+      const savedAnswer = this.aiAnswerRepository.create({
+        questionId,
+        title,
+        content: aiAnswer.trim(),
+      });
+      await this.aiAnswerRepository.save(savedAnswer);
 
       return aiAnswer.trim();
     } catch (error) {
@@ -55,6 +70,13 @@ export class AiService {
         HttpStatus.SERVICE_UNAVAILABLE,
       );
     }
+  }
+
+  // 2. 저장된 답변 조회
+  async findByQuestionId(questionId: number): Promise<AiAnswer | null> {
+    return this.aiAnswerRepository.findOne({
+      where: { questionId },
+    });
   }
 
   private buildPrompt(title: string, content: string): string {

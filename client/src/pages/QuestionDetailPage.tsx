@@ -17,7 +17,6 @@ const QuestionDetailPage = () => {
           height: { xs: "auto", md: "calc(100vh - 80px)" },
           overflow: "hidden",
           position: "relative",
-
           padding: "30px",
         }}
       >
@@ -25,7 +24,7 @@ const QuestionDetailPage = () => {
         <Box
           sx={{
             flex: { xs: "1 1 auto", md: "1.5 1 0%" },
-            minWidth: 0, // flex 아이템 축소 허용
+            minWidth: 0,
             order: { xs: 1, md: 1 },
           }}
         >
