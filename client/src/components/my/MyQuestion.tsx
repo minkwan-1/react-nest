@@ -30,6 +30,8 @@ const MyQuestion: React.FC<MyQuestionProps> = ({
 }) => {
   const theme = useTheme();
 
+  console.log(questionData);
+
   // Define theme colors for easy reference
   const themeColors = {
     cardBg: theme.palette.background.paper,
@@ -92,6 +94,7 @@ const MyQuestion: React.FC<MyQuestionProps> = ({
                 onCardClick={onCardClick}
                 onAnswerClick={onAnswerClick}
                 showActions={true}
+                questionUserId={question.userId}
               />
             ))
           ) : (

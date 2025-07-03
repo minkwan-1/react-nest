@@ -3,6 +3,8 @@ import CommentOutlinedIcon from "@mui/icons-material/CommentOutlined";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import { useNavigate } from "react-router-dom";
+import { useAtom } from "jotai";
+import { realUserInfo } from "@atom/auth";
 
 interface Question {
   id: number | string;
@@ -18,20 +20,23 @@ interface CardActionsSectionProps {
   handleAnswerClick: (questionId: number | string) => void;
   handleDeleteClick: () => void;
   onCardClick?: (id: number | string) => void;
-  questionId: number | string;
+  questionUserId: string;
   userId: number | string;
 }
 
 const CardActionsSection = ({
   question,
   //   handleAnswerClick,
-  questionId,
-  userId,
+  questionUserId,
+  // userId,
   onCardClick,
   handleDeleteClick,
 }: CardActionsSectionProps) => {
   const navigate = useNavigate();
-  const isOwner = userId === questionId;
+  const [user] = useAtom(realUserInfo);
+
+  const isOwner = user?.id === questionUserId;
+
   return (
     <Box sx={{ display: "flex", alignItems: "center" }}>
       <Button

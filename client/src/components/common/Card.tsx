@@ -30,6 +30,7 @@ interface QuestionCardProps {
   onLikeClick?: (questionId: number | string) => void;
   onBookmarkClick?: (questionId: number | string) => void;
   showActions?: boolean;
+  questionUserId: string;
 }
 
 const QuestionCard = ({
@@ -38,6 +39,7 @@ const QuestionCard = ({
   onCardClick,
   onAnswerClick,
   showActions = true,
+  questionUserId,
 }: QuestionCardProps) => {
   const theme = useTheme();
 
@@ -49,7 +51,6 @@ const QuestionCard = ({
       onAnswerClick,
     });
 
-  const questionId = question.id;
   const userId = user.id;
 
   return (
@@ -104,7 +105,7 @@ const QuestionCard = ({
                 handleAnswerClick={handleAnswerClick}
                 handleDeleteClick={handleDeleteClick}
                 question={question}
-                questionId={questionId}
+                questionUserId={questionUserId}
                 userId={userId}
               />
             )}
