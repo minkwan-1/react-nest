@@ -4,7 +4,6 @@ import { questionData } from "@mock/mockHomePageData";
 import {
   HomePageTitle,
   SearchBar,
-  FilteringButtons,
   QuestionCards,
 } from "@components/home/index";
 
@@ -35,10 +34,7 @@ const MainContent = () => {
       {/* 2. search bar */}
       <SearchBar />
 
-      {/* 3. filtering buttons */}
-      <FilteringButtons />
-
-      {/* 4. question cards */}
+      {/* 3. question cards */}
       {questionData.map((question) => (
         <QuestionCards key={question.id} question={question} />
       ))}
