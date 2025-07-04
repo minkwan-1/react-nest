@@ -9,6 +9,7 @@ import CardContentSection from "./CardContentSection";
 import CardSubtitle from "./CardSubtitle";
 import CardActionsSection from "./CardActionsSection";
 import ThumbnailSection from "./ThumbnailSection";
+import HomeQuestionCard from "./HomeQuestionCard";
 
 export {
   SectionDivider,
@@ -22,4 +23,5 @@ export {
   CardSubtitle,
   CardActionsSection,
   ThumbnailSection,
+  HomeQuestionCard,
 };
