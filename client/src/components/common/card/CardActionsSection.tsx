@@ -1,4 +1,3 @@
-// 코드래빗
 import { Box, IconButton, Button } from "@mui/material";
 import CommentOutlinedIcon from "@mui/icons-material/CommentOutlined";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
