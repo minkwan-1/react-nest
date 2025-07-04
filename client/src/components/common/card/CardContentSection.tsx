@@ -22,6 +22,7 @@ const CardContentSection = ({
     <Typography
       variant="h6"
       sx={{
+        border: "1px solid red",
         fontWeight: "bold",
         mb: 1.5,
         fontSize: "18px",
