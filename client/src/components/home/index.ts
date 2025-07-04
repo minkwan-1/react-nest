@@ -4,7 +4,7 @@ import GlobalActionButton from "./GlobalActionButton";
 import HomePageTitle from "./HomePageTitle";
 import SearchBar from "./SearchBar";
 import QuestionCards from "./QuestionCards";
-
+import CardHeaderSection from "./CardHeaderSection";
 export {
   SectionDivider,
   MainContent,
@@ -12,4 +12,5 @@ export {
   HomePageTitle,
   SearchBar,
   QuestionCards,
+  CardHeaderSection,
 };
