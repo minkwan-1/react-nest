@@ -1,4 +1,5 @@
 import { atomWithStorage } from "jotai/utils";
+import { atom } from "jotai";
 
 export interface Question {
   id: number;
@@ -17,3 +18,5 @@ export interface Question {
 }
 
 export const questionsAtom = atomWithStorage<Question[]>("questions", []);
+
+export const allQuestionsAtom = atom<Question[]>([]);

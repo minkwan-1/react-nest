@@ -1,13 +1,39 @@
 import { Box } from "@mui/material";
-import { questionData } from "@mock/mockHomePageData";
-
-import {
-  HomePageTitle,
-  SearchBar,
-  QuestionCards,
-} from "@components/home/index";
+import { HomePageTitle, SearchBar } from "@components/home/index";
+import { useEffect } from "react";
+import { useAtom } from "jotai";
+import { allQuestionsAtom } from "@atom/question";
+// import { realUserInfo } from "@atom/auth";
 
 const MainContent = () => {
+  const [allQuestions, setAllQuestions] = useAtom(allQuestionsAtom);
+  // const [userInfo] = useAtom(realUserInfo);
+
+  const fetchAllQuestions = async () => {
+    try {
+      const response = await fetch("http://localhost:3000/questions", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const data = await response.json();
+
+      setAllQuestions(data);
+
+      console.log("fetchAllQuestions Data: ", data);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  useEffect(() => {
+    fetchAllQuestions();
+  }, []);
+
+  console.log("전역 상태에 저장된 fetchAllQuestions Data: ", allQuestions);
+
   return (
     <Box
       sx={{
@@ -35,9 +61,6 @@ const MainContent = () => {
       <SearchBar />
 
       {/* 3. question cards */}
-      {questionData.map((question) => (
-        <QuestionCards key={question.id} question={question} />
-      ))}
     </Box>
   );
 };
