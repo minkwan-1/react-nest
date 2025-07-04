@@ -7,6 +7,7 @@ import QuestionCards from "./QuestionCards";
 import CardHeaderSection from "./CardHeaderSection";
 import CardContentSection from "./CardContentSection";
 import CardSubtitle from "./CardSubtitle";
+import CardActionsSection from "./CardActionsSection";
 
 export {
   SectionDivider,
@@ -18,4 +19,5 @@ export {
   CardHeaderSection,
   CardContentSection,
   CardSubtitle,
+  CardActionsSection,
 };
