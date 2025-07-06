@@ -13,6 +13,7 @@ const HomeQuestionCard = () => {
   return (
     <Card
       sx={{
+        width: "100%",
         borderRadius: 2,
         boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
         transition: "all 0.3s",

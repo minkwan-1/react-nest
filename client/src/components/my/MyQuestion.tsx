@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, Typography, Paper, useTheme } from "@mui/material";
-
+import { useQuestionCard } from "@components/common/card/hooks/useQuestionCard";
 // Import the CommonCard component
 import CommonCard from "@components/common/Card";
 
@@ -29,6 +29,14 @@ const MyQuestion: React.FC<MyQuestionProps> = ({
   onAnswerClick,
 }) => {
   const theme = useTheme();
+
+  const { handleTitleClick, handleAnswerClick, handleDeleteClick } =
+    useQuestionCard({
+      questionId: question.id,
+      userId: user.id,
+      onCardClick,
+      onAnswerClick,
+    });
 
   console.log(questionData);
 
