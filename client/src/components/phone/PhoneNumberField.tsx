@@ -1,12 +1,12 @@
-// 필요한 훅과 라이브러리 import
 import { useState, useEffect, useCallback } from "react";
 import {
   Box,
   TextField,
   Button,
-  InputAdornment,
+  CircularProgress,
   Typography,
   Paper,
+  InputAdornment,
   useTheme,
   Dialog,
   DialogTitle,
@@ -16,11 +16,11 @@ import {
 import PhoneIcon from "@mui/icons-material/Phone";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ErrorIcon from "@mui/icons-material/Error";
-import axios from "axios";
 import { motion } from "framer-motion";
 import type { signupUserInfo } from "@atom/auth";
 import { SetStateAction } from "jotai";
-import { API_URL } from "@api/axiosConfig";
+import { useMutation } from "@tanstack/react-query";
+import { requestVerificationCodeAPI } from "./api/RequestVerificationCodeAPI";
 
 type PhoneNumberFieldProps = {
   onNext: () => void;
@@ -36,9 +36,7 @@ const PhoneNumberField = ({
   const theme = useTheme();
   const keyColor = "#b8dae1";
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [isSending, setIsSending] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
-  // 모달 상태를 객체로 통합 관리
   const [modal, setModal] = useState({
     open: false,
     type: "success" as "success" | "error",
@@ -46,24 +44,41 @@ const PhoneNumberField = ({
     message: "",
   });
 
-  // 컴포넌트 마운트 시 userInfo에서 전화번호 불러오기
+  const { mutate: requestCode, isPending: isSending } = useMutation({
+    mutationFn: requestVerificationCodeAPI,
+    onSuccess: (data) => {
+      setModal({
+        open: true,
+        type: "success",
+        title: "인증 코드 요청 완료",
+        message: `${phoneNumber}로 인증 코드가 전송되었습니다.`,
+      });
+      console.log("인증 코드 전송 성공:", data);
+    },
+    onError: (error) => {
+      setModal({
+        open: true,
+        type: "error",
+        title: "인증 코드 전송 실패",
+        message: "인증 코드 전송에 실패했습니다. 다시 시도해주세요.",
+      });
+      console.log("휴대전화번호 전송 인증 에러:", error);
+    },
+  });
+
   useEffect(() => {
     if (userInfo?.phoneNumber) {
       setPhoneNumber(userInfo.phoneNumber);
     }
   }, [userInfo?.phoneNumber]);
 
-  // 전화번호 입력 시 상태와 userInfo 업데이트
   const handlePhoneNumberChange = useCallback(
     (phone: string) => {
       setPhoneNumber(phone);
-
-      // userInfo 업데이트
       setUserInfo((prev) => {
         if (prev) {
           return { ...prev, phoneNumber: phone };
         } else {
-          // prev가 null일 경우 최소한의 정보로 새 객체 생성
           return {
             id: "",
             email: "",
@@ -79,7 +94,6 @@ const PhoneNumberField = ({
     [setUserInfo]
   );
 
-  // 전화번호 유효성 검사 함수 (010으로 시작하고 8자리 숫자 총 11자리)
   const isValidPhoneNumber = (number: string) => {
     const trimmed = number.replace(/\s+/g, "");
     const phoneRegex = /^010\d{8}$/;
@@ -88,12 +102,10 @@ const PhoneNumberField = ({
 
   const isValidFormat = phoneNumber ? isValidPhoneNumber(phoneNumber) : true;
 
-  // phoneNumber가 바뀔 때마다 userInfo 동기화
   useEffect(() => {
     handlePhoneNumberChange(phoneNumber);
   }, [phoneNumber, handlePhoneNumberChange]);
 
-  // 디바운스 유틸 함수 (지연된 실행)
   const debounce = <T extends unknown[]>(
     func: (...args: T) => void,
     delay: number
@@ -105,79 +117,29 @@ const PhoneNumberField = ({
     };
   };
 
-  // 인증 코드 전송 함수 (수정됨)
-  const sendCode = async () => {
-    // 전화번호 비었는지 확인
-    if (!phoneNumber.trim()) {
-      console.log("전화번호를 입력해주세요.");
+  const sendCode = () => {
+    if (!phoneNumber.trim() || !isValidPhoneNumber(phoneNumber)) {
+      console.log("유효한 전화번호를 입력해주세요.");
       return;
     }
+    setUserInfo(
+      (prev) =>
+        ({
+          ...(prev ?? {}),
+          phoneNumber: phoneNumber.trim(),
+        } as signupUserInfo)
+    );
 
-    // 형식 확인
-    if (!isValidPhoneNumber(phoneNumber)) {
-      console.log("유효한 전화번호를 입력해주세요. (예: 01012345678)");
-      return;
-    }
-
-    setIsSending(true);
-
-    try {
-      // 백엔드 API로 POST 요청 (국가코드 +82 붙이기)
-      const response = await axios.post(`${API_URL}api/send-code`, {
-        toPhoneNumber: `+82${phoneNumber.trim()}`,
-      });
-
-      console.log("인증 코드 전송 성공:", response);
-
-      // userInfo에 전화번호 저장 재확인
-      setUserInfo((prev) => {
-        if (prev) {
-          return { ...prev, phoneNumber: phoneNumber };
-        } else {
-          return {
-            id: "",
-            email: "",
-            name: "",
-            phoneNumber: phoneNumber,
-            createdAt: "",
-            updatedAt: "",
-            provider: "",
-          };
-        }
-      });
-
-      // next() 함수 대신 성공 모달을 표시
-      setModal({
-        open: true,
-        type: "success",
-        title: "인증 코드 요청 완료",
-        message: `${phoneNumber}로 인증 코드가 전송되었습니다.`,
-      });
-    } catch (error: unknown) {
-      console.log("휴대전화번호 전송 인증 에러:", error);
-
-      // 실패 모달을 표시
-      setModal({
-        open: true,
-        type: "error",
-        title: "인증 코드 전송 실패",
-        message: "인증 코드 전송에 실패했습니다. 다시 시도해주세요.",
-      });
-    } finally {
-      setIsSending(false);
-    }
+    requestCode(phoneNumber);
   };
 
-  // 모달 내 다음 단계 버튼 핸들러
   const handleNextStep = () => {
     setModal({ ...modal, open: false });
     onNext();
   };
 
-  // 디바운스된 sendCode 함수
   const debouncedSendCode = useCallback(debounce(sendCode, 300), [
     phoneNumber,
-    setModal,
     setUserInfo,
   ]);
 
@@ -202,7 +164,6 @@ const PhoneNumberField = ({
             backgroundColor: theme.palette.background.paper,
           }}
         >
-          {/* 제목 */}
           <Typography
             variant="subtitle1"
             fontWeight={600}
@@ -211,7 +172,6 @@ const PhoneNumberField = ({
             휴대폰 번호 인증
           </Typography>
 
-          {/* 입력 필드 및 버튼 */}
           <Box sx={{ mb: 2, position: "relative" }}>
             <TextField
               fullWidth
@@ -261,7 +221,6 @@ const PhoneNumberField = ({
               }}
             />
 
-            {/* 인증 코드 발송 버튼 */}
             <Button
               variant="contained"
               onClick={debouncedSendCode}
@@ -289,11 +248,14 @@ const PhoneNumberField = ({
                 transition: "all 0.3s",
               }}
             >
-              {isSending ? "전송 중..." : "인증 코드 발송"}
+              {isSending ? (
+                <CircularProgress size={24} color="inherit" />
+              ) : (
+                "인증 코드 발송"
+              )}
             </Button>
           </Box>
 
-          {/* 안내 문구 */}
           <Typography
             variant="caption"
             color="text.secondary"
@@ -304,7 +266,6 @@ const PhoneNumberField = ({
         </Paper>
       </motion.div>
 
-      {/* 성공 모달 */}
       <Dialog
         open={modal.open}
         onClose={() => setModal({ ...modal, open: false })}
