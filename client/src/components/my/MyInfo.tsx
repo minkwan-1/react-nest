@@ -1,11 +1,12 @@
 import React, { useEffect } from "react";
-import axios from "axios";
 import { Avatar, Typography, Badge, Tooltip, useTheme } from "@mui/material";
 import { useAtom } from "jotai";
 import { realUserInfo } from "@atom/auth";
 import { questionsAtom } from "@atom/question";
 import { Verified as VerifiedIcon } from "@mui/icons-material";
-import { API_URL } from "@api/axiosConfig";
+import { useQuery } from "@tanstack/react-query";
+import { fetchQuestionsByUser } from "./api/fetchQuestionsByUser";
+import { Question } from "@atom/question";
 
 interface MyInfoProps {
   avatarUrl?: string;
@@ -19,25 +20,22 @@ const MyInfo: React.FC<MyInfoProps> = ({ avatarUrl, job }) => {
   const [userInfo] = useAtom(realUserInfo);
   const [, setQuestions] = useAtom(questionsAtom);
 
+  const { data: userQuestions, isSuccess } = useQuery<Question[]>({
+    queryKey: ["questions", "user", userInfo?.id],
+    queryFn: () => fetchQuestionsByUser(userInfo!.id),
+    enabled: !!userInfo?.id,
+  });
+
   useEffect(() => {
     if (!userInfo?.id) {
       setQuestions([]);
       return;
     }
 
-    const fetchQuestionsByUser = async () => {
-      try {
-        const response = await axios.get(
-          `${API_URL}questions/user/${userInfo.id}`
-        );
-        setQuestions(response.data);
-      } catch (error) {
-        console.error("Error fetching user's questions:", error);
-      }
-    };
-
-    fetchQuestionsByUser();
-  }, [userInfo, setQuestions]);
+    if (isSuccess) {
+      setQuestions(userQuestions);
+    }
+  }, [userInfo, setQuestions, isSuccess, userQuestions]);
 
   const themeColors = {
     primary: theme.palette.primary.main,
