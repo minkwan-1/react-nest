@@ -3,6 +3,7 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { AiAnswer } from './ai.entity';
+import { Question } from '../questions/questions.entity';
 
 @Injectable()
 export class AiService {
@@ -12,17 +13,18 @@ export class AiService {
   constructor(
     @InjectRepository(AiAnswer)
     private readonly aiAnswerRepository: Repository<AiAnswer>,
+
+    @InjectRepository(Question)
+    private readonly questionRepository: Repository<Question>,
   ) {
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
       throw new Error('GEMINI_API_KEY 환경변수가 설정되지 않았습니다.');
     }
-
     this.genAI = new GoogleGenerativeAI(apiKey);
-    this.model = this.genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
+    this.model = this.genAI.getGenerativeModel({ model: 'gemini-2.5-pro' });
   }
 
-  // 1. AI 답변 생성 및 저장
   async generateAnswer(
     title: string,
     content: string,
@@ -30,7 +32,6 @@ export class AiService {
   ): Promise<string> {
     try {
       const prompt = this.buildPrompt(title, content);
-
       const result = await this.model.generateContent(prompt);
       const response = await result.response;
       const aiAnswer = response.text();
@@ -39,7 +40,6 @@ export class AiService {
         throw new Error('AI로부터 답변을 받지 못했습니다.');
       }
 
-      // DB에 저장
       const savedAnswer = this.aiAnswerRepository.create({
         questionId,
         title,
@@ -50,21 +50,18 @@ export class AiService {
       return aiAnswer.trim();
     } catch (error) {
       console.error('Gemini API 호출 실패:', error);
-
       if (error.message?.includes('API_KEY')) {
         throw new HttpException(
           'API 키 설정에 문제가 있습니다.',
           HttpStatus.UNAUTHORIZED,
         );
       }
-
       if (error.message?.includes('quota')) {
         throw new HttpException(
           'API 할당량을 초과했습니다.',
           HttpStatus.TOO_MANY_REQUESTS,
         );
       }
-
       throw new HttpException(
         'AI 서비스 연결에 실패했습니다.',
         HttpStatus.SERVICE_UNAVAILABLE,
@@ -72,10 +69,15 @@ export class AiService {
     }
   }
 
-  // 2. 저장된 답변 조회
   async findByQuestionId(questionId: number): Promise<AiAnswer | null> {
     return this.aiAnswerRepository.findOne({
       where: { questionId },
+    });
+  }
+
+  async findQuestionById(questionId: number): Promise<Question | null> {
+    return this.questionRepository.findOne({
+      where: { id: questionId },
     });
   }
 

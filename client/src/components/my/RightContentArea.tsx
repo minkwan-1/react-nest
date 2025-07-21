@@ -1,6 +1,5 @@
-import { Box, Grid } from "@mui/material";
+import { Box } from "@mui/material";
 import SelfIntroduction from "./SelfIntroduction";
-
 import MyQuestion from "./MyQuestion";
 import { useAtom } from "jotai";
 import { questionsAtom } from "@atom/question";
@@ -17,37 +16,25 @@ const RightContentArea = () => {
     name: userInfo?.name || "minkwan won",
   };
 
-  // Event handlers for CommonCard
   const handleCardClick = (questionId: number | string) => {
     console.log("Card clicked:", questionId);
     navigate(`/questions/${questionId}`);
-    // Add navigation logic here
   };
 
   const handleAnswerClick = (questionId: number | string) => {
     console.log("Answer clicked:", questionId);
-    // Add answer logic here
   };
 
   return (
     <Box sx={{ flex: 1, p: 0, borderRadius: 2, overflowY: "scroll" }}>
-      {/* Content Sections */}
-      <Box>
-        <Grid spacing={2}>
-          <Grid item xs={14} md={8}>
-            {/* Self Introduction Section */}
-            <SelfIntroduction />
+      <SelfIntroduction />
 
-            {/* My Questions Section - Now using separated component */}
-            <MyQuestion
-              questionData={questionData}
-              userData={userData}
-              onCardClick={handleCardClick}
-              onAnswerClick={handleAnswerClick}
-            />
-          </Grid>
-        </Grid>
-      </Box>
+      <MyQuestion
+        questionData={questionData}
+        userData={userData}
+        onCardClick={handleCardClick}
+        onAnswerClick={handleAnswerClick}
+      />
     </Box>
   );
 };

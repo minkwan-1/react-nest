@@ -12,10 +12,6 @@ import { AiService } from './ai.service';
 export class AiController {
   constructor(private readonly aiService: AiService) {}
 
-  /**
-   * 기존 방식: 프론트에서 title, content, questionId를 모두 전달
-   * 예: GET /api/ask-ai?title=...&content=...&questionId=1
-   */
   @Get('ask-ai')
   async askAi(
     @Query('title') title: string,
@@ -36,8 +32,6 @@ export class AiController {
 
     try {
       const questionIdNum = Number(questionId);
-
-      // 기존 답변이 존재하는지 확인
       const existing = await this.aiService.findByQuestionId(questionIdNum);
       if (existing) {
         return {
@@ -50,7 +44,6 @@ export class AiController {
         };
       }
 
-      // 새로 생성
       const aiAnswer = await this.aiService.generateAnswer(
         title,
         content,
@@ -74,10 +67,6 @@ export class AiController {
     }
   }
 
-  /**
-   * 새로운 방식: 프론트에서는 questionId만 전달
-   * 예: GET /api/ask-ai/1
-   */
   @Get('ask-ai/:questionId')
   async askAiById(@Param('questionId') questionId: string) {
     if (!questionId) {
@@ -99,7 +88,6 @@ export class AiController {
     console.log('questionId:', id);
 
     try {
-      // 1. 기존 답변 캐시 확인
       const existing = await this.aiService.findByQuestionId(id);
       if (existing) {
         return {
@@ -112,8 +100,7 @@ export class AiController {
         };
       }
 
-      // 2. 질문 DB 조회
-      const question = await this.aiService.findByQuestionId(id);
+      const question = await this.aiService.findQuestionById(id);
       if (!question) {
         throw new HttpException(
           '질문을 찾을 수 없습니다.',
@@ -121,7 +108,6 @@ export class AiController {
         );
       }
 
-      // 3. AI 답변 생성
       const aiAnswer = await this.aiService.generateAnswer(
         question.title,
         question.content,

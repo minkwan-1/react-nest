@@ -1,13 +1,14 @@
 import { useState } from "react";
 import { useAtom } from "jotai";
 import { useNavigate } from "react-router-dom";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { imageService } from "../service/imageService";
 import { realUserInfo } from "@atom/auth";
 import { questionsAtom } from "@atom/question";
 import { API_URL } from "@api/axiosConfig";
 
+// 질문 생성 API (기존과 동일)
 const createQuestion = async ({
   title,
   content,
@@ -20,47 +21,27 @@ const createQuestion = async ({
   userId: string;
 }) => {
   const processedContent = await imageService.processContentImages(content);
-
   const response = await fetch(`${API_URL}questions`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      title,
-      content: processedContent,
-      tags,
-      userId,
-    }),
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ title, content: processedContent, tags, userId }),
   });
-
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({}));
     throw new Error(
       errorData.message || `HTTP error! status: ${response.status}`
     );
   }
-
   return response.json();
 };
 
-const fetchAiAnswer = async ({
-  title,
-  content,
-  questionId,
-}: {
-  title: string;
-  content: string;
-  questionId: string;
-}) => {
-  const params = new URLSearchParams({ title, content, questionId });
-  const response = await fetch(`${API_URL}api/ask-ai?${params.toString()}`);
-
+// ✨ 1. 새로운 'ID 기반' AI 답변 요청 함수를 정의합니다.
+const fetchAiAnswerById = async (questionId: string) => {
+  const response = await fetch(`${API_URL}api/ask-ai/${questionId}`);
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({}));
     throw new Error(errorData.message || "AI 답변 요청 실패");
   }
-
   const result = await response.json();
   return result.data;
 };
@@ -74,6 +55,7 @@ export const useQuestionForm = () => {
   const [userInfo] = useAtom(realUserInfo);
   const [, setQuestions] = useAtom(questionsAtom);
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const [dialog, setDialog] = useState<{
     open: boolean;
@@ -87,16 +69,22 @@ export const useQuestionForm = () => {
 
   const { mutate: submitQuestion, isPending: isSubmitting } = useMutation({
     mutationFn: createQuestion,
-    onSuccess: (createdQuestion) => {
+    // ✨ 2. onSuccess 콜백을 async로 만들고, 새로운 AI 요청 함수를 호출하도록 수정합니다.
+    onSuccess: async (createdQuestion) => {
+      // 질문 목록 관련 쿼리를 무효화하여 다른 페이지에서 최신 목록을 볼 수 있도록 합니다.
+      queryClient.invalidateQueries({ queryKey: ["questions"] });
       setQuestions((prev) => [...prev, createdQuestion]);
 
-      fetchAiAnswer({
-        title: createdQuestion.title,
-        content: createdQuestion.content,
-        questionId: createdQuestion.id,
-      })
-        .then((aiResponse) => console.log("AI 응답:", aiResponse))
-        .catch((error) => console.error("AI 생성 중 오류:", error));
+      try {
+        console.log(`AI 답변 요청 (ID: ${createdQuestion.id})`);
+        const aiResponse = await fetchAiAnswerById(createdQuestion.id);
+        console.log("AI 응답:", aiResponse);
+        // 필요 시 AI 응답을 별도 상태에 저장하거나 캐시에 추가할 수 있습니다.
+        // 예: queryClient.setQueryData(['aiAnswer', createdQuestion.id], aiResponse);
+      } catch (error) {
+        // AI 답변 생성 실패가 전체적인 성공 흐름을 방해하지 않도록 console.error로 처리
+        console.error("AI 생성 중 오류:", error);
+      }
 
       setDialog({
         open: true,
