@@ -10,61 +10,54 @@ import {
   CircularProgress,
 } from "@mui/material";
 import { Edit, Check, Close } from "@mui/icons-material";
-import axios from "axios";
-import { realUserInfo } from "@atom/auth";
 import { useAtom } from "jotai";
-import { API_URL } from "@api/axiosConfig";
+import { realUserInfo } from "@atom/auth";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { fetchSelfIntro, updateSelfIntro } from "./api/selfIntroApi";
 
 const MAX_LENGTH = 80;
 
 const SelfIntroduction = () => {
   const theme = useTheme();
-  const [selfIntro, setSelfIntro] = useState("");
   const [editing, setEditing] = useState(false);
-  const [saving, setSaving] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [selfIntro, setSelfIntro] = useState("");
   const [user] = useAtom(realUserInfo);
+  const queryClient = useQueryClient();
 
-  // 컴포넌트 마운트 시 기존 소개 불러오기
-  useEffect(() => {
-    const fetchSelfIntro = async () => {
-      if (!user?.id) {
-        setLoading(false);
-        return;
-      }
+  // 1. useQuery로 한 줄 소개 데이터 조회
+  const { data: fetchedData, isPending: loading } = useQuery({
+    queryKey: ["selfIntro", user?.id],
+    queryFn: () => fetchSelfIntro(user!.id),
+    enabled: !!user?.id,
+  });
 
-      try {
-        setLoading(true);
-        const response = await axios.get(`${API_URL}self-intro?id=${user.id}`);
-        setSelfIntro(response.data.selfIntro || "");
-      } catch (error) {
-        console.error("소개 불러오기 실패:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchSelfIntro();
-  }, [user?.id]);
-
-  const handleSave = async () => {
-    if (selfIntro.length > MAX_LENGTH) return;
-    setSaving(true);
-    try {
-      await axios.put(`${API_URL}self-intro`, {
-        id: user?.id,
-        selfIntro,
-      });
+  // 2. useMutation으로 한 줄 소개 수정 로직 구현
+  const { mutate: saveIntro, isPending: saving } = useMutation({
+    mutationFn: updateSelfIntro,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["selfIntro", user?.id] });
       setEditing(false);
-    } catch (error) {
+    },
+    onError: (error) => {
       console.error("소개 저장 실패:", error);
-    } finally {
-      setSaving(false);
+      alert("소개 저장에 실패했습니다.");
+    },
+  });
+
+  // 3. 서버에서 데이터를 가져오면 편집용 로컬 상태에 반영
+  useEffect(() => {
+    if (!loading && fetchedData) {
+      setSelfIntro(fetchedData.selfIntro || "");
     }
+  }, [loading, fetchedData]);
+
+  const handleSave = () => {
+    if (selfIntro.length > MAX_LENGTH || !user?.id) return;
+    saveIntro({ userId: user.id, selfIntro });
   };
 
-  const handleClear = () => {
-    // setSelfIntro("");
+  const handleCancel = () => {
+    setSelfIntro(fetchedData?.selfIntro || "");
     setEditing(false);
   };
 
@@ -74,7 +67,6 @@ const SelfIntroduction = () => {
     textSecondary: theme.palette.text.secondary,
   };
 
-  // 로딩 중일 때 표시할 내용
   if (loading) {
     return (
       <>
@@ -159,9 +151,9 @@ const SelfIntroduction = () => {
                   </IconButton>
                 </span>
               </Tooltip>
-              <Tooltip title="닫기">
+              <Tooltip title="취소">
                 <span>
-                  <IconButton onClick={handleClear} disabled={saving}>
+                  <IconButton onClick={handleCancel} disabled={saving}>
                     <Close />
                   </IconButton>
                 </span>
@@ -173,7 +165,7 @@ const SelfIntroduction = () => {
                 variant="body2"
                 sx={{ color: themeColors.textSecondary, flexGrow: 1 }}
               >
-                {selfIntro || "아직 작성된 소개가 없습니다."}
+                {fetchedData?.selfIntro || "아직 작성된 소개가 없습니다."}
               </Typography>
               <Tooltip title="편집">
                 <IconButton onClick={() => setEditing(true)}>
