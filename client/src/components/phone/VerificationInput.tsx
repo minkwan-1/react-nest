@@ -18,10 +18,10 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import VerifiedIcon from "@mui/icons-material/Verified";
 import LockIcon from "@mui/icons-material/Lock";
 import RefreshIcon from "@mui/icons-material/Refresh";
-import axios from "axios";
 import { motion } from "framer-motion";
 import ErrorIcon from "@mui/icons-material/Error";
-import { API_URL } from "@api/axiosConfig";
+import { useMutation } from "@tanstack/react-query";
+import { verifyCode } from "./api/verifyCodeAPI";
 
 interface VerificationInputProps {
   phoneNumber: string;
@@ -31,19 +31,14 @@ interface VerificationInputProps {
   onNext: () => void;
 }
 
-// verification input에 대한 modal 처리 로직 구현
-
 const VerificationInput = ({
   phoneNumber,
-  // onSuccess,
-  // onError,
   onResendCode,
   onNext,
 }: VerificationInputProps) => {
   const theme = useTheme();
   const keyColor = "#b8dae1";
   const [verificationCode, setVerificationCode] = useState("");
-  const [isVerifying, setIsVerifying] = useState(false);
   const [timeLeft, setTimeLeft] = useState(300);
   const [timerActive, setTimerActive] = useState(true);
   const [modal, setModal] = useState({
@@ -51,6 +46,28 @@ const VerificationInput = ({
     type: "success" as "success" | "error",
     title: "",
     message: "",
+  });
+
+  const { mutate: submitVerification, isPending: isVerifying } = useMutation({
+    mutationFn: verifyCode,
+    onSuccess: (data) => {
+      console.log("🎉 인증 성공!");
+      setModal({
+        open: true,
+        type: "success",
+        title: "인증 성공",
+        message: data.message || "전화번호가 인증되었습니다.",
+      });
+    },
+    onError: (error) => {
+      console.error("🚨 인증 요청 중 오류 발생:", error);
+      setModal({
+        open: true,
+        type: "error",
+        title: "인증 실패",
+        message: error.message,
+      });
+    },
   });
 
   useEffect(() => {
@@ -75,67 +92,18 @@ const VerificationInput = ({
     return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
   };
 
-  // 모달 내 다음 단계 버튼 핸들러
   const handleNextStep = () => {
     setModal({ ...modal, open: false });
     onNext();
   };
-  const handleVerifyCode = async () => {
+
+  const handleVerifyCode = () => {
     console.log("🔐 인증 코드 확인 요청 시작");
-    console.log("📱 입력된 전화번호:", phoneNumber);
-    console.log("🔢 입력된 인증 코드:", verificationCode);
-
-    if (!verificationCode) {
-      console.warn("⚠️ 인증 코드 미입력");
+    if (!verificationCode || !phoneNumber || timeLeft === 0) {
+      console.warn("⚠️ 인증 요청 사전 조건 미충족");
       return;
     }
-
-    if (!phoneNumber) {
-      console.warn("⚠️ 전화번호 미입력");
-      return;
-    }
-
-    if (timeLeft === 0) {
-      console.warn("⏰ 인증 시간 초과");
-      return;
-    }
-
-    setIsVerifying(true);
-
-    try {
-      const response = await axios.post(`${API_URL}api/verify-code`, {
-        verificationCode: verificationCode,
-        phoneNumber: `+82${phoneNumber}`,
-      });
-
-      const { status, message } = response.data;
-
-      console.log("✅ 서버 응답 수신:", response.data);
-
-      if (status === "success") {
-        console.log("🎉 인증 성공!");
-        setModal({
-          open: true,
-          type: "success",
-          title: "인증 성공",
-          message: message || "전화번호가 인증되었습니다.",
-        });
-      } else {
-        console.warn("❌ 인증 실패:", message);
-        setModal({
-          open: true,
-          type: "error",
-          title: "인증 실패",
-          message:
-            message || "인증 코드가 올바르지 않습니다. 다시 시도해주세요.",
-        });
-      }
-    } catch (error: unknown) {
-      console.error("🚨 인증 요청 중 오류 발생:", error);
-    } finally {
-      setIsVerifying(false);
-      console.log("🔁 인증 프로세스 종료");
-    }
+    submitVerification({ phoneNumber, verificationCode });
   };
 
   const handleCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -180,7 +148,6 @@ const VerificationInput = ({
             backgroundColor: theme.palette.background.paper,
           }}
         >
-          {/* 상단: 제목 + 타이머 or 새로고침 아이콘 */}
           <Box
             sx={{
               display: "flex",
@@ -209,7 +176,6 @@ const VerificationInput = ({
                   {formatTime()}
                 </Typography>
               )}
-
               {timeLeft === 0 && (
                 <IconButton
                   onClick={handleResendCode}
@@ -226,8 +192,6 @@ const VerificationInput = ({
               )}
             </Box>
           </Box>
-
-          {/* 인증 코드 입력 필드 */}
           <TextField
             fullWidth
             label="인증 코드"
@@ -275,8 +239,6 @@ const VerificationInput = ({
               },
             }}
           />
-
-          {/* 인증 확인 버튼 */}
           <Button
             variant="contained"
             onClick={handleVerifyCode}
@@ -311,7 +273,6 @@ const VerificationInput = ({
             )}
           </Button>
 
-          {/* 안내 메시지 */}
           <Typography
             variant="caption"
             color="text.secondary"
@@ -320,7 +281,6 @@ const VerificationInput = ({
             SMS로 전송된 6자리 코드를 입력하세요
           </Typography>
 
-          {/* 시간 만료 시 안내 메시지 */}
           {timeLeft === 0 && (
             <Typography
               variant="caption"
@@ -333,7 +293,6 @@ const VerificationInput = ({
         </Paper>
       </motion.div>
 
-      {/* 모달 */}
       <Dialog
         open={modal.open}
         onClose={() => setModal({ ...modal, open: false })}
@@ -367,7 +326,6 @@ const VerificationInput = ({
             {modal.title}
           </Typography>
         </DialogTitle>
-
         <DialogContent sx={{ textAlign: "center", py: 1 }}>
           <Typography variant="body2" color="text.secondary">
             {modal.message}
@@ -378,7 +336,6 @@ const VerificationInput = ({
             </Typography>
           )}
         </DialogContent>
-
         <DialogActions sx={{ justifyContent: "center", pt: 2 }}>
           {modal.type === "success" ? (
             <Button
