@@ -12,7 +12,8 @@ import { Box, Container, SxProps, Theme } from "@mui/material";
 import { useAtom } from "jotai";
 import { realUserInfo } from "@atom/auth";
 import useFetchMyInfo from "@components/my-info/hooks/useFetchMyInfo";
-import { API_URL } from "@api/axiosConfig";
+import { useQuery } from "@tanstack/react-query";
+import { fetchUserInfo } from "./api/fetchUserInfo";
 
 interface AppbarProps {
   sx?: SxProps<Theme>;
@@ -23,30 +24,25 @@ function Appbar({ sx }: AppbarProps) {
   const myInfo = useFetchMyInfo(realUser?.id);
   const userProfileImage = myInfo?.profileImageUrl;
 
-  console.log("유저 로그인 상태 확인: ", realUser);
+  const {
+    data: user,
+    isSuccess,
+    isError,
+  } = useQuery({
+    queryKey: ["auth", "me"],
+    queryFn: fetchUserInfo,
+    staleTime: 1000 * 60 * 5, // 5분
+    retry: false,
+  });
 
   useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const response = await fetch(`${API_URL}auth/me`, {
-          method: "GET",
-          credentials: "include",
-        });
-
-        if (!response.ok) {
-          throw new Error("로그인되지 않았습니다.");
-        }
-
-        const data = await response.json();
-        setRealUser(data?.user);
-        // console.log("로그인 세션 유지에 대한 데이터: ", data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    fetchUser();
-  }, [setRealUser]);
+    if (isSuccess) {
+      setRealUser(user);
+    }
+    if (isError) {
+      setRealUser(null);
+    }
+  }, [isSuccess, isError, user, setRealUser]);
 
   return (
     <AppbarWrapper sx={sx}>
@@ -61,13 +57,7 @@ function Appbar({ sx }: AppbarProps) {
           <AppbarLogo />
         </Box>
 
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            gap: 2,
-          }}
-        >
+        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
           <ThemeToggleButton />
           {realUser ? (
             <>
@@ -82,7 +72,6 @@ function Appbar({ sx }: AppbarProps) {
           )}
         </Box>
       </Container>
-
       <ErrorDialog open={false} message={""} onClose={() => {}} />
     </AppbarWrapper>
   );

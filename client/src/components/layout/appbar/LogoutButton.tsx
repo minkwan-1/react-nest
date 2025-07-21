@@ -146,35 +146,31 @@ const LogoutButton = () => {
               handleClose();
               handleLogout();
             }}
-            sx={
-              {
-                fontWeight: 600,
-                color: "inherit",
-                borderColor: "inherit",
-                borderRadius: 50,
-                px: 3,
-                py: 1,
-                textTransform: "none",
-                ...theme.applyStyles("light", {
-                  borderColor: "#00000025",
-                  color: "#333",
-                  "&:hover": {
-                    borderColor: "#00000050",
-                    backgroundColor: "rgba(0, 0, 0, 0.04)",
-                  },
-                }),
-                ...theme.applyStyles("dark", {
-                  borderColor: "#ffffff25",
-                  color: "#f0f0f0",
-                  "&:hover": {
-                    borderColor: "#ffffff50",
-                    backgroundColor: "rgba(255, 255, 255, 0.08)",
-                  },
-                }),
-              }
-
-              // 확인 버튼은 조금 더 강조
-            }
+            sx={{
+              fontWeight: 600,
+              color: "inherit",
+              borderColor: "inherit",
+              borderRadius: 50,
+              px: 3,
+              py: 1,
+              textTransform: "none",
+              ...theme.applyStyles("light", {
+                borderColor: "#00000025",
+                color: "#333",
+                "&:hover": {
+                  borderColor: "#00000050",
+                  backgroundColor: "rgba(0, 0, 0, 0.04)",
+                },
+              }),
+              ...theme.applyStyles("dark", {
+                borderColor: "#ffffff25",
+                color: "#f0f0f0",
+                "&:hover": {
+                  borderColor: "#ffffff50",
+                  backgroundColor: "rgba(255, 255, 255, 0.08)",
+                },
+              }),
+            }}
           >
             네, 로그아웃할게요
           </Button>

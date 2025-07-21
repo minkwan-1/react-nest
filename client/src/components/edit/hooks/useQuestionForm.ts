@@ -1,12 +1,49 @@
 import { useState } from "react";
-import axios from "axios";
-import { imageService } from "../service/imageService";
 import { useAtom } from "jotai";
+import { useNavigate } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
+
+import { imageService } from "../service/imageService";
 import { realUserInfo } from "@atom/auth";
 import { questionsAtom } from "@atom/question";
-import { useNavigate } from "react-router-dom";
 import { API_URL } from "@api/axiosConfig";
-// ✅ AI 요청 함수
+
+const createQuestion = async ({
+  title,
+  content,
+  tags,
+  userId,
+}: {
+  title: string;
+  content: string;
+  tags: string[];
+  userId: string;
+}) => {
+  const processedContent = await imageService.processContentImages(content);
+
+  const response = await fetch(`${API_URL}questions`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      title,
+      content: processedContent,
+      tags,
+      userId,
+    }),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(
+      errorData.message || `HTTP error! status: ${response.status}`
+    );
+  }
+
+  return response.json();
+};
+
 const fetchAiAnswer = async ({
   title,
   content,
@@ -17,7 +54,6 @@ const fetchAiAnswer = async ({
   questionId: string;
 }) => {
   const params = new URLSearchParams({ title, content, questionId });
-
   const response = await fetch(`${API_URL}api/ask-ai?${params.toString()}`);
 
   if (!response.ok) {
@@ -26,7 +62,7 @@ const fetchAiAnswer = async ({
   }
 
   const result = await response.json();
-  return result.data; // { answer, generatedAt }
+  return result.data;
 };
 
 export const useQuestionForm = () => {
@@ -34,10 +70,11 @@ export const useQuestionForm = () => {
   const [content, setContent] = useState("");
   const [tags, setTags] = useState<string[]>([]);
   const [previewMode, setPreviewMode] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [userInfo] = useAtom(realUserInfo);
-  const [questions, setQuestions] = useAtom(questionsAtom);
+  const [, setQuestions] = useAtom(questionsAtom);
+  const navigate = useNavigate();
+
   const [dialog, setDialog] = useState<{
     open: boolean;
     title: string;
@@ -48,58 +85,18 @@ export const useQuestionForm = () => {
     message: "",
   });
 
-  const navigate = useNavigate();
+  const { mutate: submitQuestion, isPending: isSubmitting } = useMutation({
+    mutationFn: createQuestion,
+    onSuccess: (createdQuestion) => {
+      setQuestions((prev) => [...prev, createdQuestion]);
 
-  // 태그 입력 핸들러
-  const handleTagsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const input = e.target.value;
-    setTags(input.split(",").map((tag) => tag.trim()));
-  };
-
-  // 폼 제출 핸들러
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-
-    try {
-      // 이미지 처리
-      const processedContent = await imageService.processContentImages(content);
-
-      // 질문 등록
-      const response = await axios.post(`${API_URL}questions`, {
-        title,
-        content: processedContent,
-        tags,
-        userId: userInfo?.id,
-      });
-
-      const createdQuestion = response.data;
-
-      // 상태 반영
-      setQuestions([...questions, createdQuestion]);
-      console.log("질문 id 체크: ", createdQuestion.id);
-
-      // ✅ AI 요청
-      const aiData = {
+      fetchAiAnswer({
         title: createdQuestion.title,
         content: createdQuestion.content,
         questionId: createdQuestion.id,
-      };
-
-      console.log(aiData);
-
-      try {
-        const aiResponse = await fetchAiAnswer(aiData);
-        console.log("AI 응답:", aiResponse);
-        // 필요한 경우 여기에 저장 로직 추가
-      } catch (error) {
-        console.error("AI 생성 중 오류:", error);
-      }
-
-      // 폼 초기화 및 안내
-      setTitle("");
-      setContent("");
-      setTags([]);
+      })
+        .then((aiResponse) => console.log("AI 응답:", aiResponse))
+        .catch((error) => console.error("AI 생성 중 오류:", error));
 
       setDialog({
         open: true,
@@ -107,18 +104,34 @@ export const useQuestionForm = () => {
         message: "질문이 성공적으로 등록되었습니다.",
       });
 
+      resetForm();
       navigate(`/questions/${createdQuestion.id}`);
-    } catch (error) {
+    },
+    onError: (error) => {
       console.error("Error submitting question:", error);
-
       setDialog({
         open: true,
         title: "오류 발생",
         message: "질문 등록 중 오류가 발생했습니다. 다시 시도해주세요.",
       });
-    } finally {
-      setIsSubmitting(false);
-    }
+    },
+  });
+
+  const handleTagsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const input = e.target.value;
+    setTags(input.split(",").map((tag) => tag.trim()));
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!userInfo?.id) return;
+
+    submitQuestion({
+      title,
+      content,
+      tags,
+      userId: userInfo.id,
+    });
   };
 
   const resetForm = () => {

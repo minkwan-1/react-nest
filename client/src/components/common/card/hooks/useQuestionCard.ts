@@ -1,5 +1,6 @@
 import { useCallback } from "react";
 import { API_URL } from "@api/axiosConfig";
+import { useMutation } from "@tanstack/react-query";
 
 interface UseQuestionCardProps {
   questionId: number | string;
@@ -8,12 +9,31 @@ interface UseQuestionCardProps {
   onAnswerClick?: (id: number | string) => void;
 }
 
+interface DeleteQuestionVariables {
+  userId: number | string;
+}
+
 export const useQuestionCard = ({
   questionId,
   userId,
   onCardClick,
   onAnswerClick,
 }: UseQuestionCardProps) => {
+  const deleteMutation = useMutation({
+    mutationFn: async (variables: DeleteQuestionVariables) => {
+      const res = await fetch(`${API_URL}questions/delete/${questionId}`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId: variables.userId }),
+      });
+
+      if (!res.ok) {
+        throw new Error(`삭제 실패: ${res.status}`);
+      }
+      return res.json();
+    },
+  });
+
   const handleTitleClick = useCallback(() => {
     if (onCardClick) onCardClick(questionId);
     else console.log("실패");
@@ -26,26 +46,15 @@ export const useQuestionCard = ({
 
   const handleDeleteClick = useCallback(async () => {
     const isConfirmed = window.confirm("정말 이 질문을 삭제하시겠습니까?");
-    if (!isConfirmed) return;
-
-    try {
-      const res = await fetch(`${API_URL}questions/delete/${questionId}`, {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId }),
-      });
-
-      if (!res.ok) throw new Error(`삭제 실패: ${res.status}`);
-      alert("질문이 삭제되었습니다.");
-    } catch (error) {
-      console.error("삭제 에러:", error);
-      alert("삭제 중 오류가 발생했습니다.");
+    if (isConfirmed) {
+      deleteMutation.mutate({ userId });
     }
-  }, [questionId, userId]);
+  }, [deleteMutation, userId]);
 
   return {
     handleTitleClick,
     handleAnswerClick,
     handleDeleteClick,
+    isDeleting: deleteMutation.isPending,
   };
 };
