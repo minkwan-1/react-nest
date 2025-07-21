@@ -9,13 +9,25 @@ import {
   DialogTitle,
   useTheme,
 } from "@mui/material";
-import axios from "axios";
-import { API_URL } from "@api/axiosConfig";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { logoutUser } from "./api/logoutUser";
 
 const LogoutButton = () => {
   const theme = useTheme();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
+  const queryClient = useQueryClient();
+
+  const logoutMutation = useMutation({
+    mutationFn: logoutUser,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["auth", "me"] });
+      navigate("/");
+    },
+    onError: (err) => {
+      console.error("로그아웃 실패:", err);
+    },
+  });
 
   const handleButtonClick = () => {
     setOpen(true);
@@ -23,18 +35,6 @@ const LogoutButton = () => {
 
   const handleClose = () => {
     setOpen(false);
-  };
-
-  const handleLogout = async () => {
-    try {
-      const res = await axios.get(`${API_URL}auth/logout`, {
-        withCredentials: true,
-      });
-      console.log("로그아웃 응답:", res);
-      navigate("/");
-    } catch (err) {
-      console.error("로그아웃 실패:", err);
-    }
   };
 
   return (
@@ -111,6 +111,7 @@ const LogoutButton = () => {
           <Button
             variant="outlined"
             onClick={handleClose}
+            disabled={logoutMutation.isPending}
             sx={{
               color: "inherit",
               borderColor: "inherit",
@@ -144,8 +145,9 @@ const LogoutButton = () => {
             variant="outlined"
             onClick={() => {
               handleClose();
-              handleLogout();
+              logoutMutation.mutate();
             }}
+            disabled={logoutMutation.isPending}
             sx={{
               fontWeight: 600,
               color: "inherit",
@@ -172,7 +174,7 @@ const LogoutButton = () => {
               }),
             }}
           >
-            네, 로그아웃할게요
+            {logoutMutation.isPending ? "로그아웃 중..." : "네, 로그아웃할게요"}
           </Button>
         </DialogActions>
       </Dialog>
