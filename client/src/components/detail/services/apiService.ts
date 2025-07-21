@@ -1,4 +1,4 @@
-// services/apiService.ts
+import { API_URL } from "@api/axiosConfig";
 import {
   Answer,
   Question,
@@ -107,7 +107,7 @@ export const aiService = {
   getAiAnswer: async (questionId: number): Promise<Answer> => {
     try {
       const response = await apiRequest<ApiResponse<AiAnswerResponse>>(
-        `${API_BASE_URL}/api/ask-ai/${questionId}` // ✅ id 기반 API 호출
+        `${API_URL}api/ask-ai/${questionId}` // ✅ id 기반 API 호출
       );
 
       return {

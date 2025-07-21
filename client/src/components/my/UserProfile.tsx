@@ -1,13 +1,8 @@
 import React from "react";
-import { useEffect } from "react";
-import axios from "axios";
 import { Box, Container, useTheme } from "@mui/material";
-import { useAtom } from "jotai";
-import { questionsAtom } from "@atom/question";
-import { realUserInfo } from "@atom/auth";
 import RightContentArea from "./RightContentArea";
 import LeftContentArea from "./LeftContentArea";
-import { API_URL } from "@api/axiosConfig";
+import { useUserQuestions } from "./hooks/useUserQuestions";
 
 interface UserProfileProps {
   username: string;
@@ -21,29 +16,6 @@ interface UserProfileProps {
 
 const UserProfile: React.FC<UserProfileProps> = () => {
   const theme = useTheme();
-  const [, setQuestions] = useAtom(questionsAtom);
-  const [userInfo] = useAtom(realUserInfo);
-
-  useEffect(() => {
-    if (!userInfo?.id) {
-      setQuestions([]);
-      return;
-    }
-
-    const fetchQuestionsByUser = async () => {
-      try {
-        const response = await axios.get(
-          `${API_URL}questions/user/${userInfo.id}`
-        );
-        setQuestions(response.data);
-      } catch (error) {
-        console.error("Error fetching user's questions:", error);
-      }
-    };
-
-    fetchQuestionsByUser();
-  }, [userInfo, setQuestions]);
-
   const themeColors = {
     primary: theme.palette.primary.main,
     primaryDark: "#02b676",
@@ -54,6 +26,8 @@ const UserProfile: React.FC<UserProfileProps> = () => {
     textSecondary: theme.palette.text.secondary,
     divider: theme.palette.mode === "light" ? "#e0e0e0" : "#424242",
   };
+
+  useUserQuestions();
 
   return (
     <Box

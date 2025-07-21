@@ -1,12 +1,11 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Avatar, Typography, Badge, Tooltip, useTheme } from "@mui/material";
 import { useAtom } from "jotai";
 import { realUserInfo } from "@atom/auth";
-import { questionsAtom } from "@atom/question";
+
 import { Verified as VerifiedIcon } from "@mui/icons-material";
-import { useQuery } from "@tanstack/react-query";
-import { fetchQuestionsByUser } from "./api/fetchQuestionsByUser";
-import { Question } from "@atom/question";
+
+import { useUserQuestions } from "./hooks/useUserQuestions";
 
 interface MyInfoProps {
   avatarUrl?: string;
@@ -17,26 +16,6 @@ interface MyInfoProps {
 
 const MyInfo: React.FC<MyInfoProps> = ({ avatarUrl, job }) => {
   const theme = useTheme();
-  const [userInfo] = useAtom(realUserInfo);
-  const [, setQuestions] = useAtom(questionsAtom);
-
-  const { data: userQuestions, isSuccess } = useQuery<Question[]>({
-    queryKey: ["questions", "user", userInfo?.id],
-    queryFn: () => fetchQuestionsByUser(userInfo!.id),
-    enabled: !!userInfo?.id,
-  });
-
-  useEffect(() => {
-    if (!userInfo?.id) {
-      setQuestions([]);
-      return;
-    }
-
-    if (isSuccess) {
-      setQuestions(userQuestions);
-    }
-  }, [userInfo, setQuestions, isSuccess, userQuestions]);
-
   const themeColors = {
     primary: theme.palette.primary.main,
     primaryDark: "#02b676",
@@ -47,6 +26,9 @@ const MyInfo: React.FC<MyInfoProps> = ({ avatarUrl, job }) => {
     textSecondary: theme.palette.text.secondary,
     divider: theme.palette.mode === "light" ? "#e0e0e0" : "#424242",
   };
+  const [userInfo] = useAtom(realUserInfo);
+
+  useUserQuestions();
 
   return (
     <>
