@@ -1,8 +1,18 @@
 import { useMutation } from "@tanstack/react-query";
-import { postAuthorizationCode } from "./auth";
+import { postAuthorizationCode, signup } from "./auth";
 
 export const usePostAuthorizationMutate = () =>
   useMutation({
     // mutationFn => {}
     mutationFn: postAuthorizationCode,
   });
+
+export const useSignupMutate = () =>
+  useMutation({
+    mutationFn: signup,
+  });
+
+// export const useSigninMutate = () =>
+//   useMutation({
+//     mutationFn: signin,
+//   });

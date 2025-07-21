@@ -10,6 +10,7 @@ import {
   SearchBar,
   HomeQuestionCard,
 } from "@components/home/index";
+import { API_URL } from "@api/axiosConfig";
 
 // 타입 정의
 interface User {
@@ -54,7 +55,7 @@ const MainContent = () => {
 
   const fetchAllQuestions = async () => {
     try {
-      const response = await fetch("http://localhost:3000/questions", {
+      const response = await fetch(`${API_URL}questions`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

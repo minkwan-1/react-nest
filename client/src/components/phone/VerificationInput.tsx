@@ -21,6 +21,7 @@ import RefreshIcon from "@mui/icons-material/Refresh";
 import axios from "axios";
 import { motion } from "framer-motion";
 import ErrorIcon from "@mui/icons-material/Error";
+import { API_URL } from "@api/axiosConfig";
 
 interface VerificationInputProps {
   phoneNumber: string;
@@ -102,13 +103,10 @@ const VerificationInput = ({
     setIsVerifying(true);
 
     try {
-      const response = await axios.post(
-        "http://localhost:3000/api/verify-code",
-        {
-          verificationCode: verificationCode,
-          phoneNumber: `+82${phoneNumber}`,
-        }
-      );
+      const response = await axios.post(`${API_URL}api/verify-code`, {
+        verificationCode: verificationCode,
+        phoneNumber: `+82${phoneNumber}`,
+      });
 
       const { status, message } = response.data;
 

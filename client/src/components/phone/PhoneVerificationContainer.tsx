@@ -15,7 +15,11 @@ import { useStep } from "./hooks/useStep";
 interface PhoneVerificationContainerProps {
   userInfo: signupUserInfo | null;
   setUserInfo: (userInfo: SetStateAction<signupUserInfo | null>) => void;
-  onSignupComplete?: () => void;
+  onSignupComplete?: () => Promise<{
+    success: boolean;
+    data: unknown | null;
+    message?: string;
+  }>;
 }
 
 function PhoneVerificationContainer(props: PhoneVerificationContainerProps) {

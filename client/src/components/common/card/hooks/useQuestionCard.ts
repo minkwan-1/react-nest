@@ -1,4 +1,5 @@
 import { useCallback } from "react";
+import { API_URL } from "@api/axiosConfig";
 
 interface UseQuestionCardProps {
   questionId: number | string;
@@ -28,14 +29,11 @@ export const useQuestionCard = ({
     if (!isConfirmed) return;
 
     try {
-      const res = await fetch(
-        `http://localhost:3000/questions/delete/${questionId}`,
-        {
-          method: "DELETE",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ userId }),
-        }
-      );
+      const res = await fetch(`${API_URL}questions/delete/${questionId}`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId }),
+      });
 
       if (!res.ok) throw new Error(`삭제 실패: ${res.status}`);
       alert("질문이 삭제되었습니다.");

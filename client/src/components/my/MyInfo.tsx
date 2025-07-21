@@ -5,6 +5,7 @@ import { useAtom } from "jotai";
 import { realUserInfo } from "@atom/auth";
 import { questionsAtom } from "@atom/question";
 import { Verified as VerifiedIcon } from "@mui/icons-material";
+import { API_URL } from "@api/axiosConfig";
 
 interface MyInfoProps {
   avatarUrl?: string;
@@ -27,7 +28,7 @@ const MyInfo: React.FC<MyInfoProps> = ({ avatarUrl, job }) => {
     const fetchQuestionsByUser = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3000/questions/user/${userInfo.id}`
+          `${API_URL}questions/user/${userInfo.id}`
         );
         setQuestions(response.data);
       } catch (error) {

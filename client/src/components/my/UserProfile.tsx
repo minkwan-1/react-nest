@@ -6,8 +6,8 @@ import { useAtom } from "jotai";
 import { questionsAtom } from "@atom/question";
 import { realUserInfo } from "@atom/auth";
 import RightContentArea from "./RightContentArea";
-
 import LeftContentArea from "./LeftContentArea";
+import { API_URL } from "@api/axiosConfig";
 
 interface UserProfileProps {
   username: string;
@@ -33,7 +33,7 @@ const UserProfile: React.FC<UserProfileProps> = () => {
     const fetchQuestionsByUser = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3000/questions/user/${userInfo.id}`
+          `${API_URL}questions/user/${userInfo.id}`
         );
         setQuestions(response.data);
       } catch (error) {

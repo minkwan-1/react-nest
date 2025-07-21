@@ -16,16 +16,19 @@ import {
 const App = () => {
   return (
     <Routes>
+      {/* o */}
       <Route path="/" element={<LandingPage />} />
+      <Route path="/phone" element={<PhoneVerificationPage />} />
+      <Route path="/start" element={<StartPage />} />
+      <Route path="/redirect" element={<RedirectPage />} />
       <Route path="/home" element={<HomePage />} />
+      <Route path="*" element={<NotFoundPage />} />
       <Route path="/my" element={<MyPage />} />
       <Route path="/my/edit" element={<MyInfoEditPage />} />
-      <Route path="/redirect" element={<RedirectPage />} />
-      <Route path="/start" element={<StartPage />} />
+
+      {/* x */}
       <Route path="/questions/:id" element={<QuestionDetailPage />} />
-      <Route path="/phone" element={<PhoneVerificationPage />} />
       <Route path="/edit" element={<QuestionEditPage />} />
-      <Route path="*" element={<NotFoundPage />} />
       <Route path="/modify/:id" element={<ModifyQuestionPage />} />
     </Routes>
   );

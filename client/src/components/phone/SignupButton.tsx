@@ -16,7 +16,11 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { useNavigate } from "react-router-dom";
 
 interface SignupButtonProps {
-  onClick?: () => Promise<boolean> | boolean | Promise<void> | void;
+  onClick?: () => Promise<{
+    success: boolean;
+    data: unknown | null;
+    message?: string;
+  }>;
   onSuccess?: (message: string) => void;
   onError?: (message: string) => void;
   disabled?: boolean;
@@ -47,14 +51,18 @@ const SignupButton: React.FC<SignupButtonProps> = ({
     setIsLoading(true);
 
     try {
-      let result: boolean | void = true;
+      let result: {
+        success: boolean;
+        data: unknown | null;
+        message?: string;
+      } = { success: true, data: null };
 
       if (onClick) {
         result = await onClick();
       }
 
       // void인 경우 성공으로 간주, false인 경우만 실패로 처리
-      if (result !== false) {
+      if ((result.success as boolean) === true) {
         // 성공 시 축하 메시지 표시
         // if (onSuccess) {
         //   onSuccess(

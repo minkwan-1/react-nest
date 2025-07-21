@@ -1,6 +1,5 @@
 import axios from "axios";
-
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000/";
+import { axiosInstance } from "@api/axiosConfig";
 
 export interface SignupUserInfo {
   email: string;
@@ -18,8 +17,8 @@ export const postAuthorizationCode = async ({
 }) => {
   console.log("#프론트엔드->백엔드 인가 코드: ", code);
   try {
-    const response = await axios.post(
-      `${API_URL}auth/${provider}/user`,
+    const response = await axiosInstance.post(
+      `auth/${provider}/user`,
       {
         code,
         provider,
@@ -46,10 +45,10 @@ export const signup = async (userInfo: SignupUserInfo) => {
     let endpoint = "";
     switch (userInfo.provider) {
       case "google":
-        endpoint = `${API_URL}auth/google/user/update`;
+        endpoint = `auth/google/user/update`;
         break;
       case "naver":
-        endpoint = `${API_URL}auth/naver/user/update`;
+        endpoint = `auth/naver/user/update`;
         break;
 
         break;
@@ -57,31 +56,13 @@ export const signup = async (userInfo: SignupUserInfo) => {
         throw new Error("지원하지 않는 소셜 로그인 제공자입니다.");
     }
 
-    const response = await axios.post(endpoint, userInfo);
-    return response.data;
-  } catch (error) {
-    if (axios.isAxiosError(error) && error.response) {
-      throw new Error(
-        error.response.data.message || "회원가입 중 오류가 발생했습니다."
-      );
-    }
-    throw new Error("서버와 통신 중 오류가 발생했습니다.");
-  }
-};
-
-// Updated handleCompleteSignup function for PhoneVerificationPage
-export const handleCompleteSignupWithAPI = async (userInfo: SignupUserInfo) => {
-  try {
-    const result = await signup(userInfo);
-    // Save auth token if returned from backend
-    // if (result.data?.token) {
-    //   localStorage.setItem("token", result.data.token);
-    // }
-    return { success: true, data: result.data };
+    const response = await axiosInstance.post(endpoint, userInfo);
+    return { success: true, data: response.data };
   } catch (error) {
     console.error("Signup error:", error);
     return {
       success: false,
+      data: null,
       message:
         error instanceof Error
           ? error.message
@@ -89,3 +70,26 @@ export const handleCompleteSignupWithAPI = async (userInfo: SignupUserInfo) => {
     };
   }
 };
+
+// export const signin = async (userInfo: SignupUserInfo) => {
+//   try {
+//     const response = await axiosInstance.post(
+//       `auth/${userInfo.provider}/user`,
+//       {
+//         code,
+//         provider,
+//       },
+//       {
+//         withCredentials: true,
+//       }
+//     );
+//     return response.data;
+//   } catch (error) {
+//     if (axios.isAxiosError(error) && error.response) {
+//       throw new Error(
+//         error.response.data.message || "로그인 중 오류가 발생했습니다."
+//       );
+//     }
+//     throw new Error("서버와 통신 중 오류가 발생했습니다.");
+//   }
+// };

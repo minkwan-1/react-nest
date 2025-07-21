@@ -5,6 +5,7 @@ import { realUserInfo } from "@atom/auth";
 import useFetchMyInfo from "./useFetchMyInfo";
 import { imageService } from "@components/edit/service/imageService";
 import { useNavigate } from "react-router-dom";
+import { API_URL } from "@api/axiosConfig";
 
 const useMyInfoForm = () => {
   // 유저 전역 상태
@@ -119,7 +120,7 @@ const useMyInfoForm = () => {
 
       console.log("저장할 데이터: ", payload);
 
-      await axios.post("http://localhost:3000/my-info", payload);
+      await axios.post(`${API_URL}my-info`, payload);
       alert(myInfo ? "정보가 수정되었습니다." : "정보가 저장되었습니다.");
       navigate("/my");
     } catch (err) {

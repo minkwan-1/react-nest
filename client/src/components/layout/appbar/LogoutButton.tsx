@@ -10,6 +10,7 @@ import {
   useTheme,
 } from "@mui/material";
 import axios from "axios";
+import { API_URL } from "@api/axiosConfig";
 
 const LogoutButton = () => {
   const theme = useTheme();
@@ -26,7 +27,7 @@ const LogoutButton = () => {
 
   const handleLogout = async () => {
     try {
-      const res = await axios.get("http://localhost:3000/auth/logout", {
+      const res = await axios.get(`${API_URL}auth/logout`, {
         withCredentials: true,
       });
       console.log("로그아웃 응답:", res);

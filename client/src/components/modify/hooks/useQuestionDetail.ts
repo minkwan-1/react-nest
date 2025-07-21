@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-
+import { API_URL } from "@api/axiosConfig";
 export interface Question {
   id: number;
   title: string;
@@ -20,9 +20,7 @@ export const useQuestionDetail = (questionId?: string) => {
     const fetchQuestion = async () => {
       try {
         setLoading(true);
-        const res = await fetch(
-          `http://localhost:3000/questions/${questionId}`
-        );
+        const res = await fetch(`${API_URL}questions/${questionId}`);
         if (!res.ok) throw new Error("질문을 불러올 수 없습니다.");
         const data = await res.json();
         setQuestion(data);

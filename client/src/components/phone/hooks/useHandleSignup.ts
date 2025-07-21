@@ -1,9 +1,10 @@
-import { handleCompleteSignupWithAPI } from "@api/auth/auth";
 import { signupUserInfo } from "@atom/auth";
 import { useAtom } from "jotai";
+import { useSignupMutate } from "@api/auth/useAuthHooks";
 
 export const useHandleSignup = () => {
   const [userInfo] = useAtom(signupUserInfo);
+  const { mutateAsync: signupAsyncMutate } = useSignupMutate();
 
   const handleCompleteSignup = async () => {
     if (!userInfo) throw new Error("유저 정보가 없습니다.");
@@ -16,14 +17,14 @@ export const useHandleSignup = () => {
         isExist: true,
       };
 
-      const result = await handleCompleteSignupWithAPI(newCompleteUserInfo);
+      const result = await signupAsyncMutate(newCompleteUserInfo);
       if (!result.success) {
         throw new Error(result.message || "회원가입 중 오류가 발생했습니다.");
       }
 
       localStorage.removeItem("userInfo");
 
-      return;
+      return result;
     } catch (error) {
       console.error("회원가입 처리 중 오류:", error);
       throw error;

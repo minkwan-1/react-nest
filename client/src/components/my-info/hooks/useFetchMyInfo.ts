@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { API_URL } from "@api/axiosConfig";
 
 interface MyInfoType {
   id: string;
@@ -20,9 +21,7 @@ const useFetchMyInfo = (userId: string | undefined) => {
       if (!userId) return;
 
       try {
-        const response = await axios.get(
-          `http://localhost:3000/my-info?id=${userId}`
-        );
+        const response = await axios.get(`${API_URL}my-info?id=${userId}`);
         setMyInfo(response.data?.myInfo);
       } catch (err) {
         console.error("프로필 정보 불러오기 실패: ", err);

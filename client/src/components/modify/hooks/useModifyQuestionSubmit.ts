@@ -1,5 +1,5 @@
 import { useState } from "react";
-
+import { API_URL } from "@api/axiosConfig";
 export const useModifyQuestionSubmit = (
   questionId: string | undefined,
   userId: string | undefined,
@@ -17,19 +17,16 @@ export const useModifyQuestionSubmit = (
 
     setIsSubmitting(true);
     try {
-      const res = await fetch(
-        `http://localhost:3000/questions/modify/${questionId}`,
-        {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            title: formData.title.trim(),
-            content: formData.content,
-            tags: formData.tags,
-            userId,
-          }),
-        }
-      );
+      const res = await fetch(`${API_URL}questions/modify/${questionId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: formData.title.trim(),
+          content: formData.content,
+          tags: formData.tags,
+          userId,
+        }),
+      });
 
       if (!res.ok) throw new Error("질문 수정 실패");
 

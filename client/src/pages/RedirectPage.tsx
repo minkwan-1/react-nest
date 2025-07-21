@@ -2,8 +2,11 @@ import { useEffect, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { CircularProgress, Box } from "@mui/material";
 import { useAtom } from "jotai";
-import { signupUserInfo } from "@atom/auth";
-import { usePostAuthorizationMutate } from "@api/auth/useAuthHooks";
+import { signupUserInfo, realUserInfo } from "@atom/auth";
+import {
+  usePostAuthorizationMutate,
+  // useSigninMutate,
+} from "@api/auth/useAuthHooks";
 
 const RedirectPage = () => {
   const [loading, setLoading] = useState(false);
@@ -13,7 +16,9 @@ const RedirectPage = () => {
   const provider = query.get("provider");
 
   const [, setUserInfo] = useAtom(signupUserInfo);
+  const [, setRealUserInfo] = useAtom(realUserInfo);
   const { mutate: authorizationMutate } = usePostAuthorizationMutate();
+  // const { mutateAsync: signinAsyncMutate } = useSigninMutate();
 
   useEffect(() => {
     // 유효성 검사
@@ -33,7 +38,7 @@ const RedirectPage = () => {
     authorizationMutate(
       { code, provider },
       {
-        onSuccess: (res) => {
+        onSuccess: async (res) => {
           const user = res?.user;
 
           if (!user) {
@@ -44,13 +49,13 @@ const RedirectPage = () => {
             return;
           }
 
-          // jotai 전역 상태 업데이트
-          setUserInfo({ ...user, provider });
-
           // 사용자 존재 여부에 따라 라우팅
           if (!user.isExist) {
+            setUserInfo({ ...user, provider });
             navigate("/phone");
           } else {
+            // const result = await signinAsyncMutate({ ...user });
+            setRealUserInfo({ ...user });
             navigate("/home");
           }
 

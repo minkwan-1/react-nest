@@ -12,6 +12,7 @@ import { Box, Container, SxProps, Theme } from "@mui/material";
 import { useAtom } from "jotai";
 import { realUserInfo } from "@atom/auth";
 import useFetchMyInfo from "@components/my-info/hooks/useFetchMyInfo";
+import { API_URL } from "@api/axiosConfig";
 
 interface AppbarProps {
   sx?: SxProps<Theme>;
@@ -27,7 +28,7 @@ function Appbar({ sx }: AppbarProps) {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await fetch("http://localhost:3000/auth/me", {
+        const response = await fetch(`${API_URL}auth/me`, {
           method: "GET",
           credentials: "include",
         });

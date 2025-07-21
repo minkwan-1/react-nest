@@ -13,6 +13,7 @@ import { Edit, Check, Close } from "@mui/icons-material";
 import axios from "axios";
 import { realUserInfo } from "@atom/auth";
 import { useAtom } from "jotai";
+import { API_URL } from "@api/axiosConfig";
 
 const MAX_LENGTH = 80;
 
@@ -34,9 +35,7 @@ const SelfIntroduction = () => {
 
       try {
         setLoading(true);
-        const response = await axios.get(
-          `http://localhost:3000/self-intro?id=${user.id}`
-        );
+        const response = await axios.get(`${API_URL}self-intro?id=${user.id}`);
         setSelfIntro(response.data.selfIntro || "");
       } catch (error) {
         console.error("소개 불러오기 실패:", error);
@@ -52,7 +51,7 @@ const SelfIntroduction = () => {
     if (selfIntro.length > MAX_LENGTH) return;
     setSaving(true);
     try {
-      await axios.put("http://localhost:3000/self-intro", {
+      await axios.put(`${API_URL}self-intro`, {
         id: user?.id,
         selfIntro,
       });

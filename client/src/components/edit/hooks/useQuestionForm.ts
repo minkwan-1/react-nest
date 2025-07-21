@@ -5,7 +5,7 @@ import { useAtom } from "jotai";
 import { realUserInfo } from "@atom/auth";
 import { questionsAtom } from "@atom/question";
 import { useNavigate } from "react-router-dom";
-
+import { API_URL } from "@api/axiosConfig";
 // ✅ AI 요청 함수
 const fetchAiAnswer = async ({
   title,
@@ -18,9 +18,7 @@ const fetchAiAnswer = async ({
 }) => {
   const params = new URLSearchParams({ title, content, questionId });
 
-  const response = await fetch(
-    `http://localhost:3000/api/ask-ai?${params.toString()}`
-  );
+  const response = await fetch(`${API_URL}api/ask-ai?${params.toString()}`);
 
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({}));
@@ -68,7 +66,7 @@ export const useQuestionForm = () => {
       const processedContent = await imageService.processContentImages(content);
 
       // 질문 등록
-      const response = await axios.post("http://localhost:3000/questions", {
+      const response = await axios.post(`${API_URL}questions`, {
         title,
         content: processedContent,
         tags,

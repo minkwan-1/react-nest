@@ -20,6 +20,7 @@ import axios from "axios";
 import { motion } from "framer-motion";
 import type { signupUserInfo } from "@atom/auth";
 import { SetStateAction } from "jotai";
+import { API_URL } from "@api/axiosConfig";
 
 type PhoneNumberFieldProps = {
   onNext: () => void;
@@ -122,7 +123,7 @@ const PhoneNumberField = ({
 
     try {
       // 백엔드 API로 POST 요청 (국가코드 +82 붙이기)
-      const response = await axios.post("http://localhost:3000/api/send-code", {
+      const response = await axios.post(`${API_URL}api/send-code`, {
         toPhoneNumber: `+82${phoneNumber.trim()}`,
       });
 
