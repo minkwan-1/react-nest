@@ -1,5 +1,7 @@
-import { useState } from "react";
-import { API_URL } from "@api/axiosConfig";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
+import { modifyQuestion } from "../api/modifyQuestion";
+
 export const useModifyQuestionSubmit = (
   questionId: string | undefined,
   userId: string | undefined,
@@ -9,36 +11,37 @@ export const useModifyQuestionSubmit = (
     tags: string[];
   }
 ) => {
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!questionId) return;
-
-    setIsSubmitting(true);
-    try {
-      const res = await fetch(`${API_URL}questions/modify/${questionId}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          title: formData.title.trim(),
-          content: formData.content,
-          tags: formData.tags,
-          userId,
-        }),
+  const { mutate, isPending: isSubmitting } = useMutation({
+    mutationFn: modifyQuestion,
+    onSuccess: (data, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: ["questions", variables.questionId],
       });
+      queryClient.invalidateQueries({ queryKey: ["questions"] });
 
-      if (!res.ok) throw new Error("질문 수정 실패");
-
-      const updated = await res.json();
       alert("질문이 성공적으로 수정되었습니다!");
-      return updated;
-    } catch (err) {
+      navigate(`/questions/${variables.questionId}`);
+    },
+    onError: (err) => {
       console.error(err);
       alert("질문 수정 중 오류가 발생했습니다.");
-    } finally {
-      setIsSubmitting(false);
-    }
+    },
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!questionId || !userId) return;
+
+    mutate({
+      questionId,
+      userId,
+      title: formData.title,
+      content: formData.content,
+      tags: formData.tags,
+    });
   };
 
   return { handleSubmit, isSubmitting };
