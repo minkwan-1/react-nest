@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
-import { API_URL } from "@api/axiosConfig";
+import { useQuery } from "@tanstack/react-query";
+import { fetchMyInfoAPI } from "../api/fetchMyInfoAPI";
 
 interface MyInfoType {
   id: string;
@@ -14,24 +13,13 @@ interface MyInfoType {
 }
 
 const useFetchMyInfo = (userId: string | undefined) => {
-  const [myInfo, setMyInfo] = useState<MyInfoType | null>(null);
+  const { data: myInfo } = useQuery<MyInfoType | null>({
+    queryKey: ["myInfo", userId],
+    queryFn: () => fetchMyInfoAPI(userId!),
+    enabled: !!userId,
+  });
 
-  useEffect(() => {
-    const fetchMyInfo = async () => {
-      if (!userId) return;
-
-      try {
-        const response = await axios.get(`${API_URL}my-info?id=${userId}`);
-        setMyInfo(response.data?.myInfo);
-      } catch (err) {
-        console.error("프로필 정보 불러오기 실패: ", err);
-      }
-    };
-
-    fetchMyInfo();
-  }, [userId]);
-
-  return myInfo;
+  return myInfo ?? null;
 };
 
 export default useFetchMyInfo;
