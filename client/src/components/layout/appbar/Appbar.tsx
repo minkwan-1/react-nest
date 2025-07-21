@@ -21,7 +21,8 @@ interface AppbarProps {
 
 function Appbar({ sx }: AppbarProps) {
   const [realUser, setRealUser] = useAtom(realUserInfo);
-  const myInfo = useFetchMyInfo(realUser?.id);
+
+  const { data: myInfo } = useFetchMyInfo(realUser?.id);
   const userProfileImage = myInfo?.profileImageUrl;
 
   const {
@@ -31,7 +32,7 @@ function Appbar({ sx }: AppbarProps) {
   } = useQuery({
     queryKey: ["auth", "me"],
     queryFn: fetchUserInfo,
-    staleTime: 1000 * 60 * 5, // 5분
+    staleTime: 1000 * 60 * 5,
     retry: false,
   });
 

@@ -1,20 +1,19 @@
 import { useState, useEffect } from "react";
 import { useAtom } from "jotai";
-import axios from "axios";
 import { realUserInfo } from "@atom/auth";
 import useFetchMyInfo from "./useFetchMyInfo";
-import { imageService } from "@components/edit/service/imageService";
 import { useNavigate } from "react-router-dom";
-import { API_URL } from "@api/axiosConfig";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { saveMyInfo, uploadProfileImage } from "../api/saveMyInfoAPI";
 
 const useMyInfoForm = () => {
-  // 유저 전역 상태
   const [userInfo] = useAtom(realUserInfo);
   const userId = userInfo?.id;
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
-  // 프로필 정보 가져오기 훅 적용
-  const myInfo = useFetchMyInfo(userId);
+  // 1. 프로필 정보 조회(useQuery)
+  const { data: myInfo, isPending: isInfoLoading } = useFetchMyInfo(userId);
 
   // 폼 상태 정의
   const [nickname, setNickname] = useState("");
@@ -22,35 +21,46 @@ const useMyInfoForm = () => {
   const [interestInput, setInterestInput] = useState("");
   const [socialLinks, setSocialLinks] = useState<string[]>([""]);
   const [profileImageUrl, setProfileImageUrl] = useState("");
-  const [isInitialized, setIsInitialized] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
 
-  // 사용자 ID가 있을 때 로딩 상태 설정
+  // 2. useQuery의 데이터로 폼 상태 초기화
   useEffect(() => {
-    if (userId) {
-      setIsLoading(true);
+    if (myInfo) {
+      setNickname(myInfo.nickname || "");
+      setInterests(myInfo.interests || []);
+      setSocialLinks(myInfo.socialLinks?.length ? myInfo.socialLinks : [""]);
+      setProfileImageUrl(myInfo.profileImageUrl || "");
     }
-  }, [userId]);
+  }, [myInfo]);
 
-  // 서버에서 받아온 myInfo 데이터로 폼 필드 초기화
-  useEffect(() => {
-    if (userId && myInfo !== null && !isInitialized) {
-      console.log("서버에서 받아온 프로필 정보: ", myInfo);
+  // 3. 이미지 업로드용 useMutation
+  const { mutate: uploadImage, isPending: isUploading } = useMutation({
+    mutationFn: uploadProfileImage,
+    onSuccess: (uploadedUrl) => {
+      setProfileImageUrl(uploadedUrl);
+      console.log("S3 업로드 URL:", uploadedUrl);
+    },
+    onError: (error) => {
+      console.error("프로필 이미지 업로드 실패:", error);
+      alert("이미지 업로드 중 오류가 발생했습니다.");
+    },
+  });
 
-      setNickname(myInfo?.nickname || "");
-      setInterests(myInfo?.interests || []);
-      setSocialLinks(myInfo?.socialLinks?.length ? myInfo.socialLinks : [""]);
-      setProfileImageUrl(myInfo?.profileImageUrl || "");
-      setIsInitialized(true);
-      setIsLoading(false);
-    } else if (userId && myInfo === null) {
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 1000);
-    }
-  }, [myInfo, isInitialized, userId]);
+  // 4. 정보 저장용 useMutation
+  const { mutate: saveForm, isPending: isSaving } = useMutation({
+    mutationFn: saveMyInfo,
+    onSuccess: () => {
+      // ✅ 정보 저장 성공 시, myInfo 쿼리를 무효화하여 최신 정보로 갱신
+      queryClient.invalidateQueries({ queryKey: ["myInfo", userId] });
+      alert(myInfo ? "정보가 수정되었습니다." : "정보가 저장되었습니다.");
+      navigate("/my");
+    },
+    onError: (error) => {
+      console.error("저장 실패:", error);
+      alert("저장 중 오류가 발생했습니다.");
+    },
+  });
 
-  // 관심 분야 관련 핸들러들
+  // 핸들러들
   const handleAddInterest = () => {
     if (interestInput.trim()) {
       setInterests([...interests, interestInput.trim()]);
@@ -81,56 +91,24 @@ const useMyInfoForm = () => {
   };
 
   // 프로필 이미지 Base64 업로드 및 처리 핸들러
-  const handleProfileImageUpload = async (base64Image: string) => {
-    console.log("1: ", base64Image);
-    try {
-      // base64를 WebP 파일로 변환
-      const file = await imageService.convertBase64ToWebPFileWithFallback(
-        base64Image
-      );
-      console.log("WebP 변환 완료, 파일명: ", file.name);
-
-      // S3에 업로드
-      const uploadedUrl = await imageService.uploadFileToS3(file);
-      console.log("2: ", uploadedUrl);
-
-      setProfileImageUrl(uploadedUrl);
-    } catch (error) {
-      console.error("프로필 이미지 업로드 실패:", error);
-      alert("이미지 업로드 중 오류가 발생했습니다.");
-    }
+  const handleProfileImageUpload = (base64Image: string) => {
+    uploadImage(base64Image);
   };
 
   // 저장 핸들러
-  const handleSave = async () => {
+  const handleSave = () => {
     if (!userId) return;
-
-    const filteredSocialLinks = socialLinks.filter(
-      (link) => link.trim() !== ""
-    );
-
-    try {
-      const payload = {
-        userId,
-        nickname: nickname.trim(),
-        interests,
-        socialLinks: filteredSocialLinks,
-        profileImageUrl,
-      };
-
-      console.log("저장할 데이터: ", payload);
-
-      await axios.post(`${API_URL}my-info`, payload);
-      alert(myInfo ? "정보가 수정되었습니다." : "정보가 저장되었습니다.");
-      navigate("/my");
-    } catch (err) {
-      console.log("저장 실패: ", err);
-      alert("저장 중 오류가 발생했습니다.");
-    }
+    const payload = {
+      userId,
+      nickname: nickname.trim(),
+      interests,
+      socialLinks: socialLinks.filter((link) => link.trim() !== ""),
+      profileImageUrl,
+    };
+    saveForm(payload);
   };
 
   return {
-    // 상태값들
     nickname,
     setNickname,
     interests,
@@ -139,10 +117,12 @@ const useMyInfoForm = () => {
     socialLinks,
     profileImageUrl,
     setProfileImageUrl,
-    isLoading,
+
+    isLoading: isInfoLoading,
+    isUploading,
+    isSaving,
     myInfo,
 
-    // 핸들러들
     handleAddInterest,
     handleDeleteInterest,
     handleSocialLinkChange,

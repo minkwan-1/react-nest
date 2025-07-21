@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, type UseQueryResult } from "@tanstack/react-query";
 import { fetchMyInfoAPI } from "../api/fetchMyInfoAPI";
 
 interface MyInfoType {
@@ -12,14 +12,14 @@ interface MyInfoType {
   updatedAt: string;
 }
 
-const useFetchMyInfo = (userId: string | undefined) => {
-  const { data: myInfo } = useQuery<MyInfoType | null>({
+const useFetchMyInfo = (
+  userId: string | undefined
+): UseQueryResult<MyInfoType | null> => {
+  return useQuery<MyInfoType | null>({
     queryKey: ["myInfo", userId],
     queryFn: () => fetchMyInfoAPI(userId!),
     enabled: !!userId,
   });
-
-  return myInfo ?? null;
 };
 
 export default useFetchMyInfo;

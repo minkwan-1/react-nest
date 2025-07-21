@@ -9,7 +9,8 @@ import useFetchMyInfo from "@components/my-info/hooks/useFetchMyInfo";
 
 const AnswerHeader = ({ answer }: AnswerHeaderProps) => {
   const [realUser] = useAtom(realUserInfo);
-  const myInfo = useFetchMyInfo(realUser?.id);
+  // ✨ data를 myInfo로 받아옵니다.
+  const { data: myInfo } = useFetchMyInfo(realUser?.id);
   const userProfileImage =
     !answer.isAiAnswer && myInfo?.profileImageUrl
       ? myInfo.profileImageUrl
