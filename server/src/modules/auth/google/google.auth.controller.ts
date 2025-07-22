@@ -80,7 +80,7 @@ export class GoogleAuthController {
   }
 
   // [POST] 사용자 정보 저장 (최초 회원가입 처리)
-  @Post('user/update')
+  @Post('=')
   async updateUser(@Body() userData: any) {
     console.log('최종 가입 직전 유저 정보: ', userData);
     try {

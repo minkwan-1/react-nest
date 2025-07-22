@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Box,
   TextField,
@@ -20,7 +21,7 @@ import { motion } from "framer-motion";
 import type { signupUserInfo } from "@atom/auth";
 import { SetStateAction } from "jotai";
 import { useMutation } from "@tanstack/react-query";
-import { requestVerificationCodeAPI } from "./api/RequestVerificationCodeAPI";
+import { requestVerificationCodeAPI } from "./api/requestVerificationCodeAPI";
 
 type PhoneNumberFieldProps = {
   onNext: () => void;
@@ -33,8 +34,10 @@ const PhoneNumberField = ({
   userInfo,
   setUserInfo,
 }: PhoneNumberFieldProps) => {
+  const navigate = useNavigate();
   const theme = useTheme();
   const keyColor = "#b8dae1";
+
   const [phoneNumber, setPhoneNumber] = useState("");
   const [isFocused, setIsFocused] = useState(false);
   const [modal, setModal] = useState({
@@ -44,6 +47,14 @@ const PhoneNumberField = ({
     message: "",
   });
 
+  // 컴포넌트 마운트 시 유저 정보가 없으면 '/start' 경로로 리다이렉트
+  useEffect(() => {
+    if (!userInfo) {
+      navigate("/start");
+    }
+  }, [userInfo, navigate]);
+
+  // 인증 코드 요청을 위한 React Query useMutation hook
   const { mutate: requestCode, isPending: isSending } = useMutation({
     mutationFn: requestVerificationCodeAPI,
     onSuccess: (data) => {
@@ -66,12 +77,14 @@ const PhoneNumberField = ({
     },
   });
 
+  // 부모로부터 받은 유저 정보에 휴대폰 번호가 있다면 상태에 설정
   useEffect(() => {
     if (userInfo?.phoneNumber) {
       setPhoneNumber(userInfo.phoneNumber);
     }
   }, [userInfo?.phoneNumber]);
 
+  // 휴대폰 번호 변경 시, 로컬 및 전역 상태를 업데이트하는 함수
   const handlePhoneNumberChange = useCallback(
     (phone: string) => {
       setPhoneNumber(phone);
@@ -79,6 +92,7 @@ const PhoneNumberField = ({
         if (prev) {
           return { ...prev, phoneNumber: phone };
         } else {
+          // userInfo가 없는 경우는 이미 리다이렉트되므로, 사실상 이 코드는 실행되지 않음
           return {
             id: "",
             email: "",
@@ -94,18 +108,22 @@ const PhoneNumberField = ({
     [setUserInfo]
   );
 
+  // 휴대폰 번호 유효성 검사 함수 (010으로 시작하는 11자리)
   const isValidPhoneNumber = (number: string) => {
     const trimmed = number.replace(/\s+/g, "");
     const phoneRegex = /^010\d{8}$/;
     return phoneRegex.test(trimmed);
   };
 
+  // 현재 입력된 휴대폰 번호의 유효성 여부
   const isValidFormat = phoneNumber ? isValidPhoneNumber(phoneNumber) : true;
 
+  // phoneNumber 상태가 변경될 때마다 전역 상태도 함께 업데이트
   useEffect(() => {
     handlePhoneNumberChange(phoneNumber);
   }, [phoneNumber, handlePhoneNumberChange]);
 
+  // 연속적인 함수 호출을 방지하는 디바운스 유틸리티 함수
   const debounce = <T extends unknown[]>(
     func: (...args: T) => void,
     delay: number
@@ -117,6 +135,7 @@ const PhoneNumberField = ({
     };
   };
 
+  // 인증 코드 발송 API를 호출하는 함수
   const sendCode = () => {
     if (!phoneNumber.trim() || !isValidPhoneNumber(phoneNumber)) {
       console.log("유효한 전화번호를 입력해주세요.");
@@ -133,26 +152,35 @@ const PhoneNumberField = ({
     requestCode(phoneNumber);
   };
 
+  // 모달의 '다음 단계로' 버튼 클릭 시 실행되는 핸들러
   const handleNextStep = () => {
     setModal({ ...modal, open: false });
     onNext();
   };
 
+  // 디바운스가 적용된 인증 코드 발송 함수
   const debouncedSendCode = useCallback(debounce(sendCode, 300), [
     phoneNumber,
     setUserInfo,
   ]);
 
-  const isDarkMode = theme.palette.mode === "dark";
-  const borderColor = isDarkMode ? `${keyColor}40` : `${keyColor}30`;
+  const isDarkMode = theme.palette.mode === "dark"; // 다크모드 여부 확인
+  const borderColor = isDarkMode ? `${keyColor}40` : `${keyColor}30`; // 다크모드에 따른 테두리 색상 설정
+
+  // 유저 정보가 없을 경우 리다이렉트가 처리되는 동안 렌더링하지 않음
+  if (!userInfo) {
+    return null;
+  }
 
   return (
     <>
+      {/* 화면에 부드럽게 나타나는 애니메이션 효과를 위한 컨테이너 */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
+        {/* 휴대폰 번호 입력 UI를 감싸는 Paper 컴포넌트 */}
         <Paper
           elevation={0}
           sx={{
@@ -172,6 +200,7 @@ const PhoneNumberField = ({
             휴대폰 번호 인증
           </Typography>
 
+          {/* 입력 필드와 버튼을 포함하는 영역 */}
           <Box sx={{ mb: 2, position: "relative" }}>
             <TextField
               fullWidth
@@ -221,6 +250,7 @@ const PhoneNumberField = ({
               }}
             />
 
+            {/* 인증 코드 발송 요청 버튼 */}
             <Button
               variant="contained"
               onClick={debouncedSendCode}
@@ -256,16 +286,18 @@ const PhoneNumberField = ({
             </Button>
           </Box>
 
+          {/* 하단 안내 문구 */}
           <Typography
             variant="caption"
             color="text.secondary"
             sx={{ display: "block", textAlign: "center" }}
           >
-            국가 코드를 포함한 휴대폰 번호를 입력해주세요
+            '-'를 제외한 휴대폰 번호를 입력해주세요.
           </Typography>
         </Paper>
       </motion.div>
 
+      {/* 인증 요청 결과(성공/실패)를 알려주는 모달창 */}
       <Dialog
         open={modal.open}
         onClose={() => setModal({ ...modal, open: false })}

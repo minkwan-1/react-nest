@@ -3,7 +3,6 @@ import { postAuthorizationCode, signup } from "./auth";
 
 export const usePostAuthorizationMutate = () =>
   useMutation({
-    // mutationFn => {}
     mutationFn: postAuthorizationCode,
   });
 
