@@ -1,12 +1,36 @@
-import { Box, useTheme } from "@mui/material";
+import { Box } from "@mui/material";
 import { PageContainer } from "@components/layout/common";
+import {
+  HeroSection,
+  StatsSection,
+  FeaturesSection,
+  PopularTagsSection,
+  CTASection,
+} from "@components/landing";
 
 const LandingPage = () => {
-  const theme = useTheme();
-
   return (
     <PageContainer>
-      <Box></Box>
+      <Box
+        sx={(theme) => ({
+          ...theme.applyStyles("dark", {
+            bgcolor: "black",
+          }),
+          ...theme.applyStyles("light", {
+            bgcolor: "white",
+          }),
+        })}
+      >
+        <HeroSection />
+
+        <StatsSection />
+
+        <FeaturesSection />
+
+        <PopularTagsSection />
+
+        <CTASection />
+      </Box>
     </PageContainer>
   );
 };
