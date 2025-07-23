@@ -66,8 +66,6 @@ const QuestionForm = ({
 
         {/* tags */}
         <Box sx={{ mb: 3 }}>
-          <SectionTitle title="태그" />
-
           {/* 변경됨 */}
           <TagsField tags={tags} setTags={setTags} />
         </Box>
