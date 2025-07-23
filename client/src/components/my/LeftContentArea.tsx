@@ -82,6 +82,7 @@ const LeftContentArea = () => {
             width: 40,
             height: 40,
             "&:hover": {
+              bgcolor: "#a2cbd4",
               transform: "scale(1.05)",
             },
             transition: "all 0.2s ease-in-out",
