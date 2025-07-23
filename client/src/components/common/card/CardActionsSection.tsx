@@ -38,9 +38,7 @@ const CardActionsSection = ({
   const isOwner = user?.id === questionUserId;
 
   return (
-    <Box
-      sx={{ display: "flex", alignItems: "center", border: "1px solid red" }}
-    >
+    <Box sx={{ display: "flex", alignItems: "center" }}>
       <Button
         size="small"
         sx={{

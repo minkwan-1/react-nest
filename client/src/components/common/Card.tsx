@@ -84,7 +84,6 @@ const QuestionCard = ({
             <Typography
               variant="body2"
               sx={{
-                border: "1px solid red",
                 color: theme.palette.text.secondary,
                 mb: showActions ? 2.5 : 0,
                 display: "-webkit-box",

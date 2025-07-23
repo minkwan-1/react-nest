@@ -28,7 +28,6 @@ const CardHeaderSection = ({ user, question }: CardHeaderSectionProps) => {
         display: "flex",
         alignItems: "center",
         mb: 2,
-        border: "1px solid red",
       }}
     >
       <Avatar
