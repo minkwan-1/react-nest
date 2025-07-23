@@ -1,4 +1,3 @@
-// questions.service.ts
 import {
   Injectable,
   NotFoundException,
@@ -9,6 +8,19 @@ import { Repository } from 'typeorm';
 import { Question } from './questions.entity';
 import { UsersRepository } from 'src/modules/users/users.repository';
 
+export interface PaginationOptions {
+  page: number;
+  limit: number;
+}
+
+export interface PaginatedQuestionsResult {
+  items: Question[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
+
 @Injectable()
 export class QuestionsService {
   constructor(
@@ -17,7 +29,6 @@ export class QuestionsService {
     private readonly usersRepository: UsersRepository,
   ) {}
 
-  // [1] 질문 생성
   async create(
     title: string,
     content: string,
@@ -32,12 +43,12 @@ export class QuestionsService {
       content,
       tags,
       user,
+      userId,
     });
 
     return await this.questionsRepository.save(newQuestion);
   }
 
-  // [2] 특정 유저의 질문 조회
   async findAllByUser(userId: string): Promise<Question[]> {
     const user = await this.usersRepository.findById(userId);
     if (!user) throw new NotFoundException('존재하지 않는 유저입니다.');
@@ -45,11 +56,10 @@ export class QuestionsService {
     return this.questionsRepository.find({
       where: { userId: userId },
       relations: ['user'],
-      order: { id: 'DESC' },
+      order: { createdAt: 'DESC' },
     });
   }
 
-  // [3] 질문 삭제
   async delete(questionId: number, userId: string): Promise<void> {
     const question = await this.questionsRepository.findOne({
       where: { id: questionId },
@@ -67,7 +77,6 @@ export class QuestionsService {
     await this.questionsRepository.remove(question);
   }
 
-  // [4] 질문 단일 조회
   async findOne(id: number): Promise<Question> {
     const question = await this.questionsRepository.findOne({
       where: { id },
@@ -81,7 +90,6 @@ export class QuestionsService {
     return question;
   }
 
-  // [5] 질문 수정
   async update(
     questionId: number,
     title: string,
@@ -109,11 +117,24 @@ export class QuestionsService {
     return await this.questionsRepository.save(question);
   }
 
-  // [추가] 모든 질문 조회
-  async findAll(): Promise<Question[]> {
-    return this.questionsRepository.find({
+  async findAll(options: PaginationOptions): Promise<PaginatedQuestionsResult> {
+    const { page, limit } = options;
+
+    const [items, total] = await this.questionsRepository.findAndCount({
       relations: ['user'],
-      order: { id: 'DESC' },
+      order: { createdAt: 'DESC' },
+      take: limit,
+      skip: (page - 1) * limit,
     });
+
+    const totalPages = Math.ceil(total / limit);
+
+    return {
+      items,
+      total,
+      page,
+      limit,
+      totalPages,
+    };
   }
 }

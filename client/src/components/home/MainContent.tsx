@@ -1,72 +1,72 @@
-import { Box } from "@mui/material";
-// import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
-// import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-// import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-import { useEffect } from "react";
+import {
+  Box,
+  Card,
+  CardContent,
+  Typography,
+  Chip,
+  Stack,
+  Pagination,
+} from "@mui/material";
+import { useEffect, useState } from "react";
 import { useAtom } from "jotai";
 import { allQuestionsAtom } from "@atom/question";
-import {
-  HomePageTitle,
-  SearchBar,
-  HomeQuestionCard,
-} from "@components/home/index";
-import { API_URL } from "@api/axiosConfig";
+import { HomePageTitle, SearchBar } from "@components/home/index";
 
-// 타입 정의
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  phoneNumber: string;
-  createdAt: string;
-  updatedAt?: string;
-}
+// 유틸: HTML 태그 제거
+const stripHtml = (html: string) => {
+  const div = document.createElement("div");
+  div.innerHTML = html;
+  return div.textContent || div.innerText || "";
+};
 
-interface Question {
-  id: number;
-  title: string;
-  content: string;
-  createdAt: string;
-  tags: string[];
-  userId: string;
-  user: User;
-}
-
-// HTML에서 첫 번째 이미지 src 추출
-// const extractFirstImage = (html: string): string | null => {
-//   const match = html.match(/<img[^>]+src="([^">]+)"/);
-//   return match ? match[1] : null;
-// };
-
-// HTML에서 텍스트만 추출
-// const extractText = (html: string): string => {
-//   const doc = new DOMParser().parseFromString(html, "text/html");
-//   return doc.body.textContent || "";
-// };
-
-// 날짜 포맷팅: "2025. 7. 3."
-// const formatDate = (isoString: string): string => {
-//   const date = new Date(isoString);
-//   return `${date.getFullYear()}. ${date.getMonth() + 1}. ${date.getDate()}.`;
-// };
+// 유틸: 날짜 포맷
+const formatDate = (isoString: string) => {
+  const date = new Date(isoString);
+  return date.toLocaleDateString("ko-KR", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+};
 
 const MainContent = () => {
   const [allQuestions, setAllQuestions] = useAtom(allQuestionsAtom);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalQuestions, setTotalQuestions] = useState(0);
+  const [loading, setLoading] = useState(false);
 
-  const fetchAllQuestions = async () => {
+  const fetchAllQuestions = async (page: number = 1, limit: number = 5) => {
     try {
-      const response = await fetch(`${API_URL}questions`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
+      setLoading(true);
+      const response = await fetch(
+        `http://localhost:3000/questions?page=${page}&limit=${limit}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
       const data = await response.json();
-      setAllQuestions(data);
+
+      setAllQuestions(data.items);
+      setTotalPages(data.totalPages);
+      setTotalQuestions(data.total);
+      setCurrentPage(data.page);
     } catch (e) {
-      console.log(e);
+      console.log("에러 발생:", e);
+    } finally {
+      setLoading(false);
     }
+  };
+
+  const handlePageChange = (
+    event: React.ChangeEvent<unknown>,
+    value: number
+  ) => {
+    setCurrentPage(value);
+    fetchAllQuestions(value);
   };
 
   useEffect(() => {
@@ -92,15 +92,92 @@ const MainContent = () => {
       <HomePageTitle />
       <SearchBar />
 
-      <Box sx={{ mt: 2 }}>
-        {allQuestions.map((question: Question) => {
-          // const imageSrc = extractFirstImage(question.content);
-          // const plainText = extractText(question.content);
-          // const dateText = formatDate(question.createdAt);
-
-          return <HomeQuestionCard />;
-        })}
+      {/* 질문 개수 표시 */}
+      <Box sx={{ mt: 2, mb: 1 }}>
+        <Typography variant="body2" color="text.secondary">
+          총 {totalQuestions}개의 질문 (페이지 {currentPage} / {totalPages})
+        </Typography>
       </Box>
+
+      {/* 질문 목록 */}
+      <Box sx={{ mt: 2, display: "flex", flexDirection: "column", gap: 2 }}>
+        {loading ? (
+          <Box sx={{ textAlign: "center", py: 4 }}>
+            <Typography variant="body2" color="text.secondary">
+              로딩 중...
+            </Typography>
+          </Box>
+        ) : allQuestions.length === 0 ? (
+          <Box sx={{ textAlign: "center", py: 4 }}>
+            <Typography variant="body2" color="text.secondary">
+              등록된 질문이 없습니다.
+            </Typography>
+          </Box>
+        ) : (
+          <>
+            {allQuestions.map((question) => (
+              <Card key={question.id} variant="outlined" sx={{ p: 2 }}>
+                <CardContent>
+                  <Typography variant="h6" fontWeight="bold" gutterBottom>
+                    {question.title}
+                  </Typography>
+
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    sx={{
+                      display: "-webkit-box",
+                      WebkitLineClamp: 2,
+                      WebkitBoxOrient: "vertical",
+                      overflow: "hidden",
+                    }}
+                  >
+                    {stripHtml(question.content)}
+                  </Typography>
+
+                  <Stack direction="row" spacing={1} mt={2} flexWrap="wrap">
+                    {question.tags.map((tag: string) => (
+                      <Chip key={tag} label={tag} size="small" />
+                    ))}
+                  </Stack>
+
+                  <Typography
+                    variant="caption"
+                    color="text.secondary"
+                    mt={1}
+                    display="block"
+                  >
+                    작성자: {question.user.name} ·{" "}
+                    {formatDate(question.createdAt)}
+                  </Typography>
+                </CardContent>
+              </Card>
+            ))}
+          </>
+        )}
+      </Box>
+
+      {allQuestions.length > 0 && (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            mt: 4,
+            mb: 2,
+          }}
+        >
+          <Pagination
+            count={Math.max(totalPages, 1)}
+            page={currentPage}
+            onChange={handlePageChange}
+            color="primary"
+            size="large"
+            showFirstButton
+            showLastButton
+            disabled={loading}
+          />
+        </Box>
+      )}
     </Box>
   );
 };
