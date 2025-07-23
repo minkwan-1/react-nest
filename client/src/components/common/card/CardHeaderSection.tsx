@@ -1,4 +1,6 @@
 import { Box, Avatar, Typography, useTheme } from "@mui/material";
+import PersonIcon from "@mui/icons-material/Person";
+import useFetchMyInfo from "@components/my-info/hooks/useFetchMyInfo";
 
 interface User {
   id: number | string;
@@ -22,6 +24,18 @@ interface CardHeaderSectionProps {
 const CardHeaderSection = ({ user, question }: CardHeaderSectionProps) => {
   const theme = useTheme();
 
+  // user.id를 string으로 변환하여 전달
+  const userId = user?.id ? String(user.id) : undefined;
+  const { data: myInfo } = useFetchMyInfo(userId);
+
+  // 날짜 포맷팅 함수
+  const formatDate = (dateInput: string | Date | undefined) => {
+    if (!dateInput) return new Date().toLocaleDateString("ko-KR");
+    const date =
+      typeof dateInput === "string" ? new Date(dateInput) : dateInput;
+    return date.toLocaleDateString("ko-KR");
+  };
+
   return (
     <Box
       sx={{
@@ -39,8 +53,9 @@ const CardHeaderSection = ({ user, question }: CardHeaderSectionProps) => {
           fontSize: "14px",
           fontWeight: "bold",
         }}
+        src={myInfo?.profileImageUrl}
       >
-        {user.name?.charAt(0) || "U"}
+        {!myInfo?.profileImageUrl && <PersonIcon sx={{ fontSize: 16 }} />}
       </Avatar>
       <Typography
         variant="body2"
@@ -49,13 +64,13 @@ const CardHeaderSection = ({ user, question }: CardHeaderSectionProps) => {
           color: theme.palette.text.primary,
         }}
       >
-        {user.name}
+        {myInfo?.nickname || user.name}
       </Typography>
       <Typography variant="body2" sx={{ mx: 1, color: "#BDBDBD" }}>
         •
       </Typography>
       <Typography variant="body2" sx={{ color: theme.palette.text.primary }}>
-        {new Date(question.createdAt || Date.now()).toLocaleDateString("ko-KR")}
+        {formatDate(question.createdAt)}
       </Typography>
     </Box>
   );
