@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   Grow,
   Paper,
@@ -6,155 +7,244 @@ import {
   Typography,
   TextField,
   useTheme,
+  Link as MuiLink,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
   Button,
 } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
+import {
+  Add as AddIcon,
+  RemoveCircleOutline as RemoveCircleOutlineIcon,
+  Edit as EditIcon,
+  Instagram as InstagramIcon,
+  LinkedIn as LinkedInIcon,
+  GitHub as GitHubIcon,
+  Link as DefaultLinkIcon,
+} from "@mui/icons-material";
+
+// --- 링크 표시(보기 모드)를 위한 헬퍼 함수 ---
+const getIcon = (url: string) => {
+  if (url.includes("instagram.com"))
+    return <InstagramIcon sx={{ color: "#E4405F" }} />;
+  if (url.includes("linkedin.com"))
+    return <LinkedInIcon sx={{ color: "#0A66C2" }} />;
+  if (url.includes("github.com"))
+    return (
+      <GitHubIcon
+        sx={{
+          color: (theme) => (theme.palette.mode === "dark" ? "#fff" : "#333"),
+        }}
+      />
+    );
+  return <DefaultLinkIcon color="action" />;
+};
+
+const getDomainLabel = (url: string) => {
+  try {
+    const domain = new URL(url).hostname.replace("www.", "");
+    return domain;
+  } catch {
+    // 유효하지 않은 URL일 경우 원본을 표시
+    return url.length > 30
+      ? url.substring(0, 27) + "..."
+      : url || "잘못된 링크";
+  }
+};
+// ---------------------------------------------
 
 const keyColor = "#b8dae1";
-const lightKeyColor = "#f0f8fa";
 
-// Props 타입 정의
+// --- Props 타입 정의 ---
 interface SocialMediaSectionProps {
   socialLinks: string[];
-  handleSocialLinkChange: (index: number, value: string) => void;
-  handleAddSocialLink: () => void;
-  handleRemoveSocialLink: (index: number) => void;
+  // 부모 컴포넌트에 최종 저장 결과를 전달할 단일 함수
+  onSaveLinks: (links: string[]) => void;
 }
 
 const SocialMediaSection = ({
   socialLinks,
-  handleSocialLinkChange,
-  handleAddSocialLink,
-  handleRemoveSocialLink,
+  onSaveLinks,
 }: SocialMediaSectionProps) => {
   const theme = useTheme();
 
+  // --- 컴포넌트 내부 상태 관리 ---
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  // 모달 안에서 수정될 임시 링크 상태
+  const [tempLinks, setTempLinks] = useState<string[]>([]);
+
+  // --- 핸들러 함수 정의 ---
+  const handleOpenModal = () => {
+    // 모달을 열 때 현재 링크를 임시 상태로 복사
+    setTempLinks([...socialLinks]);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleSaveChanges = () => {
+    // 저장 시 빈 문자열은 제외하고 부모에게 변경사항 전달
+    onSaveLinks(tempLinks.filter((link) => link.trim() !== ""));
+    handleCloseModal();
+  };
+
+  // --- 모달 내부 링크 편집 핸들러 ---
+  const handleTempLinkChange = (index: number, value: string) => {
+    const newLinks = [...tempLinks];
+    newLinks[index] = value;
+    setTempLinks(newLinks);
+  };
+
+  const handleAddTempLink = () => {
+    setTempLinks([...tempLinks, ""]);
+  };
+
+  const handleRemoveTempLink = (index: number) => {
+    const newLinks = tempLinks.filter((_, i) => i !== index);
+    setTempLinks(newLinks);
+  };
+
   return (
-    <Grow in timeout={1400}>
-      <Paper
-        elevation={0}
-        sx={{
-          p: 4,
-          mb: 4,
-          borderRadius: 3,
-          border: `1px solid ${theme.palette.divider}`,
-          background:
-            theme.palette.mode === "dark"
-              ? `linear-gradient(145deg, ${theme.palette.background.paper} 0%, ${theme.palette.background.default} 100%)`
-              : "linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%)",
-          transition: "all 0.3s ease",
-          "&:hover": {
-            boxShadow:
-              theme.palette.mode === "dark"
-                ? "0 8px 25px rgba(0,0,0,0.3)"
-                : "0 8px 25px rgba(0,0,0,0.1)",
-            transform: "translateY(-2px)",
-          },
-        }}
-      >
-        <Typography
-          variant="h6"
-          gutterBottom
+    <>
+      {/* ==================== 보기 모드 UI ==================== */}
+      <Grow in timeout={1400}>
+        <Paper
+          elevation={0}
           sx={{
-            fontWeight: 600,
-            color: theme.palette.text.primary,
-            mb: 3,
-            display: "flex",
-            alignItems: "center",
-            "&::before": {
-              content: '""',
-              width: 4,
-              height: 20,
-              bgcolor: keyColor,
-              borderRadius: 2,
-              mr: 2,
-            },
+            p: 4,
+            mb: 4,
+            borderRadius: 3,
+            border: `1px solid ${theme.palette.divider}`,
           }}
         >
-          소셜 미디어 링크
-        </Typography>
+          <Stack
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center"
+            mb={3}
+          >
+            <Typography
+              variant="h6"
+              fontWeight={600}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                "&::before": {
+                  content: '""',
+                  width: 4,
+                  height: 20,
+                  bgcolor: keyColor,
+                  borderRadius: 2,
+                  mr: 2,
+                },
+              }}
+            >
+              소셜 미디어 링크
+            </Typography>
+            <IconButton
+              onClick={handleOpenModal}
+              size="small"
+              title="링크 수정"
+            >
+              <EditIcon />
+            </IconButton>
+          </Stack>
 
-        <Stack spacing={2.5}>
-          {socialLinks.map((link, index) => (
-            <Stack key={index} direction="row" spacing={1} alignItems="center">
-              <TextField
-                fullWidth
-                placeholder="Github, Blog, LinkedIn 등의 링크를 입력하세요"
-                value={link}
-                onChange={(e) => handleSocialLinkChange(index, e.target.value)}
-                variant="outlined"
-                size="small"
-                sx={{
-                  "& .MuiOutlinedInput-root": {
-                    borderRadius: 2,
-                    bgcolor:
-                      theme.palette.mode === "dark"
-                        ? theme.palette.background.default
-                        : lightKeyColor,
-                    transition: "all 0.2s ease",
-                    "&:hover": {
-                      "& > fieldset": {
-                        borderColor: keyColor,
-                      },
-                    },
-                    "&.Mui-focused": {
-                      "& > fieldset": {
-                        borderColor: keyColor,
-                      },
-                    },
-                  },
-                }}
-              />
-
-              {socialLinks.length > 1 && (
-                <IconButton
-                  onClick={() => handleRemoveSocialLink(index)}
-                  size="small"
+          <Stack spacing={1.5}>
+            {socialLinks && socialLinks.length > 0 ? (
+              socialLinks.map((link, index) => (
+                <MuiLink
+                  key={index}
+                  href={link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  underline="none"
                   sx={{
-                    color: theme.palette.error.main,
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 1.5,
+                    p: 1.5,
+                    borderRadius: 2,
+                    backgroundColor: theme.palette.action.hover,
+                    transition: "background-color 0.2s, transform 0.2s",
                     "&:hover": {
-                      bgcolor: theme.palette.error.main + "20",
+                      backgroundColor: theme.palette.action.selected,
+                      transform: "translateY(-2px)",
                     },
                   }}
                 >
-                  ×
-                </IconButton>
-              )}
-            </Stack>
-          ))}
+                  {getIcon(link)}
+                  <Typography variant="body2" color="text.primary">
+                    {getDomainLabel(link)}
+                  </Typography>
+                </MuiLink>
+              ))
+            ) : (
+              <Typography variant="body2" color="text.secondary" sx={{ pl: 1 }}>
+                등록된 링크가 없습니다.
+              </Typography>
+            )}
+          </Stack>
+        </Paper>
+      </Grow>
 
+      {/* ==================== 수정 모드 UI (모달) ==================== */}
+      <Dialog
+        open={isModalOpen}
+        onClose={handleCloseModal}
+        fullWidth
+        maxWidth="sm"
+      >
+        <DialogTitle fontWeight="bold">소셜 미디어 링크 수정</DialogTitle>
+        <DialogContent>
+          <Stack spacing={2} sx={{ pt: 1 }}>
+            {tempLinks.map((link, index) => (
+              <Stack
+                key={index}
+                direction="row"
+                spacing={1}
+                alignItems="center"
+              >
+                <TextField
+                  fullWidth
+                  placeholder="https://github.com/..."
+                  value={link}
+                  onChange={(e) => handleTempLinkChange(index, e.target.value)}
+                  variant="outlined"
+                  size="small"
+                />
+                {tempLinks.length > 1 && (
+                  <IconButton
+                    onClick={() => handleRemoveTempLink(index)}
+                    title="삭제"
+                  >
+                    <RemoveCircleOutlineIcon />
+                  </IconButton>
+                )}
+                {index === tempLinks.length - 1 && (
+                  <IconButton onClick={handleAddTempLink} title="링크 추가">
+                    <AddIcon />
+                  </IconButton>
+                )}
+              </Stack>
+            ))}
+          </Stack>
+        </DialogContent>
+        <DialogActions sx={{ p: "0 24px 16px" }}>
+          <Button onClick={handleCloseModal}>취소</Button>
           <Button
-            onClick={handleAddSocialLink}
-            variant="outlined"
-            startIcon={<AddIcon />}
-            sx={{
-              alignSelf: "flex-start",
-              borderColor: keyColor,
-              color: keyColor,
-              borderRadius: 2,
-              px: 3,
-              py: 1,
-              fontWeight: 500,
-              transition: "all 0.2s ease",
-              "&:hover": {
-                borderColor: keyColor,
-                bgcolor:
-                  theme.palette.mode === "dark"
-                    ? theme.palette.action.hover
-                    : lightKeyColor,
-                transform: "translateY(-1px)",
-                boxShadow:
-                  theme.palette.mode === "dark"
-                    ? "0 4px 12px rgba(42, 74, 79, 0.3)"
-                    : "0 4px 12px rgba(184, 218, 225, 0.2)",
-              },
-            }}
+            onClick={handleSaveChanges}
+            variant="contained"
+            disableElevation
           >
-            링크 추가
+            저장
           </Button>
-        </Stack>
-      </Paper>
-    </Grow>
+        </DialogActions>
+      </Dialog>
+    </>
   );
 };
 
