@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import {
   Box,
   TextField,
@@ -47,12 +48,20 @@ const PhoneNumberField = ({
     message: "",
   });
 
+  const [authRedirectModal, setAuthRedirectModal] = useState(false);
+
   // 컴포넌트 마운트 시 유저 정보가 없으면 '/start' 경로로 리다이렉트
   useEffect(() => {
     if (!userInfo) {
-      navigate("/start");
+      setAuthRedirectModal(true);
+      // navigate("/start");
     }
   }, [userInfo, navigate]);
+
+  const handleRedirectConfirm = () => {
+    setAuthRedirectModal(false);
+    navigate("/start");
+  };
 
   // 인증 코드 요청을 위한 React Query useMutation hook
   const { mutate: requestCode, isPending: isSending } = useMutation({
@@ -377,6 +386,60 @@ const PhoneNumberField = ({
               닫기
             </Button>
           )}
+        </DialogActions>
+      </Dialog>
+
+      {/* 유저 정보 없음에 대한 모달 */}
+      <Dialog
+        open={authRedirectModal}
+        onClose={handleRedirectConfirm}
+        PaperProps={{
+          sx: {
+            borderRadius: 4,
+            p: 3,
+            minWidth: 320,
+            textAlign: "center",
+            boxShadow: "0 8px 40px -12px rgba(0,0,0,0.2)",
+            border: "1px solid #b8dae130",
+          },
+        }}
+      >
+        <DialogTitle sx={{ p: 0, mb: 1 }}>
+          <InfoOutlinedIcon sx={{ fontSize: 52, color: "#b8dae1" }} />
+        </DialogTitle>
+
+        <DialogContent sx={{ p: 0 }}>
+          <Typography variant="h6" fontWeight={600} sx={{ mb: 1 }}>
+            알림
+          </Typography>
+          <Typography color="text.secondary">
+            사용자 정보가 없어요. 시작 페이지로 이동할게요.
+          </Typography>
+        </DialogContent>
+
+        <DialogActions sx={{ justifyContent: "center", p: 0, pt: 3 }}>
+          <Button
+            onClick={handleRedirectConfirm}
+            // autoFocus
+            variant="contained"
+            sx={{
+              px: 5,
+              py: 1.2,
+              borderRadius: 2,
+              textTransform: "none",
+              fontWeight: 600,
+              bgcolor: "#b8dae1",
+              boxShadow: "none",
+              "&:hover": {
+                bgcolor: "#a8c9d0",
+                boxShadow: "none",
+                transform: "translateY(-1px)",
+              },
+              transition: "all 0.2s ease-in-out",
+            }}
+          >
+            확인
+          </Button>
         </DialogActions>
       </Dialog>
     </>
