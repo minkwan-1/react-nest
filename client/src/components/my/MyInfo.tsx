@@ -11,10 +11,10 @@ interface MyInfoProps {
   avatarUrl?: string;
   reputation?: number;
   badges?: string[];
-  job?: string;
+  nickname?: string;
 }
 
-const MyInfo: React.FC<MyInfoProps> = ({ avatarUrl, job }) => {
+const MyInfo: React.FC<MyInfoProps> = ({ avatarUrl, nickname }) => {
   const theme = useTheme();
   const themeColors = {
     primary: theme.palette.primary.main,
@@ -77,12 +77,12 @@ const MyInfo: React.FC<MyInfoProps> = ({ avatarUrl, job }) => {
         {userInfo?.name || "이름 없음"}
       </Typography>
 
-      {job && (
+      {nickname && (
         <Typography
           variant="body2"
           sx={{ mb: 2, color: themeColors.textSecondary }}
         >
-          {job}
+          {nickname}
         </Typography>
       )}
     </>

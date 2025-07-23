@@ -64,7 +64,7 @@ const LeftContentArea = () => {
 
   return (
     <Box sx={containerSx}>
-      <MyInfo job={myInfo?.nickname} avatarUrl={myInfo?.profileImageUrl} />
+      <MyInfo nickname={myInfo?.nickname} avatarUrl={myInfo?.profileImageUrl} />
       <Divider sx={{ width: "100%", mb: 2, bgcolor: themeColors.divider }} />
       <InterestArea interests={myInfo?.interests || []} />
       <Divider sx={{ width: "100%", mb: 2 }} />

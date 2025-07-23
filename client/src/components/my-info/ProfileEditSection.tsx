@@ -17,7 +17,7 @@ const gradientBg = "linear-gradient(135deg, #b8dae1 0%, #9bc5cc 100%)";
 
 interface ProfileEditSectionProps {
   nickname: string;
-  setNickname: (job: string) => void;
+  setNickname: (nickname: string) => void;
   profileImageUrl: string;
   setProfileImageUrl: (url: string) => void;
   handleProfileImageUpload: (base64Image: string) => Promise<void>;
@@ -125,7 +125,7 @@ const ProfileEditSection = ({
               </IconButton>
             </label>
           </Box>
-          {/* job 입력 필드 */}
+          {/* nickname 입력 필드 */}
           <Box flex={1}>
             <Stack spacing={2.5}>
               <TextField
