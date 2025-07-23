@@ -1,17 +1,18 @@
 import { Box, Button, Typography, Tooltip, Zoom } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { useAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import { realUserInfo } from "@atom/auth";
+import { authRedirectModalAtom } from "@atom/modalAtoms";
 
 const GlobalActionButton = () => {
   const navigate = useNavigate();
   const [userInfo] = useAtom(realUserInfo);
+  const showAuthRedirectModal = useSetAtom(authRedirectModalAtom);
 
   const handleClick = () => {
     if (!userInfo) {
-      navigate("/start");
+      showAuthRedirectModal(true);
     } else {
-      console.log("edit으로");
       navigate("/edit");
     }
   };
