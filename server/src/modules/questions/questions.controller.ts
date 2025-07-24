@@ -12,6 +12,7 @@ import {
   Put,
   Query,
   DefaultValuePipe,
+  NotFoundException,
 } from '@nestjs/common';
 import { Question } from './questions.entity';
 import { QuestionsService } from './questions.service';
@@ -48,7 +49,11 @@ export class QuestionsController {
 
   @Get(':id')
   async findOne(@Param('id', ParseIntPipe) id: number): Promise<Question> {
-    return this.questionsService.findOne(id);
+    const question = await this.questionsService.findOne(id);
+    if (!question) {
+      throw new NotFoundException(`Question with ID ${id} not found.`);
+    }
+    return question;
   }
 
   @Put('modify/:id')
@@ -71,9 +76,9 @@ export class QuestionsController {
   @Get()
   async findAll(
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
-
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
+    @Query('search', new DefaultValuePipe('')) search: string,
   ) {
-    return this.questionsService.findAll({ page, limit });
+    return this.questionsService.findAll({ page, limit, search });
   }
 }

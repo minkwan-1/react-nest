@@ -15,7 +15,7 @@ import PersonIcon from "@mui/icons-material/Person";
 import CommentOutlinedIcon from "@mui/icons-material/CommentOutlined";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { useAtom } from "jotai";
 import { useNavigate } from "react-router-dom";
 import { allQuestionsAtom } from "@atom/question";
@@ -24,7 +24,6 @@ import { HomePageTitle, SearchBar } from "@components/home/index";
 import { ComponentWrapper } from "@components/layout/common";
 import useFetchMyInfo from "@components/my-info/hooks/useFetchMyInfo";
 
-// 타입 정의
 interface User {
   id: number | string;
   name: string;
@@ -41,14 +40,12 @@ interface Question {
   tags?: string[];
 }
 
-// 유틸: HTML 태그 제거
 const stripHtml = (html: string) => {
   const div = document.createElement("div");
   div.innerHTML = html;
   return div.textContent || div.innerText || "";
 };
 
-// 유틸: 텍스트 요약
 const getExcerpt = (content: string, maxLength: number = 100): string => {
   const plainText = stripHtml(content);
   return plainText.length > maxLength
@@ -56,13 +53,11 @@ const getExcerpt = (content: string, maxLength: number = 100): string => {
     : plainText;
 };
 
-// 유틸: 날짜 포맷
 const formatDate = (dateInput: string | Date) => {
   const date = typeof dateInput === "string" ? new Date(dateInput) : dateInput;
   return date.toLocaleDateString("ko-KR");
 };
 
-// 유틸: 이미지 추출
 const extractImageFromContent = (htmlContent: string): string | null => {
   const imgRegex = /<img[^>]+src=["']([^"']+)["'][^>]*>/i;
   const match = htmlContent.match(imgRegex);
@@ -78,60 +73,76 @@ const MainContent = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [totalQuestions, setTotalQuestions] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const { data: myInfo } = useFetchMyInfo(user?.id);
 
-  const fetchAllQuestions = async (page: number = 1, limit: number = 5) => {
-    try {
-      setLoading(true);
-      const response = await fetch(
-        `http://localhost:3000/questions?page=${page}&limit=${limit}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      const data = await response.json();
+  const fetchAllQuestions = useCallback(
+    async (page = 1, limit = 5, search = "") => {
+      try {
+        setLoading(true);
+        const response = await fetch(
+          `http://localhost:3000/questions?page=${page}&limit=${limit}&search=${encodeURIComponent(
+            search
+          )}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        const data = await response.json();
 
-      setAllQuestions(data.items);
-      setTotalPages(data.totalPages);
-      setTotalQuestions(data.total);
-      setCurrentPage(data.page);
-    } catch (e) {
-      console.log("에러 발생:", e);
-    } finally {
-      setLoading(false);
+        setAllQuestions(data.items);
+        setTotalPages(data.totalPages);
+        setTotalQuestions(data.total);
+        setCurrentPage(data.page);
+      } catch (e) {
+        console.log("에러 발생:", e);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [setAllQuestions]
+  );
+
+  const handleSearchChange = (searchTerm: string) => {
+    setSearchQuery(searchTerm);
+
+    if (debounceTimeoutRef.current) {
+      clearTimeout(debounceTimeoutRef.current);
     }
+
+    debounceTimeoutRef.current = setTimeout(() => {
+      setCurrentPage(1);
+      fetchAllQuestions(1, 5, searchTerm);
+    }, 500);
   };
 
-  // 페이지 변경 핸들러
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,
     value: number
   ) => {
     setCurrentPage(value);
-    fetchAllQuestions(value);
+    fetchAllQuestions(value, 5, searchQuery);
   };
 
-  // 카드 클릭 핸들러
   const handleCardClick = (questionId: number | string) => {
     navigate(`/question/${questionId}`);
   };
 
-  // 제목 클릭 핸들러
   const handleTitleClick = (questionId: number | string) => {
-    navigate(`/question/${questionId}`);
+    navigate(`/questions/${questionId}`);
   };
 
-  // 삭제 핸들러
   const handleDeleteClick = async (questionId: number | string) => {
     if (window.confirm("정말로 삭제하시겠습니까?")) {
       try {
-        // 삭제 API 호출 로직
         console.log("삭제:", questionId);
-        fetchAllQuestions(currentPage); // 새로고침
+        fetchAllQuestions(currentPage, 5, searchQuery);
       } catch (error) {
         console.error("삭제 실패:", error);
       }
@@ -139,8 +150,8 @@ const MainContent = () => {
   };
 
   useEffect(() => {
-    fetchAllQuestions();
-  }, []);
+    fetchAllQuestions(1, 5, searchQuery);
+  }, [fetchAllQuestions, searchQuery]);
 
   return (
     <Box
@@ -160,16 +171,14 @@ const MainContent = () => {
     >
       <ComponentWrapper sx={{ maxWidth: "1000px" }}>
         <HomePageTitle />
-        <SearchBar />
+        <SearchBar onSearchChange={handleSearchChange} />
 
-        {/* 질문 개수 표시 */}
         <Box sx={{ mt: 2, mb: 1 }}>
           <Typography variant="body2" color="text.secondary">
             총 {totalQuestions}개의 질문 (페이지 {currentPage} / {totalPages})
           </Typography>
         </Box>
 
-        {/* 질문 목록 */}
         <Box sx={{ mt: 2, display: "flex", flexDirection: "column", gap: 2 }}>
           {loading ? (
             <Box sx={{ textAlign: "center", py: 4 }}>
@@ -215,7 +224,6 @@ const MainContent = () => {
                     }}
                   >
                     <CardContent sx={{ p: 3 }}>
-                      {/* Header */}
                       <Box
                         sx={{
                           display: "flex",
@@ -264,7 +272,6 @@ const MainContent = () => {
                           gap: 3,
                         }}
                       >
-                        {/* Content */}
                         <Box sx={{ flex: 1 }}>
                           <Typography
                             variant="h6"
@@ -298,7 +305,6 @@ const MainContent = () => {
                             {getExcerpt(question.content, 100)}
                           </Typography>
 
-                          {/* Tags */}
                           {question.tags && question.tags.length > 0 && (
                             <Stack
                               direction="row"
@@ -312,7 +318,6 @@ const MainContent = () => {
                             </Stack>
                           )}
 
-                          {/* Actions */}
                           <Box sx={{ display: "flex", alignItems: "center" }}>
                             <Button
                               size="small"
@@ -363,7 +368,6 @@ const MainContent = () => {
                           </Box>
                         </Box>
 
-                        {/* Thumbnail */}
                         {thumbnailSrc && (
                           <Box
                             sx={{
@@ -412,7 +416,6 @@ const MainContent = () => {
           )}
         </Box>
 
-        {/* 페이지네이션 */}
         {allQuestions.length > 0 && (
           <Box
             sx={{
@@ -426,7 +429,6 @@ const MainContent = () => {
               count={Math.max(totalPages, 1)}
               page={currentPage}
               onChange={handlePageChange}
-              color="primary"
               size="large"
               showFirstButton
               showLastButton

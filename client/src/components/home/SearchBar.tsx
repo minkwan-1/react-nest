@@ -1,15 +1,30 @@
 import { Box, TextField, useTheme, IconButton } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { InputAdornment } from "@mui/material";
+import { useState } from "react";
 
-const SearchBar = () => {
+interface SearchBarProps {
+  onSearchChange: (searchTerm: string) => void;
+}
+
+const SearchBar = ({ onSearchChange }: SearchBarProps) => {
   const theme = useTheme();
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    setSearchTerm(value);
+    onSearchChange(value);
+  };
+
   return (
     <Box sx={{ display: "flex", gap: 2, marginBottom: 4 }}>
       <TextField
         variant="outlined"
         placeholder="원하는 주제를 찾아보세요"
         fullWidth
+        value={searchTerm}
+        onChange={handleChange}
         sx={{
           ...theme.applyStyles("light", { color: "#212121" }),
           ...theme.applyStyles("light", { color: "#ffffff" }),
