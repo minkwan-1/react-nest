@@ -58,6 +58,7 @@ const DetailQuestionContent = () => {
       <Paper
         elevation={0}
         sx={{
+          overflowX: "auto",
           p: 3,
           borderRadius: 2,
           bgcolor: colors.background,
