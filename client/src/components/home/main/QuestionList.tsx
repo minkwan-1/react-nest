@@ -3,20 +3,19 @@ import {
   Card,
   CardContent,
   Typography,
-  Avatar,
   Button,
   IconButton,
   useTheme,
 } from "@mui/material";
-import PersonIcon from "@mui/icons-material/Person";
+
 import CommentOutlinedIcon from "@mui/icons-material/CommentOutlined";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import { useAtom } from "jotai";
 import { useNavigate } from "react-router-dom";
 import { realUserInfo } from "@atom/auth";
-import useFetchMyInfo from "@components/my-info/hooks/useFetchMyInfo";
-import { TagsSection, EmptyStateSection } from "./list/index";
+
+import { TagsSection, EmptyStateSection, UserInfoSection } from "./list/index";
 
 interface User {
   id: number | string;
@@ -59,11 +58,6 @@ const getExcerpt = (content: string, maxLength: number = 100): string => {
     : plainText;
 };
 
-const formatDate = (dateInput: string | Date) => {
-  const date = typeof dateInput === "string" ? new Date(dateInput) : dateInput;
-  return date.toLocaleDateString("ko-KR");
-};
-
 const extractImageFromContent = (htmlContent: string): string | null => {
   const imgRegex = /<img[^>]+src=["']([^"']+)["'][^>]*>/i;
   const match = htmlContent.match(imgRegex);
@@ -80,7 +74,6 @@ const QuestionList = ({
   const theme = useTheme();
   const navigate = useNavigate();
   const [user] = useAtom(realUserInfo);
-  const { data: myInfo } = useFetchMyInfo(user?.id);
 
   const handleCardClick = (questionId: number | string) => {
     navigate(`/question/${questionId}`);
@@ -139,47 +132,7 @@ const QuestionList = ({
                 }}
               >
                 <CardContent sx={{ p: 3 }}>
-                  {/* UserInfoSection */}
-                  <Box
-                    sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      mb: 2,
-                    }}
-                  >
-                    <Avatar
-                      src={myInfo?.profileImageUrl}
-                      sx={{
-                        width: 28,
-                        height: 28,
-                        mr: 1,
-                        bgcolor: "#b8dae1",
-                      }}
-                    >
-                      <PersonIcon sx={{ fontSize: 16 }} />
-                    </Avatar>
-                    <Typography
-                      variant="body2"
-                      sx={{
-                        fontWeight: 500,
-                        color: theme.palette.text.primary,
-                      }}
-                    >
-                      {myInfo?.nickname}
-                    </Typography>
-                    <Typography
-                      variant="body2"
-                      sx={{ mx: 1, color: "#BDBDBD" }}
-                    >
-                      •
-                    </Typography>
-                    <Typography
-                      variant="body2"
-                      sx={{ color: theme.palette.text.primary }}
-                    >
-                      {formatDate(question.createdAt)}
-                    </Typography>
-                  </Box>
+                  <UserInfoSection createdAt={question.createdAt} />
 
                   <Box
                     sx={{
