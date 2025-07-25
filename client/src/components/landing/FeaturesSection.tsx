@@ -64,7 +64,7 @@ const FeaturesSection = () => {
             <Box
               key={index}
               sx={{
-                width: { xs: "100%", sm: "50%", md: "calc(100% / 3)" },
+                width: { xs: "100%", sm: "100%", md: "calc(100% / 3)" },
                 p: 2,
               }}
             >

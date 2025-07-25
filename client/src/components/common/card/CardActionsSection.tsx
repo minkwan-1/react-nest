@@ -46,8 +46,8 @@ const CardActionsSection = ({
           fontWeight: 500,
           textTransform: "none",
           "&:hover": {
-            color: "#02a770",
-            backgroundColor: "rgba(3, 203, 132, 0.05)",
+            color: "#7bb8c7",
+            backgroundColor: "rgba(184, 218, 225, 0.08)",
           },
           pl: 0,
           borderRadius: 6,
