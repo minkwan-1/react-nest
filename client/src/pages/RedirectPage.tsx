@@ -4,6 +4,7 @@ import { CircularProgress, Box } from "@mui/material";
 import { useAtom } from "jotai";
 import { signupUserInfo, realUserInfo } from "@atom/auth";
 import { usePostAuthorizationMutate } from "@api/auth/useAuthHooks";
+import { useOpenErrorModal } from "@components/common/modal/hook/useOpenErrorModal";
 
 const RedirectPage = () => {
   const [loading, setLoading] = useState(false);
@@ -15,6 +16,7 @@ const RedirectPage = () => {
   const [, setUserInfo] = useAtom(signupUserInfo);
   const [, setRealUserInfo] = useAtom(realUserInfo);
   const { mutate: authorizationMutate } = usePostAuthorizationMutate();
+  const { openErrorModal } = useOpenErrorModal();
   // const { mutateAsync: signinAsyncMutate } = useSigninMutate();
 
   useEffect(() => {
@@ -60,7 +62,10 @@ const RedirectPage = () => {
         },
         onError: (err) => {
           console.error("인가 요청 실패:", err);
-          alert("서버로부터 토큰을 받아오지 못했습니다.");
+          openErrorModal({
+            info: "서버로부터 토큰을 받아오지 못했습니다.",
+            navigateTo: "/start",
+          });
         },
         onSettled: () => {
           console.log("인가 요청 완료");

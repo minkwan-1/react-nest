@@ -1,6 +1,7 @@
 import { useCallback } from "react";
 import { API_URL } from "@api/axiosConfig";
 import { useMutation } from "@tanstack/react-query";
+import { useOpenErrorModal } from "@components/common/modal/hook/useOpenErrorModal";
 
 interface UseQuestionCardProps {
   questionId: number | string;
@@ -19,6 +20,7 @@ export const useQuestionCard = ({
   onCardClick,
   onAnswerClick,
 }: UseQuestionCardProps) => {
+  const { openErrorModal } = useOpenErrorModal();
   const deleteMutation = useMutation({
     mutationFn: async (variables: DeleteQuestionVariables) => {
       const res = await fetch(`${API_URL}questions/delete/${questionId}`, {
@@ -45,10 +47,11 @@ export const useQuestionCard = ({
   }, [onAnswerClick, questionId]);
 
   const handleDeleteClick = useCallback(async () => {
-    const isConfirmed = window.confirm("정말 이 질문을 삭제하시겠습니까?");
-    if (isConfirmed) {
-      deleteMutation.mutate({ userId });
-    }
+    openErrorModal({
+      info: "정말 이 질문을 삭제하시겠습니까?",
+      navigateTo: "/my",
+    });
+    deleteMutation.mutate({ userId });
   }, [deleteMutation, userId]);
 
   return {

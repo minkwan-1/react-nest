@@ -107,7 +107,7 @@ const MainContent = () => {
         },
       }}
     >
-      <ComponentWrapper sx={{ maxWidth: "1000px" }}>
+      <ComponentWrapper sx={{ maxWidth: "1200px" }}>
         <HomePageTitle />
         <SearchBar onSearchChange={handleSearchChange} />
         <QuestionListHeader

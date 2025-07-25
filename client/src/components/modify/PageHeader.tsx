@@ -7,11 +7,7 @@ interface PageHeaderProps {
   mainColor?: string;
 }
 
-export const PageHeader: React.FC<PageHeaderProps> = ({
-  title,
-  subtitle,
-  mainColor = "#b8dae1",
-}) => {
+export const PageHeader: React.FC<PageHeaderProps> = ({ title, subtitle }) => {
   const theme = useTheme();
   const isDarkMode = theme.palette.mode === "dark";
 
@@ -22,24 +18,14 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
         sx={{
           fontWeight: 800,
           fontSize: { xs: "28px", sm: "36px" },
-          background: `linear-gradient(135deg, ${mainColor} 0%, #ccaee3 100%)`,
+          background: theme.palette.mode === "dark" ? "#fff" : "#000",
           backgroundClip: "text",
           WebkitBackgroundClip: "text",
           WebkitTextFillColor: "transparent",
           letterSpacing: "-0.5px",
-          mb: 2,
+
           position: "relative",
           display: "inline-block",
-          "&::after": {
-            content: '""',
-            position: "absolute",
-            left: 0,
-            bottom: "-8px",
-            width: "60px",
-            height: "4px",
-            borderRadius: "2px",
-            background: `linear-gradient(90deg, ${mainColor} 0%, #ccaee3 100%)`,
-          },
         }}
       >
         {title}

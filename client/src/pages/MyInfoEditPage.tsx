@@ -41,7 +41,7 @@ const MyInfoEditPage = () => {
 
   return (
     <PageContainer>
-      <ComponentWrapper>
+      <ComponentWrapper sx={{ maxWidth: "1200px" }}>
         <Fade in timeout={800}>
           <Box>
             {/* 헤더 섹션 */}

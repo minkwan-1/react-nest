@@ -1,11 +1,7 @@
 import { Box, Container } from "@mui/material";
-import { PageContainer, ComponentWrapper } from "../components/layout/common";
+import { PageContainer } from "../components/layout/common";
 import { QuestionForm } from "../components/edit/QuestionForm";
-import {
-  PageHeader,
-  BackgroundElements,
-  useQuestionForm,
-} from "@components/edit";
+import { PageHeader, useQuestionForm } from "@components/edit";
 import {
   Dialog,
   DialogTitle,
@@ -40,45 +36,40 @@ export default function QuestionEditPage() {
   return (
     <>
       <PageContainer>
-        <ComponentWrapper>
-          <Container maxWidth="lg" disableGutters>
-            <Box
-              sx={{
-                position: "relative",
-                padding: { xs: 2, sm: 3 },
-                maxWidth: 1200,
-                mx: "auto",
-                zIndex: 1,
-              }}
-            >
-              {/* 배경 요소 */}
-              <BackgroundElements mainColor={mainColor} />
+        <Container maxWidth="lg" disableGutters>
+          <Box
+            sx={{
+              position: "relative",
+              padding: { xs: 2, sm: 3 },
+              maxWidth: 1200,
+              mx: "auto",
+              zIndex: 1,
+            }}
+          >
+            {/* 헤더 */}
+            <PageHeader
+              title="질문 등록하기"
+              subtitle="궁금한 점을 명확하게 작성하여 커뮤니티에서 도움을 받아보세요."
+              mainColor={mainColor}
+            />
 
-              {/* 헤더 */}
-              <PageHeader
-                title="질문 등록하기"
-                subtitle="궁금한 점을 명확하게 작성하여 커뮤니티에서 도움을 받아보세요."
-                mainColor={mainColor}
-              />
-
-              {/* 폼 */}
-              <QuestionForm
-                title={title}
-                setTitle={setTitle}
-                content={content}
-                setContent={setContent}
-                tags={tags}
-                setTags={setTags}
-                handleTagsChange={handleTagsChange}
-                previewMode={previewMode}
-                setPreviewMode={setPreviewMode}
-                isSubmitting={isSubmitting}
-                onSubmit={handleSubmit}
-                mainColor={mainColor}
-              />
-            </Box>
-          </Container>
-        </ComponentWrapper>
+            {/* 폼 */}
+            <QuestionForm
+              title={title}
+              setTitle={setTitle}
+              content={content}
+              setContent={setContent}
+              tags={tags}
+              setTags={setTags}
+              handleTagsChange={handleTagsChange}
+              previewMode={previewMode}
+              setPreviewMode={setPreviewMode}
+              isSubmitting={isSubmitting}
+              onSubmit={handleSubmit}
+              mainColor={mainColor}
+            />
+          </Box>
+        </Container>
       </PageContainer>
       <Dialog
         open={dialog.open}
