@@ -1,15 +1,5 @@
-import {
-  Box,
-  Card,
-  CardContent,
-  Typography,
-  Button,
-  useTheme,
-} from "@mui/material";
-
-import CommentOutlinedIcon from "@mui/icons-material/CommentOutlined";
+import { Box, Card, CardContent, useTheme } from "@mui/material";
 import { useAtom } from "jotai";
-import { useNavigate } from "react-router-dom";
 import { realUserInfo } from "@atom/auth";
 
 import {
@@ -18,6 +8,8 @@ import {
   UserInfoSection,
   ThumbnailSection,
   OwnerActionButtons,
+  ViewDetailsButton,
+  TitleAndExcerpt,
 } from "./list/index";
 
 interface User {
@@ -48,19 +40,6 @@ interface QuestionListProps {
   ) => Promise<void>;
 }
 
-const stripHtml = (html: string) => {
-  const div = document.createElement("div");
-  div.innerHTML = html;
-  return div.textContent || div.innerText || "";
-};
-
-const getExcerpt = (content: string, maxLength: number = 100): string => {
-  const plainText = stripHtml(content);
-  return plainText.length > maxLength
-    ? plainText.substring(0, maxLength) + "..."
-    : plainText;
-};
-
 const extractImageFromContent = (htmlContent: string): string | null => {
   const imgRegex = /<img[^>]+src=["']([^"']+)["'][^>]*>/i;
   const match = htmlContent.match(imgRegex);
@@ -69,16 +48,8 @@ const extractImageFromContent = (htmlContent: string): string | null => {
 
 const QuestionList = ({ questions, loading }: QuestionListProps) => {
   const theme = useTheme();
-  const navigate = useNavigate();
+
   const [user] = useAtom(realUserInfo);
-
-  const handleCardClick = (questionId: number | string) => {
-    navigate(`/question/${questionId}`);
-  };
-
-  const handleTitleClick = (questionId: number | string) => {
-    navigate(`/questions/${questionId}`);
-  };
 
   return (
     <Box sx={{ mt: 2, display: "flex", flexDirection: "column", gap: 2 }}>
@@ -125,66 +96,19 @@ const QuestionList = ({ questions, loading }: QuestionListProps) => {
                       gap: 3,
                     }}
                   >
-                    {/* QuestionContentSection */}
                     <Box sx={{ flex: 1 }}>
-                      <Typography
-                        variant="h6"
-                        sx={{
-                          fontWeight: "bold",
-                          mb: 1.5,
-                          fontSize: "18px",
-                          lineHeight: 1.4,
-                          cursor: "pointer",
-                          "&:hover": { textDecoration: "underline" },
-                        }}
-                        onClick={() => handleTitleClick(question.id)}
-                      >
-                        {question.title}
-                      </Typography>
-
-                      <Typography
-                        variant="body2"
-                        sx={{
-                          color: theme.palette.text.secondary,
-                          mb: 2.5,
-                          display: "-webkit-box",
-                          WebkitLineClamp: 2,
-                          WebkitBoxOrient: "vertical",
-                          overflow: "hidden",
-                          textOverflow: "ellipsis",
-                          lineHeight: 1.5,
-                          whiteSpace: "pre-wrap",
-                        }}
-                      >
-                        {getExcerpt(question.content, 100)}
-                      </Typography>
+                      <TitleAndExcerpt
+                        questionId={question.id}
+                        questionTitle={question.title}
+                        questionContent={question.content}
+                      />
 
                       {question.tags && question.tags.length > 0 && (
                         <TagsSection tags={question.tags} />
                       )}
 
                       <Box sx={{ display: "flex", alignItems: "center" }}>
-                        {/* ViewDetailsButton */}
-                        <Button
-                          size="small"
-                          sx={{
-                            color: "#b8dae1",
-                            fontWeight: 500,
-                            textTransform: "none",
-                            "&:hover": {
-                              color: "#02a770",
-                              backgroundColor: "rgba(3, 203, 132, 0.05)",
-                            },
-                            pl: 0,
-                            borderRadius: 6,
-                          }}
-                          startIcon={
-                            <CommentOutlinedIcon sx={{ fontSize: 18 }} />
-                          }
-                          onClick={() => handleCardClick(question.id)}
-                        >
-                          확인하기
-                        </Button>
+                        <ViewDetailsButton questionId={question.id} />
 
                         <Box sx={{ flexGrow: 1 }} />
                         {isOwner && (
