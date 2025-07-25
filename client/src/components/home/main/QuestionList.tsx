@@ -1,6 +1,7 @@
 import { Box, Card, CardContent, useTheme, Skeleton } from "@mui/material";
 import { useAtom } from "jotai";
 import { realUserInfo } from "@atom/auth";
+import useFetchMyInfo from "@components/my-info/hooks/useFetchMyInfo";
 
 import {
   TagsSection,
@@ -40,6 +41,7 @@ const extractImageFromContent = (htmlContent: string): string | null => {
   return match ? match[1] : null;
 };
 
+// 스켈레톤 아이템 컴포넌트
 const SkeletonItem = ({
   withThumbnail = false,
 }: {
@@ -59,7 +61,7 @@ const SkeletonItem = ({
       <CardContent sx={{ p: 3 }}>
         {/* UserInfoSection 스켈레톤 */}
         <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-          <Skeleton variant="circular" width={24} height={24} sx={{ mr: 1 }} />
+          <Skeleton variant="circular" width={28} height={28} sx={{ mr: 1 }} />
           <Skeleton variant="text" width={80} height={20} />
           <Box sx={{ flexGrow: 1 }} />
           <Skeleton variant="text" width={60} height={20} />
@@ -121,10 +123,13 @@ const SkeletonItem = ({
 const QuestionList = ({ questions, loading }: QuestionListProps) => {
   const theme = useTheme();
   const [user] = useAtom(realUserInfo);
+  const { isLoading: isMyInfoLoading } = useFetchMyInfo(user?.id);
 
-  if (loading) {
+  // 질문 목록 로딩 또는 사용자 정보 로딩 중일 때 스켈레톤 표시
+  if (loading || isMyInfoLoading) {
     return (
       <Box sx={{ mt: 2, display: "flex", flexDirection: "column", gap: 2 }}>
+        {/* 썸네일이 있는 스켈레톤과 없는 스켈레톤을 번갈아 표시 */}
         <SkeletonItem withThumbnail={true} />
         <SkeletonItem withThumbnail={false} />
         <SkeletonItem withThumbnail={true} />
@@ -132,6 +137,7 @@ const QuestionList = ({ questions, loading }: QuestionListProps) => {
     );
   }
 
+  // 질문이 하나도 없을 때 간단 텍스트 출력
   if (questions.length === 0) {
     return (
       <Box
@@ -147,6 +153,7 @@ const QuestionList = ({ questions, loading }: QuestionListProps) => {
     );
   }
 
+  // 정상 질문 목록 렌더링
   return (
     <Box sx={{ mt: 2, display: "flex", flexDirection: "column", gap: 2 }}>
       {questions.map((question) => {
