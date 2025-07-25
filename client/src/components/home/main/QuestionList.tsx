@@ -3,8 +3,6 @@ import {
   Card,
   CardContent,
   Typography,
-  Chip,
-  Stack,
   Avatar,
   Button,
   IconButton,
@@ -18,6 +16,7 @@ import { useAtom } from "jotai";
 import { useNavigate } from "react-router-dom";
 import { realUserInfo } from "@atom/auth";
 import useFetchMyInfo from "@components/my-info/hooks/useFetchMyInfo";
+import { TagsSection } from "./list/index";
 
 interface User {
   id: number | string;
@@ -95,7 +94,7 @@ const QuestionList = ({
     if (window.confirm("정말로 삭제하시겠습니까?")) {
       try {
         console.log("삭제:", questionId);
-        // Assuming there's an API call to delete the question
+        // TODO: Add actual API call for deletion
         // await fetch(`http://localhost:3000/questions/${questionId}`, { method: 'DELETE' });
         fetchAllQuestions(currentPage, 5, searchQuery);
       } catch (error) {
@@ -107,12 +106,14 @@ const QuestionList = ({
   return (
     <Box sx={{ mt: 2, display: "flex", flexDirection: "column", gap: 2 }}>
       {loading ? (
+        // LoadingState
         <Box sx={{ textAlign: "center", py: 4 }}>
           <Typography variant="body2" color="text.secondary">
             로딩 중...
           </Typography>
         </Box>
       ) : questions.length === 0 ? (
+        // NoQuestionsState
         <Box sx={{ textAlign: "center", py: 4 }}>
           <Typography variant="body2" color="text.secondary">
             등록된 질문이 없습니다.
@@ -126,6 +127,7 @@ const QuestionList = ({
               question.thumbnail || extractImageFromContent(question.content);
 
             return (
+              // QuestionCard
               <Card
                 key={question.id}
                 sx={{
@@ -147,6 +149,7 @@ const QuestionList = ({
                 }}
               >
                 <CardContent sx={{ p: 3 }}>
+                  {/* UserInfoSection */}
                   <Box
                     sx={{
                       display: "flex",
@@ -195,6 +198,7 @@ const QuestionList = ({
                       gap: 3,
                     }}
                   >
+                    {/* QuestionContentSection */}
                     <Box sx={{ flex: 1 }}>
                       <Typography
                         variant="h6"
@@ -229,19 +233,11 @@ const QuestionList = ({
                       </Typography>
 
                       {question.tags && question.tags.length > 0 && (
-                        <Stack
-                          direction="row"
-                          spacing={1}
-                          mb={2}
-                          flexWrap="wrap"
-                        >
-                          {question.tags.map((tag: string) => (
-                            <Chip key={tag} label={tag} size="small" />
-                          ))}
-                        </Stack>
+                        <TagsSection tags={question.tags} />
                       )}
 
                       <Box sx={{ display: "flex", alignItems: "center" }}>
+                        {/* ViewDetailsButton */}
                         <Button
                           size="small"
                           sx={{
@@ -265,6 +261,7 @@ const QuestionList = ({
 
                         <Box sx={{ flexGrow: 1 }} />
                         {isOwner && (
+                          // OwnerActionButtons
                           <Box sx={{ display: "flex", alignItems: "center" }}>
                             <IconButton
                               size="small"
@@ -290,6 +287,7 @@ const QuestionList = ({
                     </Box>
 
                     {thumbnailSrc && (
+                      // ThumbnailSection
                       <Box
                         sx={{
                           flexShrink: 0,
