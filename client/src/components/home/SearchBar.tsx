@@ -1,4 +1,4 @@
-import { Box, TextField, useTheme, IconButton } from "@mui/material";
+import { Box, TextField, useTheme } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { InputAdornment } from "@mui/material";
 import { useState } from "react";
@@ -60,14 +60,6 @@ const SearchBar = ({ onSearchChange }: SearchBarProps) => {
           ),
         }}
       />
-      <IconButton disableRipple>
-        <SearchIcon
-          sx={{
-            ...theme.applyStyles("light", { color: "#b8dae1" }),
-            ...theme.applyStyles("dark", { color: "#ffffff" }),
-          }}
-        />
-      </IconButton>
     </Box>
   );
 };
