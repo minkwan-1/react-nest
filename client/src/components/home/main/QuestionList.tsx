@@ -16,7 +16,7 @@ import { useAtom } from "jotai";
 import { useNavigate } from "react-router-dom";
 import { realUserInfo } from "@atom/auth";
 import useFetchMyInfo from "@components/my-info/hooks/useFetchMyInfo";
-import { TagsSection } from "./list/index";
+import { TagsSection, EmptyStateSection } from "./list/index";
 
 interface User {
   id: number | string;
@@ -106,19 +106,9 @@ const QuestionList = ({
   return (
     <Box sx={{ mt: 2, display: "flex", flexDirection: "column", gap: 2 }}>
       {loading ? (
-        // LoadingState
-        <Box sx={{ textAlign: "center", py: 4 }}>
-          <Typography variant="body2" color="text.secondary">
-            로딩 중...
-          </Typography>
-        </Box>
+        <EmptyStateSection type="loading" message="로딩 중..." />
       ) : questions.length === 0 ? (
-        // NoQuestionsState
-        <Box sx={{ textAlign: "center", py: 4 }}>
-          <Typography variant="body2" color="text.secondary">
-            등록된 질문이 없습니다.
-          </Typography>
-        </Box>
+        <EmptyStateSection type="empty" message="등록된 질문이 없습니다." />
       ) : (
         <>
           {questions.map((question) => {
