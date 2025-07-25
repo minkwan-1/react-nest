@@ -2,6 +2,8 @@ import { Box, Paper, alpha, Avatar, Typography, useTheme } from "@mui/material";
 import { useParams } from "react-router-dom";
 import { useAtom } from "jotai";
 import { questionsAtom } from "@atom/question";
+import useFetchMyInfo from "@components/my-info/hooks/useFetchMyInfo";
+import { realUserInfo } from "@atom/auth";
 
 const generateAvatarText = (name: string) => name.charAt(0).toUpperCase();
 
@@ -26,8 +28,9 @@ const DetailQuestionContent = () => {
   const [questions] = useAtom(questionsAtom);
   const theme = useTheme();
   const mode = theme.palette.mode;
-
   const isDark = mode === "dark";
+  const [user] = useAtom(realUserInfo);
+  const { data } = useFetchMyInfo(user?.id);
 
   const colors = {
     primary: "#3B82F6",
@@ -123,16 +126,18 @@ const DetailQuestionContent = () => {
               backgroundColor: "#b8dae1",
               color: "white",
               fontWeight: 600,
+              objectFit: "cover",
             }}
+            src={data?.profileImageUrl || undefined}
           >
-            {generateAvatarText(question.user.name)}
+            {!data?.profileImageUrl && generateAvatarText(data?.nickname || "")}
           </Avatar>
           <Box>
             <Typography
               variant="body1"
               sx={{ fontWeight: 600, color: colors.textPrimary }}
             >
-              {question.user.name}
+              {data?.nickname || "익명"}
             </Typography>
             <Typography
               variant="caption"
