@@ -4,11 +4,7 @@ import { useAtom } from "jotai";
 import { allQuestionsAtom } from "@atom/question";
 import { HomePageTitle, SearchBar } from "@components/home/index";
 import { ComponentWrapper } from "@components/layout/common";
-import {
-  QuestionListHeader,
-  QuestionPagination,
-  QuestionList,
-} from "./main/index";
+import { QuestionPagination, QuestionList } from "./main/index";
 
 interface User {
   id: number | string;
@@ -30,7 +26,7 @@ const MainContent = () => {
   const [allQuestions, setAllQuestions] = useAtom(allQuestionsAtom);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [totalQuestions, setTotalQuestions] = useState(0);
+  const [, setTotalQuestions] = useState(0);
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -110,11 +106,6 @@ const MainContent = () => {
       <ComponentWrapper sx={{ maxWidth: "1200px" }}>
         <HomePageTitle />
         <SearchBar onSearchChange={handleSearchChange} />
-        <QuestionListHeader
-          totalQuestions={totalQuestions}
-          currentPage={currentPage}
-          totalPages={totalPages}
-        />
         <QuestionList
           questions={allQuestions as Question[]}
           loading={loading}
