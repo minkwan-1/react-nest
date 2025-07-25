@@ -4,13 +4,10 @@ import {
   CardContent,
   Typography,
   Button,
-  IconButton,
   useTheme,
 } from "@mui/material";
 
 import CommentOutlinedIcon from "@mui/icons-material/CommentOutlined";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import { useAtom } from "jotai";
 import { useNavigate } from "react-router-dom";
 import { realUserInfo } from "@atom/auth";
@@ -20,6 +17,7 @@ import {
   EmptyStateSection,
   UserInfoSection,
   ThumbnailSection,
+  OwnerActionButtons,
 } from "./list/index";
 
 interface User {
@@ -69,13 +67,7 @@ const extractImageFromContent = (htmlContent: string): string | null => {
   return match ? match[1] : null;
 };
 
-const QuestionList = ({
-  questions,
-  loading,
-  currentPage,
-  searchQuery,
-  fetchAllQuestions,
-}: QuestionListProps) => {
+const QuestionList = ({ questions, loading }: QuestionListProps) => {
   const theme = useTheme();
   const navigate = useNavigate();
   const [user] = useAtom(realUserInfo);
@@ -86,19 +78,6 @@ const QuestionList = ({
 
   const handleTitleClick = (questionId: number | string) => {
     navigate(`/questions/${questionId}`);
-  };
-
-  const handleDeleteClick = async (questionId: number | string) => {
-    if (window.confirm("정말로 삭제하시겠습니까?")) {
-      try {
-        console.log("삭제:", questionId);
-        // TODO: Add actual API call for deletion
-        // await fetch(`http://localhost:3000/questions/${questionId}`, { method: 'DELETE' });
-        fetchAllQuestions(currentPage, 5, searchQuery);
-      } catch (error) {
-        console.error("삭제 실패:", error);
-      }
-    }
   };
 
   return (
@@ -209,27 +188,7 @@ const QuestionList = ({
 
                         <Box sx={{ flexGrow: 1 }} />
                         {isOwner && (
-                          // OwnerActionButtons
-                          <Box sx={{ display: "flex", alignItems: "center" }}>
-                            <IconButton
-                              size="small"
-                              aria-label="삭제"
-                              sx={{ color: "#757575" }}
-                              onClick={() => handleDeleteClick(question.id)}
-                            >
-                              <DeleteOutlineIcon fontSize="small" />
-                            </IconButton>
-                            <IconButton
-                              size="small"
-                              aria-label="수정"
-                              sx={{ color: "#757575" }}
-                              onClick={() => {
-                                navigate(`/modify/${question.id}`);
-                              }}
-                            >
-                              <EditOutlinedIcon fontSize="small" />
-                            </IconButton>
-                          </Box>
+                          <OwnerActionButtons questionId={question.id} />
                         )}
                       </Box>
                     </Box>
