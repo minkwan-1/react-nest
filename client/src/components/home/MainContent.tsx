@@ -1,66 +1,17 @@
 import { Box } from "@mui/material";
-import { useEffect, useState, useRef, useCallback } from "react";
-import { useAtom } from "jotai";
-import { allQuestionsAtom } from "@atom/question";
+import { useState, useRef } from "react";
 import { HomePageTitle, SearchBar } from "@components/home/index";
 import { ComponentWrapper } from "@components/layout/common";
 import { QuestionPagination, QuestionList } from "./main/index";
-
-interface User {
-  id: number | string;
-  name: string;
-}
-
-interface Question {
-  id: number | string;
-  title: string;
-  content: string;
-  likes?: number;
-  thumbnail?: string;
-  createdAt: string | Date;
-  user: User;
-  tags?: string[];
-}
+import { useQuestions } from "./hooks/useQuestions";
 
 const MainContent = () => {
-  const [allQuestions, setAllQuestions] = useAtom(allQuestionsAtom);
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const [, setTotalQuestions] = useState(0);
-  const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
   const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const fetchAllQuestions = useCallback(
-    async (page = 1, limit = 5, search = "") => {
-      try {
-        setLoading(true);
-        const response = await fetch(
-          `http://localhost:3000/questions?page=${page}&limit=${limit}&search=${encodeURIComponent(
-            search
-          )}`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        const data = await response.json();
-
-        setAllQuestions(data.items);
-        setTotalPages(data.totalPages);
-        setTotalQuestions(data.total);
-        setCurrentPage(data.page);
-      } catch (e) {
-        console.log("에러 발생:", e);
-      } finally {
-        setLoading(false);
-      }
-    },
-    [setAllQuestions]
-  );
+  const { data, isLoading } = useQuestions(currentPage, 5, searchQuery);
 
   const handleSearchChange = (searchTerm: string) => {
     setSearchQuery(searchTerm);
@@ -70,8 +21,7 @@ const MainContent = () => {
     }
 
     debounceTimeoutRef.current = setTimeout(() => {
-      setCurrentPage(1);
-      fetchAllQuestions(1, 5, searchTerm);
+      setCurrentPage(1); // 검색 시 첫 페이지로 이동
     }, 500);
   };
 
@@ -80,12 +30,7 @@ const MainContent = () => {
     value: number
   ) => {
     setCurrentPage(value);
-    fetchAllQuestions(value, 5, searchQuery);
   };
-
-  useEffect(() => {
-    fetchAllQuestions(1, 5, searchQuery);
-  }, [fetchAllQuestions, searchQuery]);
 
   return (
     <Box
@@ -107,17 +52,16 @@ const MainContent = () => {
         <HomePageTitle />
         <SearchBar onSearchChange={handleSearchChange} />
         <QuestionList
-          questions={allQuestions as Question[]}
-          loading={loading}
+          questions={data?.items || []}
+          loading={isLoading}
           currentPage={currentPage}
           searchQuery={searchQuery}
-          fetchAllQuestions={fetchAllQuestions}
         />
-        {allQuestions.length > 0 && (
+        {(data?.items?.length ?? 0) > 0 && (
           <QuestionPagination
-            totalPages={totalPages}
+            totalPages={data?.totalPages || 1}
             currentPage={currentPage}
-            loading={loading}
+            loading={isLoading}
             handlePageChange={handlePageChange}
           />
         )}

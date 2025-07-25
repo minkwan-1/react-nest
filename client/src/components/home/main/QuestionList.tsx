@@ -33,11 +33,6 @@ interface QuestionListProps {
   loading: boolean;
   currentPage: number;
   searchQuery: string;
-  fetchAllQuestions: (
-    page?: number,
-    limit?: number,
-    search?: string
-  ) => Promise<void>;
 }
 
 const extractImageFromContent = (htmlContent: string): string | null => {
