@@ -9,59 +9,53 @@ import useFetchMyInfo from "@components/my-info/hooks/useFetchMyInfo";
 
 const AnswerHeader = ({ answer }: AnswerHeaderProps) => {
   const [realUser] = useAtom(realUserInfo);
-  // ✨ data를 myInfo로 받아옵니다.
   const { data: myInfo } = useFetchMyInfo(realUser?.id);
+
   const userProfileImage =
     !answer.isAiAnswer && myInfo?.profileImageUrl
       ? myInfo.profileImageUrl
       : undefined;
+
   const userName = answer.isAiAnswer
     ? "AI Assistant"
     : realUser?.name ?? "사용자";
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        alignItems: "center",
-        mb: 3,
-      }}
-    >
+    <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
       <Avatar
         sx={{
-          width: 40,
-          height: 40,
+          width: 36,
+          height: 36,
           bgcolor: !userProfileImage
             ? getAvatarColor(answer.userId, answer.isAiAnswer)
             : undefined,
-          mr: 2.5,
-          fontSize: "16px",
+          fontSize: "14px",
           fontWeight: 600,
-          boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+          mr: 2,
         }}
         src={userProfileImage}
       >
         {!userProfileImage && (answer.isAiAnswer ? "🤖" : userName.charAt(0))}
       </Avatar>
 
-      <Box sx={{ flex: 1 }}>
+      <Box>
         <Typography
-          variant="subtitle1"
+          variant="subtitle2"
           sx={{
             color: answer.isAiAnswer
               ? themeColors.ai.primary
               : themeColors.user.primary,
-            fontWeight: 700,
-            fontSize: "16px",
+            fontWeight: 600,
+            fontSize: "15px",
           }}
         >
           {userName}
         </Typography>
         <Typography
-          variant="body2"
+          variant="caption"
           sx={{
             color: themeColors.textSecondary,
-            fontSize: "13px",
+            fontSize: "12px",
             mt: 0.5,
           }}
         >

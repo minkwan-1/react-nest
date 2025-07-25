@@ -7,58 +7,40 @@ const AnswerCard = ({ answer }: AnswerCardProps) => {
   const theme = useTheme();
   const isDarkMode = theme.palette.mode === "dark";
 
-  const getCardStyles = () => {
-    const baseColor = answer.isAiAnswer ? themeColors.ai : themeColors.user;
-
-    return {
-      mb: 3,
-      border: `2px solid ${baseColor.primary}`,
-      borderRadius: 3,
-      boxShadow: answer.isAiAnswer
-        ? isDarkMode
-          ? "0 4px 20px rgba(133, 193, 204, 0.15)"
-          : "0 4px 20px rgba(133, 193, 204, 0.2)"
-        : isDarkMode
-        ? "0 4px 20px rgba(168, 209, 219, 0.15)"
-        : "0 4px 20px rgba(168, 209, 219, 0.2)",
-      "&:hover": {
-        boxShadow: answer.isAiAnswer
-          ? isDarkMode
-            ? "0 8px 25px rgba(133, 193, 204, 0.25)"
-            : "0 8px 25px rgba(133, 193, 204, 0.3)"
-          : isDarkMode
-          ? "0 8px 25px rgba(168, 209, 219, 0.25)"
-          : "0 8px 25px rgba(168, 209, 219, 0.3)",
-        transform: "translateY(-2px)",
-      },
-      position: "relative",
-      backgroundColor: isDarkMode ? baseColor.dark : baseColor.light,
-      transition: "all 0.3s ease",
-    };
-  };
-
-  const getDividerColor = () => {
-    const baseColor = answer.isAiAnswer ? themeColors.ai : themeColors.user;
-    return isDarkMode
-      ? `${baseColor.primary}40` // 투명도 적용
-      : baseColor.border;
-  };
+  const baseColor = answer.isAiAnswer ? themeColors.ai : themeColors.user;
 
   return (
-    <Card sx={getCardStyles()}>
+    <Card
+      sx={{
+        mb: 4,
+        borderRadius: 6,
+        border: `1px solid ${baseColor.primary}`,
+        backgroundColor: isDarkMode ? baseColor.dark : baseColor.light,
+        boxShadow: isDarkMode
+          ? "0 4px 24px rgba(0, 0, 0, 0.2)"
+          : "0 4px 24px rgba(0, 0, 0, 0.06)",
+        transition: "all 0.25s ease-in-out",
+        position: "relative",
+        "&:hover": {
+          boxShadow: isDarkMode
+            ? "0 8px 32px rgba(0, 0, 0, 0.25)"
+            : "0 8px 32px rgba(0, 0, 0, 0.1)",
+          transform: "translateY(-2px)",
+        },
+      }}
+    >
       <AnswerBadge isAiAnswer={answer.isAiAnswer} />
-
-      <CardContent sx={{ p: 4 }}>
+      <CardContent sx={{ p: { xs: 3, sm: 4 } }}>
         <AnswerHeader answer={answer} />
-
         <Divider
           sx={{
-            mb: 3,
-            borderColor: getDividerColor(),
-            borderWidth: "1px",
+            my: 3,
+            borderColor: isDarkMode
+              ? `${baseColor.primary}33`
+              : baseColor.border,
+            borderWidth: 1,
           }}
         />
-
         <AnswerContent answer={answer} />
       </CardContent>
     </Card>
