@@ -1,4 +1,11 @@
-import { Box, Card, CardContent, Typography, useTheme } from "@mui/material";
+import {
+  Box,
+  Card,
+  CardContent,
+  Typography,
+  useTheme,
+  Skeleton,
+} from "@mui/material";
 import {
   CardHeaderSection,
   CardContentSection,
@@ -31,7 +38,81 @@ interface QuestionCardProps {
   onBookmarkClick?: (questionId: number | string) => void;
   showActions?: boolean;
   questionUserId: string;
+  isLoading?: boolean;
 }
+
+// 스켈레톤 카드 컴포넌트
+const QuestionCardSkeleton = () => {
+  const theme = useTheme();
+
+  return (
+    <Card
+      sx={{
+        borderRadius: 2,
+        boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
+        backgroundColor: theme.palette.mode === "light" ? "#ffffff" : "#333333",
+        border: theme.palette.mode === "light" ? "1px solid #F0F0F0" : "none",
+      }}
+    >
+      <CardContent sx={{ p: 3 }}>
+        {/* Header Skeleton */}
+        <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
+          <Skeleton
+            variant="circular"
+            width={32}
+            height={32}
+            sx={{ mr: 1.5 }}
+          />
+          <Box sx={{ flex: 1 }}>
+            <Skeleton variant="text" width="30%" height={20} sx={{ mb: 0.5 }} />
+            <Skeleton variant="text" width="20%" height={16} />
+          </Box>
+        </Box>
+
+        <Box sx={{ display: "flex", justifyContent: "space-between", gap: 3 }}>
+          {/* Content Skeleton */}
+          <Box sx={{ flex: 1 }}>
+            {/* Title Skeleton */}
+            <Skeleton variant="text" width="80%" height={28} sx={{ mb: 1 }} />
+
+            {/* Content Skeleton */}
+            <Skeleton
+              variant="text"
+              width="100%"
+              height={20}
+              sx={{ mb: 0.5 }}
+            />
+            <Skeleton variant="text" width="70%" height={20} sx={{ mb: 2.5 }} />
+
+            {/* Actions Skeleton */}
+            <Box sx={{ display: "flex", gap: 1 }}>
+              <Skeleton
+                variant="rounded"
+                width={60}
+                height={32}
+                sx={{ borderRadius: 1 }}
+              />
+              <Skeleton
+                variant="rounded"
+                width={60}
+                height={32}
+                sx={{ borderRadius: 1 }}
+              />
+            </Box>
+          </Box>
+
+          {/* Thumbnail Skeleton */}
+          <Skeleton
+            variant="rounded"
+            width={120}
+            height={80}
+            sx={{ borderRadius: 1 }}
+          />
+        </Box>
+      </CardContent>
+    </Card>
+  );
+};
 
 const QuestionCard = ({
   question,
@@ -40,6 +121,7 @@ const QuestionCard = ({
   onAnswerClick,
   showActions = true,
   questionUserId,
+  isLoading = false,
 }: QuestionCardProps) => {
   const theme = useTheme();
 
@@ -52,6 +134,10 @@ const QuestionCard = ({
     });
 
   const userId = user.id;
+
+  if (isLoading) {
+    return <QuestionCardSkeleton />;
+  }
 
   return (
     <Card
