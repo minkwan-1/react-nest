@@ -14,12 +14,19 @@ import {
 } from "./pages";
 import AuthRedirectModal from "@components/common/modal/AuthRedirectModal";
 import CommonErrorModal from "@components/common/modal/CommonErrorModal";
+import { useAtom } from "jotai";
+import { realUserInfo } from "@atom/auth";
 
 const App = () => {
+  const [realUser] = useAtom(realUserInfo);
+
   return (
     <>
       <Routes>
-        <Route path="/" element={<LandingPage />} />
+        <Route
+          path="/"
+          element={realUser ? <NotFoundPage /> : <LandingPage />}
+        />
         <Route path="/home" element={<HomePage />} />
         <Route path="/my" element={<MyPage />} />
         <Route path="/my/edit" element={<MyInfoEditPage />} />
