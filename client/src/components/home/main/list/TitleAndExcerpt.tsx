@@ -34,6 +34,7 @@ const TitleAndExcerpt = ({
 
   return (
     <>
+      {" "}
       <Typography
         variant="h6"
         sx={{
@@ -48,7 +49,6 @@ const TitleAndExcerpt = ({
       >
         {questionTitle}
       </Typography>
-
       <Typography
         variant="body2"
         sx={{

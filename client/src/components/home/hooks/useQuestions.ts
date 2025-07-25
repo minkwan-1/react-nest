@@ -26,6 +26,8 @@ export const useQuestions = (
   return useQuery<FetchQuestionsResponse>({
     queryKey: ["questions", page, search],
     queryFn: async () => {
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
       const res = await fetch(
         `http://localhost:3000/questions?page=${page}&limit=${limit}&search=${encodeURIComponent(
           search
