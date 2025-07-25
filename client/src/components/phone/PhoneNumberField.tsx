@@ -47,7 +47,7 @@ const PhoneNumberField = ({
     message: "",
   });
 
-  const showAuthRedirectModal = useSetAtom(authRedirectModalAtom);
+  const show = useSetAtom(authRedirectModalAtom);
 
   useEffect(() => {
     if (!userInfo) {

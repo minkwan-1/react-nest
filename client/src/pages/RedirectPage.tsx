@@ -3,10 +3,7 @@ import { useSearchParams, useNavigate } from "react-router-dom";
 import { CircularProgress, Box } from "@mui/material";
 import { useAtom } from "jotai";
 import { signupUserInfo, realUserInfo } from "@atom/auth";
-import {
-  usePostAuthorizationMutate,
-  // useSigninMutate,
-} from "@api/auth/useAuthHooks";
+import { usePostAuthorizationMutate } from "@api/auth/useAuthHooks";
 
 const RedirectPage = () => {
   const [loading, setLoading] = useState(false);

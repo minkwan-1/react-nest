@@ -1,6 +1,8 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { modifyQuestion } from "../api/modifyQuestion";
+import { useAtom } from "jotai";
+import { errorModalAtom } from "@atom/modalAtoms";
 
 export const useModifyQuestionSubmit = (
   questionId: string | undefined,
@@ -13,6 +15,7 @@ export const useModifyQuestionSubmit = (
 ) => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
+  const [, setErrorModal] = useAtom(errorModalAtom);
 
   const { mutate, isPending: isSubmitting } = useMutation({
     mutationFn: modifyQuestion,
@@ -27,7 +30,12 @@ export const useModifyQuestionSubmit = (
     },
     onError: (err) => {
       console.error(err);
-      alert("질문 수정 중 오류가 발생했습니다.");
+      // alert("질문 수정 중 오류가 발생했습니다.");
+      setErrorModal({
+        isOpen: true,
+        info: "질문 수정 중 오류가 발생했습니다. 다시 시도해주세요.",
+        navigateTo: undefined,
+      });
     },
   });
 

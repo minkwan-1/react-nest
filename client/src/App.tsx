@@ -13,6 +13,7 @@ import {
   MyInfoEditPage,
 } from "./pages";
 import AuthRedirectModal from "@components/common/modal/AuthRedirectModal";
+import CommonErrorModal from "@components/common/modal/CommonErrorModal";
 
 const App = () => {
   return (
@@ -31,6 +32,7 @@ const App = () => {
         <Route path="/modify/:id" element={<ModifyQuestionPage />} />
       </Routes>
       <AuthRedirectModal />
+      <CommonErrorModal />
     </>
   );
 };
