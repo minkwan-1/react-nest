@@ -1,5 +1,12 @@
 import React from "react";
-import { Avatar, Typography, Badge, Tooltip, useTheme } from "@mui/material";
+import {
+  Avatar,
+  Typography,
+  Badge,
+  Tooltip,
+  useTheme,
+  Box,
+} from "@mui/material";
 import { useAtom } from "jotai";
 import { realUserInfo } from "@atom/auth";
 
@@ -73,18 +80,31 @@ const MyInfo: React.FC<MyInfoProps> = ({ avatarUrl, nickname }) => {
         />
       </Badge>
 
-      <Typography variant="h5" fontWeight="bold" sx={{ mb: 0.5 }}>
-        {userInfo?.name || "이름 없음"}
+      <Typography
+        variant="body2"
+        sx={{
+          mb: 2,
+          height: 24,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          color: themeColors.textSecondary,
+        }}
+      >
+        {nickname && nickname.trim() ? (
+          nickname
+        ) : (
+          <Box
+            component="span"
+            sx={{
+              fontStyle: "italic",
+              color: theme.palette.text.disabled,
+            }}
+          >
+            닉네임을 추가해 보세요.
+          </Box>
+        )}
       </Typography>
-
-      {nickname && (
-        <Typography
-          variant="body2"
-          sx={{ mb: 2, color: themeColors.textSecondary }}
-        >
-          {nickname}
-        </Typography>
-      )}
     </>
   );
 };

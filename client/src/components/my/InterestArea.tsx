@@ -23,7 +23,7 @@ const InterestArea: React.FC<InterestAreaProps> = ({ interests }) => {
   };
 
   return (
-    // 👇 최상위 컨테이너를 Box로 변경하고 하단 여백(mb)을 여기로 이동
+    // 최상위 컨테이너를 Box로 변경하고 하단 여백(mb)을 여기로 이동
     <Box sx={{ width: "100%", mb: 3 }}>
       <Typography
         variant="subtitle2"
@@ -33,9 +33,9 @@ const InterestArea: React.FC<InterestAreaProps> = ({ interests }) => {
         {koreanContent.interests}
       </Typography>
 
-      {/* 👇 interests 배열 길이에 따라 조건부 렌더링 */}
+      {/* interests 배열 길이에 따라 조건부 렌더링 */}
       {interests && interests.length > 0 ? (
-        // ✅ 관심 분야가 있을 때 표시할 기존 UI
+        // 관심 분야가 있을 때 표시할 기존 UI
         <Box
           sx={{
             display: "flex",
