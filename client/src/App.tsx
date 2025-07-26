@@ -16,6 +16,7 @@ import AuthRedirectModal from "@components/common/modal/AuthRedirectModal";
 import CommonErrorModal from "@components/common/modal/CommonErrorModal";
 import { useAtom } from "jotai";
 import { realUserInfo } from "@atom/auth";
+import { GlobalActionButton } from "@components/home";
 
 const App = () => {
   const [realUser] = useAtom(realUserInfo);
@@ -39,6 +40,7 @@ const App = () => {
         <Route path="/redirect" element={<RedirectPage />} />
         <Route path="/phone" element={<PhoneVerificationPage />} />
       </Routes>
+      <GlobalActionButton />
       <AuthRedirectModal />
       <CommonErrorModal />
     </>

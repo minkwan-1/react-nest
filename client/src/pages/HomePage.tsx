@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 import { PageContainer } from "@components/layout/common";
-import { MainContent, GlobalActionButton } from "@components/home";
+import { MainContent } from "@components/home";
 import { useAtom } from "jotai";
 import { signupUserInfo } from "@atom/auth";
 
@@ -28,7 +28,7 @@ const HomePage = () => {
       </Box>
 
       {/* 글로벌 작성 버튼 (우측 하단에 고정) */}
-      <GlobalActionButton />
+      {/* <GlobalActionButton /> */}
     </PageContainer>
   );
 };

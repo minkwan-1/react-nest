@@ -49,11 +49,12 @@ const PhoneNumberField = ({
 
   const show = useSetAtom(authRedirectModalAtom);
 
+  // 'showAuthRedirectModal'을 'show'로 수정
   useEffect(() => {
     if (!userInfo) {
-      showAuthRedirectModal(true);
+      show(true);
     }
-  }, [userInfo, showAuthRedirectModal]);
+  }, [userInfo, show]);
 
   const { mutate: requestCode, isPending: isSending } = useMutation({
     mutationFn: requestVerificationCodeAPI,

@@ -70,26 +70,3 @@ export const signup = async (userInfo: SignupUserInfo) => {
     };
   }
 };
-
-// export const signin = async (userInfo: SignupUserInfo) => {
-//   try {
-//     const response = await axiosInstance.post(
-//       `auth/${userInfo.provider}/user`,
-//       {
-//         code,
-//         provider,
-//       },
-//       {
-//         withCredentials: true,
-//       }
-//     );
-//     return response.data;
-//   } catch (error) {
-//     if (axios.isAxiosError(error) && error.response) {
-//       throw new Error(
-//         error.response.data.message || "로그인 중 오류가 발생했습니다."
-//       );
-//     }
-//     throw new Error("서버와 통신 중 오류가 발생했습니다.");
-//   }
-// };
