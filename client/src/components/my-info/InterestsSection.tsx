@@ -34,6 +34,7 @@ const InterestsSection = ({
 }: InterestsSectionProps) => {
   const theme = useTheme();
 
+  // 깃허브 테스트
   return (
     <Grow in timeout={1200}>
       <Paper
