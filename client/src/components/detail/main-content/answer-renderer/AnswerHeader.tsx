@@ -49,7 +49,7 @@ const AnswerHeader = ({ answer }: AnswerHeaderProps) => {
             fontSize: "15px",
           }}
         >
-          {userName}
+          {myInfo?.nickname}
         </Typography>
         <Typography
           variant="caption"

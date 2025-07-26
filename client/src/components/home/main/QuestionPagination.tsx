@@ -1,4 +1,4 @@
-import { Box, Pagination } from "@mui/material";
+import { Box, Pagination, useMediaQuery, useTheme } from "@mui/material";
 
 interface QuestionPaginationProps {
   totalPages: number;
@@ -13,6 +13,8 @@ const QuestionPagination = ({
   loading,
   handlePageChange,
 }: QuestionPaginationProps) => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   return (
     <Box
       sx={{
@@ -26,7 +28,7 @@ const QuestionPagination = ({
         count={Math.max(totalPages, 1)}
         page={currentPage}
         onChange={handlePageChange}
-        size="large"
+        size={isMobile ? "small" : "large"}
         showFirstButton
         showLastButton
         disabled={loading}
