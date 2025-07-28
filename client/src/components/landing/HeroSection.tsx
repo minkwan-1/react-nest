@@ -4,7 +4,10 @@ const HeroSection = () => {
   return (
     <Container
       maxWidth="lg"
-      sx={{ textAlign: "center", py: { xs: 8, md: 10 } }}
+      sx={{
+        textAlign: "center",
+        py: { xs: 8, md: 10 },
+      }}
     >
       <Chip
         label="🚀 개발자를 위한 Q&A 플랫폼"

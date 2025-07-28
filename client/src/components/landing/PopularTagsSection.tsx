@@ -1,6 +1,7 @@
-import { Box, Container, Typography, Chip } from "@mui/material";
+import { Box, Container, Typography, Chip, useTheme } from "@mui/material";
 
 const PopularTagsSection = () => {
+  const theme = useTheme();
   const popularTags = [
     "JavaScript",
     "Python",
@@ -23,14 +24,13 @@ const PopularTagsSection = () => {
   ];
   return (
     <Box
-      sx={(theme) => ({
-        py: { xs: 8, md: 10 },
-        backgroundColor: theme.palette.background.paper,
-        borderTop:
-          theme.palette.mode === "light"
-            ? `1px solid ${theme.palette.divider}`
-            : "none",
-      })}
+      sx={{
+        py: { xs: 6, md: 8 },
+        ...theme.applyStyles("dark", {
+          backgroundColor: "black",
+          borderBottom: "1px solid #616161",
+        }),
+      }}
     >
       <Container maxWidth="lg">
         <Box textAlign="center" mb={6}>
@@ -61,19 +61,22 @@ const PopularTagsSection = () => {
               component="a"
               href="#"
               clickable
-              sx={(theme) => ({
+              sx={{
                 px: { xs: 1, sm: 2 },
                 py: { xs: 2, sm: 2.5 },
                 fontSize: { xs: "0.8rem", sm: "0.9rem" },
                 transition: "all 0.2s",
-                bgcolor:
-                  theme.palette.mode === "dark" ? "grey.700" : "grey.100",
+                // bgcolor:
+                //   theme.palette.mode === "dark" ? "grey.700" : "grey.100",
+                ...theme.applyStyles("dark", {
+                  backgroundColor: "grey.700",
+                }),
                 "&:hover": {
                   backgroundColor: "#b8dae1",
                   color: "#1A2027",
                   transform: "translateY(-2px)",
                 },
-              })}
+              }}
             />
           ))}
         </Box>

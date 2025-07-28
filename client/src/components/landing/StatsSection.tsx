@@ -1,16 +1,24 @@
-import { Box, Container, Typography } from "@mui/material";
+import { Box, Container, Typography, useTheme } from "@mui/material";
 
 const StatsSection = () => {
+  const theme = useTheme();
   return (
     <Box
-      sx={(theme) => ({
+      // sx={(theme) => ({
+      //   py: { xs: 6, md: 8 },
+      //   backgroundColor: theme.palette.background.paper,
+      //   borderTop:
+      //     theme.palette.mode === "light"
+      //       ? `1px solid ${theme.palette.divider}`
+      //       : "none",
+      // })}
+      sx={{
         py: { xs: 6, md: 8 },
-        backgroundColor: theme.palette.background.paper,
-        borderTop:
-          theme.palette.mode === "light"
-            ? `1px solid ${theme.palette.divider}`
-            : "none",
-      })}
+        ...theme.applyStyles("dark", {
+          backgroundColor: "black",
+          borderBottom: "1px solid #616161",
+        }),
+      }}
     >
       <Container maxWidth="lg">
         <Box sx={{ display: "flex", flexWrap: "wrap", textAlign: "center" }}>

@@ -7,7 +7,12 @@ const FeaturesSection = () => {
   const featureCards = [
     {
       icon: (
-        <QuestionAnswerOutlinedIcon sx={{ fontSize: 32, color: "#b8dae1" }} />
+        <QuestionAnswerOutlinedIcon
+          sx={{
+            fontSize: 32,
+            color: "#b8dae1",
+          }}
+        />
       ),
       title: "실시간 Q&A",
       description:
