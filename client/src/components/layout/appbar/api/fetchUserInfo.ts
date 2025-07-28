@@ -1,18 +1,16 @@
-import { API_URL } from "@api/axiosConfig";
+import { axiosInstance } from "@api/axiosConfig";
+import axios from "axios";
 
 export const fetchUserInfo = async () => {
-  const res = await fetch(`${API_URL}auth/me`, {
-    method: "GET",
-    credentials: "include",
-  });
+  try {
+    const response = await axiosInstance.get("auth/me");
 
-  if (!res.ok) {
-    if (res.status === 401) {
+    return response.data?.user;
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response?.status === 401) {
       return null;
     }
+
     throw new Error("사용자 정보를 가져오는 데 실패했습니다.");
   }
-
-  const data = await res.json();
-  return data?.user;
 };

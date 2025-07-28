@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, Like } from 'typeorm';
+import { Repository, ILike } from 'typeorm';
 import { Question } from './questions.entity';
 
 @Injectable()
@@ -81,7 +81,7 @@ export class QuestionsService {
 
     let whereCondition: any = {};
     if (search) {
-      whereCondition = { title: Like(`%${search}%`) };
+      whereCondition = { title: ILike(`%${search}%`) };
     }
 
     const [items, total] = await this.questionsRepository.findAndCount({
@@ -89,7 +89,6 @@ export class QuestionsService {
       skip: skip,
       take: limit,
       order: { createdAt: 'DESC' },
-      // relations: ['user'],
     });
 
     return {

@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { API_URL } from "@api/axiosConfig";
+import { axiosInstance } from "@api/axiosConfig";
 import { useMutation } from "@tanstack/react-query";
 import { useOpenErrorModal } from "@components/common/modal/hook/useOpenErrorModal";
 
@@ -23,16 +23,13 @@ export const useQuestionCard = ({
   const { openErrorModal } = useOpenErrorModal();
   const deleteMutation = useMutation({
     mutationFn: async (variables: DeleteQuestionVariables) => {
-      const res = await fetch(`${API_URL}questions/delete/${questionId}`, {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId: variables.userId }),
-      });
-
-      if (!res.ok) {
-        throw new Error(`삭제 실패: ${res.status}`);
-      }
-      return res.json();
+      const response = await axiosInstance.delete(
+        `/questions/delete/${questionId}`,
+        {
+          data: { userId: variables.userId },
+        }
+      );
+      return response.data;
     },
   });
 

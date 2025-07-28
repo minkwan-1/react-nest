@@ -6,7 +6,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { imageService } from "../service/imageService";
 import { realUserInfo } from "@atom/auth";
 import { questionsAtom } from "@atom/question";
-import { API_URL } from "@api/axiosConfig";
+import { axiosInstance } from "@api/axiosConfig";
 
 // 질문 생성 API (기존과 동일)
 const createQuestion = async ({
@@ -21,29 +21,19 @@ const createQuestion = async ({
   userId: string;
 }) => {
   const processedContent = await imageService.processContentImages(content);
-  const response = await fetch(`${API_URL}questions`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ title, content: processedContent, tags, userId }),
+
+  const response = await axiosInstance.post("questions", {
+    title,
+    content: processedContent,
+    tags,
+    userId,
   });
-  if (!response.ok) {
-    const errorData = await response.json().catch(() => ({}));
-    throw new Error(
-      errorData.message || `HTTP error! status: ${response.status}`
-    );
-  }
-  return response.json();
+  return response.data;
 };
 
-// ✨ 1. 새로운 'ID 기반' AI 답변 요청 함수를 정의합니다.
 const fetchAiAnswerById = async (questionId: string) => {
-  const response = await fetch(`${API_URL}api/ask-ai/${questionId}`);
-  if (!response.ok) {
-    const errorData = await response.json().catch(() => ({}));
-    throw new Error(errorData.message || "AI 답변 요청 실패");
-  }
-  const result = await response.json();
-  return result.data;
+  const response = await axiosInstance.get(`api/ask-ai/${questionId}`);
+  return response.data;
 };
 
 export const useQuestionForm = () => {

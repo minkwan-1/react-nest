@@ -1,5 +1,5 @@
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
-import { API_URL } from "@api/axiosConfig";
+import { axiosInstance } from "@api/axiosConfig";
 
 interface Question {
   id: number | string;
@@ -27,15 +27,12 @@ export const useQuestions = (
   return useQuery<FetchQuestionsResponse>({
     queryKey: ["questions", page, search],
     queryFn: async () => {
-      // await new Promise((resolve) => setTimeout(resolve, 2000));
-
-      const res = await fetch(
-        `${API_URL}questions?page=${page}&limit=${limit}&search=${encodeURIComponent(
+      const response = await axiosInstance.get(
+        `questions?page=${page}&limit=${limit}&search=${encodeURIComponent(
           search
         )}`
       );
-      if (!res.ok) throw new Error("질문 목록 불러오기 실패");
-      return res.json();
+      return response.data;
     },
     placeholderData: keepPreviousData,
   });
