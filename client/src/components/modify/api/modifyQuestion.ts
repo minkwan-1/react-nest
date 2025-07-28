@@ -1,4 +1,4 @@
-import { API_URL } from "@api/axiosConfig";
+import { axiosInstance } from "@api/axiosConfig";
 
 interface ModifyQuestionParams {
   questionId: string;
@@ -15,19 +15,12 @@ export const modifyQuestion = async ({
   content,
   tags,
 }: ModifyQuestionParams) => {
-  const response = await fetch(`${API_URL}questions/modify/${questionId}`, {
-    method: "PUT",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      title: title.trim(),
-      content,
-      tags,
-      userId,
-    }),
+  const response = await axiosInstance.put(`questions/modify/${questionId}`, {
+    title: title.trim(),
+    content,
+    tags,
+    userId,
   });
 
-  if (!response.ok) {
-    throw new Error("질문 수정에 실패했습니다.");
-  }
-  return response.json();
+  return response.data;
 };

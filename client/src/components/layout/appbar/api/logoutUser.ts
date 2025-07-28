@@ -1,14 +1,7 @@
-import { API_URL } from "@api/axiosConfig";
+import { axiosInstance } from "@api/axiosConfig";
 
 export const logoutUser = async () => {
-  const res = await fetch(`${API_URL}auth/logout`, {
-    method: "GET",
-    credentials: "include",
-  });
+  const response = await axiosInstance.get("auth/logout");
 
-  if (!res.ok) {
-    throw new Error(`로그아웃 실패: ${res.status}`);
-  }
-
-  return await res.json();
+  return response.data;
 };
