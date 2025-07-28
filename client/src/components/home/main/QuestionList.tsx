@@ -1,5 +1,14 @@
-import { Box, Card, CardContent, useTheme, Skeleton } from "@mui/material";
+import {
+  Box,
+  Card,
+  CardContent,
+  useTheme,
+  Skeleton,
+  Typography,
+} from "@mui/material";
+import LiveHelpOutlinedIcon from "@mui/icons-material/LiveHelpOutlined"; // Icon import 추가
 import { useAtom } from "jotai";
+
 import { realUserInfo } from "@atom/auth";
 import useFetchMyInfo from "@components/my-info/hooks/useFetchMyInfo";
 
@@ -137,18 +146,32 @@ const QuestionList = ({ questions, loading }: QuestionListProps) => {
     );
   }
 
-  // 질문이 하나도 없을 때 간단 텍스트 출력
+  // 질문이 하나도 없을 때 새로운 UI 출력
   if (questions.length === 0) {
     return (
       <Box
         sx={{
-          mt: 4,
           textAlign: "center",
-          color: theme.palette.text.secondary,
-          fontSize: "1rem",
+          minHeight: "60vh",
+          p: { xs: 3, sm: 8 },
+          mt: 4,
+          border: `1px dashed ${theme.palette.divider}`,
+          borderRadius: 2,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          backgroundColor:
+            theme.palette.mode === "light" ? "grey.50" : "#2C2C2C",
         }}
       >
-        등록된 질문이 없습니다.
+        <LiveHelpOutlinedIcon sx={{ fontSize: 64, color: "grey.400", mb: 2 }} />
+        <Typography variant="h6" fontWeight={600} sx={{ mb: 1 }}>
+          아직 검색어와 관련된 질문이 없어요
+        </Typography>
+        <Typography color="text.secondary" sx={{ mb: 3 }}>
+          가장 먼저 질문을 등록하고 지식을 나눠보세요!
+        </Typography>
       </Box>
     );
   }
@@ -201,12 +224,12 @@ const QuestionList = ({ questions, loading }: QuestionListProps) => {
                     <TagsSection tags={question.tags} />
                   )}
 
-                  <Box sx={{ display: "flex", alignItems: "center" }}>
+                  {/* <Box sx={{ display: "flex", alignItems: "center" }}>
                     <ViewDetailsButton questionId={question.id} />
 
                     <Box sx={{ flexGrow: 1 }} />
                     {isOwner && <OwnerActionButtons questionId={question.id} />}
-                  </Box>
+                  </Box> */}
                 </Box>
 
                 {thumbnailSrc && (

@@ -26,9 +26,6 @@ const HomePage = () => {
         {/* 메인 컨텐츠 영역 */}
         <MainContent />
       </Box>
-
-      {/* 글로벌 작성 버튼 (우측 하단에 고정) */}
-      {/* <GlobalActionButton /> */}
     </PageContainer>
   );
 };

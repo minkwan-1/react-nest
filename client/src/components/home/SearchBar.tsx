@@ -22,15 +22,16 @@ const SearchBar = ({ onSearchChange }: SearchBarProps) => {
       <TextField
         variant="outlined"
         placeholder="원하는 주제를 찾아보세요"
-        fullWidth
+        // fullWidth prop 제거
         value={searchTerm}
         onChange={handleChange}
         sx={{
+          width: 400, // 원하는 너비로 설정 (e.g., 400px)
           ...theme.applyStyles("light", { color: "#212121" }),
           ...theme.applyStyles("light", { color: "#ffffff" }),
-          flexGrow: 1,
+          // flexGrow: 1 제거
           "& .MuiOutlinedInput-root": {
-            borderRadius: 2,
+            borderRadius: 10,
             backgroundColor:
               theme.palette.mode === "dark" ? "#333333" : "#FFFFFF",
             boxShadow: "0 1px 3px rgba(0,0,0,0.1)",

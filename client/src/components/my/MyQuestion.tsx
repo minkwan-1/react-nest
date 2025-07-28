@@ -125,7 +125,7 @@ const MyQuestion: React.FC<MyQuestionProps> = ({
           alignItems: "center",
         }}
       >
-        <Typography variant="h6" fontWeight="bold">
+        <Typography variant="h6" fontWeight="bold" mb={1}>
           {koreanContent.popularPosts}
         </Typography>
       </Box>{" "}
@@ -146,7 +146,7 @@ const MyQuestion: React.FC<MyQuestionProps> = ({
             theme.palette.mode === "dark"
               ? `1px solid ${themeColors.border}`
               : "none",
-          height: "56vh",
+          height: "74.5vh",
           overflowY: "auto",
         }}
       >

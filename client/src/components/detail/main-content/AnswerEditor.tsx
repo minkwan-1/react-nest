@@ -13,6 +13,10 @@ import {
 import { useAtom } from "jotai";
 import ReactQuill from "react-quill";
 import LoginIcon from "@mui/icons-material/Login";
+import { editorModule } from "../module/editorModule";
+import "react-quill/dist/quill.snow.css";
+// import "quill-syntax/dist/quill.syntax.css";
+import "highlight.js/styles/atom-one-dark.css";
 
 const baseThemeColors = {
   primary: "#b8dae1",
@@ -80,15 +84,15 @@ const AnswerEditor = ({
     },
   };
 
-  const quillModules = {
-    toolbar: [
-      [{ header: [1, 2, 3, false] }],
-      ["bold", "italic", "underline", "strike"],
-      [{ list: "ordered" }, { list: "bullet" }],
-      ["link", "image"],
-      ["clean"],
-    ],
-  };
+  // const quillModules = {
+  //   toolbar: [
+  //     [{ header: [1, 2, 3, false] }],
+  //     ["bold", "italic", "underline", "strike"],
+  //     [{ list: "ordered" }, { list: "bullet" }],
+  //     ["link", "image"],
+  //     ["clean"],
+  //   ],
+  // };
 
   if (!realUser) {
     return (
@@ -189,7 +193,8 @@ const AnswerEditor = ({
           <ReactQuill
             value={userAnswer}
             onChange={setUserAnswer}
-            modules={quillModules}
+            // modules={quillModules}
+            modules={editorModule}
             theme="snow"
             style={{
               backgroundColor: isDarkMode ? "#1e293b" : "#fff",

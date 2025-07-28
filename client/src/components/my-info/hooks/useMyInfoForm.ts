@@ -5,9 +5,11 @@ import useFetchMyInfo from "./useFetchMyInfo";
 import { useNavigate } from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { saveMyInfo, uploadProfileImage } from "../api/saveMyInfoAPI";
+import { snackbarAtom } from "@atom/snackbarAtom";
 
 const useMyInfoForm = () => {
   const [userInfo] = useAtom(realUserInfo);
+  const [, setSnackbar] = useAtom(snackbarAtom);
   const userId = userInfo?.id;
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -51,7 +53,7 @@ const useMyInfoForm = () => {
     onSuccess: () => {
       // ✅ 정보 저장 성공 시, myInfo 쿼리를 무효화하여 최신 정보로 갱신
       queryClient.invalidateQueries({ queryKey: ["myInfo", userId] });
-      alert(myInfo ? "정보가 수정되었습니다." : "정보가 저장되었습니다.");
+      // alert(myInfo ? "정보가 수정되었습니다." : "정보가 저장되었습니다.");
       navigate("/my");
     },
     onError: (error) => {
@@ -106,6 +108,7 @@ const useMyInfoForm = () => {
       profileImageUrl,
     };
     saveForm(payload);
+    setSnackbar({ isOpen: true, message: "정보가 성공적으로 수정되었어요." });
   };
 
   return {

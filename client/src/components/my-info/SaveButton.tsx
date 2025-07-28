@@ -16,8 +16,8 @@ interface MyInfoType {
 
 // Props 타입 정의
 interface SaveButtonProps {
-  handleSave: () => Promise<void>; // Promise<void>로 수정
-  myInfo: MyInfoType | null;
+  handleSave: () => void;
+  myInfo: MyInfoType | null | undefined;
 }
 
 const SaveButton = ({ handleSave, myInfo }: SaveButtonProps) => {

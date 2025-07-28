@@ -2,6 +2,7 @@ import { convertMarkdownToHtml } from "@components/detail/utils/markdownUtils";
 import { themeColors } from "../../utils/styleUtils";
 import { AnswerContentProps } from "@components/detail/types";
 import { Box } from "@mui/material";
+import "highlight.js/styles/atom-one-dark.css";
 
 function AnswerContent({ answer }: AnswerContentProps) {
   const getContentStyles = (isAiAnswer?: boolean) => ({

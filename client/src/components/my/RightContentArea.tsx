@@ -39,7 +39,7 @@ const RightContentArea = () => {
 
   return (
     <Box sx={{ flex: 1, p: 0, borderRadius: 2, overflowY: "scroll" }}>
-      <SelfIntroduction />
+      {/* <SelfIntroduction /> */}
 
       <MyQuestion
         questionData={questionData}

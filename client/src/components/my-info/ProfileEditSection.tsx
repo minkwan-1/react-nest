@@ -20,7 +20,7 @@ interface ProfileEditSectionProps {
   setNickname: (nickname: string) => void;
   profileImageUrl: string;
   setProfileImageUrl: (url: string) => void;
-  handleProfileImageUpload: (base64Image: string) => Promise<void>;
+  handleProfileImageUpload: (base64Image: string) => void;
 }
 
 const ProfileEditSection = ({

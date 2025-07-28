@@ -89,7 +89,7 @@ export class QuestionsService {
       skip: skip,
       take: limit,
       order: { createdAt: 'DESC' },
-      relations: ['user'],
+      // relations: ['user'],
     });
 
     return {

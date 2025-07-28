@@ -11,16 +11,15 @@ const MainContent = () => {
 
   const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const { data, isLoading } = useQuestions(currentPage, 5, searchQuery);
+  const { data, isLoading } = useQuestions(currentPage, 1, searchQuery);
 
   const handleSearchChange = (searchTerm: string) => {
-    setSearchQuery(searchTerm);
-
     if (debounceTimeoutRef.current) {
       clearTimeout(debounceTimeoutRef.current);
     }
 
     debounceTimeoutRef.current = setTimeout(() => {
+      setSearchQuery(searchTerm);
       setCurrentPage(1); // 검색 시 첫 페이지로 이동
     }, 500);
   };
@@ -32,6 +31,7 @@ const MainContent = () => {
     setCurrentPage(value);
   };
 
+  console.log("페이지네이션 데이터: ", data);
   return (
     <Box
       sx={{

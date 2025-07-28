@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, keepPreviousData } from "@tanstack/react-query";
 
 interface Question {
   id: number | string;
@@ -36,5 +36,6 @@ export const useQuestions = (
       if (!res.ok) throw new Error("질문 목록 불러오기 실패");
       return res.json();
     },
+    placeholderData: keepPreviousData,
   });
 };

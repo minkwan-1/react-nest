@@ -17,6 +17,7 @@ import CommonErrorModal from "@components/common/modal/CommonErrorModal";
 import { useAtom } from "jotai";
 import { realUserInfo } from "@atom/auth";
 import { GlobalActionButton } from "@components/home";
+import Commonsnackbar from "@components/common/snackbar/CommonSnackbar";
 
 const App = () => {
   const [realUser] = useAtom(realUserInfo);
@@ -43,6 +44,7 @@ const App = () => {
       <GlobalActionButton />
       <AuthRedirectModal />
       <CommonErrorModal />
+      <Commonsnackbar />
     </>
   );
 };

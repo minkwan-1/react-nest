@@ -24,7 +24,7 @@ import {
   Link as DefaultLinkIcon,
 } from "@mui/icons-material";
 
-// --- 링크 표시(보기 모드)를 위한 헬퍼 함수 ---
+// --- Helper functions for displaying links (Unchanged) ---
 const getIcon = (url: string) => {
   if (url.includes("instagram.com"))
     return <InstagramIcon sx={{ color: "#E4405F" }} />;
@@ -46,70 +46,38 @@ const getDomainLabel = (url: string) => {
     const domain = new URL(url).hostname.replace("www.", "");
     return domain;
   } catch {
-    // 유효하지 않은 URL일 경우 원본을 표시
     return url.length > 30
       ? url.substring(0, 27) + "..."
-      : url || "잘못된 링크";
+      : url || "Invalid Link";
   }
 };
-// ---------------------------------------------
 
 const keyColor = "#b8dae1";
 
-// --- Props 타입 정의 ---
+// --- Props Type Definition (Updated) ---
 interface SocialMediaSectionProps {
   socialLinks: string[];
-  // 부모 컴포넌트에 최종 저장 결과를 전달할 단일 함수
-  onSaveLinks: (links: string[]) => void;
+  handleSocialLinkChange: (index: number, value: string) => void;
+  handleAddSocialLink: () => void;
+  handleRemoveSocialLink: (index: number) => void;
 }
 
 const SocialMediaSection = ({
   socialLinks,
-  onSaveLinks,
+  handleSocialLinkChange,
+  handleAddSocialLink,
+  handleRemoveSocialLink,
 }: SocialMediaSectionProps) => {
   const theme = useTheme();
-
-  // --- 컴포넌트 내부 상태 관리 ---
   const [isModalOpen, setIsModalOpen] = useState(false);
-  // 모달 안에서 수정될 임시 링크 상태
-  const [tempLinks, setTempLinks] = useState<string[]>([]);
 
-  // --- 핸들러 함수 정의 ---
-  const handleOpenModal = () => {
-    // 모달을 열 때 현재 링크를 임시 상태로 복사
-    setTempLinks([...socialLinks]);
-    setIsModalOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-  };
-
-  const handleSaveChanges = () => {
-    // 저장 시 빈 문자열은 제외하고 부모에게 변경사항 전달
-    onSaveLinks(tempLinks.filter((link) => link.trim() !== ""));
-    handleCloseModal();
-  };
-
-  // --- 모달 내부 링크 편집 핸들러 ---
-  const handleTempLinkChange = (index: number, value: string) => {
-    const newLinks = [...tempLinks];
-    newLinks[index] = value;
-    setTempLinks(newLinks);
-  };
-
-  const handleAddTempLink = () => {
-    setTempLinks([...tempLinks, ""]);
-  };
-
-  const handleRemoveTempLink = (index: number) => {
-    const newLinks = tempLinks.filter((_, i) => i !== index);
-    setTempLinks(newLinks);
-  };
+  // --- Modal Handlers ---
+  const handleOpenModal = () => setIsModalOpen(true);
+  const handleCloseModal = () => setIsModalOpen(false);
 
   return (
     <>
-      {/* ==================== 보기 모드 UI ==================== */}
+      {/* ==================== View Mode UI (Unchanged) ==================== */}
       <Grow in timeout={1400}>
         <Paper
           elevation={0}
@@ -147,61 +115,64 @@ const SocialMediaSection = ({
             <IconButton
               onClick={handleOpenModal}
               size="small"
-              title="링크 수정"
+              title="Edit Links"
             >
               <EditIcon />
             </IconButton>
           </Stack>
-
           <Stack spacing={1.5}>
-            {socialLinks && socialLinks.length > 0 ? (
-              socialLinks.map((link, index) => (
-                <MuiLink
-                  key={index}
-                  href={link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  underline="none"
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 1.5,
-                    p: 1.5,
-                    borderRadius: 2,
-                    backgroundColor: theme.palette.action.hover,
-                    transition: "background-color 0.2s, transform 0.2s",
-                    "&:hover": {
-                      backgroundColor: theme.palette.action.selected,
-                      transform: "translateY(-2px)",
-                    },
-                  }}
-                >
-                  {getIcon(link)}
-                  <Typography variant="body2" color="text.primary">
-                    {getDomainLabel(link)}
-                  </Typography>
-                </MuiLink>
-              ))
+            {socialLinks &&
+            socialLinks.filter((link) => link.trim()).length > 0 ? (
+              socialLinks
+                .filter((link) => link.trim())
+                .map((link, index) => (
+                  <MuiLink
+                    key={index}
+                    href={link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    underline="none"
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 1.5,
+                      p: 1.5,
+                      borderRadius: 2,
+                      backgroundColor: theme.palette.action.hover,
+                      transition: "background-color 0.2s, transform 0.2s",
+                      "&:hover": {
+                        backgroundColor: theme.palette.action.selected,
+                        transform: "translateY(-2px)",
+                      },
+                    }}
+                  >
+                    {getIcon(link)}
+                    <Typography variant="body2" color="text.primary">
+                      {getDomainLabel(link)}
+                    </Typography>
+                  </MuiLink>
+                ))
             ) : (
               <Typography variant="body2" color="text.secondary" sx={{ pl: 1 }}>
-                등록된 링크가 없습니다.
+                아직 추가된 링크가 없어요.
               </Typography>
             )}
           </Stack>
         </Paper>
       </Grow>
 
-      {/* ==================== 수정 모드 UI (모달) ==================== */}
+      {/* ==================== Edit Mode UI (Modal - Refactored) ==================== */}
       <Dialog
         open={isModalOpen}
         onClose={handleCloseModal}
         fullWidth
         maxWidth="sm"
       >
-        <DialogTitle fontWeight="bold">소셜 미디어 링크 수정</DialogTitle>
+        <DialogTitle fontWeight="bold">소셜 미디어 링크 수정하기</DialogTitle>
         <DialogContent>
           <Stack spacing={2} sx={{ pt: 1 }}>
-            {tempLinks.map((link, index) => (
+            {/* Directly map over `socialLinks` from props */}
+            {socialLinks.map((link, index) => (
               <Stack
                 key={index}
                 direction="row"
@@ -212,35 +183,53 @@ const SocialMediaSection = ({
                   fullWidth
                   placeholder="https://github.com/..."
                   value={link}
-                  onChange={(e) => handleTempLinkChange(index, e.target.value)}
+                  // Use the handler from props
+                  onChange={(e) =>
+                    handleSocialLinkChange(index, e.target.value)
+                  }
                   variant="outlined"
                   size="small"
                 />
-                {tempLinks.length > 1 && (
+                {/* Remove button is now always shown if there is more than one link */}
+                {socialLinks.length > 1 && (
                   <IconButton
-                    onClick={() => handleRemoveTempLink(index)}
-                    title="삭제"
+                    // Use the handler from props
+                    onClick={() => handleRemoveSocialLink(index)}
+                    title="Remove"
                   >
                     <RemoveCircleOutlineIcon />
                   </IconButton>
                 )}
-                {index === tempLinks.length - 1 && (
-                  <IconButton onClick={handleAddTempLink} title="링크 추가">
-                    <AddIcon />
-                  </IconButton>
-                )}
               </Stack>
             ))}
+            {/* The "Add" button is moved outside the map for clarity */}
+            <Button
+              onClick={handleAddSocialLink} // Use the handler from props
+              startIcon={<AddIcon />}
+              sx={{
+                alignSelf: "flex-start",
+                // bgcolor: "#b8dae1",
+                color: "black",
+              }}
+            >
+              링크 추가하기
+            </Button>
           </Stack>
         </DialogContent>
         <DialogActions sx={{ p: "0 24px 16px" }}>
-          <Button onClick={handleCloseModal}>취소</Button>
           <Button
-            onClick={handleSaveChanges}
-            variant="contained"
+            onClick={handleCloseModal}
+            sx={{ border: "1px solid #b8dae1", color: "black" }}
+          >
+            취소
+          </Button>
+          {/* "Save" button now just closes the modal, as changes are live */}
+          <Button
+            onClick={handleCloseModal}
+            sx={{ bgcolor: "#b8dae1", color: "black" }}
             disableElevation
           >
-            저장
+            확인
           </Button>
         </DialogActions>
       </Dialog>
