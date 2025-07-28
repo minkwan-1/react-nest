@@ -1,4 +1,4 @@
-import { API_URL } from "@api/axiosConfig";
+import { axiosInstance } from "@api/axiosConfig";
 import { imageService } from "@components/edit/service/imageService";
 
 interface SaveMyInfoPayload {
@@ -10,17 +10,14 @@ interface SaveMyInfoPayload {
 }
 
 export const saveMyInfo = async (payload: SaveMyInfoPayload) => {
-  const res = await fetch(`${API_URL}my-info`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
-  });
+  try {
+    const response = await axiosInstance.post("my-info", payload);
 
-  if (!res.ok) {
+    return response.data;
+  } catch (error) {
+    console.error("정보 저장 실패:", error);
     throw new Error("정보 저장에 실패했습니다.");
   }
-
-  return res.json();
 };
 
 export const uploadProfileImage = async (base64Image: string) => {
