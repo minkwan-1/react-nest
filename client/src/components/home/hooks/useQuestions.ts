@@ -1,4 +1,5 @@
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
+import { API_URL } from "@api/axiosConfig";
 
 interface Question {
   id: number | string;
@@ -29,7 +30,7 @@ export const useQuestions = (
       // await new Promise((resolve) => setTimeout(resolve, 2000));
 
       const res = await fetch(
-        `http://localhost:3000/questions?page=${page}&limit=${limit}&search=${encodeURIComponent(
+        `${API_URL}questions?page=${page}&limit=${limit}&search=${encodeURIComponent(
           search
         )}`
       );
