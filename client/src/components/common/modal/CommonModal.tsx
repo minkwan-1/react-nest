@@ -1,6 +1,5 @@
 import { useAtom } from "jotai";
 import { commonModalAtom } from "@atom/modalAtoms";
-import { useNavigate } from "react-router-dom";
 import {
   Dialog,
   DialogTitle,
@@ -9,34 +8,36 @@ import {
   Button,
   Typography,
 } from "@mui/material";
-
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
+
+const icons = {
+  info: <InfoOutlinedIcon sx={{ fontSize: 52, color: "#b8dae1" }} />,
+  error: <ErrorOutlineIcon sx={{ fontSize: 52, color: "#f44336" }} />,
+  success: <CheckCircleOutlineIcon sx={{ fontSize: 52, color: "#4caf50" }} />,
+  confirm: <HelpOutlineIcon sx={{ fontSize: 52, color: "#ff9800" }} />,
+};
 
 const CommonModal = () => {
-  const navigate = useNavigate();
   const [modalState, setModalState] = useAtom(commonModalAtom);
 
-  const isError = modalState.type === "error";
+  const handleClose = () => {
+    setModalState((prev) => ({ ...prev, isOpen: false }));
+  };
 
-  const handleCloseModal = () => {
-    setModalState({
-      isOpen: false,
-      type: "info",
-      title: "",
-      info: "",
-      navigateTo: undefined,
-    });
-
-    if (modalState.navigateTo) {
-      navigate(modalState.navigateTo);
+  const handleConfirm = () => {
+    if (modalState.onConfirm) {
+      modalState.onConfirm();
     }
+    handleClose();
   };
 
   return (
     <Dialog
       open={modalState.isOpen}
-      onClose={handleCloseModal}
+      onClose={handleClose}
       PaperProps={{
         sx: {
           borderRadius: 4,
@@ -44,17 +45,10 @@ const CommonModal = () => {
           minWidth: 320,
           textAlign: "center",
           boxShadow: "0 8px 40px -12px rgba(0,0,0,0.2)",
-          border: "1px solid #e0e0e0",
         },
       }}
     >
-      <DialogTitle sx={{ p: 0, mb: 1 }}>
-        {isError ? (
-          <ErrorOutlineIcon sx={{ fontSize: 52, color: "#f44336" }} />
-        ) : (
-          <InfoOutlinedIcon sx={{ fontSize: 52, color: "#b8dae1" }} />
-        )}
-      </DialogTitle>
+      <DialogTitle sx={{ p: 0, mb: 1 }}>{icons[modalState.type]}</DialogTitle>
 
       <DialogContent sx={{ p: 0 }}>
         <Typography variant="h6" fontWeight={600} sx={{ mb: 1 }}>
@@ -63,23 +57,29 @@ const CommonModal = () => {
         <Typography color="text.secondary">{modalState.info}</Typography>
       </DialogContent>
 
-      <DialogActions sx={{ justifyContent: "center", p: 0, pt: 3 }}>
+      <DialogActions sx={{ justifyContent: "center", p: 0, pt: 3, gap: 1 }}>
+        {modalState.type === "confirm" && (
+          <Button
+            onClick={handleClose}
+            sx={{
+              border: "1px solid #b8dae1",
+              color: "black",
+              "&:hover": {
+                border: "1px solid #a8c9d0",
+                color: "black",
+              },
+            }}
+          >
+            취소
+          </Button>
+        )}
         <Button
-          onClick={handleCloseModal}
+          onClick={handleConfirm}
           variant="contained"
           sx={{
-            px: 5,
-            py: 1.2,
-            borderRadius: 2,
-            textTransform: "none",
-            fontWeight: 600,
-            boxShadow: "none",
-            transition: "all 0.2s ease-in-out",
-            bgcolor: isError ? "#f44336" : "#b8dae1",
+            bgcolor: "#b8dae1",
             "&:hover": {
-              bgcolor: isError ? "#d32f2f" : "#a8c9d0",
-              boxShadow: "none",
-              transform: "translateY(-1px)",
+              bgcolor: "#a8c9d0",
             },
           }}
         >

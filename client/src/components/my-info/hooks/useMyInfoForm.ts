@@ -108,7 +108,11 @@ const useMyInfoForm = () => {
       profileImageUrl,
     };
     saveForm(payload);
-    setSnackbar({ isOpen: true, message: "정보가 성공적으로 수정되었어요." });
+    setSnackbar({
+      isOpen: true,
+      type: "info",
+      message: "정보가 성공적으로 수정되었어요.",
+    });
   };
 
   return {

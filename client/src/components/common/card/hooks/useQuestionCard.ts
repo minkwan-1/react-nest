@@ -1,7 +1,8 @@
 import { useCallback } from "react";
 import { axiosInstance } from "@api/axiosConfig";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useOpenCommonModal } from "@components/common/modal/hook/useOpenCommonModal";
+// import { useNavigate } from "react-router-dom";
 
 interface UseQuestionCardProps {
   questionId: number | string;
@@ -21,38 +22,47 @@ export const useQuestionCard = ({
   onAnswerClick,
 }: UseQuestionCardProps) => {
   const { openModal } = useOpenCommonModal();
+  // const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
   const deleteMutation = useMutation({
-    mutationFn: async (variables: DeleteQuestionVariables) => {
-      const response = await axiosInstance.delete(
-        `/questions/delete/${questionId}`,
-        {
-          data: { userId: variables.userId },
-        }
-      );
-      return response.data;
+    mutationFn: (variables: DeleteQuestionVariables) =>
+      axiosInstance.delete(`/questions/delete/${questionId}`, {
+        data: { userId: variables.userId },
+      }),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["my-questions"] });
+    },
+    onError: (error) => {
+      console.error(error);
+      openModal({
+        isOpen: true,
+        type: "error",
+        title: "삭제 실패",
+        info: "오류가 발생했습니다. 다시 시도해 주세요.",
+      });
     },
   });
 
   const handleTitleClick = useCallback(() => {
     if (onCardClick) onCardClick(questionId);
-    else console.log("실패");
   }, [onCardClick, questionId]);
 
   const handleAnswerClick = useCallback(() => {
     if (onAnswerClick) onAnswerClick(questionId);
-    else console.log("실패");
   }, [onAnswerClick, questionId]);
 
-  const handleDeleteClick = useCallback(async () => {
+  const handleDeleteClick = useCallback(() => {
     openModal({
       isOpen: true,
-      type: "info",
-      title: "알림",
+      type: "confirm",
+      title: "질문 삭제",
       info: "정말 이 질문을 삭제하시겠습니까?",
-      navigateTo: "/my",
+      onConfirm: () => {
+        deleteMutation.mutate({ userId });
+      },
     });
-    deleteMutation.mutate({ userId });
-  }, [deleteMutation, userId]);
+  }, [openModal, deleteMutation, userId]);
 
   return {
     handleTitleClick,

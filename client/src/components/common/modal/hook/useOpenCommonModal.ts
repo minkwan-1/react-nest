@@ -7,6 +7,7 @@ interface OpenModalOptions {
   title: string;
   info: string;
   navigateTo?: string;
+  onConfirm?: () => void;
 }
 
 export const useOpenCommonModal = () => {
@@ -18,6 +19,7 @@ export const useOpenCommonModal = () => {
     title,
     info,
     navigateTo,
+    onConfirm,
   }: OpenModalOptions) => {
     setModal({
       isOpen,
@@ -25,6 +27,7 @@ export const useOpenCommonModal = () => {
       title,
       info,
       navigateTo,
+      onConfirm,
     });
   };
 

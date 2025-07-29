@@ -6,7 +6,7 @@ const Commonsnackbar = () => {
   const [snackbarData, setSnackbarData] = useAtom(snackbarAtom);
 
   const handleCloseSnackbar = () => {
-    setSnackbarData({ isOpen: false, message: "" });
+    setSnackbarData({ isOpen: false, type: "info", message: "" });
   };
 
   return (
