@@ -6,7 +6,7 @@ import {
   Skeleton,
   Typography,
 } from "@mui/material";
-import LiveHelpOutlinedIcon from "@mui/icons-material/LiveHelpOutlined"; // Icon import 추가
+import LiveHelpOutlinedIcon from "@mui/icons-material/LiveHelpOutlined";
 import { useAtom } from "jotai";
 
 import { realUserInfo } from "@atom/auth";
@@ -16,8 +16,6 @@ import {
   TagsSection,
   UserInfoSection,
   ThumbnailSection,
-  OwnerActionButtons,
-  ViewDetailsButton,
   TitleAndExcerpt,
 } from "./list/index";
 
@@ -50,7 +48,6 @@ const extractImageFromContent = (htmlContent: string): string | null => {
   return match ? match[1] : null;
 };
 
-// 스켈레톤 아이템 컴포넌트
 const SkeletonItem = ({
   withThumbnail = false,
 }: {
@@ -63,12 +60,17 @@ const SkeletonItem = ({
       sx={{
         borderRadius: 2,
         boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
-        backgroundColor: theme.palette.mode === "light" ? "#ffffff" : "#333333",
-        border: theme.palette.mode === "light" ? "1px solid #F0F0F0" : "none",
+        ...theme.applyStyles("light", {
+          backgroundColor: "#ffffff",
+          border: "1px solid #F0F0F0",
+        }),
+        ...theme.applyStyles("dark", {
+          backgroundColor: "#333333",
+          border: "none",
+        }),
       }}
     >
       <CardContent sx={{ p: 3 }}>
-        {/* UserInfoSection 스켈레톤 */}
         <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
           <Skeleton variant="circular" width={28} height={28} sx={{ mr: 1 }} />
           <Skeleton variant="text" width={80} height={20} />
@@ -84,21 +86,17 @@ const SkeletonItem = ({
           }}
         >
           <Box sx={{ flex: 1 }}>
-            {/* 제목 스켈레톤 */}
             <Skeleton variant="text" width="70%" height={28} sx={{ mb: 1 }} />
 
-            {/* 내용 스켈레톤 */}
             <Skeleton variant="text" width="90%" height={20} sx={{ mb: 0.5 }} />
             <Skeleton variant="text" width="60%" height={20} sx={{ mb: 2 }} />
 
-            {/* 태그 스켈레톤 */}
             <Box sx={{ display: "flex", gap: 1, mb: 2 }}>
               <Skeleton variant="rounded" width={60} height={24} />
               <Skeleton variant="rounded" width={80} height={24} />
               <Skeleton variant="rounded" width={50} height={24} />
             </Box>
 
-            {/* 하단 버튼 영역 스켈레톤 */}
             <Box sx={{ display: "flex", alignItems: "center" }}>
               <Skeleton variant="rounded" width={80} height={32} />
               <Box sx={{ flexGrow: 1 }} />
@@ -112,7 +110,6 @@ const SkeletonItem = ({
             </Box>
           </Box>
 
-          {/* 썸네일 스켈레톤 (조건부) */}
           {withThumbnail && (
             <Box sx={{ flexShrink: 0 }}>
               <Skeleton
@@ -134,11 +131,9 @@ const QuestionList = ({ questions, loading }: QuestionListProps) => {
   const [user] = useAtom(realUserInfo);
   const { isLoading: isMyInfoLoading } = useFetchMyInfo(user?.id);
 
-  // 질문 목록 로딩 또는 사용자 정보 로딩 중일 때 스켈레톤 표시
   if (loading || isMyInfoLoading) {
     return (
       <Box sx={{ mt: 2, display: "flex", flexDirection: "column", gap: 2 }}>
-        {/* 썸네일이 있는 스켈레톤과 없는 스켈레톤을 번갈아 표시 */}
         <SkeletonItem withThumbnail={true} />
         <SkeletonItem withThumbnail={false} />
         <SkeletonItem withThumbnail={true} />
@@ -146,7 +141,6 @@ const QuestionList = ({ questions, loading }: QuestionListProps) => {
     );
   }
 
-  // 질문이 하나도 없을 때 새로운 UI 출력
   if (questions.length === 0) {
     return (
       <Box
@@ -161,26 +155,61 @@ const QuestionList = ({ questions, loading }: QuestionListProps) => {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          backgroundColor:
-            theme.palette.mode === "light" ? "grey.50" : "#2C2C2C",
+          ...theme.applyStyles("light", {
+            backgroundColor: "grey.50",
+          }),
+          ...theme.applyStyles("dark", {
+            backgroundColor: "#2C2C2C",
+          }),
         }}
       >
-        <LiveHelpOutlinedIcon sx={{ fontSize: 64, color: "grey.400", mb: 2 }} />
-        <Typography variant="h6" fontWeight={600} sx={{ mb: 1 }}>
+        <LiveHelpOutlinedIcon
+          sx={{
+            fontSize: 64,
+            mb: 2,
+            ...theme.applyStyles("light", {
+              color: "grey.400",
+            }),
+            ...theme.applyStyles("dark", {
+              color: "#ffffff",
+            }),
+          }}
+        />
+        <Typography
+          variant="h6"
+          fontWeight={600}
+          sx={{
+            mb: 1,
+            ...theme.applyStyles("light", {
+              color: "inherit",
+            }),
+            ...theme.applyStyles("dark", {
+              color: "#ffffff",
+            }),
+          }}
+        >
           아직 검색어와 관련된 질문이 없어요
         </Typography>
-        <Typography color="text.secondary" sx={{ mb: 3 }}>
+        <Typography
+          sx={{
+            mb: 3,
+            ...theme.applyStyles("light", {
+              color: "text.secondary",
+            }),
+            ...theme.applyStyles("dark", {
+              color: "#ffffff",
+            }),
+          }}
+        >
           가장 먼저 질문을 등록하고 지식을 나눠보세요!
         </Typography>
       </Box>
     );
   }
 
-  // 정상 질문 목록 렌더링
   return (
     <Box sx={{ mt: 2, display: "flex", flexDirection: "column", gap: 2 }}>
       {questions.map((question) => {
-        const isOwner = user?.id === question.user?.id;
         const thumbnailSrc =
           question.thumbnail || extractImageFromContent(question.content);
 
@@ -191,16 +220,24 @@ const QuestionList = ({ questions, loading }: QuestionListProps) => {
               borderRadius: 2,
               boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
               transition: "all 0.3s",
+              ...theme.applyStyles("light", {
+                backgroundColor: "#ffffff",
+                border: "1px solid #F0F0F0",
+              }),
+              ...theme.applyStyles("dark", {
+                backgroundColor: "#333333",
+                border: "none",
+              }),
               "&:hover": {
                 boxShadow: "0 5px 15px rgba(0,0,0,0.1)",
                 transform: "translateY(-2px)",
-                backgroundColor:
-                  theme.palette.mode === "light" ? "#F5F5F5" : "#4F4F4F",
+                ...theme.applyStyles("light", {
+                  backgroundColor: "#F5F5F5",
+                }),
+                ...theme.applyStyles("dark", {
+                  backgroundColor: "#4F4F4F",
+                }),
               },
-              backgroundColor:
-                theme.palette.mode === "light" ? "#ffffff" : "#333333",
-              border:
-                theme.palette.mode === "light" ? "1px solid #F0F0F0" : "none",
             }}
           >
             <CardContent sx={{ p: 3 }}>
@@ -223,13 +260,6 @@ const QuestionList = ({ questions, loading }: QuestionListProps) => {
                   {question.tags && question.tags.length > 0 && (
                     <TagsSection tags={question.tags} />
                   )}
-
-                  {/* <Box sx={{ display: "flex", alignItems: "center" }}>
-                    <ViewDetailsButton questionId={question.id} />
-
-                    <Box sx={{ flexGrow: 1 }} />
-                    {isOwner && <OwnerActionButtons questionId={question.id} />}
-                  </Box> */}
                 </Box>
 
                 {thumbnailSrc && (

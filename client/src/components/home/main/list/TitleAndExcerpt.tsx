@@ -34,7 +34,6 @@ const TitleAndExcerpt = ({
 
   return (
     <>
-      {" "}
       <Typography
         variant="h6"
         sx={{
@@ -44,6 +43,12 @@ const TitleAndExcerpt = ({
           lineHeight: 1.4,
           cursor: "pointer",
           "&:hover": { textDecoration: "underline" },
+          ...theme.applyStyles("light", {
+            color: "inherit",
+          }),
+          ...theme.applyStyles("dark", {
+            color: "#ffffff",
+          }),
         }}
         onClick={() => handleTitleClick(questionId)}
       >
@@ -52,7 +57,6 @@ const TitleAndExcerpt = ({
       <Typography
         variant="body2"
         sx={{
-          color: theme.palette.text.secondary,
           mb: 2.5,
           display: "-webkit-box",
           WebkitLineClamp: 2,
@@ -61,6 +65,12 @@ const TitleAndExcerpt = ({
           textOverflow: "ellipsis",
           lineHeight: 1.5,
           whiteSpace: "pre-wrap",
+          ...theme.applyStyles("light", {
+            color: theme.palette.text.secondary,
+          }),
+          ...theme.applyStyles("dark", {
+            color: "#ffffff",
+          }),
         }}
       >
         {getExcerpt(questionContent, 100)}

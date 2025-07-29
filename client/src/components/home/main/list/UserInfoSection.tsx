@@ -35,21 +35,57 @@ const UserInfoSection = ({ createdAt }: UserInfoSectionProps) => {
           bgcolor: "#b8dae1",
         }}
       >
-        <PersonIcon sx={{ fontSize: 16 }} />
+        <PersonIcon
+          sx={{
+            fontSize: 16,
+            ...theme.applyStyles("light", {
+              color: "inherit",
+            }),
+            ...theme.applyStyles("dark", {
+              color: "#ffffff",
+            }),
+          }}
+        />
       </Avatar>
       <Typography
         variant="body2"
         sx={{
           fontWeight: 500,
-          color: theme.palette.text.primary,
+          ...theme.applyStyles("light", {
+            color: theme.palette.text.primary,
+          }),
+          ...theme.applyStyles("dark", {
+            color: "#ffffff",
+          }),
         }}
       >
         {myInfo?.nickname}
       </Typography>
-      <Typography variant="body2" sx={{ mx: 1, color: "#BDBDBD" }}>
+      <Typography
+        variant="body2"
+        sx={{
+          mx: 1,
+          ...theme.applyStyles("light", {
+            color: "#BDBDBD",
+          }),
+          ...theme.applyStyles("dark", {
+            color: "#ffffff",
+          }),
+        }}
+      >
         •
       </Typography>
-      <Typography variant="body2" sx={{ color: theme.palette.text.primary }}>
+      <Typography
+        variant="body2"
+        sx={{
+          ...theme.applyStyles("light", {
+            color: theme.palette.text.primary,
+          }),
+          ...theme.applyStyles("dark", {
+            color: "#ffffff",
+          }),
+        }}
+      >
         {formatDate(createdAt)}
       </Typography>
     </Box>
