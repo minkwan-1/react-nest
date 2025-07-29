@@ -1,7 +1,6 @@
-import { Box, Container, Typography, Chip, useTheme } from "@mui/material";
+import { Box, Container, Typography, Chip } from "@mui/material";
 
 const PopularTagsSection = () => {
-  const theme = useTheme();
   const popularTags = [
     "JavaScript",
     "Python",
@@ -26,10 +25,6 @@ const PopularTagsSection = () => {
     <Box
       sx={{
         py: { xs: 6, md: 8 },
-        ...theme.applyStyles("dark", {
-          backgroundColor: "black",
-          borderBottom: "1px solid #616161",
-        }),
       }}
     >
       <Container maxWidth="lg">
@@ -66,11 +61,6 @@ const PopularTagsSection = () => {
                 py: { xs: 2, sm: 2.5 },
                 fontSize: { xs: "0.8rem", sm: "0.9rem" },
                 transition: "all 0.2s",
-                // bgcolor:
-                //   theme.palette.mode === "dark" ? "grey.700" : "grey.100",
-                ...theme.applyStyles("dark", {
-                  backgroundColor: "grey.700",
-                }),
                 "&:hover": {
                   backgroundColor: "#b8dae1",
                   color: "#1A2027",

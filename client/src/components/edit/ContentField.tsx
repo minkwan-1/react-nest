@@ -6,7 +6,6 @@ import {
   alpha,
   CircularProgress,
 } from "@mui/material";
-import DOMPurify from "dompurify";
 import QuillEditor from "./QuillEditor";
 
 interface ContentFieldProps {
@@ -16,7 +15,6 @@ interface ContentFieldProps {
 
 const ContentField: React.FC<ContentFieldProps> = ({ content, setContent }) => {
   const theme = useTheme();
-  const isDarkMode = theme.palette.mode === "dark";
   const mainColor = "#b8dae1";
 
   const Quill_Editor = useMemo(
@@ -31,9 +29,14 @@ const ContentField: React.FC<ContentFieldProps> = ({ content, setContent }) => {
         sx={{
           mb: 1.5,
           fontWeight: 600,
-          color: isDarkMode ? "#fff" : "#333",
           display: "flex",
           alignItems: "center",
+          ...theme.applyStyles("light", {
+            color: "#333",
+          }),
+          ...theme.applyStyles("dark", {
+            color: "#ffffff",
+          }),
           "&::before": {
             content: '""',
             display: "inline-block",
@@ -52,34 +55,46 @@ const ContentField: React.FC<ContentFieldProps> = ({ content, setContent }) => {
         variant="body2"
         sx={{
           mb: 2,
-          color: isDarkMode ? alpha("#fff", 0.6) : alpha("#000", 0.6),
           fontSize: "14px",
+          ...theme.applyStyles("light", {
+            color: alpha("#000", 0.6),
+          }),
+          ...theme.applyStyles("dark", {
+            color: alpha("#fff", 0.6),
+          }),
         }}
       >
         문제 상황, 시도한 방법, 예상 결과 등을 상세히 설명해주세요
       </Typography>
 
-      {/* Editor style wrapper */}
       <Box
         sx={{
           ".ql-toolbar": {
             borderTopLeftRadius: "8px",
             borderTopRightRadius: "8px",
-            backgroundColor: isDarkMode ? alpha("#fff", 0.05) : "#f5f5f5",
-            border: `1px solid ${
-              isDarkMode ? alpha("#fff", 0.1) : alpha("#000", 0.1)
-            }`,
+            ...theme.applyStyles("light", {
+              backgroundColor: "#f5f5f5",
+              border: `1px solid ${alpha("#000", 0.1)}`,
+            }),
+            ...theme.applyStyles("dark", {
+              backgroundColor: alpha("#fff", 0.05),
+              border: `1px solid ${alpha("#fff", 0.1)}`,
+            }),
             borderBottom: "none",
           },
           ".ql-container": {
             borderBottomLeftRadius: "8px",
             borderBottomRightRadius: "8px",
-            backgroundColor: isDarkMode ? alpha("#fff", 0.03) : "#fff",
-            border: `1px solid ${
-              isDarkMode ? alpha("#fff", 0.1) : alpha("#000", 0.1)
-            }`,
             maxHeight: "400px",
             minHeight: "200px",
+            ...theme.applyStyles("light", {
+              backgroundColor: "#fff",
+              border: `1px solid ${alpha("#000", 0.1)}`,
+            }),
+            ...theme.applyStyles("dark", {
+              backgroundColor: alpha("#fff", 0.03),
+              border: `1px solid ${alpha("#fff", 0.1)}`,
+            }),
           },
           ".ql-editor": {
             minHeight: "200px",
@@ -87,25 +102,54 @@ const ContentField: React.FC<ContentFieldProps> = ({ content, setContent }) => {
             overflow: "auto",
           },
           ".ql-picker": {
-            color: isDarkMode ? "#ddd" : "#444",
+            ...theme.applyStyles("light", {
+              color: "#444",
+            }),
+            ...theme.applyStyles("dark", {
+              color: "#ddd",
+            }),
           },
           ".ql-picker-options": {
-            backgroundColor: isDarkMode ? "#333" : "#fff",
-            border: `1px solid ${
-              isDarkMode ? alpha("#fff", 0.1) : alpha("#000", 0.1)
-            }`,
+            ...theme.applyStyles("light", {
+              backgroundColor: "#fff",
+              border: `1px solid ${alpha("#000", 0.1)}`,
+            }),
+            ...theme.applyStyles("dark", {
+              backgroundColor: "#333",
+              border: `1px solid ${alpha("#fff", 0.1)}`,
+            }),
           },
           ".ql-stroke": {
-            stroke: isDarkMode ? "#ddd" : "#444",
+            ...theme.applyStyles("light", {
+              stroke: "#444",
+            }),
+            ...theme.applyStyles("dark", {
+              stroke: "#ddd",
+            }),
           },
           ".ql-fill": {
-            fill: isDarkMode ? "#ddd" : "#444",
+            ...theme.applyStyles("light", {
+              fill: "#444",
+            }),
+            ...theme.applyStyles("dark", {
+              fill: "#ddd",
+            }),
           },
           ".ql-picker-label": {
-            color: isDarkMode ? "#ddd" : "#444",
+            ...theme.applyStyles("light", {
+              color: "#444",
+            }),
+            ...theme.applyStyles("dark", {
+              color: "#ddd",
+            }),
           },
           ".ql-picker-item": {
-            color: isDarkMode ? "#ddd" : "#444",
+            ...theme.applyStyles("light", {
+              color: "#444",
+            }),
+            ...theme.applyStyles("dark", {
+              color: "#ddd",
+            }),
           },
           ".ql-active": {
             color: `${mainColor} !important`,
@@ -117,22 +161,32 @@ const ContentField: React.FC<ContentFieldProps> = ({ content, setContent }) => {
             },
           },
           ".ql-tooltip": {
-            backgroundColor: isDarkMode ? "#333" : "#fff",
-            color: isDarkMode ? "#fff" : "#333",
             boxShadow: "0 5px 15px rgba(0,0,0,0.1)",
             borderRadius: "8px",
-            border: `1px solid ${
-              isDarkMode ? alpha("#fff", 0.1) : alpha("#000", 0.1)
-            }`,
+            ...theme.applyStyles("light", {
+              backgroundColor: "#fff",
+              color: "#333",
+              border: `1px solid ${alpha("#000", 0.1)}`,
+            }),
+            ...theme.applyStyles("dark", {
+              backgroundColor: "#333",
+              color: "#fff",
+              border: `1px solid ${alpha("#fff", 0.1)}`,
+            }),
           },
           ".ql-tooltip input[type=text]": {
-            backgroundColor: isDarkMode ? "#444" : "#f5f5f5",
-            color: isDarkMode ? "#fff" : "#333",
-            border: `1px solid ${
-              isDarkMode ? alpha("#fff", 0.1) : alpha("#000", 0.1)
-            }`,
             borderRadius: "4px",
             padding: "4px 8px",
+            ...theme.applyStyles("light", {
+              backgroundColor: "#f5f5f5",
+              color: "#333",
+              border: `1px solid ${alpha("#000", 0.1)}`,
+            }),
+            ...theme.applyStyles("dark", {
+              backgroundColor: "#444",
+              color: "#fff",
+              border: `1px solid ${alpha("#fff", 0.1)}`,
+            }),
           },
           ".ql-tooltip a.ql-action, .ql-tooltip a.ql-remove": {
             color: mainColor,
@@ -147,18 +201,27 @@ const ContentField: React.FC<ContentFieldProps> = ({ content, setContent }) => {
                 justifyContent: "center",
                 alignItems: "center",
                 height: "200px",
-                backgroundColor: isDarkMode ? alpha("#fff", 0.03) : "#fff",
-                border: `1px solid ${
-                  isDarkMode ? alpha("#fff", 0.1) : alpha("#000", 0.1)
-                }`,
                 borderRadius: "8px",
+                ...theme.applyStyles("light", {
+                  backgroundColor: "#fff",
+                  border: `1px solid ${alpha("#000", 0.1)}`,
+                }),
+                ...theme.applyStyles("dark", {
+                  backgroundColor: alpha("#fff", 0.03),
+                  border: `1px solid ${alpha("#fff", 0.1)}`,
+                }),
               }}
             >
               <CircularProgress size={40} sx={{ color: mainColor }} />
               <Typography
                 sx={{
                   ml: 2,
-                  color: isDarkMode ? alpha("#fff", 0.7) : alpha("#000", 0.6),
+                  ...theme.applyStyles("light", {
+                    color: alpha("#000", 0.6),
+                  }),
+                  ...theme.applyStyles("dark", {
+                    color: alpha("#fff", 0.7),
+                  }),
                 }}
               >
                 에디터 로딩 중...
@@ -169,64 +232,6 @@ const ContentField: React.FC<ContentFieldProps> = ({ content, setContent }) => {
           {Quill_Editor}
         </Suspense>
       </Box>
-
-      {/* Preview Section - Only visible when there's content */}
-      {content && (
-        <Box
-          sx={{
-            mt: 4,
-            p: 3,
-            borderRadius: "12px",
-            backgroundColor: isDarkMode
-              ? alpha("#fff", 0.03)
-              : alpha("#f9f9f9", 0.7),
-            border: `1px solid ${
-              isDarkMode ? alpha("#fff", 0.1) : alpha("#000", 0.1)
-            }`,
-            transition: "all 0.2s ease",
-          }}
-        >
-          <Typography
-            variant="subtitle1"
-            gutterBottom
-            sx={{
-              fontWeight: 600,
-              color: mainColor,
-              mb: 2,
-              display: "flex",
-              alignItems: "center",
-              "&::before": {
-                content: '""',
-                display: "inline-block",
-                width: "3px",
-                height: "14px",
-                borderRadius: "2px",
-                marginRight: "8px",
-                background: `linear-gradient(to bottom, ${mainColor}, #ccaee3)`,
-              },
-            }}
-          >
-            미리보기
-          </Typography>
-          <div
-            className="ql-editor"
-            dangerouslySetInnerHTML={{
-              __html: DOMPurify.sanitize(content),
-            }}
-            style={{
-              overflow: "hidden",
-              whiteSpace: "pre-wrap",
-              maxHeight: "300px",
-              overflowY: "auto",
-              padding: "8px",
-              borderRadius: "8px",
-              backgroundColor: isDarkMode
-                ? alpha("#fff", 0.01)
-                : alpha("#fff", 0.5),
-            }}
-          />
-        </Box>
-      )}
     </Box>
   );
 };

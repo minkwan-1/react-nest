@@ -4,12 +4,10 @@ import { Box, Typography, useTheme, alpha } from "@mui/material";
 interface PageHeaderProps {
   title: string;
   subtitle: string;
-  mainColor?: string;
 }
 
 export const PageHeader: React.FC<PageHeaderProps> = ({ title, subtitle }) => {
   const theme = useTheme();
-  const isDarkMode = theme.palette.mode === "dark";
 
   return (
     <Box sx={{ mb: 4 }}>
@@ -18,14 +16,15 @@ export const PageHeader: React.FC<PageHeaderProps> = ({ title, subtitle }) => {
         sx={{
           fontWeight: 800,
           fontSize: { xs: "28px", sm: "36px" },
-          background: theme.palette.mode === "dark" ? "#fff" : "#000",
-          backgroundClip: "text",
-          WebkitBackgroundClip: "text",
-          WebkitTextFillColor: "transparent",
           letterSpacing: "-0.5px",
-
           position: "relative",
           display: "inline-block",
+          ...theme.applyStyles("dark", {
+            color: "#fff",
+          }),
+          ...theme.applyStyles("light", {
+            color: "#000",
+          }),
         }}
       >
         {title}
@@ -33,7 +32,12 @@ export const PageHeader: React.FC<PageHeaderProps> = ({ title, subtitle }) => {
       <Typography
         variant="subtitle1"
         sx={{
-          color: isDarkMode ? alpha("#fff", 0.7) : alpha("#000", 0.6),
+          ...theme.applyStyles("dark", {
+            color: alpha("#fff", 0.7),
+          }),
+          ...theme.applyStyles("light", {
+            color: alpha("#000", 0.6),
+          }),
           fontSize: { xs: "15px", sm: "16px" },
           mt: 3,
         }}

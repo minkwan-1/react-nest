@@ -8,7 +8,6 @@ const NotFoundMessage = () => {
         sx={{
           mb: 2,
           fontWeight: 600,
-          color: (theme) => (theme.palette.mode === "dark" ? "#fff" : "#333"),
         }}
       >
         페이지를 찾을 수 없습니다.

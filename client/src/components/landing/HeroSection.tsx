@@ -20,17 +20,11 @@ const HeroSection = () => {
       />
       <Typography
         variant="h2"
-        sx={(theme) => ({
+        sx={{
           fontWeight: "bold",
           fontSize: { xs: "2.5rem", sm: "3.2rem", md: "3.75rem" },
           mb: 3,
-          background:
-            theme.palette.mode === "dark"
-              ? `linear-gradient(to right, ${theme.palette.grey[200]}, ${theme.palette.primary.light})`
-              : `linear-gradient(to right, ${theme.palette.primary.dark}, #b8dae1)`,
-          WebkitBackgroundClip: "text",
-          WebkitTextFillColor: "transparent",
-        })}
+        }}
       >
         코딩 문제,
         <br />

@@ -11,16 +11,7 @@ import {
 const LandingPage = () => {
   return (
     <PageContainer>
-      <Box
-        sx={(theme) => ({
-          ...theme.applyStyles("dark", {
-            bgcolor: "black",
-          }),
-          ...theme.applyStyles("light", {
-            bgcolor: "white",
-          }),
-        })}
-      >
+      <Box>
         <HeroSection />
 
         <StatsSection />

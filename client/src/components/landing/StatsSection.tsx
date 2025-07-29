@@ -1,23 +1,10 @@
-import { Box, Container, Typography, useTheme } from "@mui/material";
+import { Box, Container, Typography } from "@mui/material";
 
 const StatsSection = () => {
-  const theme = useTheme();
   return (
     <Box
-      // sx={(theme) => ({
-      //   py: { xs: 6, md: 8 },
-      //   backgroundColor: theme.palette.background.paper,
-      //   borderTop:
-      //     theme.palette.mode === "light"
-      //       ? `1px solid ${theme.palette.divider}`
-      //       : "none",
-      // })}
       sx={{
         py: { xs: 6, md: 8 },
-        ...theme.applyStyles("dark", {
-          backgroundColor: "black",
-          borderBottom: "1px solid #616161",
-        }),
       }}
     >
       <Container maxWidth="lg">
@@ -27,7 +14,6 @@ const StatsSection = () => {
               variant="h3"
               fontWeight="bold"
               sx={{
-                color: "primary.dark",
                 mb: 1,
                 fontSize: { xs: "2.5rem", md: "3rem" },
               }}
@@ -41,7 +27,6 @@ const StatsSection = () => {
               variant="h3"
               fontWeight="bold"
               sx={{
-                color: "secondary.main",
                 mb: 1,
                 fontSize: { xs: "2.5rem", md: "3rem" },
               }}
@@ -55,7 +40,6 @@ const StatsSection = () => {
               variant="h3"
               fontWeight="bold"
               sx={{
-                color: "success.main",
                 mb: 1,
                 fontSize: { xs: "2.5rem", md: "3rem" },
               }}
@@ -69,7 +53,6 @@ const StatsSection = () => {
               variant="h3"
               fontWeight="bold"
               sx={{
-                color: "warning.main",
                 mb: 1,
                 fontSize: { xs: "2.5rem", md: "3rem" },
               }}

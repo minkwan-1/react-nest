@@ -4,21 +4,7 @@ import { useNavigate } from "react-router-dom";
 const CTASection = () => {
   const navigate = useNavigate();
   return (
-    <Box
-      sx={(theme) => ({
-        py: { xs: 8, md: 10 },
-        textAlign: "center",
-        ...theme.applyStyles("dark", {
-          bgcolor: "black",
-          color: "white",
-        }),
-        ...theme.applyStyles("light", {
-          bgcolor: "white",
-          color: "black",
-          borderTop: `1px solid ${theme.palette.divider}`,
-        }),
-      })}
-    >
+    <Box sx={{ py: { xs: 8, md: 10 }, textAlign: "center" }}>
       <Container maxWidth="md">
         <Typography
           variant="h3"

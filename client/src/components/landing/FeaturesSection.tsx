@@ -86,17 +86,15 @@ const FeaturesSection = () => {
               >
                 <CardContent sx={{ p: 3 }}>
                   <Box
-                    sx={(theme) => ({
+                    sx={{
                       width: 56,
                       height: 56,
                       borderRadius: "12px",
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
-                      backgroundColor:
-                        theme.palette.mode === "dark" ? "grey.800" : "grey.100",
                       mb: 2,
-                    })}
+                    }}
                   >
                     {card.icon}
                   </Box>

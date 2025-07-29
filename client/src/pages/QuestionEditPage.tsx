@@ -1,17 +1,19 @@
-import { Box, Container } from "@mui/material";
-import { PageContainer } from "../components/layout/common";
-import { QuestionForm } from "../components/edit/QuestionForm";
-import { PageHeader, useQuestionForm } from "@components/edit";
 import {
+  Box,
+  Container,
   Dialog,
   DialogTitle,
   DialogContent,
   DialogActions,
   Button,
 } from "@mui/material";
+// 올바른 경로로 수정해야 할 수 있습니다.
+import { PageContainer } from "../components/layout/common";
+import { QuestionForm } from "../components/edit/QuestionForm";
+// 올바른 경로로 수정해야 할 수 있습니다.
+import { PageHeader, useQuestionForm } from "@components/edit";
 
 export default function QuestionEditPage() {
-  const mainColor = "#b8dae1";
   const {
     title,
     setTitle,
@@ -19,19 +21,11 @@ export default function QuestionEditPage() {
     setContent,
     tags,
     setTags,
-    previewMode,
-    setPreviewMode,
     isSubmitting,
-    handleTagsChange,
     handleSubmit,
     dialog,
     setDialog,
   } = useQuestionForm();
-  //   {
-  //   onSuccess: () => {
-  //     // 성공 시 추가 작업을 수행할 수 있음 (ex: 리다이렉트)
-  //   },
-  // }
 
   return (
     <>
@@ -50,7 +44,6 @@ export default function QuestionEditPage() {
             <PageHeader
               title="질문 등록하기"
               subtitle="궁금한 점을 명확하게 작성하여 커뮤니티에서 도움을 받아보세요."
-              mainColor={mainColor}
             />
 
             {/* 폼 */}
@@ -61,12 +54,13 @@ export default function QuestionEditPage() {
               setContent={setContent}
               tags={tags}
               setTags={setTags}
-              handleTagsChange={handleTagsChange}
-              previewMode={previewMode}
-              setPreviewMode={setPreviewMode}
               isSubmitting={isSubmitting}
               onSubmit={handleSubmit}
-              mainColor={mainColor}
+              // ✅ 아래 4개의 불필요한 props 전달을 제거하여 오류를 해결합니다.
+              // handleTagsChange={handleTagsChange}
+              // previewMode={previewMode}
+              // setPreviewMode={setPreviewMode}
+              // mainColor={mainColor}
             />
           </Box>
         </Container>

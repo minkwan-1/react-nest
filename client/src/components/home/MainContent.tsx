@@ -11,7 +11,7 @@ const MainContent = () => {
 
   const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const { data, isLoading } = useQuestions(currentPage, 1, searchQuery);
+  const { data, isLoading } = useQuestions(currentPage, 2, searchQuery);
 
   const handleSearchChange = (searchTerm: string) => {
     if (debounceTimeoutRef.current) {
