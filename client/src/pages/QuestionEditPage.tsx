@@ -7,10 +7,8 @@ import {
   DialogActions,
   Button,
 } from "@mui/material";
-// 올바른 경로로 수정해야 할 수 있습니다.
 import { PageContainer } from "../components/layout/common";
 import { QuestionForm } from "../components/edit/QuestionForm";
-// 올바른 경로로 수정해야 할 수 있습니다.
 import { PageHeader, useQuestionForm } from "@components/edit";
 
 export default function QuestionEditPage() {
@@ -40,13 +38,11 @@ export default function QuestionEditPage() {
               zIndex: 1,
             }}
           >
-            {/* 헤더 */}
             <PageHeader
               title="질문 등록하기"
               subtitle="궁금한 점을 명확하게 작성하여 커뮤니티에서 도움을 받아보세요."
             />
 
-            {/* 폼 */}
             <QuestionForm
               title={title}
               setTitle={setTitle}
@@ -56,11 +52,6 @@ export default function QuestionEditPage() {
               setTags={setTags}
               isSubmitting={isSubmitting}
               onSubmit={handleSubmit}
-              // ✅ 아래 4개의 불필요한 props 전달을 제거하여 오류를 해결합니다.
-              // handleTagsChange={handleTagsChange}
-              // previewMode={previewMode}
-              // setPreviewMode={setPreviewMode}
-              // mainColor={mainColor}
             />
           </Box>
         </Container>

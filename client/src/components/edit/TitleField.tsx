@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, TextField, Typography, useTheme, alpha } from "@mui/material";
+import { Box, TextField, Typography } from "@mui/material";
 
 interface TitleFieldProps {
   title: string;
@@ -7,9 +7,6 @@ interface TitleFieldProps {
 }
 
 const TitleField: React.FC<TitleFieldProps> = ({ title, setTitle }) => {
-  const theme = useTheme();
-  const isDark = theme.palette.mode === "dark";
-
   return (
     <Box sx={{ mb: 3 }}>
       <Typography
@@ -17,7 +14,7 @@ const TitleField: React.FC<TitleFieldProps> = ({ title, setTitle }) => {
         sx={{
           mb: 1.5,
           fontWeight: 600,
-          color: isDark ? "#fff" : "#000",
+
           display: "flex",
           alignItems: "center",
           "&::before": {
@@ -43,11 +40,8 @@ const TitleField: React.FC<TitleFieldProps> = ({ title, setTitle }) => {
         sx={{
           "& .MuiOutlinedInput-root": {
             borderRadius: "10px",
-            backgroundColor: isDark
-              ? alpha("#fff", 0.05)
-              : alpha("#f5f5f5", 0.7),
+
             "& fieldset": {
-              borderColor: isDark ? alpha("#fff", 0.1) : alpha("#000", 0.1),
               transition: "border-color 0.2s ease",
             },
             "&:hover fieldset": {
@@ -59,7 +53,6 @@ const TitleField: React.FC<TitleFieldProps> = ({ title, setTitle }) => {
             },
           },
           "& .MuiInputLabel-root": {
-            color: isDark ? alpha("#fff", 0.7) : alpha("#000", 0.6),
             "&.Mui-focused": {
               color: "#b8dae1",
             },

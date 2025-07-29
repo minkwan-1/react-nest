@@ -72,7 +72,6 @@ const QuillEditor: React.FC<QuillEditorProps> = ({ value, onChange }) => {
       onChange={onChange}
       modules={modules}
       theme="snow"
-      placeholder="질문 내용을 자세히 작성하세요..."
       style={{ borderRadius: "8px", marginBottom: "20px" }}
     />
   );
