@@ -1,13 +1,19 @@
 import { atom } from "jotai";
 
-interface ErrorModalState {
+export type ModalType = "success" | "error" | "info";
+
+interface CommonModalState {
   isOpen: boolean;
+  type: ModalType;
+  title: string;
   info: string;
   navigateTo?: string;
 }
 
-export const errorModalAtom = atom<ErrorModalState>({
+export const CommonModalAtom = atom<CommonModalState>({
   isOpen: false,
+  type: "info",
+  title: "",
   info: "",
   navigateTo: undefined,
 });

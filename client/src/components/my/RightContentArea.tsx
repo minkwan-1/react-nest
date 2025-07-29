@@ -1,5 +1,4 @@
 import { Box } from "@mui/material";
-import SelfIntroduction from "./SelfIntroduction";
 import MyQuestion from "./MyQuestion";
 import { useAtom } from "jotai";
 import { questionsAtom } from "@atom/question";
