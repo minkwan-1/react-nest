@@ -22,20 +22,24 @@ const SearchBar = ({ onSearchChange }: SearchBarProps) => {
       <TextField
         variant="outlined"
         placeholder="원하는 주제를 찾아보세요"
-        // fullWidth prop 제거
         value={searchTerm}
         onChange={handleChange}
         sx={{
-          width: 400, // 원하는 너비로 설정 (e.g., 400px)
+          width: 400,
           ...theme.applyStyles("light", { color: "#212121" }),
-          ...theme.applyStyles("light", { color: "#ffffff" }),
-          // flexGrow: 1 제거
+          ...theme.applyStyles("dark", {
+            color: "#ffffff",
+          }),
           "& .MuiOutlinedInput-root": {
             borderRadius: 10,
-            backgroundColor:
-              theme.palette.mode === "dark" ? "#333333" : "#FFFFFF",
             boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
             transition: "all 0.3s",
+            ...theme.applyStyles("light", {
+              backgroundColor: "#FFFFFF",
+            }),
+            ...theme.applyStyles("dark", {
+              backgroundColor: "#333333",
+            }),
             "&:hover": {
               boxShadow: "0 3px 6px rgba(0,0,0,0.15)",
             },
@@ -43,20 +47,44 @@ const SearchBar = ({ onSearchChange }: SearchBarProps) => {
               boxShadow: "0 3px 8px rgba(3,203,132,0.25)",
             },
             "&:hover fieldset": {
-              borderColor: "#b8dae1",
+              ...theme.applyStyles("light", {
+                borderColor: "#b8dae1",
+              }),
+              ...theme.applyStyles("dark", {
+                borderColor: "#b8dae1",
+              }),
             },
             "&.Mui-focused fieldset": {
-              borderColor: "#b8dae1",
+              ...theme.applyStyles("light", {
+                borderColor: "#b8dae1",
+              }),
+              ...theme.applyStyles("dark", {
+                borderColor: "#b8dae1",
+              }),
             },
           },
           "& .MuiInputBase-input::placeholder": {
-            color: theme.palette.mode === "dark" ? "#ffffff" : "#757575",
+            ...theme.applyStyles("light", {
+              color: "#757575",
+            }),
+            ...theme.applyStyles("dark", {
+              color: "#ffffff",
+            }),
           },
         }}
         InputProps={{
           startAdornment: (
             <InputAdornment position="start">
-              <SearchIcon sx={{ color: "#757575" }} />
+              <SearchIcon
+                sx={{
+                  ...theme.applyStyles("light", {
+                    color: "#757575",
+                  }),
+                  ...theme.applyStyles("dark", {
+                    color: "#ffffff",
+                  }),
+                }}
+              />
             </InputAdornment>
           ),
         }}
