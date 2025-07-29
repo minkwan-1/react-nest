@@ -1,14 +1,11 @@
-import { Typography, alpha, useTheme } from "@mui/material";
+import { Typography } from "@mui/material";
 
 const ContentInstruction = () => {
-  const theme = useTheme();
-  const isDarkMode = theme.palette.mode === "dark";
   return (
     <Typography
       variant="body2"
       sx={{
         mb: 2,
-        color: isDarkMode ? alpha("#fff", 0.6) : alpha("#000", 0.6),
         fontSize: "14px",
       }}
     >

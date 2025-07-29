@@ -1,4 +1,4 @@
-import { TextField, alpha, useTheme } from "@mui/material";
+import { TextField } from "@mui/material";
 
 interface TitleFieldProps {
   title: string;
@@ -6,9 +6,7 @@ interface TitleFieldProps {
 }
 
 const TitleField = ({ title, setTitle }: TitleFieldProps) => {
-  const theme = useTheme();
   const mainColor = "#b8dae1";
-  const isDarkMode = theme.palette.mode === "dark";
 
   return (
     <TextField
@@ -20,11 +18,8 @@ const TitleField = ({ title, setTitle }: TitleFieldProps) => {
       sx={{
         "& .MuiOutlinedInput-root": {
           borderRadius: "10px",
-          backgroundColor: isDarkMode
-            ? alpha("#fff", 0.05)
-            : alpha("#f5f5f5", 0.7),
+
           "& fieldset": {
-            borderColor: isDarkMode ? alpha("#fff", 0.1) : alpha("#000", 0.1),
             transition: "border-color 0.2s ease",
           },
           "&:hover fieldset": {

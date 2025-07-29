@@ -1,3 +1,4 @@
+import React, { Suspense, useRef } from "react";
 import {
   Box,
   CircularProgress,
@@ -5,18 +6,76 @@ import {
   alpha,
   useTheme,
 } from "@mui/material";
-import { Suspense } from "react";
-import ReactQuill from "react-quill";
+import ReactQuill, { Quill } from "react-quill";
+import "react-quill/dist/quill.snow.css";
+import { ImageResize } from "quill-image-resize-module-ts";
+
+const Font = Quill.import("formats/font");
+Font.whitelist = [
+  "sans-serif",
+  "arial",
+  "comic-sans",
+  "courier-new",
+  "georgia",
+  "helvetica",
+  "lucida",
+];
+Quill.register(Font, true);
+Quill.register("modules/ImageResize", ImageResize);
 
 interface QuestionEditorProps {
   content: string;
   setContent: (value: string) => void;
 }
 
-const QuestionEditor = ({ content, setContent }: QuestionEditorProps) => {
+const QuestionEditor: React.FC<QuestionEditorProps> = ({
+  content,
+  setContent,
+}) => {
   const theme = useTheme();
+  const quillRef = useRef<ReactQuill | null>(null);
   const mainColor = "#b8dae1";
-  const isDarkMode = theme.palette.mode === "dark";
+
+  // Quill 에디터 모듈 설정
+  const modules = {
+    toolbar: {
+      container: [
+        [{ header: [1, 2, 3, 4, 5, 6, false] }],
+        [{ font: Font.whitelist }],
+        [{ align: [] }],
+        [{ size: ["small", false, "large", "huge"] }],
+        ["bold", "italic", "underline", "strike", "blockquote"],
+        [
+          { list: "ordered" },
+          { list: "bullet" },
+          "link",
+          { indent: "-1" },
+          { indent: "+1" },
+        ],
+        [
+          {
+            color: [
+              "#000000",
+              "#e60000",
+              "#ff9900",
+              "#ffff00",
+              "#008a00",
+              "#0066cc",
+              mainColor,
+              "custom-color",
+            ],
+          },
+          { background: [] },
+        ],
+        ["image", "video"],
+        ["clean"],
+      ],
+    },
+    ImageResize: {
+      parchment: Quill.import("parchment"),
+      modules: ["Resize", "DisplaySize"],
+    },
+  };
 
   return (
     <Box
@@ -24,21 +83,29 @@ const QuestionEditor = ({ content, setContent }: QuestionEditorProps) => {
         ".ql-toolbar": {
           borderTopLeftRadius: "8px",
           borderTopRightRadius: "8px",
-          backgroundColor: isDarkMode ? alpha("#fff", 0.05) : "#f5f5f5",
-          border: `1px solid ${
-            isDarkMode ? alpha("#fff", 0.1) : alpha("#000", 0.1)
-          }`,
+          ...theme.applyStyles("light", {
+            backgroundColor: "#f5f5f5",
+            border: `1px solid ${alpha("#000", 0.1)}`,
+          }),
+          ...theme.applyStyles("dark", {
+            backgroundColor: alpha("#fff", 0.05),
+            border: `1px solid ${alpha("#fff", 0.1)}`,
+          }),
           borderBottom: "none",
         },
         ".ql-container": {
           borderBottomLeftRadius: "8px",
           borderBottomRightRadius: "8px",
-          backgroundColor: isDarkMode ? alpha("#fff", 0.03) : "#fff",
-          border: `1px solid ${
-            isDarkMode ? alpha("#fff", 0.1) : alpha("#000", 0.1)
-          }`,
           maxHeight: "400px",
           minHeight: "200px",
+          ...theme.applyStyles("light", {
+            backgroundColor: "#fff",
+            border: `1px solid ${alpha("#000", 0.1)}`,
+          }),
+          ...theme.applyStyles("dark", {
+            backgroundColor: alpha("#fff", 0.03),
+            border: `1px solid ${alpha("#fff", 0.1)}`,
+          }),
         },
         ".ql-editor": {
           minHeight: "200px",
@@ -46,52 +113,67 @@ const QuestionEditor = ({ content, setContent }: QuestionEditorProps) => {
           overflow: "auto",
         },
         ".ql-picker": {
-          color: isDarkMode ? "#ddd" : "#444",
+          ...theme.applyStyles("light", { color: "#444" }),
+          ...theme.applyStyles("dark", { color: "#ddd" }),
         },
         ".ql-picker-options": {
-          backgroundColor: isDarkMode ? "#333" : "#fff",
-          border: `1px solid ${
-            isDarkMode ? alpha("#fff", 0.1) : alpha("#000", 0.1)
-          }`,
+          ...theme.applyStyles("light", {
+            backgroundColor: "#fff",
+            border: `1px solid ${alpha("#000", 0.1)}`,
+          }),
+          ...theme.applyStyles("dark", {
+            backgroundColor: "#333",
+            border: `1px solid ${alpha("#fff", 0.1)}`,
+          }),
         },
         ".ql-stroke": {
-          stroke: isDarkMode ? "#ddd" : "#444",
+          ...theme.applyStyles("light", { stroke: "#444" }),
+          ...theme.applyStyles("dark", { stroke: "#ddd" }),
         },
         ".ql-fill": {
-          fill: isDarkMode ? "#ddd" : "#444",
+          ...theme.applyStyles("light", { fill: "#444" }),
+          ...theme.applyStyles("dark", { fill: "#ddd" }),
         },
         ".ql-picker-label": {
-          color: isDarkMode ? "#ddd" : "#444",
+          ...theme.applyStyles("light", { color: "#444" }),
+          ...theme.applyStyles("dark", { color: "#ddd" }),
         },
         ".ql-picker-item": {
-          color: isDarkMode ? "#ddd" : "#444",
+          ...theme.applyStyles("light", { color: "#444" }),
+          ...theme.applyStyles("dark", { color: "#ddd" }),
         },
         ".ql-active": {
           color: `${mainColor} !important`,
-          ".ql-stroke": {
-            stroke: `${mainColor} !important`,
-          },
-          ".ql-fill": {
-            fill: `${mainColor} !important`,
-          },
+          ".ql-stroke": { stroke: `${mainColor} !important` },
+          ".ql-fill": { fill: `${mainColor} !important` },
         },
         ".ql-tooltip": {
-          backgroundColor: isDarkMode ? "#333" : "#fff",
-          color: isDarkMode ? "#fff" : "#333",
           boxShadow: "0 5px 15px rgba(0,0,0,0.1)",
           borderRadius: "8px",
-          border: `1px solid ${
-            isDarkMode ? alpha("#fff", 0.1) : alpha("#000", 0.1)
-          }`,
+          ...theme.applyStyles("light", {
+            backgroundColor: "#fff",
+            color: "#333",
+            border: `1px solid ${alpha("#000", 0.1)}`,
+          }),
+          ...theme.applyStyles("dark", {
+            backgroundColor: "#333",
+            color: "#fff",
+            border: `1px solid ${alpha("#fff", 0.1)}`,
+          }),
         },
         ".ql-tooltip input[type=text]": {
-          backgroundColor: isDarkMode ? "#444" : "#f5f5f5",
-          color: isDarkMode ? "#fff" : "#333",
-          border: `1px solid ${
-            isDarkMode ? alpha("#fff", 0.1) : alpha("#000", 0.1)
-          }`,
           borderRadius: "4px",
           padding: "4px 8px",
+          ...theme.applyStyles("light", {
+            backgroundColor: "#f5f5f5",
+            color: "#333",
+            border: `1px solid ${alpha("#000", 0.1)}`,
+          }),
+          ...theme.applyStyles("dark", {
+            backgroundColor: "#444",
+            color: "#fff",
+            border: `1px solid ${alpha("#fff", 0.1)}`,
+          }),
         },
         ".ql-tooltip a.ql-action, .ql-tooltip a.ql-remove": {
           color: mainColor,
@@ -106,18 +188,23 @@ const QuestionEditor = ({ content, setContent }: QuestionEditorProps) => {
               justifyContent: "center",
               alignItems: "center",
               height: "200px",
-              backgroundColor: isDarkMode ? alpha("#fff", 0.03) : "#fff",
-              border: `1px solid ${
-                isDarkMode ? alpha("#fff", 0.1) : alpha("#000", 0.1)
-              }`,
               borderRadius: "8px",
+              ...theme.applyStyles("light", {
+                backgroundColor: "#fff",
+                border: `1px solid ${alpha("#000", 0.1)}`,
+              }),
+              ...theme.applyStyles("dark", {
+                backgroundColor: alpha("#fff", 0.03),
+                border: `1px solid ${alpha("#fff", 0.1)}`,
+              }),
             }}
           >
             <CircularProgress size={40} sx={{ color: mainColor }} />
             <Typography
               sx={{
                 ml: 2,
-                color: isDarkMode ? alpha("#fff", 0.7) : alpha("#000", 0.6),
+                ...theme.applyStyles("light", { color: alpha("#000", 0.6) }),
+                ...theme.applyStyles("dark", { color: alpha("#fff", 0.7) }),
               }}
             >
               에디터 로딩 중...
@@ -126,8 +213,10 @@ const QuestionEditor = ({ content, setContent }: QuestionEditorProps) => {
         }
       >
         <ReactQuill
+          ref={quillRef}
           value={content}
           onChange={setContent}
+          modules={modules}
           theme="snow"
           placeholder="질문 내용을 자세히 작성하세요..."
           style={{ borderRadius: "8px", marginBottom: "20px" }}

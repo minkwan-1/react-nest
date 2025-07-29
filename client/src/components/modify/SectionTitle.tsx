@@ -1,13 +1,11 @@
-import { Typography, useTheme } from "@mui/material";
+import { Typography } from "@mui/material";
 
 interface SectionTitleProps {
   title: string;
 }
 
 const SectionTitle = ({ title }: SectionTitleProps) => {
-  const theme = useTheme();
   const mainColor = "#b8dae1";
-  const isDarkMode = theme.palette.mode === "dark";
 
   return (
     <Typography
@@ -15,7 +13,6 @@ const SectionTitle = ({ title }: SectionTitleProps) => {
       sx={{
         mb: 1.5,
         fontWeight: 600,
-        color: isDarkMode ? "#fff" : "#333",
         display: "flex",
         alignItems: "center",
         "&::before": {
