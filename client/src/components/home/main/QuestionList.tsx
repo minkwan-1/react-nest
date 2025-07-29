@@ -53,21 +53,11 @@ const SkeletonItem = ({
 }: {
   withThumbnail?: boolean;
 }) => {
-  const theme = useTheme();
-
   return (
     <Card
+      variant="outlined"
       sx={{
         borderRadius: 2,
-        boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
-        ...theme.applyStyles("light", {
-          backgroundColor: "#ffffff",
-          border: "1px solid #F0F0F0",
-        }),
-        ...theme.applyStyles("dark", {
-          backgroundColor: "#333333",
-          border: "none",
-        }),
       }}
     >
       <CardContent sx={{ p: 3 }}>
@@ -155,52 +145,20 @@ const QuestionList = ({ questions, loading }: QuestionListProps) => {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          ...theme.applyStyles("light", {
-            backgroundColor: "grey.50",
-          }),
-          ...theme.applyStyles("dark", {
-            backgroundColor: "#2C2C2C",
-          }),
+          backgroundColor: "action.hover",
         }}
       >
         <LiveHelpOutlinedIcon
           sx={{
             fontSize: 64,
             mb: 2,
-            ...theme.applyStyles("light", {
-              color: "grey.400",
-            }),
-            ...theme.applyStyles("dark", {
-              color: "#ffffff",
-            }),
+            color: "text.disabled",
           }}
         />
-        <Typography
-          variant="h6"
-          fontWeight={600}
-          sx={{
-            mb: 1,
-            ...theme.applyStyles("light", {
-              color: "inherit",
-            }),
-            ...theme.applyStyles("dark", {
-              color: "#ffffff",
-            }),
-          }}
-        >
+        <Typography variant="h6" fontWeight={600} sx={{ mb: 1 }}>
           아직 검색어와 관련된 질문이 없어요
         </Typography>
-        <Typography
-          sx={{
-            mb: 3,
-            ...theme.applyStyles("light", {
-              color: "text.secondary",
-            }),
-            ...theme.applyStyles("dark", {
-              color: "#ffffff",
-            }),
-          }}
-        >
+        <Typography color="text.secondary" sx={{ mb: 3 }}>
           가장 먼저 질문을 등록하고 지식을 나눠보세요!
         </Typography>
       </Box>
@@ -216,27 +174,14 @@ const QuestionList = ({ questions, loading }: QuestionListProps) => {
         return (
           <Card
             key={question.id}
+            variant="outlined"
             sx={{
               borderRadius: 2,
-              boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
               transition: "all 0.3s",
-              ...theme.applyStyles("light", {
-                backgroundColor: "#ffffff",
-                border: "1px solid #F0F0F0",
-              }),
-              ...theme.applyStyles("dark", {
-                backgroundColor: "#333333",
-                border: "none",
-              }),
               "&:hover": {
                 boxShadow: "0 5px 15px rgba(0,0,0,0.1)",
                 transform: "translateY(-2px)",
-                ...theme.applyStyles("light", {
-                  backgroundColor: "#F5F5F5",
-                }),
-                ...theme.applyStyles("dark", {
-                  backgroundColor: "#4F4F4F",
-                }),
+                bgcolor: "action.hover",
               },
             }}
           >
