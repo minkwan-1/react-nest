@@ -20,7 +20,6 @@ const QuestionDetailPage = () => {
           padding: "30px",
         }}
       >
-        {/* 메인 컨텐츠 영역 */}
         <Box
           sx={{
             flex: { xs: "1 1 auto", md: "1.5 1 0%" },

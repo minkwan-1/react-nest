@@ -40,10 +40,7 @@ const LeftContentArea = () => {
               ? "0 2px 12px rgba(0,0,0,0.08)"
               : "0 2px 12px rgba(0,0,0,0.3)",
           position: "relative",
-          // border:
-          //   theme.palette.mode === "dark"
-          //     ? `1px solid #e0e0e0`
-          //     : `1px solid #333333`,
+          border: theme.palette.mode === "dark" ? `1px solid #e0e0e0` : "",
         }}
       >
         <CircularProgress />
@@ -68,12 +65,12 @@ const LeftContentArea = () => {
             ? "0 2px 12px rgba(0,0,0,0.08)"
             : "0 2px 12px rgba(0,0,0,0.3)",
         position: "relative",
-        border:
-          theme.palette.mode === "dark"
-            ? `1px solid ${
-                theme.palette.mode === "light" ? "#e0e0e0" : "#333333"
-              }`
-            : "none",
+        // border:
+        //   theme.palette.mode === "dark"
+        //     ? `1px solid ${
+        //         theme.palette.mode === "light" ? "#e0e0e0" : "#333333"
+        //       }`
+        //     : "none",
       }}
     >
       <MyInfo nickname={myInfo?.nickname} avatarUrl={myInfo?.profileImageUrl} />

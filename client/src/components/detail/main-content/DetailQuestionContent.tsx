@@ -1,4 +1,4 @@
-import { Box, Paper, alpha, Avatar, Typography, useTheme } from "@mui/material";
+import { Box, Paper, Avatar, Typography } from "@mui/material";
 import { useParams } from "react-router-dom";
 import { useAtom } from "jotai";
 import { questionsAtom } from "@atom/question";
@@ -26,27 +26,8 @@ type Question = {
 const DetailQuestionContent = () => {
   const { id } = useParams();
   const [questions] = useAtom(questionsAtom);
-  const theme = useTheme();
-  const mode = theme.palette.mode;
-  const isDark = mode === "dark";
   const [user] = useAtom(realUserInfo);
   const { data } = useFetchMyInfo(user?.id);
-
-  const colors = {
-    primary: "#3B82F6",
-    primaryDark: "#1E40AF",
-    textPrimary: isDark ? "#F8FAFC" : "#1E293B",
-    textSecondary: isDark ? "#CBD5E1" : "#64748B",
-    background: isDark ? "#1E293B" : "#FFFFFF",
-    surface: isDark ? "#334155" : "#F8FAFC",
-    borderLight: isDark ? "#475569" : "#E2E8F0",
-    tagBg: isDark ? alpha("#E0F2FE", 0.15) : "#E0F2FE",
-    tagText: "#0369A1",
-    codeBg: isDark ? alpha("#1E293B", 0.8) : "#F8F9FC",
-    codeBorder: isDark ? "#334155" : "#E5E7EB",
-    codeText: isDark ? "#E2E8F0" : "#374151",
-    imgBorder: isDark ? "#475569" : "#E2E8F0",
-  };
 
   const question = questions?.find(
     (q: Question) => q.id === parseInt(id || "0")
@@ -64,11 +45,12 @@ const DetailQuestionContent = () => {
           overflowX: "auto",
           p: 3,
           borderRadius: 2,
-          bgcolor: colors.background,
-          border: `1px solid ${colors.borderLight}`,
+          bgcolor: "background.paper",
+          border: "1px solid",
+          borderColor: "divider",
           "& p": {
             mb: 2,
-            color: colors.textPrimary,
+            color: "text.primary",
             lineHeight: 1.7,
           },
           "& ul, & ol": {
@@ -79,40 +61,42 @@ const DetailQuestionContent = () => {
             },
           },
           "& strong": {
-            color: colors.primaryDark,
+            color: "primary.dark",
             fontWeight: 600,
           },
           "& code": {
             fontFamily: "monospace",
-            backgroundColor: colors.codeBg,
-            padding: "2px 4px",
+            backgroundColor: (theme) =>
+              theme.palette.mode === "dark" ? "grey.800" : "grey.100",
+            padding: "2px 6px",
             borderRadius: "4px",
             fontSize: "0.9em",
-            color: colors.codeText,
-            border: `1px solid ${colors.codeBorder}`,
+            color: "text.secondary",
+            border: "1px solid",
+            borderColor: "divider",
           },
           "& img": {
             maxWidth: "100%",
             height: "auto",
             borderRadius: "8px",
-            marginTop: "8px",
-            marginBottom: "8px",
-            border: `1px solid ${colors.imgBorder}`,
+            my: 1,
+            border: "1px solid",
+            borderColor: "divider",
           },
         }}
       >
         <div dangerouslySetInnerHTML={{ __html: question.content }} />
       </Paper>
 
-      {/* 작성자 정보 */}
       <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
         <Paper
           elevation={0}
           sx={{
             p: 2,
-            backgroundColor: colors.surface,
+            backgroundColor: "background.default",
             borderRadius: 2,
-            border: `1px solid ${colors.borderLight}`,
+            border: "1px solid",
+            borderColor: "divider",
             display: "flex",
             alignItems: "center",
             gap: 2,
@@ -122,9 +106,10 @@ const DetailQuestionContent = () => {
             sx={{
               width: 40,
               height: 40,
-              border: `1px solid ${colors.borderLight}`,
-              backgroundColor: "#b8dae1",
-              color: "white",
+              border: "1px solid",
+              borderColor: "divider",
+              bgcolor: "primary.light",
+              color: "primary.contrastText",
               fontWeight: 600,
               objectFit: "cover",
             }}
@@ -133,15 +118,12 @@ const DetailQuestionContent = () => {
             {!data?.profileImageUrl && generateAvatarText(data?.nickname || "")}
           </Avatar>
           <Box>
-            <Typography
-              variant="body1"
-              sx={{ fontWeight: 600, color: colors.textPrimary }}
-            >
+            <Typography variant="body1" sx={{ fontWeight: 600 }}>
               {data?.nickname || "익명"}
             </Typography>
             <Typography
               variant="caption"
-              sx={{ color: colors.textSecondary, display: "block" }}
+              sx={{ color: "text.secondary", display: "block" }}
             >
               작성자
             </Typography>
