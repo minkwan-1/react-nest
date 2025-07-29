@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { modifyQuestion } from "../api/modifyQuestion";
-import { useOpenErrorModal } from "@components/common/modal/hook/useOpenErrorModal";
+import { useOpenCommonModal } from "@components/common/modal/hook/useOpenCommonModal";
 
 export const useModifyQuestionSubmit = (
   questionId: string | undefined,
@@ -14,7 +14,7 @@ export const useModifyQuestionSubmit = (
 ) => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-  const { openErrorModal } = useOpenErrorModal();
+  const { openModal } = useOpenCommonModal();
 
   const { mutate, isPending: isSubmitting } = useMutation({
     mutationFn: modifyQuestion,
@@ -30,7 +30,10 @@ export const useModifyQuestionSubmit = (
     onError: (err) => {
       console.error(err);
       // alert("질문 수정 중 오류가 발생했습니다.");
-      openErrorModal({
+      openModal({
+        isOpen: true,
+        type: "error",
+        title: "",
         info: "질문 수정 중 오류가 발생했습니다. 다시 시도해주세요.",
         navigateTo: "undefined",
       });

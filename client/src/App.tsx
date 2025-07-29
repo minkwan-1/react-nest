@@ -13,7 +13,7 @@ import {
   MyInfoEditPage,
 } from "./pages";
 import AuthRedirectModal from "@components/common/modal/AuthRedirectModal";
-import CommonErrorModal from "@components/common/modal/CommonErrorModal";
+import CommonErrorModal from "@components/common/modal/CommonModal";
 import { useAtom } from "jotai";
 import { realUserInfo } from "@atom/auth";
 import { GlobalActionButton } from "@components/home";

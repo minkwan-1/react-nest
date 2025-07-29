@@ -10,7 +10,7 @@ interface CommonModalState {
   navigateTo?: string;
 }
 
-export const CommonModalAtom = atom<CommonModalState>({
+export const commonModalAtom = atom<CommonModalState>({
   isOpen: false,
   type: "info",
   title: "",
