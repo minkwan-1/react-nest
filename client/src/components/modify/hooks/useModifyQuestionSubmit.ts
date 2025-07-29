@@ -33,7 +33,7 @@ export const useModifyQuestionSubmit = (
       openModal({
         isOpen: true,
         type: "error",
-        title: "",
+        title: "오류",
         info: "질문 수정 중 오류가 발생했습니다. 다시 시도해주세요.",
         navigateTo: "undefined",
       });

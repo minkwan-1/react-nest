@@ -44,11 +44,10 @@ export const useQuestionCard = ({
   }, [onAnswerClick, questionId]);
 
   const handleDeleteClick = useCallback(async () => {
-    console.log("클릭");
     openModal({
       isOpen: true,
       type: "info",
-      title: "",
+      title: "알림",
       info: "정말 이 질문을 삭제하시겠습니까?",
       navigateTo: "/my",
     });

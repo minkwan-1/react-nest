@@ -65,7 +65,7 @@ const RedirectPage = () => {
           openModal({
             isOpen: true,
             type: "error",
-            title: "",
+            title: "오류",
             info: "서버로부터 토큰을 받아오지 못했습니다.",
             navigateTo: "/start",
           });

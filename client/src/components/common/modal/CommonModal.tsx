@@ -59,7 +59,7 @@ const CommonModal = () => {
 
       <DialogContent sx={{ p: 0 }}>
         <Typography variant="h6" fontWeight={600} sx={{ mb: 1 }}>
-          알림
+          {modalState.title}
         </Typography>
 
         <Typography color="text.secondary">{modalState.info}</Typography>
