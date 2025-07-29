@@ -22,50 +22,68 @@ const LeftContentArea = () => {
   const { data: myInfo, isPending } = useFetchMyInfo(userInfo?.id);
   const socialLink = myInfo?.socialLinks;
 
-  const themeColors = {
-    primary: theme.palette.primary.main,
-    primaryDark: "#02b676",
-    background: theme.palette.mode === "light" ? "#f8f9fa" : "#121212",
-    cardBg: theme.palette.background.paper,
-    border: theme.palette.mode === "light" ? "#e0e0e0" : "#333333",
-    textPrimary: theme.palette.text.primary,
-    textSecondary: theme.palette.text.secondary,
-    divider: theme.palette.mode === "light" ? "#e0e0e0" : "#424242",
-  };
-
-  const containerSx = {
-    width: { xs: "100%", md: "320px" },
-    height: "620px",
-    p: 3,
-    bgcolor: themeColors.cardBg,
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    textAlign: "center",
-    borderRadius: 2,
-    boxShadow:
-      theme.palette.mode === "light"
-        ? "0 2px 12px rgba(0,0,0,0.08)"
-        : "0 2px 12px rgba(0,0,0,0.3)",
-    position: "relative",
-    border:
-      theme.palette.mode === "dark"
-        ? `1px solid ${themeColors.border}`
-        : "none",
-  };
-
   if (isPending) {
     return (
-      <Box sx={containerSx}>
+      <Box
+        sx={{
+          width: { xs: "100%", md: "320px" },
+          height: "620px",
+          p: 3,
+          bgcolor: theme.palette.background.paper,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          textAlign: "center",
+          borderRadius: 2,
+          boxShadow:
+            theme.palette.mode === "light"
+              ? "0 2px 12px rgba(0,0,0,0.08)"
+              : "0 2px 12px rgba(0,0,0,0.3)",
+          position: "relative",
+          // border:
+          //   theme.palette.mode === "dark"
+          //     ? `1px solid #e0e0e0`
+          //     : `1px solid #333333`,
+        }}
+      >
         <CircularProgress />
       </Box>
     );
   }
 
   return (
-    <Box sx={containerSx}>
+    <Box
+      sx={{
+        width: { xs: "100%", md: "320px" },
+        height: "620px",
+        p: 3,
+        bgcolor: theme.palette.background.paper,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        textAlign: "center",
+        borderRadius: 2,
+        boxShadow:
+          theme.palette.mode === "light"
+            ? "0 2px 12px rgba(0,0,0,0.08)"
+            : "0 2px 12px rgba(0,0,0,0.3)",
+        position: "relative",
+        border:
+          theme.palette.mode === "dark"
+            ? `1px solid ${
+                theme.palette.mode === "light" ? "#e0e0e0" : "#333333"
+              }`
+            : "none",
+      }}
+    >
       <MyInfo nickname={myInfo?.nickname} avatarUrl={myInfo?.profileImageUrl} />
-      <Divider sx={{ width: "100%", mb: 2, bgcolor: themeColors.divider }} />
+      <Divider
+        sx={{
+          width: "100%",
+          mb: 2,
+          bgcolor: theme.palette.mode === "light" ? "#e0e0e0" : "#424242",
+        }}
+      />
       <InterestArea interests={myInfo?.interests || []} />
       <Divider sx={{ width: "100%", mb: 2 }} />
       <SocialMedia socialLink={socialLink} />

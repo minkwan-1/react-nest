@@ -102,7 +102,6 @@ const SignupButton: React.FC<SignupButtonProps> = ({
           border: "1px solid",
           borderColor:
             theme.palette.mode === "dark" ? `${keyColor}40` : `${keyColor}30`,
-          backgroundColor: theme.palette.background.paper,
         }}
       >
         <Box sx={{ mb: 2 }}>

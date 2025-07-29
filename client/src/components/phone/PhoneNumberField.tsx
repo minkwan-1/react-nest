@@ -177,7 +177,6 @@ const PhoneNumberField = ({
             borderRadius: 3,
             border: "1px solid",
             borderColor: borderColor,
-            backgroundColor: theme.palette.background.paper,
           }}
         >
           <Typography

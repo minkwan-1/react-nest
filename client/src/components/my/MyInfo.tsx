@@ -4,7 +4,7 @@ import {
   Typography,
   Badge,
   Tooltip,
-  useTheme,
+  // useTheme,
   Box,
 } from "@mui/material";
 import { useAtom } from "jotai";
@@ -22,17 +22,17 @@ interface MyInfoProps {
 }
 
 const MyInfo: React.FC<MyInfoProps> = ({ avatarUrl, nickname }) => {
-  const theme = useTheme();
-  const themeColors = {
-    primary: theme.palette.primary.main,
-    primaryDark: "#02b676",
-    background: theme.palette.mode === "light" ? "#f8f9fa" : "#121212",
-    cardBg: theme.palette.background.paper,
-    border: theme.palette.mode === "light" ? "#e0e0e0" : "#333333",
-    textPrimary: theme.palette.text.primary,
-    textSecondary: theme.palette.text.secondary,
-    divider: theme.palette.mode === "light" ? "#e0e0e0" : "#424242",
-  };
+  // const theme = useTheme();
+  // const themeColors = {
+  //   primary: theme.palette.primary.main,
+  //   primaryDark: "#02b676",
+  //   background: theme.palette.mode === "light" ? "#f8f9fa" : "#121212",
+  //   cardBg: theme.palette.background.paper,
+  //   border: theme.palette.mode === "light" ? "#e0e0e0" : "#333333",
+  //   textPrimary: theme.palette.text.primary,
+  //   textSecondary: theme.palette.text.secondary,
+  //   divider: theme.palette.mode === "light" ? "#e0e0e0" : "#424242",
+  // };
   const [userInfo] = useAtom(realUserInfo);
 
   useUserQuestions();
@@ -46,16 +46,16 @@ const MyInfo: React.FC<MyInfoProps> = ({ avatarUrl, nickname }) => {
           <Tooltip title="인증된 프로필">
             <VerifiedIcon
               sx={{
-                backgroundColor: themeColors.cardBg,
+                // backgroundColor: themeColors.cardBg,
                 borderRadius: "50%",
                 color: "#b8dae1",
                 width: 24,
                 height: 24,
                 padding: "2px",
-                border:
-                  theme.palette.mode === "dark"
-                    ? `2px solid ${themeColors.border}`
-                    : "2px solid white",
+                // border:
+                //   theme.palette.mode === "dark"
+                //     ? `2px solid ${themeColors.border}`
+                //     : "2px solid white",
               }}
             />
           </Tooltip>
@@ -68,14 +68,14 @@ const MyInfo: React.FC<MyInfoProps> = ({ avatarUrl, nickname }) => {
             width: 120,
             height: 120,
             mb: 2,
-            border:
-              theme.palette.mode === "light"
-                ? "4px solid white"
-                : `4px solid ${themeColors.cardBg}`,
-            boxShadow:
-              theme.palette.mode === "light"
-                ? "0 2px 8px rgba(0,0,0,0.15)"
-                : "0 2px 8px rgba(0,0,0,0.4)",
+            // border:
+            //   theme.palette.mode === "light"
+            //     ? "4px solid white"
+            //     : `4px solid ${themeColors.cardBg}`,
+            // boxShadow:
+            //   theme.palette.mode === "light"
+            //     ? "0 2px 8px rgba(0,0,0,0.15)"
+            //     : "0 2px 8px rgba(0,0,0,0.4)",
           }}
         />
       </Badge>
@@ -88,7 +88,7 @@ const MyInfo: React.FC<MyInfoProps> = ({ avatarUrl, nickname }) => {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          color: themeColors.textSecondary,
+          // color: themeColors.textSecondary,
         }}
       >
         {nickname && nickname.trim() ? (
@@ -98,7 +98,7 @@ const MyInfo: React.FC<MyInfoProps> = ({ avatarUrl, nickname }) => {
             component="span"
             sx={{
               fontStyle: "italic",
-              color: theme.palette.text.disabled,
+              // color: theme.palette.text.disabled,
             }}
           >
             닉네임을 추가해 보세요.
