@@ -32,6 +32,8 @@ const QuestionPagination = ({
         showFirstButton
         showLastButton
         disabled={loading}
+        siblingCount={1}
+        boundaryCount={1}
       />
     </Box>
   );
