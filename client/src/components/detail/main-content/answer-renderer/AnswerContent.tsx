@@ -2,10 +2,25 @@ import { convertMarkdownToHtml } from "@components/detail/utils/markdownUtils";
 import { themeColors } from "../../utils/styleUtils";
 import { AnswerContentProps } from "@components/detail/types";
 import { Box } from "@mui/material";
+import { useEffect, useRef } from "react";
+import hljs from "highlight.js";
 import "highlight.js/styles/atom-one-dark.css";
 
 function AnswerContent({ answer }: AnswerContentProps) {
-  const getContentStyles = (isAiAnswer?: boolean) => ({
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (contentRef.current) {
+      const codeBlocks = contentRef.current.querySelectorAll("pre code");
+      codeBlocks.forEach((block) => {
+        if (!block.classList.contains("hljs")) {
+          hljs.highlightElement(block as HTMLElement);
+        }
+      });
+    }
+  }, [answer.content]);
+
+  const getContentStyles = () => ({
     fontSize: "14.5px",
     lineHeight: 1.6,
     color: themeColors.textPrimary,
@@ -14,7 +29,7 @@ function AnswerContent({ answer }: AnswerContentProps) {
       fontWeight: 600,
       marginTop: "20px",
       marginBottom: "12px",
-      color: isAiAnswer ? themeColors.ai.primary : themeColors.user.primary,
+      color: themeColors.ai.primary,
     },
     "& p": {
       marginBottom: "14px",
@@ -27,38 +42,36 @@ function AnswerContent({ answer }: AnswerContentProps) {
       marginBottom: "6px",
     },
     "& pre": {
-      backgroundColor: themeColors.code.bg,
+      backgroundColor: "#282c34",
       borderRadius: "6px",
-      padding: "12px",
-      fontSize: "13px",
-      fontFamily: "monospace",
+      padding: "16px",
+      fontSize: "13.5px",
+      fontFamily: "'Fira Code', 'Monaco', 'Consolas', monospace",
       overflowX: "auto",
       border: `1px solid ${themeColors.code.border}`,
       marginBottom: "14px",
+      color: "#abb2bf",
+      "& code.hljs": {
+        backgroundColor: "transparent",
+        padding: 0,
+        border: "none",
+        color: "inherit",
+      },
     },
-    "& code": {
+    "& code:not(.hljs)": {
       backgroundColor: themeColors.code.bg,
       padding: "2px 6px",
       borderRadius: "4px",
       fontSize: "13px",
-      fontFamily: "monospace",
+      fontFamily: "'Fira Code', 'Monaco', 'Consolas', monospace",
       border: `1px solid ${themeColors.code.border}`,
     },
-    "& pre code": {
-      backgroundColor: "transparent",
-      padding: 0,
-      border: "none",
-    },
     "& blockquote": {
-      borderLeft: `3px solid ${
-        isAiAnswer ? themeColors.ai.primary : themeColors.user.primary
-      }`,
+      borderLeft: `3px solid ${themeColors.ai.primary}`,
       paddingLeft: "16px",
       fontStyle: "italic",
       color: themeColors.textSecondary,
-      backgroundColor: isAiAnswer
-        ? "rgba(133,193,204,0.05)"
-        : "rgba(168,209,219,0.05)",
+      backgroundColor: "rgba(133, 193, 204, 0.05)",
       margin: "16px 0",
     },
     "& img": {
@@ -80,13 +93,11 @@ function AnswerContent({ answer }: AnswerContentProps) {
       textAlign: "left",
     },
     "& th": {
-      backgroundColor: isAiAnswer
-        ? themeColors.ai.light
-        : themeColors.user.light,
+      backgroundColor: themeColors.ai.light,
       fontWeight: 600,
     },
     "& a": {
-      color: isAiAnswer ? themeColors.ai.primary : themeColors.user.primary,
+      color: themeColors.ai.primary,
       textDecoration: "none",
       fontWeight: 600,
       "&:hover": {
@@ -98,11 +109,10 @@ function AnswerContent({ answer }: AnswerContentProps) {
 
   return (
     <Box
-      sx={getContentStyles(answer.isAiAnswer)}
+      ref={contentRef}
+      sx={getContentStyles()}
       dangerouslySetInnerHTML={{
-        __html: answer.isAiAnswer
-          ? convertMarkdownToHtml(answer.content)
-          : answer.content,
+        __html: convertMarkdownToHtml(answer.content),
       }}
     />
   );
