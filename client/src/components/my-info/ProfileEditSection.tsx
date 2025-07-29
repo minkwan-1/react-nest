@@ -5,15 +5,12 @@ import {
   Box,
   Avatar,
   IconButton,
-  useTheme,
   TextField,
+  alpha,
 } from "@mui/material";
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
 import { useAtom } from "jotai";
 import { realUserInfo } from "@atom/auth";
-
-const keyColor = "#b8dae1";
-const gradientBg = "linear-gradient(135deg, #b8dae1 0%, #9bc5cc 100%)";
 
 interface ProfileEditSectionProps {
   nickname: string;
@@ -27,10 +24,8 @@ const ProfileEditSection = ({
   nickname,
   setNickname,
   profileImageUrl,
-
   handleProfileImageUpload,
 }: ProfileEditSectionProps) => {
-  const theme = useTheme();
   const [userInfo] = useAtom(realUserInfo);
 
   const handleImageUpload = async (
@@ -41,7 +36,6 @@ const ProfileEditSection = ({
       const reader = new FileReader();
       reader.onload = async (e) => {
         const base64Image = e.target?.result as string;
-        // 기존의 setProfileImageUrl 대신 handleProfileImageUpload 사용
         await handleProfileImageUpload(base64Image);
       };
       reader.readAsDataURL(file);
@@ -51,44 +45,43 @@ const ProfileEditSection = ({
   return (
     <Grow in timeout={1000}>
       <Paper
-        elevation={0}
-        sx={{
+        variant="outlined"
+        sx={(theme) => ({
           p: 4,
           mb: 4,
           borderRadius: 3,
-          border: `1px solid ${theme.palette.divider}`,
-          background:
-            theme.palette.mode === "dark"
-              ? `linear-gradient(145deg, ${theme.palette.background.paper} 0%, ${theme.palette.background.default} 100%)`
-              : "linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%)",
+          backgroundColor: "background.paper",
           transition: "all 0.3s ease",
           "&:hover": {
-            boxShadow:
-              theme.palette.mode === "dark"
-                ? "0 8px 25px rgba(0,0,0,0.3)"
-                : "0 8px 25px rgba(0,0,0,0.1)",
+            boxShadow: theme.shadows[4],
             transform: "translateY(-2px)",
           },
-        }}
+        })}
       >
         <Stack direction="row" spacing={4} alignItems="center">
           <Box position="relative">
             <Avatar
-              sx={{
+              sx={(theme) => ({
                 width: 100,
                 height: 100,
                 fontSize: "36px",
                 fontWeight: "bold",
-                background: profileImageUrl ? "transparent" : gradientBg,
-                color: "white",
+                bgcolor: "#b8dae1",
+                color: "primary.contrastText",
                 cursor: "pointer",
                 transition: "all 0.3s ease",
-                boxShadow: "0 4px 20px rgba(184, 218, 225, 0.3)",
+                boxShadow: `0 4px 20px ${alpha(
+                  theme.palette.primary.main,
+                  0.3
+                )}`,
                 "&:hover": {
                   transform: "scale(1.05)",
-                  boxShadow: "0 6px 25px rgba(184, 218, 225, 0.4)",
+                  boxShadow: `0 6px 25px ${alpha(
+                    theme.palette.primary.main,
+                    0.4
+                  )}`,
                 },
-              }}
+              })}
               alt="Profile"
               src={profileImageUrl}
             >
@@ -110,12 +103,12 @@ const ProfileEditSection = ({
                   position: "absolute",
                   bottom: -5,
                   right: -5,
-                  bgcolor: keyColor,
-                  color: "white",
+                  bgcolor: "#b8dae1",
+                  color: "secondary.contrastText",
                   width: 32,
                   height: 32,
                   "&:hover": {
-                    bgcolor: "#a5d1d8",
+                    bgcolor: "#b8dae1",
                     transform: "scale(1.1)",
                   },
                   transition: "all 0.2s ease",
@@ -125,7 +118,7 @@ const ProfileEditSection = ({
               </IconButton>
             </label>
           </Box>
-          {/* nickname 입력 필드 */}
+
           <Box flex={1}>
             <Stack spacing={2.5}>
               <TextField
@@ -134,26 +127,6 @@ const ProfileEditSection = ({
                 variant="outlined"
                 value={nickname}
                 onChange={(e) => setNickname(e.target.value)}
-                sx={{
-                  "& .MuiOutlinedInput-root": {
-                    borderRadius: 2,
-                    transition: "all 0.2s ease",
-                    "&:hover": {
-                      "& > fieldset": {
-                        borderColor: keyColor,
-                      },
-                    },
-                    "&.Mui-focused": {
-                      "& > fieldset": {
-                        borderColor: keyColor,
-                        borderWidth: 2,
-                      },
-                    },
-                  },
-                  "& .MuiInputLabel-root.Mui-focused": {
-                    color: keyColor,
-                  },
-                }}
               />
             </Stack>
           </Box>

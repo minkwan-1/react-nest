@@ -6,7 +6,6 @@ import {
   IconButton,
   Typography,
   TextField,
-  useTheme,
   Link as MuiLink,
   Dialog,
   DialogTitle,
@@ -24,20 +23,13 @@ import {
   Link as DefaultLinkIcon,
 } from "@mui/icons-material";
 
-// --- Helper functions for displaying links (Unchanged) ---
 const getIcon = (url: string) => {
   if (url.includes("instagram.com"))
     return <InstagramIcon sx={{ color: "#E4405F" }} />;
   if (url.includes("linkedin.com"))
     return <LinkedInIcon sx={{ color: "#0A66C2" }} />;
   if (url.includes("github.com"))
-    return (
-      <GitHubIcon
-        sx={{
-          color: (theme) => (theme.palette.mode === "dark" ? "#fff" : "#333"),
-        }}
-      />
-    );
+    return <GitHubIcon sx={{ color: "text.primary" }} />;
   return <DefaultLinkIcon color="action" />;
 };
 
@@ -52,9 +44,6 @@ const getDomainLabel = (url: string) => {
   }
 };
 
-const keyColor = "#b8dae1";
-
-// --- Props Type Definition (Updated) ---
 interface SocialMediaSectionProps {
   socialLinks: string[];
   handleSocialLinkChange: (index: number, value: string) => void;
@@ -68,26 +57,15 @@ const SocialMediaSection = ({
   handleAddSocialLink,
   handleRemoveSocialLink,
 }: SocialMediaSectionProps) => {
-  const theme = useTheme();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // --- Modal Handlers ---
   const handleOpenModal = () => setIsModalOpen(true);
   const handleCloseModal = () => setIsModalOpen(false);
 
   return (
     <>
-      {/* ==================== View Mode UI (Unchanged) ==================== */}
       <Grow in timeout={1400}>
-        <Paper
-          elevation={0}
-          sx={{
-            p: 4,
-            mb: 4,
-            borderRadius: 3,
-            border: `1px solid ${theme.palette.divider}`,
-          }}
-        >
+        <Paper variant="outlined" sx={{ p: 4, mb: 4, borderRadius: 3 }}>
           <Stack
             direction="row"
             justifyContent="space-between"
@@ -104,7 +82,7 @@ const SocialMediaSection = ({
                   content: '""',
                   width: 4,
                   height: 20,
-                  bgcolor: keyColor,
+                  bgcolor: "#b8dae1",
                   borderRadius: 2,
                   mr: 2,
                 },
@@ -138,10 +116,10 @@ const SocialMediaSection = ({
                       gap: 1.5,
                       p: 1.5,
                       borderRadius: 2,
-                      backgroundColor: theme.palette.action.hover,
+                      backgroundColor: "action.hover",
                       transition: "background-color 0.2s, transform 0.2s",
                       "&:hover": {
-                        backgroundColor: theme.palette.action.selected,
+                        backgroundColor: "action.selected",
                         transform: "translateY(-2px)",
                       },
                     }}
@@ -161,7 +139,6 @@ const SocialMediaSection = ({
         </Paper>
       </Grow>
 
-      {/* ==================== Edit Mode UI (Modal - Refactored) ==================== */}
       <Dialog
         open={isModalOpen}
         onClose={handleCloseModal}
@@ -171,7 +148,6 @@ const SocialMediaSection = ({
         <DialogTitle fontWeight="bold">소셜 미디어 링크 수정하기</DialogTitle>
         <DialogContent>
           <Stack spacing={2} sx={{ pt: 1 }}>
-            {/* Directly map over `socialLinks` from props */}
             {socialLinks.map((link, index) => (
               <Stack
                 key={index}
@@ -183,17 +159,14 @@ const SocialMediaSection = ({
                   fullWidth
                   placeholder="https://github.com/..."
                   value={link}
-                  // Use the handler from props
                   onChange={(e) =>
                     handleSocialLinkChange(index, e.target.value)
                   }
                   variant="outlined"
                   size="small"
                 />
-                {/* Remove button is now always shown if there is more than one link */}
                 {socialLinks.length > 1 && (
                   <IconButton
-                    // Use the handler from props
                     onClick={() => handleRemoveSocialLink(index)}
                     title="Remove"
                   >
@@ -202,15 +175,10 @@ const SocialMediaSection = ({
                 )}
               </Stack>
             ))}
-            {/* The "Add" button is moved outside the map for clarity */}
             <Button
-              onClick={handleAddSocialLink} // Use the handler from props
+              onClick={handleAddSocialLink}
               startIcon={<AddIcon />}
-              sx={{
-                alignSelf: "flex-start",
-                // bgcolor: "#b8dae1",
-                color: "black",
-              }}
+              sx={{ alignSelf: "flex-start", color: "#b8dae1" }}
             >
               링크 추가하기
             </Button>
@@ -219,14 +187,13 @@ const SocialMediaSection = ({
         <DialogActions sx={{ p: "0 24px 16px" }}>
           <Button
             onClick={handleCloseModal}
-            sx={{ border: "1px solid #b8dae1", color: "black" }}
+            sx={{ color: "#b8dae1", border: "1px solid #b8dae1" }}
           >
             취소
           </Button>
-          {/* "Save" button now just closes the modal, as changes are live */}
           <Button
             onClick={handleCloseModal}
-            sx={{ bgcolor: "#b8dae1", color: "black" }}
+            sx={{ bgcolor: "#b8dae1", color: "#fff" }}
             disableElevation
           >
             확인
