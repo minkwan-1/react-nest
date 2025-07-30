@@ -14,6 +14,5 @@ export const editorModule = {
     ["blockquote", "code-block"],
     [{ list: "ordered" }, { list: "bullet" }],
     ["link", "image"],
-    ["clean"],
   ],
 };

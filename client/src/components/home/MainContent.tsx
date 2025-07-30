@@ -20,7 +20,7 @@ const MainContent = () => {
 
     debounceTimeoutRef.current = setTimeout(() => {
       setSearchQuery(searchTerm);
-      setCurrentPage(1); // 검색 시 첫 페이지로 이동
+      setCurrentPage(1);
     }, 500);
   };
 
