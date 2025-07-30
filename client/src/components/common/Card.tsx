@@ -3,7 +3,7 @@ import {
   Card,
   CardContent,
   Typography,
-  useTheme,
+  // useTheme,
   Skeleton,
 } from "@mui/material";
 import {
@@ -43,15 +43,15 @@ interface QuestionCardProps {
 
 // 스켈레톤 카드 컴포넌트
 const QuestionCardSkeleton = () => {
-  const theme = useTheme();
+  // const theme = useTheme();
 
   return (
     <Card
       sx={{
         borderRadius: 2,
         boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
-        backgroundColor: theme.palette.mode === "light" ? "#ffffff" : "#333333",
-        border: theme.palette.mode === "light" ? "1px solid #F0F0F0" : "none",
+        // backgroundColor: theme.palette.mode === "light" ? "#ffffff" : "#333333",
+        // border: theme.palette.mode === "light" ? "1px solid #F0F0F0" : "none",
       }}
     >
       <CardContent sx={{ p: 3 }}>
@@ -123,7 +123,7 @@ const QuestionCard = ({
   questionUserId,
   isLoading = false,
 }: QuestionCardProps) => {
-  const theme = useTheme();
+  // const theme = useTheme();
 
   const { handleTitleClick, handleAnswerClick, handleDeleteClick } =
     useQuestionCard({
@@ -143,16 +143,17 @@ const QuestionCard = ({
     <Card
       sx={{
         borderRadius: 2,
+
         boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
         transition: "all 0.3s",
         "&:hover": {
           boxShadow: "0 5px 15px rgba(0,0,0,0.1)",
           transform: "translateY(-2px)",
-          backgroundColor:
-            theme.palette.mode === "light" ? "#F5F5F5" : "#4F4F4F",
+          // backgroundColor:
+          //   theme.palette.mode === "light" ? "#F5F5F5" : "#4F4F4F",
         },
-        backgroundColor: theme.palette.mode === "light" ? "#ffffff" : "#333333",
-        border: theme.palette.mode === "light" ? "1px solid #F0F0F0" : "none",
+        // backgroundColor: theme.palette.mode === "light" ? "#ffffff" : "#333333",
+        // border: theme.palette.mode === "light" ? "1px solid #F0F0F0" : "none",
       }}
     >
       <CardContent sx={{ p: 3 }}>
@@ -170,7 +171,7 @@ const QuestionCard = ({
             <Typography
               variant="body2"
               sx={{
-                color: theme.palette.text.secondary,
+                // color: theme.palette.text.secondary,
                 mb: showActions ? 2.5 : 0,
                 display: "-webkit-box",
                 WebkitLineClamp: 2,

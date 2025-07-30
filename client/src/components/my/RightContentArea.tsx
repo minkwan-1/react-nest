@@ -18,7 +18,6 @@ const RightContentArea = () => {
     name: userInfo?.name || "minkwan won",
   };
 
-  // 초기 로딩 시뮬레이션 (실제로는 데이터 로딩 상태에 따라 결정)
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
@@ -38,8 +37,6 @@ const RightContentArea = () => {
 
   return (
     <Box sx={{ flex: 1, p: 0, borderRadius: 2, overflowY: "scroll" }}>
-      {/* <SelfIntroduction /> */}
-
       <MyQuestion
         questionData={questionData}
         userData={userData}

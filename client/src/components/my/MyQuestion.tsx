@@ -92,7 +92,7 @@ const MyQuestion: React.FC<MyQuestionProps> = ({
   onAnswerClick,
   isLoading = false,
 }) => {
-  const theme = useTheme();
+  // const theme = useTheme();
 
   // const { handleTitleClick, handleAnswerClick, handleDeleteClick } =
   //   useQuestionCard({
@@ -104,11 +104,11 @@ const MyQuestion: React.FC<MyQuestionProps> = ({
 
   console.log(questionData);
 
-  // Define theme colors for easy reference
-  const themeColors = {
-    cardBg: theme.palette.background.paper,
-    border: theme.palette.mode === "light" ? "#e0e0e0" : "#333333",
-  };
+  // // Define theme colors for easy reference
+  // const themeColors = {
+  //   cardBg: theme.palette.background.paper,
+  //   // border: theme.palette.mode === "light" ? "#e0e0e0" : "#333333",
+  // };
 
   // Korean content
   const koreanContent = {
@@ -125,27 +125,23 @@ const MyQuestion: React.FC<MyQuestionProps> = ({
           alignItems: "center",
         }}
       >
-        <Typography variant="h6" fontWeight="bold" mb={1}>
+        <Typography variant="h6" fontWeight="bold" p={1}>
           {koreanContent.popularPosts}
         </Typography>
       </Box>{" "}
       <Paper
         elevation={0}
         sx={{
-          p: 3,
-          mb: 2,
-          bgcolor: themeColors.cardBg,
+          p: 1,
+          mb: 1,
+
+          // bgcolor: themeColors.cardBg,
           borderRadius: 2,
 
-          boxShadow:
-            theme.palette.mode === "light"
-              ? "0 2px 12px rgba(0,0,0,0.04)"
-              : "0 2px 12px rgba(0,0,0,0.2)",
-
-          border:
-            theme.palette.mode === "dark"
-              ? `1px solid ${themeColors.border}`
-              : "none",
+          // border:
+          //   theme.palette.mode === "dark"
+          //     ? `1px solid ${themeColors.border}`
+          //     : "none",
           height: "74.5vh",
           overflowY: "auto",
         }}

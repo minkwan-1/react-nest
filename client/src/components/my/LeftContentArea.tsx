@@ -1,10 +1,10 @@
 import {
   Box,
   Divider,
-  useTheme,
   IconButton,
   Tooltip,
   CircularProgress,
+  Paper,
 } from "@mui/material";
 import { Edit } from "@mui/icons-material";
 import InterestArea from "./InterestArea";
@@ -16,69 +16,39 @@ import { realUserInfo } from "@atom/auth";
 import useFetchMyInfo from "../my-info/hooks/useFetchMyInfo";
 
 const LeftContentArea = () => {
-  const theme = useTheme();
   const navigate = useNavigate();
   const [userInfo] = useAtom(realUserInfo);
   const { data: myInfo, isPending } = useFetchMyInfo(userInfo?.id);
   const socialLink = myInfo?.socialLinks;
 
+  const containerStyles = {
+    width: { xs: "100%", md: "320px" },
+    height: "620px",
+    p: 3,
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    textAlign: "center",
+    borderRadius: 2,
+    position: "relative",
+    // border: `1px solid #D3D3D3`,
+  };
+
   if (isPending) {
     return (
-      <Box
-        sx={{
-          width: { xs: "100%", md: "320px" },
-          height: "620px",
-          p: 3,
-          bgcolor: theme.palette.background.paper,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          textAlign: "center",
-          borderRadius: 2,
-          boxShadow:
-            theme.palette.mode === "light"
-              ? "0 2px 12px rgba(0,0,0,0.08)"
-              : "0 2px 12px rgba(0,0,0,0.3)",
-          position: "relative",
-          border: theme.palette.mode === "dark" ? `1px solid #e0e0e0` : "",
-        }}
-      >
+      <Box sx={containerStyles}>
         <CircularProgress />
       </Box>
     );
   }
 
   return (
-    <Box
-      sx={{
-        width: { xs: "100%", md: "320px" },
-        height: "620px",
-        p: 3,
-        bgcolor: theme.palette.background.paper,
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        textAlign: "center",
-        borderRadius: 2,
-        boxShadow:
-          theme.palette.mode === "light"
-            ? "0 2px 12px rgba(0,0,0,0.08)"
-            : "0 2px 12px rgba(0,0,0,0.3)",
-        position: "relative",
-        // border:
-        //   theme.palette.mode === "dark"
-        //     ? `1px solid ${
-        //         theme.palette.mode === "light" ? "#e0e0e0" : "#333333"
-        //       }`
-        //     : "none",
-      }}
-    >
+    <Paper sx={containerStyles}>
       <MyInfo nickname={myInfo?.nickname} avatarUrl={myInfo?.profileImageUrl} />
       <Divider
         sx={{
           width: "100%",
           mb: 2,
-          bgcolor: theme.palette.mode === "light" ? "#e0e0e0" : "#424242",
         }}
       />
       <InterestArea interests={myInfo?.interests || []} />
@@ -101,16 +71,12 @@ const LeftContentArea = () => {
               transform: "scale(1.05)",
             },
             transition: "all 0.2s ease-in-out",
-            boxShadow:
-              theme.palette.mode === "light"
-                ? "0 2px 8px rgba(0,0,0,0.15)"
-                : "0 2px 8px rgba(0,0,0,0.4)",
           }}
         >
           <Edit fontSize="small" />
         </IconButton>
       </Tooltip>
-    </Box>
+    </Paper>
   );
 };
 

@@ -1,4 +1,4 @@
-import { Box, Avatar, Typography, useTheme } from "@mui/material";
+import { Box, Avatar, Typography } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
 import useFetchMyInfo from "@components/my-info/hooks/useFetchMyInfo";
 
@@ -22,8 +22,6 @@ interface CardHeaderSectionProps {
 }
 
 const CardHeaderSection = ({ user, question }: CardHeaderSectionProps) => {
-  const theme = useTheme();
-
   // user.id를 string으로 변환하여 전달
   const userId = user?.id ? String(user.id) : undefined;
   const { data: myInfo } = useFetchMyInfo(userId);
@@ -61,7 +59,7 @@ const CardHeaderSection = ({ user, question }: CardHeaderSectionProps) => {
         variant="body2"
         sx={{
           fontWeight: 500,
-          color: theme.palette.text.primary,
+          // color: theme.palette.text.primary,
         }}
       >
         {myInfo?.nickname || user.name}
@@ -69,9 +67,7 @@ const CardHeaderSection = ({ user, question }: CardHeaderSectionProps) => {
       <Typography variant="body2" sx={{ mx: 1, color: "#BDBDBD" }}>
         •
       </Typography>
-      <Typography variant="body2" sx={{ color: theme.palette.text.primary }}>
-        {formatDate(question.createdAt)}
-      </Typography>
+      <Typography variant="body2">{formatDate(question.createdAt)}</Typography>
     </Box>
   );
 };

@@ -15,7 +15,6 @@ const UserProfile: React.FC = () => {
     >
       <Box
         sx={{
-          position: "relative",
           height: { xs: 50, md: 100 },
         }}
       />
@@ -23,7 +22,6 @@ const UserProfile: React.FC = () => {
       <Container
         maxWidth="lg"
         sx={{
-          position: "relative",
           mt: { xs: -6, md: -8 },
         }}
       >

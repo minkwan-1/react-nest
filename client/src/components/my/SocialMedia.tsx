@@ -48,9 +48,7 @@ const SocialMedia = ({ socialLink = [] }: SocialMediaProps) => {
         소셜 미디어
       </Typography>
 
-      {/* 분기 처리: 링크가 없을 때와 있을 때를 나눔 */}
       {filteredLinks.length === 0 ? (
-        // 링크가 없을 때 표시할 초기 UI (Empty State)
         <Box
           sx={{
             display: "flex",
@@ -60,11 +58,6 @@ const SocialMedia = ({ socialLink = [] }: SocialMediaProps) => {
             borderRadius: 2,
             p: 3,
             gap: 1.5,
-            backgroundColor:
-              theme.palette.mode === "light"
-                ? "#f8f9fa"
-                : "rgba(255,255,255,0.04)",
-            color: theme.palette.text.secondary,
           }}
         >
           <Typography variant="body2" fontWeight={500}>
@@ -73,10 +66,10 @@ const SocialMedia = ({ socialLink = [] }: SocialMediaProps) => {
           </Typography>
         </Box>
       ) : (
-        // 링크가 있을 때 표시할 기존 UI
         <Stack spacing={1} direction="column">
           {filteredLinks.map((link, index) => (
             <MuiLink
+              color="inherit"
               key={index}
               href={link}
               target="_blank"
@@ -91,15 +84,6 @@ const SocialMedia = ({ socialLink = [] }: SocialMediaProps) => {
                 py: 0.75,
                 borderRadius: 1,
                 fontSize: "0.95rem",
-                color: theme.palette.text.primary,
-                backgroundColor:
-                  theme.palette.mode === "light" ? "#f8f9fa" : "#1e293b",
-                "&:hover": {
-                  backgroundColor:
-                    theme.palette.mode === "light"
-                      ? "#f0f4f8"
-                      : "rgba(255,255,255,0.05)",
-                },
                 transition: "background-color 0.2s",
               }}
             >
