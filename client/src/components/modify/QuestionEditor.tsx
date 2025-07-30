@@ -9,6 +9,7 @@ import {
 import ReactQuill, { Quill } from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { ImageResize } from "quill-image-resize-module-ts";
+import { editorModule } from "@components/detail/module/editorModule";
 
 const Font = Quill.import("formats/font");
 Font.whitelist = [
@@ -35,47 +36,6 @@ const QuestionEditor: React.FC<QuestionEditorProps> = ({
   const theme = useTheme();
   const quillRef = useRef<ReactQuill | null>(null);
   const mainColor = "#b8dae1";
-
-  // Quill 에디터 모듈 설정
-  const modules = {
-    toolbar: {
-      container: [
-        [{ header: [1, 2, 3, 4, 5, 6, false] }],
-        [{ font: Font.whitelist }],
-        [{ align: [] }],
-        [{ size: ["small", false, "large", "huge"] }],
-        ["bold", "italic", "underline", "strike", "blockquote"],
-        [
-          { list: "ordered" },
-          { list: "bullet" },
-          "link",
-          { indent: "-1" },
-          { indent: "+1" },
-        ],
-        [
-          {
-            color: [
-              "#000000",
-              "#e60000",
-              "#ff9900",
-              "#ffff00",
-              "#008a00",
-              "#0066cc",
-              mainColor,
-              "custom-color",
-            ],
-          },
-          { background: [] },
-        ],
-        ["image", "video"],
-        ["clean"],
-      ],
-    },
-    ImageResize: {
-      parchment: Quill.import("parchment"),
-      modules: ["Resize", "DisplaySize"],
-    },
-  };
 
   return (
     <Box
@@ -216,7 +176,7 @@ const QuestionEditor: React.FC<QuestionEditorProps> = ({
           ref={quillRef}
           value={content}
           onChange={setContent}
-          modules={modules}
+          modules={editorModule}
           theme="snow"
           placeholder="질문 내용을 자세히 작성하세요..."
           style={{ borderRadius: "8px", marginBottom: "20px" }}
