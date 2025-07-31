@@ -11,7 +11,7 @@ const MainContent = () => {
 
   const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const { data, isLoading } = useQuestions(currentPage, 1, searchQuery);
+  const { data, isLoading } = useQuestions(currentPage, 2, searchQuery);
 
   const handleSearchChange = (searchTerm: string) => {
     if (debounceTimeoutRef.current) {
@@ -31,7 +31,7 @@ const MainContent = () => {
     setCurrentPage(value);
   };
 
-  console.log("페이지네이션 데이터: ", data);
+  console.log("페이지네이션 데이터: ", data?.items);
   return (
     <Box
       sx={{
@@ -39,13 +39,6 @@ const MainContent = () => {
         pr: { xs: "0", sm: "0", md: "3" },
         overflowY: "auto",
         height: "100%",
-        scrollbarWidth: "thin",
-        "&::-webkit-scrollbar": { width: "6px" },
-        "&::-webkit-scrollbar-track": { backgroundColor: "#F1F1F1" },
-        "&::-webkit-scrollbar-thumb": {
-          backgroundColor: "#BDBDBD",
-          borderRadius: "10px",
-        },
       }}
     >
       <ComponentWrapper sx={{ maxWidth: "1200px" }}>

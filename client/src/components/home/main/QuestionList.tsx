@@ -32,6 +32,7 @@ interface Question {
   thumbnail?: string;
   createdAt: string | Date;
   user: User;
+  userId?: string;
   tags?: string[];
 }
 
@@ -125,7 +126,7 @@ const QuestionList = ({ questions, loading }: QuestionListProps) => {
     return (
       <Box sx={{ mt: 2, display: "flex", flexDirection: "column", gap: 2 }}>
         <SkeletonItem withThumbnail={true} />
-        <SkeletonItem withThumbnail={false} />
+        <SkeletonItem withThumbnail={true} />
         <SkeletonItem withThumbnail={true} />
       </Box>
     );
@@ -186,7 +187,10 @@ const QuestionList = ({ questions, loading }: QuestionListProps) => {
             }}
           >
             <CardContent sx={{ p: 3 }}>
-              <UserInfoSection createdAt={question.createdAt} />
+              <UserInfoSection
+                createdAt={question.createdAt}
+                userId={question.userId}
+              />
 
               <Box
                 sx={{

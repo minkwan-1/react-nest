@@ -1,6 +1,5 @@
 import React from "react";
-import { Box, Typography, Paper, useTheme, Skeleton } from "@mui/material";
-// import { useQuestionCard } from "@components/common/card/hooks/useQuestionCard";
+import { Box, Typography, Paper, Skeleton } from "@mui/material";
 
 import CommonCard from "@components/common/Card";
 
@@ -25,15 +24,12 @@ interface MyQuestionProps {
 
 // 스켈레톤 카드 컴포넌트
 const QuestionCardSkeleton = () => {
-  const theme = useTheme();
-
   return (
     <Box
       sx={{
         borderRadius: 2,
         boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
-        backgroundColor: theme.palette.mode === "light" ? "#ffffff" : "#333333",
-        border: theme.palette.mode === "light" ? "1px solid #F0F0F0" : "none",
+
         p: 3,
       }}
     >

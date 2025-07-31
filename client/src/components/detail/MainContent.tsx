@@ -9,9 +9,6 @@ import {
   useAnswerSubmit,
 } from "./hooks/index";
 
-import { applyCodeBlockStyling } from "./utils/domUtils";
-import { themeColors } from "./utils/styleUtils";
-
 import {
   DetailQuestionTitle,
   DetailQuestionContent,
@@ -48,13 +45,6 @@ const MainContent = () => {
     }
   }, [question, loading, fetchAiAnswer]);
 
-  // DOM 스타일링 적용
-  useEffect(() => {
-    if (!loading && question) {
-      applyCodeBlockStyling(themeColors);
-    }
-  }, [loading, question]);
-
   return (
     <Box
       sx={{
@@ -62,21 +52,6 @@ const MainContent = () => {
         pr: { xs: "0", sm: "0", md: "2" },
         overflowY: "auto",
         height: "100%",
-        scrollbarWidth: "thin",
-        "&::-webkit-scrollbar": {
-          width: "8px",
-        },
-        "&::-webkit-scrollbar-track": {
-          backgroundColor: themeColors.surface,
-          borderRadius: "4px",
-        },
-        "&::-webkit-scrollbar-thumb": {
-          backgroundColor: themeColors.primary,
-          borderRadius: "4px",
-          "&:hover": {
-            backgroundColor: themeColors.primaryDark,
-          },
-        },
       }}
     >
       {loading ? (

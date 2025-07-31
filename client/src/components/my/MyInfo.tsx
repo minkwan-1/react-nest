@@ -47,7 +47,7 @@ const MyInfo: React.FC<MyInfoProps> = ({ avatarUrl, nickname }) => {
             <VerifiedIcon
               sx={{
                 // backgroundColor: themeColors.cardBg,
-                borderRadius: "50%",
+                // borderRadius: "50%",
                 color: "#b8dae1",
                 width: 24,
                 height: 24,

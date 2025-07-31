@@ -93,10 +93,10 @@ const ChatMessage = ({ message }: ChatMessageProps) => {
                 backgroundColor: alpha(theme.palette.divider, 0.05),
                 borderRadius: 1,
               },
-              "& img": {
-                maxWidth: "100%",
-                borderRadius: 1,
-              },
+              // "& img": {
+              //   maxWidth: "100%",
+              //   borderRadius: 1,
+              // },
               "& table": {
                 borderCollapse: "collapse",
                 width: "100%",

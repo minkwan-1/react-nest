@@ -1,4 +1,4 @@
-import { Box, Typography, Stack, useTheme, Chip, alpha } from "@mui/material";
+import { Box, Typography, Stack, Chip } from "@mui/material";
 import { useParams } from "react-router-dom";
 import { useAtom } from "jotai";
 import { questionsAtom } from "@atom/question";
@@ -38,8 +38,6 @@ type Question = {
 const DetailQuestionTitle = () => {
   const { id } = useParams();
   const [questions] = useAtom(questionsAtom);
-  const theme = useTheme();
-  const isDark = theme.palette.mode === "dark";
 
   const question = questions?.find(
     (q: Question) => q.id === parseInt(id || "0")
@@ -62,7 +60,6 @@ const DetailQuestionTitle = () => {
     <Box
       sx={{
         padding: "0 0 24px",
-        borderBottom: `1px solid ${themeColors.borderLight}`,
       }}
     >
       <Typography
@@ -70,12 +67,9 @@ const DetailQuestionTitle = () => {
         component="h1"
         sx={{
           fontWeight: 700,
-          color: themeColors.textPrimary,
+
           mb: 2,
           fontSize: { xs: "1.5rem", md: "2rem" },
-          ...theme.applyStyles?.("dark", {
-            color: "#f0f0f0",
-          }),
         }}
       >
         {question.title}
@@ -106,18 +100,9 @@ const DetailQuestionTitle = () => {
             label={tag}
             size="small"
             sx={{
-              backgroundColor: isDark
-                ? alpha(themeColors.tag.bg, 0.15)
-                : themeColors.tag.bg,
-              color: themeColors.tag.text,
               fontWeight: 500,
               fontSize: "0.75rem",
               borderRadius: "4px",
-              "&:hover": {
-                backgroundColor: isDark
-                  ? alpha(themeColors.tag.bg, 0.3)
-                  : alpha(themeColors.tag.bg, 0.7),
-              },
             }}
           />
         ))}

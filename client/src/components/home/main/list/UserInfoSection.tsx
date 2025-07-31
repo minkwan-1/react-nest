@@ -1,11 +1,10 @@
 import { Box, Typography, Avatar, useTheme } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
 import useFetchMyInfo from "@components/my-info/hooks/useFetchMyInfo";
-import { realUserInfo } from "@atom/auth";
-import { useAtom } from "jotai";
 
 interface UserInfoSectionProps {
   createdAt: string | Date;
+  userId: string | undefined;
 }
 
 const formatDate = (dateInput: string | Date) => {
@@ -13,10 +12,10 @@ const formatDate = (dateInput: string | Date) => {
   return date.toLocaleDateString("ko-KR");
 };
 
-const UserInfoSection = ({ createdAt }: UserInfoSectionProps) => {
+const UserInfoSection = ({ createdAt, userId }: UserInfoSectionProps) => {
   const theme = useTheme();
-  const [user] = useAtom(realUserInfo);
-  const { data: myInfo } = useFetchMyInfo(user?.id);
+  // const [user] = useAtom(realUserInfo);
+  const { data: myInfo } = useFetchMyInfo(userId);
 
   return (
     <Box

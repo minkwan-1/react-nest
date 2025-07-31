@@ -2,52 +2,33 @@ import { realUserInfo } from "@atom/auth";
 import {
   Typography,
   Alert,
-  Card,
-  CardContent,
   Box,
   Button,
   CircularProgress,
-  useTheme,
   Paper,
+  alpha,
+  useTheme,
 } from "@mui/material";
 import { useAtom } from "jotai";
 import ReactQuill from "react-quill";
 import LoginIcon from "@mui/icons-material/Login";
+import SendIcon from "@mui/icons-material/Send";
 import { editorModule } from "../module/editorModule";
 import "react-quill/dist/quill.snow.css";
-// import "quill-syntax/dist/quill.syntax.css";
 import "highlight.js/styles/atom-one-dark.css";
 
 const baseThemeColors = {
   primary: "#b8dae1",
-  primaryLight: "#f0f7f8",
   primaryDark: "#9cc7d0",
-  background: "#FFFFFF",
-  surface: "#f8fbfc",
-  borderLight: "#e1f2f5",
-  textPrimary: "#1E293B",
-  textSecondary: "#64748B",
-  upvote: "#22C55E",
-  downvote: "#EF4444",
-  tag: {
-    bg: "#e8f5f7",
-    text: "#7ba8b3",
+  light: {
+    surface: "#f8fbfc",
+    textPrimary: "#1E293B",
+    textSecondary: "#64748B",
   },
-  accepted: "#059669",
-  code: {
-    bg: "#f0f7f8",
-    border: "#d1e9ec",
-    text: "#374151",
-  },
-  ai: {
-    primary: "#85c1cc",
-    light: "#f2f8f9",
-    border: "#b8dae1",
-  },
-  user: {
-    primary: "#a8d1db",
-    light: "#f4f9fa",
-    border: "#c5e2e8",
+  dark: {
+    surface: "#2d3748",
+    textPrimary: "#f7fafc",
+    textSecondary: "#a0aec0",
   },
 };
 
@@ -67,73 +48,53 @@ const AnswerEditor = ({
   handleSubmitAnswer,
 }: AnswerEditorProps) => {
   const theme = useTheme();
-  const isDarkMode = theme.palette.mode === "dark";
   const [realUser] = useAtom(realUserInfo);
 
-  const themeColors = {
-    ...baseThemeColors,
-    background: isDarkMode ? "#1E293B" : baseThemeColors.background,
-    surface: isDarkMode ? "#334155" : baseThemeColors.surface,
-    textPrimary: isDarkMode ? "#F8FAFC" : baseThemeColors.textPrimary,
-    textSecondary: isDarkMode ? "#94A3B8" : baseThemeColors.textSecondary,
-    code: {
-      ...baseThemeColors.code,
-      bg: isDarkMode ? "#1E293B" : baseThemeColors.code.bg,
-      border: isDarkMode ? "#475569" : baseThemeColors.code.border,
-      text: isDarkMode ? "#E2E8F0" : baseThemeColors.code.text,
-    },
-  };
-
-  // const quillModules = {
-  //   toolbar: [
-  //     [{ header: [1, 2, 3, false] }],
-  //     ["bold", "italic", "underline", "strike"],
-  //     [{ list: "ordered" }, { list: "bullet" }],
-  //     ["link", "image"],
-  //     ["clean"],
-  //   ],
-  // };
+  const mainColor = baseThemeColors.primary;
 
   if (!realUser) {
     return (
       <Paper
-        elevation={3}
         sx={{
-          p: 4,
+          p: { xs: 3, sm: 5 },
           mt: 6,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: 2,
           textAlign: "center",
-          backgroundColor: themeColors.surface,
-          borderRadius: 3,
-          border: `2px dashed ${themeColors.primary}`,
+          backgroundColor: alpha(baseThemeColors.primary, 0.1),
+          border: `1px solid ${alpha(baseThemeColors.primary, 0.3)}`,
+          borderRadius: "12px",
         }}
       >
-        <Typography
-          variant="h6"
-          sx={{ mb: 2, fontWeight: 700, color: themeColors.textPrimary }}
-        >
-          ✋ 답변 작성은 로그인 후에 가능합니다
+        <LoginIcon
+          sx={{ fontSize: 48, color: baseThemeColors.primaryDark, mb: 1 }}
+        />
+        <Typography variant="h6" sx={{ fontWeight: 700 }}>
+          답변 작성은 로그인 후에 가능합니다
         </Typography>
-        <Typography sx={{ mb: 3, color: themeColors.textSecondary }}>
+        <Typography color="text.secondary" sx={{ mb: 2 }}>
           지식을 공유하고 싶다면 먼저 로그인해주세요!
         </Typography>
         <Button
           variant="contained"
-          color="primary"
           startIcon={<LoginIcon />}
-          sx={{
-            fontWeight: 700,
-            px: 4,
-            py: 1.5,
-            borderRadius: 3,
-            bgcolor: themeColors.primary,
-            color: "white",
-            "&:hover": {
-              bgcolor: themeColors.primaryDark,
-            },
-          }}
           onClick={() => {
-            // 라우터에 따라 로그인 페이지 이동 처리
             window.location.href = "/start";
+          }}
+          sx={{
+            bgcolor: baseThemeColors.primary,
+            color: baseThemeColors.dark.surface,
+            fontWeight: 700,
+            borderRadius: "8px",
+            px: 3,
+            py: 1.5,
+            textTransform: "none",
+            "&:hover": {
+              bgcolor: baseThemeColors.primaryDark,
+              boxShadow: `0 4px 12px ${alpha(baseThemeColors.primary, 0.3)}`,
+            },
           }}
         >
           로그인하러 가기
@@ -144,108 +105,124 @@ const AnswerEditor = ({
 
   return (
     <Box sx={{ mt: 6 }}>
-      {/* 이하 기존 내용 그대로 유지 */}
-      <Typography
-        variant="h5"
-        sx={{
-          mb: 3,
-          color: themeColors.textPrimary,
-          fontWeight: 700,
-          display: "flex",
-          alignItems: "center",
-          gap: 1,
-        }}
-      >
+      <Typography variant="h5" sx={{ mb: 3, fontWeight: 700 }}>
         ✍️ 답변 작성
       </Typography>
 
       {submitError && (
-        <Alert
-          severity="error"
-          sx={{
-            mb: 3,
-            borderRadius: 2,
-            boxShadow: "0 2px 8px rgba(239, 68, 68, 0.15)",
-          }}
-        >
+        <Alert severity="error" sx={{ mb: 3 }}>
           {submitError}
         </Alert>
       )}
 
-      <Card
+      <Box
         sx={{
-          border: `2px solid ${themeColors.primary}`,
-          borderRadius: 3,
-          boxShadow: isDarkMode
-            ? "0 4px 20px rgba(255, 255, 255, 0.1)"
-            : "0 4px 20px rgba(184, 218, 225, 0.2)",
-          mb: 3,
-          backgroundColor: themeColors.surface,
-          "&:hover": {
-            boxShadow: isDarkMode
-              ? "0 6px 25px rgba(255, 255, 255, 0.15)"
-              : "0 6px 25px rgba(184, 218, 225, 0.3)",
+          mb: 2.5,
+          ".ql-toolbar": {
+            borderTopLeftRadius: "8px",
+            borderTopRightRadius: "8px",
+            borderBottom: "none",
+            ...theme.applyStyles("light", {
+              backgroundColor: "#fff",
+              border: `1px solid ${alpha("#000", 0.1)}`,
+            }),
+            ...theme.applyStyles("dark", {
+              backgroundColor: alpha("#fff", 0.03),
+              border: `1px solid ${alpha("#fff", 0.1)}`,
+            }),
           },
-          transition: "all 0.3s ease",
+          ".ql-container": {
+            borderBottomLeftRadius: "8px",
+            borderBottomRightRadius: "8px",
+            minHeight: "200px",
+            ...theme.applyStyles("light", {
+              backgroundColor: "#fff",
+              border: `1px solid ${alpha("#000", 0.1)}`,
+            }),
+            ...theme.applyStyles("dark", {
+              backgroundColor: alpha("#fff", 0.03),
+              border: `1px solid ${alpha("#fff", 0.1)}`,
+            }),
+          },
+          ".ql-editor": {
+            minHeight: "200px",
+            maxHeight: "400px",
+            overflow: "auto",
+            "&.ql-blank::before": {
+              fontStyle: "normal",
+              ...theme.applyStyles("light", {
+                color: alpha("#000", 0.4),
+              }),
+              ...theme.applyStyles("dark", {
+                color: alpha("#fff", 0.4),
+              }),
+            },
+          },
+          ".ql-active": {
+            color: `${mainColor} !important`,
+            ".ql-stroke": { stroke: `${mainColor} !important` },
+          },
         }}
       >
-        <CardContent sx={{ p: 3 }}>
-          <ReactQuill
-            value={userAnswer}
-            onChange={setUserAnswer}
-            // modules={quillModules}
-            modules={editorModule}
-            theme="snow"
-            style={{
-              backgroundColor: isDarkMode ? "#1e293b" : "#fff",
-              color: isDarkMode ? "#f1f5f9" : "inherit",
-              borderRadius: 8,
-              opacity: isSubmittingAnswer ? 0.6 : 1,
-              minHeight: "200px",
-            }}
-            readOnly={isSubmittingAnswer}
-          />
-        </CardContent>
-      </Card>
+        <ReactQuill
+          value={userAnswer}
+          onChange={setUserAnswer}
+          modules={editorModule}
+          theme="snow"
+          readOnly={isSubmittingAnswer}
+          placeholder="답변을 입력해주세요..."
+        />
+      </Box>
 
       <Box sx={{ textAlign: "right" }}>
         <Button
+          type="submit"
           variant="contained"
-          size="large"
+          disabled={isSubmittingAnswer || !userAnswer.trim()}
+          onClick={handleSubmitAnswer}
+          endIcon={!isSubmittingAnswer && <SendIcon />}
           sx={{
-            bgcolor: themeColors.primary,
+            position: "relative",
+            background: `linear-gradient(135deg, ${mainColor} 0%, #ccaee3 100%)`,
             color: "white",
+            textTransform: "none",
             fontWeight: 700,
-            px: 4,
-            py: 1.5,
-            borderRadius: 3,
-            fontSize: "16px",
-            boxShadow: isDarkMode
-              ? "0 4px 15px rgba(255,255,255,0.1)"
-              : "0 4px 15px rgba(184, 218, 225, 0.4)",
+            padding: "10px 24px",
+            borderRadius: "10px",
+            fontSize: "15px",
+            transition: "all 0.3s ease",
+            boxShadow: `0 4px 12px ${alpha(mainColor, 0.3)}`,
             "&:hover": {
-              bgcolor: themeColors.primaryDark,
-              boxShadow: isDarkMode
-                ? "0 6px 20px rgba(255,255,255,0.15)"
-                : "0 6px 20px rgba(184, 218, 225, 0.5)",
+              background: `linear-gradient(135deg, ${mainColor} 20%, #ccaee3 100%)`,
+              boxShadow: `0 6px 20px ${alpha(mainColor, 0.5)}`,
               transform: "translateY(-2px)",
             },
-            "&:disabled": {
-              bgcolor: "#e0e0e0",
-              boxShadow: "none",
+            "&:active": {
+              transform: "translateY(0)",
+              boxShadow: `0 2px 8px ${alpha(mainColor, 0.3)}`,
             },
-            transition: "all 0.3s ease",
+            "&.Mui-disabled": {
+              background: `linear-gradient(135deg, ${mainColor} 0%, #ccaee3 100%)`,
+              opacity: 0.7,
+              color: "white",
+            },
           }}
-          onClick={handleSubmitAnswer}
-          disabled={isSubmittingAnswer || !userAnswer.trim()}
         >
           {isSubmittingAnswer ? (
             <>
-              <CircularProgress size={20} sx={{ mr: 1, color: "white" }} />
-              등록 중...
+              <CircularProgress
+                size={24}
+                sx={{
+                  color: "white",
+                  position: "absolute",
+                  left: "50%",
+                  marginLeft: "-12px",
+                }}
+              />
+              <span style={{ visibility: "hidden" }}>📝 답변 등록</span>
             </>
           ) : (
-            <>📝 답변 등록</>
+            "📝 답변 등록"
           )}
         </Button>
       </Box>

@@ -23,13 +23,11 @@ function AnswerContent({ answer }: AnswerContentProps) {
   const getContentStyles = () => ({
     fontSize: "14.5px",
     lineHeight: 1.6,
-    color: themeColors.textPrimary,
     "& h1, & h2, & h3": {
       fontSize: "18px",
       fontWeight: 600,
       marginTop: "20px",
       marginBottom: "12px",
-      color: themeColors.ai.primary,
     },
     "& p": {
       marginBottom: "14px",
@@ -48,7 +46,6 @@ function AnswerContent({ answer }: AnswerContentProps) {
       fontSize: "13.5px",
       fontFamily: "'Fira Code', 'Monaco', 'Consolas', monospace",
       overflowX: "auto",
-      border: `1px solid ${themeColors.code.border}`,
       marginBottom: "14px",
       color: "#abb2bf",
       "& code.hljs": {
@@ -59,45 +56,33 @@ function AnswerContent({ answer }: AnswerContentProps) {
       },
     },
     "& code:not(.hljs)": {
-      backgroundColor: themeColors.code.bg,
       padding: "2px 6px",
       borderRadius: "4px",
       fontSize: "13px",
       fontFamily: "'Fira Code', 'Monaco', 'Consolas', monospace",
-      border: `1px solid ${themeColors.code.border}`,
     },
     "& blockquote": {
-      borderLeft: `3px solid ${themeColors.ai.primary}`,
       paddingLeft: "16px",
       fontStyle: "italic",
       color: themeColors.textSecondary,
       backgroundColor: "rgba(133, 193, 204, 0.05)",
       margin: "16px 0",
     },
-    "& img": {
-      maxWidth: "100%",
-      borderRadius: "8px",
-      margin: "16px 0",
-      border: `1px solid ${themeColors.borderLight}`,
-    },
+
     "& table": {
       width: "100%",
       borderCollapse: "collapse",
       fontSize: "13px",
       marginBottom: "16px",
-      border: `1px solid ${themeColors.borderLight}`,
     },
     "& th, & td": {
-      border: `1px solid ${themeColors.borderLight}`,
       padding: "10px 12px",
       textAlign: "left",
     },
     "& th": {
-      backgroundColor: themeColors.ai.light,
       fontWeight: 600,
     },
     "& a": {
-      color: themeColors.ai.primary,
       textDecoration: "none",
       fontWeight: 600,
       "&:hover": {

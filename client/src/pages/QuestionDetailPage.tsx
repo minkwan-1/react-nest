@@ -7,28 +7,15 @@ const QuestionDetailPage = () => {
     <PageContainer>
       <Box
         sx={{
-          display: "flex",
-          flexDirection: { xs: "column", md: "row" },
-          gap: { xs: 2, md: 0 },
-          maxWidth: "1000px",
-          mx: "auto",
+          maxWidth: "1200px",
           width: "100%",
           minHeight: "calc(100vh - 80px)",
-          height: { xs: "auto", md: "calc(100vh - 80px)" },
-          overflow: "hidden",
-          position: "relative",
+          mx: "auto",
           padding: "30px",
+          minWidth: 0,
         }}
       >
-        <Box
-          sx={{
-            flex: { xs: "1 1 auto", md: "1.5 1 0%" },
-            minWidth: 0,
-            order: { xs: 1, md: 1 },
-          }}
-        >
-          <MainContent />
-        </Box>
+        <MainContent />
       </Box>
     </PageContainer>
   );

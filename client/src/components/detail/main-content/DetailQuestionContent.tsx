@@ -48,23 +48,24 @@ const DetailQuestionContent = () => {
           bgcolor: "background.paper",
           border: "1px solid",
           borderColor: "divider",
-          "& p": {
+
+          "& .question-content p": {
             mb: 2,
             color: "text.primary",
             lineHeight: 1.7,
           },
-          "& ul, & ol": {
+          "& .question-content ul, & .question-content ol": {
             pl: 3,
             mb: 2,
             "& li": {
               mb: 1,
             },
           },
-          "& strong": {
+          "& .question-content strong": {
             color: "primary.dark",
             fontWeight: 600,
           },
-          "& code": {
+          "& .question-content code": {
             fontFamily: "monospace",
             backgroundColor: (theme) =>
               theme.palette.mode === "dark" ? "grey.800" : "grey.100",
@@ -75,7 +76,8 @@ const DetailQuestionContent = () => {
             border: "1px solid",
             borderColor: "divider",
           },
-          "& img": {
+
+          "& .question-content img": {
             maxWidth: "100%",
             height: "auto",
             borderRadius: "8px",
@@ -85,7 +87,10 @@ const DetailQuestionContent = () => {
           },
         }}
       >
-        <div dangerouslySetInnerHTML={{ __html: question.content }} />
+        <div
+          className="question-content"
+          dangerouslySetInnerHTML={{ __html: question.content }}
+        />
       </Paper>
 
       <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
@@ -106,12 +111,10 @@ const DetailQuestionContent = () => {
             sx={{
               width: 40,
               height: 40,
-              border: "1px solid",
-              borderColor: "divider",
-              bgcolor: "primary.light",
-              color: "primary.contrastText",
-              fontWeight: 600,
-              objectFit: "cover",
+              mr: 1,
+              bgcolor: "b8dae1",
+              fontSize: "14px",
+              fontWeight: "bold",
             }}
             src={data?.profileImageUrl || undefined}
           >
