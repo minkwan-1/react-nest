@@ -14,7 +14,7 @@ const formatDate = (dateInput: string | Date) => {
 
 const UserInfoSection = ({ createdAt, userId }: UserInfoSectionProps) => {
   const theme = useTheme();
-  // const [user] = useAtom(realUserInfo);
+
   const { data: myInfo } = useFetchMyInfo(userId);
 
   return (

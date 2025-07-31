@@ -16,6 +16,8 @@ const TitleAndExcerpt = ({
   const navigate = useNavigate();
 
   const handleTitleClick = (questionId: number | string) => {
+    console.log("제목 클릭: ", questionId);
+
     navigate(`/questions/${questionId}`);
   };
 

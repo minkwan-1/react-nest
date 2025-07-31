@@ -7,10 +7,10 @@ import {
   Typography,
 } from "@mui/material";
 import LiveHelpOutlinedIcon from "@mui/icons-material/LiveHelpOutlined";
-import { useAtom } from "jotai";
+// import { useAtom } from "jotai";
 
-import { realUserInfo } from "@atom/auth";
-import useFetchMyInfo from "@components/my-info/hooks/useFetchMyInfo";
+// import { realUserInfo } from "@atom/auth";
+// import useFetchMyInfo from "@components/my-info/hooks/useFetchMyInfo";
 
 import {
   TagsSection,
@@ -32,7 +32,7 @@ interface Question {
   thumbnail?: string;
   createdAt: string | Date;
   user: User;
-  userId?: string;
+  userId?: string | undefined;
   tags?: string[];
 }
 
@@ -119,10 +119,10 @@ const SkeletonItem = ({
 
 const QuestionList = ({ questions, loading }: QuestionListProps) => {
   const theme = useTheme();
-  const [user] = useAtom(realUserInfo);
-  const { isLoading: isMyInfoLoading } = useFetchMyInfo(user?.id);
+  // const [user] = useAtom(realUserInfo);
+  // const { isLoading: isMyInfoLoading } = useFetchMyInfo(user?.id);
 
-  if (loading || isMyInfoLoading) {
+  if (loading) {
     return (
       <Box sx={{ mt: 2, display: "flex", flexDirection: "column", gap: 2 }}>
         <SkeletonItem withThumbnail={true} />

@@ -3,7 +3,6 @@ import { useParams } from "react-router-dom";
 import { useAtom } from "jotai";
 import { questionsAtom } from "@atom/question";
 import useFetchMyInfo from "@components/my-info/hooks/useFetchMyInfo";
-import { realUserInfo } from "@atom/auth";
 
 const generateAvatarText = (name: string) => name.charAt(0).toUpperCase();
 
@@ -26,12 +25,12 @@ type Question = {
 const DetailQuestionContent = () => {
   const { id } = useParams();
   const [questions] = useAtom(questionsAtom);
-  const [user] = useAtom(realUserInfo);
-  const { data } = useFetchMyInfo(user?.id);
 
   const question = questions?.find(
     (q: Question) => q.id === parseInt(id || "0")
   );
+
+  const { data } = useFetchMyInfo(question?.user.id);
 
   if (!question) {
     return <Typography>질문을 찾을 수 없습니다.</Typography>;

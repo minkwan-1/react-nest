@@ -1,14 +1,8 @@
 import { Box } from "@mui/material";
 import { PageContainer } from "@components/layout/common";
 import { MainContent } from "@components/home";
-import { useAtom } from "jotai";
-import { signupUserInfo } from "@atom/auth";
 
 const HomePage = () => {
-  const [userInfo] = useAtom(signupUserInfo);
-
-  console.log("홈페이지에서 전역 상태(유저) 확인: ", userInfo);
-
   return (
     <PageContainer>
       <Box
@@ -23,7 +17,6 @@ const HomePage = () => {
           position: "relative",
         }}
       >
-        {/* 메인 컨텐츠 영역 */}
         <MainContent />
       </Box>
     </PageContainer>

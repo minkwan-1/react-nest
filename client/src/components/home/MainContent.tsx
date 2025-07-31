@@ -11,7 +11,7 @@ const MainContent = () => {
 
   const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const { data, isLoading } = useQuestions(currentPage, 2, searchQuery);
+  const { data, isLoading } = useQuestions(currentPage, 1, searchQuery);
 
   const handleSearchChange = (searchTerm: string) => {
     if (debounceTimeoutRef.current) {
@@ -31,7 +31,7 @@ const MainContent = () => {
     setCurrentPage(value);
   };
 
-  console.log("페이지네이션 데이터: ", data?.items);
+  console.log("페이지네이션 데이터: ", data);
   return (
     <Box
       sx={{
