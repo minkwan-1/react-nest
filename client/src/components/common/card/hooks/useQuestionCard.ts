@@ -2,7 +2,6 @@ import { useCallback } from "react";
 import { axiosInstance } from "@api/axiosConfig";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useOpenCommonModal } from "@components/common/modal/hook/useOpenCommonModal";
-// import { useNavigate } from "react-router-dom";
 
 interface UseQuestionCardProps {
   questionId: number | string;
@@ -31,7 +30,7 @@ export const useQuestionCard = ({
         data: { userId: variables.userId },
       }),
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["my-questions"] });
+      await queryClient.invalidateQueries({ queryKey: ["questions"] });
     },
     onError: (error) => {
       console.error(error);

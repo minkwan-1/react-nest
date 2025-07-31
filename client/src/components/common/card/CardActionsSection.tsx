@@ -65,7 +65,7 @@ const CardActionsSection = ({
             size="small"
             aria-label="삭제"
             sx={{ color: "#757575" }}
-            onClick={handleDeleteClick}
+            onClick={() => handleDeleteClick()}
           >
             <DeleteOutlineIcon fontSize="small" />
           </IconButton>
