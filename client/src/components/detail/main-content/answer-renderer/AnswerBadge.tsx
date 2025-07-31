@@ -12,7 +12,6 @@ const AnswerBadge = ({ isAiAnswer }: AnswerBadgeProps) => (
       py: 0.5,
       fontSize: "11px",
       fontWeight: 600,
-      color: "white",
       bgcolor: isAiAnswer ? themeColors.ai.primary : themeColors.user.primary,
       borderRadius: "9999px",
       zIndex: 1,

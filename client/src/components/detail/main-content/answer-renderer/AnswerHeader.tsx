@@ -3,13 +3,10 @@ import { getAvatarColor } from "@components/detail/utils/styleUtils";
 import { formatDate } from "@components/detail/utils/formatUtils";
 import { themeColors } from "../../utils/styleUtils";
 import { AnswerHeaderProps } from "@components/detail/types";
-import { useAtom } from "jotai";
-import { realUserInfo } from "@atom/auth";
 import useFetchMyInfo from "@components/my-info/hooks/useFetchMyInfo";
 
 const AnswerHeader = ({ answer }: AnswerHeaderProps) => {
-  const [realUser] = useAtom(realUserInfo);
-  const { data: myInfo } = useFetchMyInfo(realUser?.id);
+  const { data: myInfo } = useFetchMyInfo(answer?.userId);
 
   const userProfileImage =
     !answer.isAiAnswer && myInfo?.profileImageUrl
@@ -18,7 +15,7 @@ const AnswerHeader = ({ answer }: AnswerHeaderProps) => {
 
   const userName = answer.isAiAnswer
     ? "AI Assistant"
-    : realUser?.name ?? "사용자";
+    : myInfo?.nickname ?? "사용자";
 
   return (
     <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
@@ -49,7 +46,7 @@ const AnswerHeader = ({ answer }: AnswerHeaderProps) => {
             fontSize: "15px",
           }}
         >
-          {myInfo?.nickname}
+          {userName}
         </Typography>
         <Typography
           variant="caption"
