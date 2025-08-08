@@ -33,7 +33,10 @@ export const QuestionForm: React.FC<QuestionFormProps> = ({
 }) => {
   const { isPreviewOpen, handlePreviewOpen, handlePreviewClose } =
     usePreviewDialog();
-  console.log(title);
+
+  const isPreviewDisabled =
+    !title.trim() || !content.trim() || tags.length === 0;
+
   return (
     <>
       <Paper
@@ -58,13 +61,22 @@ export const QuestionForm: React.FC<QuestionFormProps> = ({
               gap: { xs: 2, sm: 0 },
             }}
           >
-            <Tooltip title="미리보기">
-              <IconButton
-                onClick={() => handlePreviewOpen()}
-                aria-label="미리보기"
-              >
-                <VisibilityIcon />
-              </IconButton>
+            <Tooltip
+              title={
+                isPreviewDisabled
+                  ? "제목, 내용, 태그를 모두 입력해야 미리보기가 가능합니다."
+                  : "미리보기"
+              }
+            >
+              <span>
+                <IconButton
+                  onClick={handlePreviewOpen}
+                  aria-label="미리보기"
+                  disabled={isPreviewDisabled}
+                >
+                  <VisibilityIcon />
+                </IconButton>
+              </span>
             </Tooltip>
             <SubmitButton isSubmitting={isSubmitting} />
           </Box>
