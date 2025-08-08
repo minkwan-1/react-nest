@@ -11,37 +11,28 @@ export class SessionService {
 
   // [1] 로그인 처리 및 세션 저장
   async loginWithSession(req: Request, user: any): Promise<void> {
-    this.logger.log(`[1] 🚀 세션 로그인 시작: User ID ${user.id}`);
     try {
       await new Promise<void>((resolve, reject) => {
-        this.logger.log(`[1-1] Passport.js 'login' 실행 시도...`);
         (req as any).login(user, (err: any) => {
           if (err) {
-            this.logger.error(`[1-1] ❌ Passport.js 'login' 실패`, err.stack);
             return reject(err);
           }
-          this.logger.log(`[1-1] ✅ Passport.js 'login' 성공`);
           resolve();
         });
       });
 
       const sessionId = req.sessionID;
-      this.logger.log(`[1-2] 🔑 세션 ID 발급 완료: ${sessionId}`);
 
-      this.logger.log(`[1-3] 💾 세션 정보 DB 저장 시도...`);
       await this.sessionRepository.saveSession(
         sessionId,
         user.id,
         user.provider,
         new Date(),
-        new Date(Date.now() + 1000 * 60 * 60 * 24 * 7), // 7일 후 만료
+        new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
         user,
       );
-      this.logger.log(`[1-3] ✅ 세션 정보 DB 저장 성공`);
-      this.logger.log(`[1] 🎉 세션 로그인 절차 완료: User ID ${user.id}`);
     } catch (error) {
-      this.logger.error(`[1] ⚠️ 세션 로그인 중 심각한 오류 발생`, error.stack);
-      throw error; // 에러를 상위로 전파
+      throw error;
     }
   }
 

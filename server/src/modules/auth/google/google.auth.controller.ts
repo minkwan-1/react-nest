@@ -81,20 +81,36 @@ export class GoogleAuthController {
 
   // [POST] 사용자 정보 저장 (최초 회원가입 처리)
   @Post('user/update')
-  async updateUser(@Body() userData: any) {
+  async updateUser(
+    @Body() userData: any,
+    @Req() req: Request,
+    @Res() res: Response,
+  ) {
     console.log('최종 가입 직전 유저 정보: ', userData);
     try {
-      const finalGoogleUser = await this.googleAuthService.createUser(userData);
-
+      // Users 테이블에 최종 사용자 정보 생성
       const finalUser = await this.usersService.create({
         email: userData.email,
         name: userData.name,
         accountID: userData.id,
         phoneNumber: userData.phoneNumber,
       });
-      return { finalGoogleUser, finalUser };
+
+      // 가입 후 즉시 로그인 처리
+      const mergedUser = { ...finalUser, provider: userData.provider };
+      await this.sessionService.loginWithSession(req, mergedUser);
+
+      return res.send({
+        message: '신규 가입 및 로그인 성공',
+        user: { ...mergedUser, isExist: true }, // isExist를 true로 설정
+        sessionId: req.sessionID,
+      });
     } catch (err) {
       console.log(err);
+      throw new HttpException(
+        '회원가입 처리 중 오류가 발생했습니다.',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 }

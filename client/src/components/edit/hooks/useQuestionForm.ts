@@ -46,7 +46,6 @@ export const useQuestionForm = () => {
   const [, setQuestions] = useAtom(questionsAtom);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-
   const [dialog, setDialog] = useState<{
     open: boolean;
     title: string;
@@ -59,7 +58,6 @@ export const useQuestionForm = () => {
 
   const { mutate: submitQuestion, isPending: isSubmitting } = useMutation({
     mutationFn: createQuestion,
-    // ✨ 2. onSuccess 콜백을 async로 만들고, 새로운 AI 요청 함수를 호출하도록 수정합니다.
     onSuccess: async (createdQuestion) => {
       // ✨ 스켈레톤 테스트를 위한 1.5초 지연
       await new Promise((resolve) => setTimeout(resolve, 1500));

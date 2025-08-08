@@ -6,7 +6,6 @@ const SignInSocialButtons = () => {
   const theme = useTheme();
 
   const handleOAuthLogin = (provider: string): void => {
-    console.log("#로그인 버튼 클릭 시 provider: ", provider);
     try {
       window.location.href = `${API_URL}auth/${provider}/callback`;
     } catch (error) {

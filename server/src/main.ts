@@ -3,7 +3,10 @@ import { AppModule } from './app.module';
 import * as dotenv from 'dotenv';
 import * as cookieParser from 'cookie-parser';
 import * as session from 'express-session';
+
 import * as passport from 'passport';
+
+console.log(passport);
 
 // .env 파일 로드
 dotenv.config();
@@ -41,6 +44,12 @@ async function bootstrap() {
 
   // passport
   app.use(passport.initialize());
+
+  console.log(
+    'serializeUser 함수 내용:',
+    passport._sm._serializeUser.toString(),
+  );
+
   app.use(passport.session());
 
   // CSP

@@ -36,7 +36,15 @@ const RightContentArea = () => {
   };
 
   return (
-    <Box sx={{ flex: 1, p: 0, borderRadius: 2, overflowY: "scroll" }}>
+    <Box
+      sx={{
+        flex: 1,
+        p: 0,
+        borderRadius: 2,
+        // border: "1px solid red",
+        overflowY: "scroll",
+      }}
+    >
       <MyQuestion
         questionData={questionData}
         userData={userData}

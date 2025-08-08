@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, ILike } from 'typeorm';
 import { Question } from './questions.entity';
@@ -34,12 +34,12 @@ export class QuestionsService {
   }
 
   async delete(questionId: number, userId: string): Promise<void> {
-    const result = await this.questionsRepository.delete({
+    const result = await this.questionsRepository.softDelete({
       id: questionId,
       user: { id: userId },
     });
     if (result.affected === 0) {
-      throw new Error(
+      throw new NotFoundException(
         `Question with ID ${questionId} not found or not owned by user ${userId}.`,
       );
     }

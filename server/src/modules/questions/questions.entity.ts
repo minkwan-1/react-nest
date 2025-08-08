@@ -4,6 +4,7 @@ import {
   Column,
   ManyToOne,
   CreateDateColumn,
+  DeleteDateColumn,
 } from 'typeorm';
 import { User } from '../users/entities/user.entity';
 
@@ -29,4 +30,7 @@ export class Question {
 
   @ManyToOne(() => User, (user) => user.questions, { nullable: true })
   user: User;
+
+  @DeleteDateColumn()
+  deletedAt?: Date;
 }

@@ -112,16 +112,19 @@ const MyQuestion: React.FC<MyQuestionProps> = ({
   };
 
   return (
-    <>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+        alignItems: "flex-start",
+        // width: "100%",
+        height: "620px",
+      }}
+    >
       {" "}
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <Typography variant="h6" fontWeight="bold" p={1}>
+      <Box sx={{ width: "100%" }}>
+        <Typography variant="h6" fontWeight="bold">
           {koreanContent.popularPosts}
         </Typography>
       </Box>{" "}
@@ -129,16 +132,18 @@ const MyQuestion: React.FC<MyQuestionProps> = ({
         elevation={0}
         sx={{
           p: 1,
-          mb: 1,
+          // border: "1px solid blue",
+          // mb: 1,
 
           // bgcolor: themeColors.cardBg,
           borderRadius: 2,
+          width: "100%",
 
           // border:
           //   theme.palette.mode === "dark"
           //     ? `1px solid ${themeColors.border}`
           //     : "none",
-          height: "74.5vh",
+          // height: "75vh",
           overflowY: "auto",
         }}
       >
@@ -180,7 +185,7 @@ const MyQuestion: React.FC<MyQuestionProps> = ({
           )}
         </Box>
       </Paper>
-    </>
+    </Box>
   );
 };
 

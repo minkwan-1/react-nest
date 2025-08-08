@@ -14,7 +14,6 @@ export class GoogleAuthService {
 
   constructor(private readonly googleAuthRepository: GoogleAuthRepository) {}
 
-  // [1] 구글 인증 URL 생성
   getGoogleAuthUrl(): string {
     try {
       return `https://accounts.google.com/o/oauth2/v2/auth?client_id=${
@@ -30,7 +29,6 @@ export class GoogleAuthService {
     }
   }
 
-  // [2] 인가 코드로 액세스 토큰 요청
   async getToken(code: string): Promise<any> {
     const tokenUrl = 'https://oauth2.googleapis.com/token';
 
@@ -60,7 +58,6 @@ export class GoogleAuthService {
     }
   }
 
-  // [3] 액세스 토큰으로 구글 사용자 정보 조회
   async getUserInfo(accessToken: string): Promise<any> {
     const userInfoUrl = 'https://www.googleapis.com/oauth2/v2/userinfo';
 
@@ -85,7 +82,6 @@ export class GoogleAuthService {
     }
   }
 
-  // [4] 기존 사용자 조회 또는 신규 사용자 데이터 반환
   async findUser(userData: any): Promise<FindUserType> {
     try {
       const user = await this.googleAuthRepository.findUser({
