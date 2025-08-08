@@ -18,6 +18,7 @@ interface PreviewDialogProps {
   handlePreviewClose: () => void;
   title: string;
   content: string;
+  tags: string[];
 }
 
 const PreviewDialog: React.FC<PreviewDialogProps> = ({
@@ -25,8 +26,8 @@ const PreviewDialog: React.FC<PreviewDialogProps> = ({
   handlePreviewClose,
   title,
   content,
+  tags,
 }) => {
-  console.log(title);
   return (
     <Dialog open={isPreviewOpen} maxWidth="md" fullWidth>
       <IconButton
@@ -85,34 +86,18 @@ const PreviewDialog: React.FC<PreviewDialogProps> = ({
               </Box>
             </Stack>
             <Box sx={{ mt: 2, display: "flex", flexWrap: "wrap", gap: 1 }}>
-              {/* Chip - 실제 데이터로 교체 필요 */}
-              <Chip
-                label="React"
-                size="small"
-                sx={{
-                  fontWeight: 500,
-                  fontSize: "0.75rem",
-                  borderRadius: "4px",
-                }}
-              />
-              <Chip
-                label="Tanstack-Query"
-                size="small"
-                sx={{
-                  fontWeight: 500,
-                  fontSize: "0.75rem",
-                  borderRadius: "4px",
-                }}
-              />
-              <Chip
-                label="Data-Fetching"
-                size="small"
-                sx={{
-                  fontWeight: 500,
-                  fontSize: "0.75rem",
-                  borderRadius: "4px",
-                }}
-              />
+              {tags.map((tag) => (
+                <Chip
+                  key={tag}
+                  label={tag}
+                  size="small"
+                  sx={{
+                    fontWeight: 500,
+                    fontSize: "0.75rem",
+                    borderRadius: "4px",
+                  }}
+                />
+              ))}
             </Box>
           </Box>
         </Box>
@@ -165,7 +150,6 @@ const PreviewDialog: React.FC<PreviewDialogProps> = ({
               },
             }}
           >
-            {/* __html - 실제 데이터로 교체 필요 */}
             <div
               className="question-content"
               dangerouslySetInnerHTML={{
