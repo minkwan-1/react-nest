@@ -16,12 +16,15 @@ import CloseIcon from "@mui/icons-material/Close";
 interface PreviewDialogProps {
   isPreviewOpen: boolean;
   handlePreviewClose: () => void;
+  title: string;
 }
 
 const PreviewDialog: React.FC<PreviewDialogProps> = ({
   isPreviewOpen,
   handlePreviewClose,
+  title,
 }) => {
+  console.log(title);
   return (
     <Dialog open={isPreviewOpen} maxWidth="md">
       <IconButton
@@ -60,7 +63,7 @@ const PreviewDialog: React.FC<PreviewDialogProps> = ({
                 fontSize: { xs: "1.5rem", md: "2rem" },
               }}
             >
-              Tanstack-Query란?
+              {title}
             </Typography>
 
             <Stack
@@ -74,11 +77,13 @@ const PreviewDialog: React.FC<PreviewDialogProps> = ({
               <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
                 <AccessTimeIcon fontSize="small" />
                 <Typography variant="body2">
+                  {/* 실제 데이터로 교체 필요 */}
                   2025년 8월 8일 오후 05:27
                 </Typography>
               </Box>
             </Stack>
             <Box sx={{ mt: 2, display: "flex", flexWrap: "wrap", gap: 1 }}>
+              {/* Chip - 실제 데이터로 교체 필요 */}
               <Chip
                 label="React"
                 size="small"
@@ -158,6 +163,7 @@ const PreviewDialog: React.FC<PreviewDialogProps> = ({
               },
             }}
           >
+            {/* __html - 실제 데이터로 교체 필요 */}
             <div
               className="question-content"
               dangerouslySetInnerHTML={{
@@ -191,10 +197,12 @@ const PreviewDialog: React.FC<PreviewDialogProps> = ({
                   fontWeight: "bold",
                 }}
               >
+                {/* 실제 데이터로 교체 필요 */}
                 K.W
               </Avatar>
               <Box>
                 <Typography variant="body1" sx={{ fontWeight: 600 }}>
+                  {/* 실제 데이터로 교체 필요 */}
                   김철수
                 </Typography>
                 <Typography

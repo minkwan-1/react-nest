@@ -33,6 +33,7 @@ export const QuestionForm: React.FC<QuestionFormProps> = ({
 }) => {
   const { isPreviewOpen, handlePreviewOpen, handlePreviewClose } =
     usePreviewDialog();
+  console.log(title);
   return (
     <>
       <Paper
@@ -72,6 +73,7 @@ export const QuestionForm: React.FC<QuestionFormProps> = ({
       <PreviewDialog
         isPreviewOpen={isPreviewOpen}
         handlePreviewClose={handlePreviewClose}
+        title={title}
       />
     </>
   );
