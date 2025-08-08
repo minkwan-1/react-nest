@@ -43,7 +43,7 @@ export const useQuestionForm = () => {
   const [previewMode, setPreviewMode] = useState(false);
 
   const [userInfo] = useAtom(realUserInfo);
-  const [, setQuestions] = useAtom(questionsAtom);
+  const [question, setQuestions] = useAtom(questionsAtom);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [dialog, setDialog] = useState<{
@@ -135,5 +135,6 @@ export const useQuestionForm = () => {
     resetForm,
     dialog,
     setDialog,
+    question,
   };
 };
