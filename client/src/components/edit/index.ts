@@ -6,6 +6,7 @@ import SubmitButton from "./SubmitButton";
 import { PageHeader } from "./layout/PageHeader";
 import { BackgroundElements } from "./layout/BackgroundElements";
 import { useQuestionForm } from "./hooks/useQuestionForm";
+import PreviewDialog from "./PreviewDialog";
 
 export {
   TitleField,
@@ -16,4 +17,5 @@ export {
   PageHeader,
   BackgroundElements,
   useQuestionForm,
+  PreviewDialog,
 };
