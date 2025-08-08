@@ -17,16 +17,18 @@ interface PreviewDialogProps {
   isPreviewOpen: boolean;
   handlePreviewClose: () => void;
   title: string;
+  content: string;
 }
 
 const PreviewDialog: React.FC<PreviewDialogProps> = ({
   isPreviewOpen,
   handlePreviewClose,
   title,
+  content,
 }) => {
   console.log(title);
   return (
-    <Dialog open={isPreviewOpen} maxWidth="md">
+    <Dialog open={isPreviewOpen} maxWidth="md" fullWidth>
       <IconButton
         aria-label="close"
         onClick={handlePreviewClose}
@@ -167,8 +169,7 @@ const PreviewDialog: React.FC<PreviewDialogProps> = ({
             <div
               className="question-content"
               dangerouslySetInnerHTML={{
-                __html:
-                  "<p>Tanstack-Query는 데이터 패칭, 캐싱, 동기화, 그리고 서버 상태 관리를 위한 강력한 라이브러리입니다. 특히 React, Vue, Svelte와 같은 UI 프레임워크와 함께 사용될 때 <strong>매우 효과적입니다</strong>.</p><h3>주요 기능</h3><ul><li>자동 캐싱과 데이터 갱신</li><li>백그라운드에서 오래된 데이터 무효화</li><li>손쉬운 Pagination 및 Infinite Scroll 구현</li><li>성능 최적화를 위한 윈도우 포커스 시 재요청</li></ul><p>이러한 기능 덕분에 개발자는 데이터 관리에 들이는 시간을 줄이고, 애플리케이션의 <strong>핵심 비즈니스 로직</strong>에 더 집중할 수 있습니다.</p><code>const { data, isLoading } = useQuery('todos', fetchTodos);</code><p>위 코드는 Tanstack-Query를 사용하여 'todos' 데이터를 가져오는 간단한 예시입니다.</p>",
+                __html: content,
               }}
             />
           </Paper>

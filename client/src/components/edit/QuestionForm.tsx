@@ -74,6 +74,7 @@ export const QuestionForm: React.FC<QuestionFormProps> = ({
         isPreviewOpen={isPreviewOpen}
         handlePreviewClose={handlePreviewClose}
         title={title}
+        content={content}
       />
     </>
   );
