@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import {
   HomePage,
   MyPage,
@@ -21,6 +21,13 @@ import Commonsnackbar from "@components/common/snackbar/CommonSnackbar";
 
 const App = () => {
   const [realUser] = useAtom(realUserInfo);
+  const location = useLocation();
+
+  const hideOnExactPaths = ["/", "/start", "/phone", "/redirect", "/edit"];
+
+  const shouldHide =
+    hideOnExactPaths.includes(location.pathname) ||
+    location.pathname.startsWith("/modify/");
 
   return (
     <>
@@ -42,7 +49,9 @@ const App = () => {
         <Route path="/redirect" element={<RedirectPage />} />
         <Route path="/phone" element={<PhoneVerificationPage />} />
       </Routes>
-      <GlobalActionButton />
+
+      {!shouldHide && <GlobalActionButton />}
+
       <AuthRedirectModal />
       <CommonErrorModal />
       <Commonsnackbar />

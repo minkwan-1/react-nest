@@ -59,7 +59,6 @@ export const useQuestionForm = () => {
   const { mutate: submitQuestion, isPending: isSubmitting } = useMutation({
     mutationFn: createQuestion,
     onSuccess: async (createdQuestion) => {
-      // ✨ 스켈레톤 테스트를 위한 1.5초 지연
       await new Promise((resolve) => setTimeout(resolve, 1500));
 
       // 질문 목록 관련 쿼리를 무효화하여 다른 페이지에서 최신 목록을 볼 수 있도록 합니다.
