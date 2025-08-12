@@ -1,69 +1,391 @@
-import { Box, Fade } from "@mui/material";
+import { ReactNode } from "react";
+import {
+  Box,
+  Typography,
+  Button,
+  Container,
+  Chip,
+  Paper,
+  Fade,
+  Slide,
+  Grow,
+  useTheme,
+} from "@mui/material";
 import { useInView } from "react-intersection-observer";
 import { PageContainer } from "@components/layout/common";
-import {
-  HeroSection,
-  StatsSection,
-  FeaturesSection,
-  PopularTagsSection,
-  CTASection,
-} from "@components/landing";
+import { useNavigate } from "react-router-dom";
 
-const LandingPage = () => {
-  const commonOptions = {
+import QuestionAnswerIcon from "@mui/icons-material/QuestionAnswer";
+import GroupIcon from "@mui/icons-material/Group";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import { aiImage, humanImage, knowledge } from "../images/index";
+
+type AnimatedSectionProps = {
+  children: ReactNode;
+  animation?: "fade" | "slideUp" | "grow";
+  timeout?: number;
+  direction?: "left" | "right" | "up" | "down";
+};
+
+const AnimatedSection = ({
+  children,
+  animation = "slideUp",
+  timeout = 1000,
+  direction = "up",
+}: AnimatedSectionProps) => {
+  const { ref, inView } = useInView({
     triggerOnce: true,
-    threshold: 0.1,
-  };
+    threshold: 0.2,
+  });
 
-  const { ref: heroRef, inView: heroInView } = useInView(commonOptions);
-  const { ref: statsRef, inView: statsInView } = useInView(commonOptions);
-  const { ref: featuresRef, inView: featuresInView } = useInView(commonOptions);
-  const { ref: tagsRef, inView: tagsInView } = useInView(commonOptions);
-  const { ref: ctaRef, inView: ctaInView } = useInView(commonOptions);
+  const AnimationComponent = {
+    fade: Fade,
+    slideUp: Slide,
+    grow: Grow,
+  }[animation];
+
+  const animationProps = animation === "slideUp" ? { direction } : {};
 
   return (
-    <PageContainer>
-      <Box>
-        <div ref={heroRef}>
-          <Fade in={heroInView} timeout={1000}>
-            <div>
-              <HeroSection />
-            </div>
-          </Fade>
-        </div>
+    <div ref={ref}>
+      <AnimationComponent in={inView} timeout={timeout} {...animationProps}>
+        <div>{children}</div>
+      </AnimationComponent>
+    </div>
+  );
+};
 
-        <div ref={statsRef}>
-          <Fade in={statsInView} timeout={1000}>
-            <div>
-              <StatsSection />
-            </div>
-          </Fade>
-        </div>
+const HeroSection = () => {
+  const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.3 });
+  const theme = useTheme();
 
-        <div ref={featuresRef}>
-          <Fade in={featuresInView} timeout={1000}>
-            <div>
-              <FeaturesSection />
-            </div>
-          </Fade>
-        </div>
+  const stats = [
+    {
+      icon: <QuestionAnswerIcon fontSize="large" />,
+      value: "10만+",
+      label: "누적 질문과 답변",
+    },
+    {
+      icon: <GroupIcon fontSize="large" />,
+      value: "1,500+",
+      label: "답변 전문가",
+    },
+    {
+      icon: <CheckCircleOutlineIcon fontSize="large" />,
+      value: "98%",
+      label: "답변 채택률",
+    },
+  ];
 
-        <div ref={tagsRef}>
-          <Fade in={tagsInView} timeout={1000}>
-            <div>
-              <PopularTagsSection />
-            </div>
-          </Fade>
-        </div>
+  return (
+    <Box ref={ref} sx={{ textAlign: "center" }}>
+      <Container
+        maxWidth="lg"
+        sx={{
+          minHeight: "90vh",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Slide in={inView} direction="down" timeout={1000}>
+          <Typography
+            component="h1"
+            sx={{
+              fontWeight: "bold",
+              mb: 5,
+              fontSize: { xs: "2.5rem", sm: "3.2rem", md: "3.75rem" },
+            }}
+          >
+            답답한 문제의 Pullim
+          </Typography>
+        </Slide>
+        <Fade in={inView} timeout={1400} style={{ transitionDelay: "700ms" }}>
+          <Typography
+            component="p"
+            sx={{
+              mb: 8,
+              fontSize: { xs: "1.1rem", md: "1.25rem" },
+            }}
+          >
+            프로그래밍 문제에 대해 AI의 답변과 개발자들의 답변을 동시에
+            제시합니다. <br /> 개발자의 모든 궁금증, 여기서 끝내세요.
+          </Typography>
+        </Fade>
 
-        <div ref={ctaRef}>
-          <Fade in={ctaInView} timeout={1000}>
-            <div>
-              <CTASection />
-            </div>
-          </Fade>
-        </div>
+        <Box
+          sx={{
+            display: "flex",
+            flexWrap: "wrap",
+            justifyContent: "center",
+            alignItems: "center",
+            width: "100%",
+            gap: theme.spacing(4),
+          }}
+        >
+          {stats.map((stat, index) => (
+            <Box
+              key={index}
+              sx={{
+                width: { xs: "100%", sm: "calc(50% - 16px)", md: "30%" },
+                minWidth: "280px",
+              }}
+            >
+              <AnimatedSection timeout={800 + index * 500}>
+                <Paper
+                  sx={{
+                    p: 4,
+                    textAlign: "center",
+                    borderRadius: "16px",
+                    height: "100%",
+                    transition: "transform 0.3s ease-in-out",
+                    "&:hover": {
+                      transform: "translateY(-8px)",
+                    },
+                  }}
+                >
+                  <Box sx={{ mb: 2 }}>{stat.icon}</Box>
+                  <Typography
+                    sx={{
+                      fontWeight: "bold",
+                      fontSize: { xs: "2.5rem", md: "3rem" },
+                    }}
+                  >
+                    {stat.value}
+                  </Typography>
+                  <Typography variant="body1">{stat.label}</Typography>
+                </Paper>
+              </AnimatedSection>
+            </Box>
+          ))}
+        </Box>
+      </Container>
+    </Box>
+  );
+};
+
+const Feature = ({
+  imageUrl,
+  title,
+  description,
+  imageSide = "left",
+}: {
+  imageUrl: string;
+  title: string;
+  description: string;
+  imageSide?: "left" | "right";
+}) => {
+  return (
+    <AnimatedSection
+      animation="slideUp"
+      direction={imageSide === "left" ? "right" : "left"}
+    >
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          gap: { xs: 4, md: 8 },
+          flexDirection: {
+            xs: "column",
+            md: imageSide === "left" ? "row" : "row-reverse",
+          },
+          mb: 10,
+        }}
+      >
+        <Box sx={{ width: "100%", flex: { md: "1 1 30%" } }}>
+          <Box
+            sx={{
+              borderRadius: "20px",
+              overflow: "hidden",
+              minHeight: 300,
+              height: "100%",
+            }}
+          >
+            <Box
+              component="img"
+              src={imageUrl}
+              alt={title}
+              sx={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+                transition: "transform 0.4s ease-in-out",
+                "&:hover": {
+                  transform: "scale(1.05)",
+                },
+              }}
+            />
+          </Box>
+        </Box>
+        <Box sx={{ width: "100%", flex: { md: "1 1 70%" } }}>
+          <Typography
+            fontWeight="bold"
+            gutterBottom
+            sx={{ fontSize: { xs: "1.8rem", md: "2.125rem" } }}
+          >
+            {title}
+          </Typography>
+          <Typography variant="body1">{description}</Typography>
+        </Box>
       </Box>
+    </AnimatedSection>
+  );
+};
+
+const FeaturesSection = () => {
+  return (
+    <Box sx={{ py: 10 }}>
+      <Container maxWidth="lg">
+        <Typography
+          fontWeight="bold"
+          textAlign="center"
+          sx={{
+            mb: 10,
+            fontSize: { xs: "2.2rem", md: "3rem" },
+          }}
+        >
+          Pullim의 주요 기능
+        </Typography>
+        <Feature
+          imageUrl={aiImage}
+          title="AI의 즉각적인 답변"
+          description="질문을 등록하는 순간, AI가 즉시 답변 초안을 생성해드립니다. 기다림 없이 문제 해결의 첫 걸음을 내딛으세요."
+          imageSide="left"
+        />
+        <Feature
+          imageUrl={humanImage}
+          title="검증된 전문가의 깊이 있는 해결책"
+          description="AI의 답변으로 부족했다면, 현직 개발자 및 분야별 전문가들이 직접 코드 리뷰와 함께 명쾌한 해결책을 제시합니다."
+          imageSide="right"
+        />
+        <Feature
+          imageUrl={knowledge}
+          title="성장으로 이어지는 지식 아카이브"
+          description="해결된 질문과 답변들은 누구나 쉽게 찾아볼 수 있는 지식의 보고가 됩니다. 다른 개발자들의 고민을 통해 함께 성장하세요."
+          imageSide="left"
+        />
+      </Container>
+    </Box>
+  );
+};
+
+const PopularTagsSection = () => {
+  const tags = [
+    "React",
+    "TypeScript",
+    "Next.js",
+    "MUI",
+    "LandingPage",
+    "Animation",
+    "Design",
+    "Frontend",
+    "Creative",
+    "Modern UI",
+  ];
+
+  return (
+    <Box sx={{ py: 10 }}>
+      <Container maxWidth="md">
+        <Typography
+          fontWeight="bold"
+          textAlign="center"
+          sx={{
+            mb: 6,
+            fontSize: { xs: "2.2rem", md: "3rem" },
+          }}
+        >
+          인기 태그
+        </Typography>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            flexWrap: "wrap",
+            gap: 2,
+          }}
+        >
+          {tags.map((tag, index) => (
+            <AnimatedSection
+              key={index}
+              animation="grow"
+              timeout={500 + index * 100}
+            >
+              <Chip
+                label={tag}
+                sx={{
+                  fontSize: { xs: "0.875rem", md: "1rem" },
+                  p: 2.5,
+                  borderRadius: "50px",
+                  fontWeight: "medium",
+                  "&:hover": {
+                    transform: "scale(1.05)",
+                  },
+                  transition: "transform 0.2s",
+                }}
+              />
+            </AnimatedSection>
+          ))}
+        </Box>
+      </Container>
+    </Box>
+  );
+};
+
+const CTASection = () => {
+  const navigate = useNavigate();
+  return (
+    <Box sx={{ py: 12 }}>
+      <Container maxWidth="md">
+        <AnimatedSection animation="fade" timeout={1500}>
+          <Box sx={{ textAlign: "center" }}>
+            <Typography
+              fontWeight="bold"
+              sx={{
+                mb: 3,
+                fontSize: { xs: "2.2rem", md: "3rem" },
+              }}
+            >
+              이제 당신의 문제를 해결할 시간입니다
+            </Typography>
+            <Typography
+              sx={{
+                mb: 4,
+                fontSize: { xs: "1rem", md: "1.25rem" },
+              }}
+            >
+              혼자 고민하는 시간은 그만. Pullim의 지성이 당신의 성장을
+              가속화합니다.
+            </Typography>
+            <Button
+              onClick={() => navigate("/home")}
+              size="large"
+              sx={{
+                py: 1.5,
+                px: 6,
+                fontSize: { xs: "1rem", md: "1.1rem" },
+                borderRadius: "50px",
+                fontWeight: "bold",
+                bgcolor: "#b8dae1",
+                color: "black",
+              }}
+            >
+              더 알아보기
+            </Button>
+          </Box>
+        </AnimatedSection>
+      </Container>
+    </Box>
+  );
+};
+
+const LandingPage = () => {
+  return (
+    <PageContainer>
+      <HeroSection />
+      <FeaturesSection />
+      <PopularTagsSection />
+      <CTASection />
     </PageContainer>
   );
 };

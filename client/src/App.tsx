@@ -14,13 +14,10 @@ import {
 } from "./pages";
 import AuthRedirectModal from "@components/common/modal/AuthRedirectModal";
 import CommonErrorModal from "@components/common/modal/CommonModal";
-import { useAtom } from "jotai";
-import { realUserInfo } from "@atom/auth";
 import { GlobalActionButton } from "@components/home";
 import Commonsnackbar from "@components/common/snackbar/CommonSnackbar";
 
 const App = () => {
-  const [realUser] = useAtom(realUserInfo);
   const location = useLocation();
 
   const hideOnExactPaths = ["/", "/start", "/phone", "/redirect", "/edit"];
@@ -32,10 +29,7 @@ const App = () => {
   return (
     <>
       <Routes>
-        <Route
-          path="/"
-          element={realUser ? <NotFoundPage /> : <LandingPage />}
-        />
+        <Route path="/" element={<LandingPage />} />
         <Route path="/home" element={<HomePage />} />
         <Route path="/my" element={<MyPage />} />
         <Route path="/my/edit" element={<MyInfoEditPage />} />
