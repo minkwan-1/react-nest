@@ -18,7 +18,6 @@ const SearchBar = ({ onSearchChange }: SearchBarProps) => {
   return (
     <Box sx={{ display: "flex", gap: 2, marginBottom: 4 }}>
       <TextField
-        variant="outlined"
         placeholder="원하는 주제를 찾아보세요"
         value={searchTerm}
         onChange={handleChange}
@@ -36,7 +35,7 @@ const SearchBar = ({ onSearchChange }: SearchBarProps) => {
               boxShadow: "0 3px 8px rgba(3,203,132,0.25)",
             },
             "&.Mui-focused fieldset": {
-              borderColor: "primary.main",
+              borderColor: "transparent",
             },
           },
         }}

@@ -15,21 +15,23 @@ import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 
 const HeroSection = () => {
   const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.3 });
+  console.log("ref는: ", ref);
+  console.log("inView는: ", inView);
   const theme = useTheme();
 
   const stats = [
     {
-      icon: <QuestionAnswerIcon fontSize="large" />,
+      icon: <QuestionAnswerIcon fontSize="medium" />,
       value: "10K+",
       label: "누적 질문과 답변",
     },
     {
-      icon: <GroupIcon fontSize="large" />,
+      icon: <GroupIcon fontSize="medium" />,
       value: "1,500+",
       label: "답변 전문가",
     },
     {
-      icon: <CheckCircleOutlineIcon fontSize="large" />,
+      icon: <CheckCircleOutlineIcon fontSize="medium" />,
       value: "98%",
       label: "답변 채택률",
     },
