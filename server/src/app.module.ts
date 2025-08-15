@@ -15,6 +15,7 @@ import { AiModule } from './modules/ai/ai.module';
 import { SelfIntroModule } from './modules/self-intro/self-intro.module';
 import { MyInfoModule } from './modules/myInfo/myInfo.module';
 import { AnswerModule } from './modules/answer/answer.module';
+import { NewsModule } from './modules/news/news.module';
 
 // 전역 필터
 import { CatchEverythingFilter } from './filters/catch-everything.filter';
@@ -35,6 +36,7 @@ import { HttpExceptionFilter } from './filters/http-exceptions.filter';
     SelfIntroModule,
     MyInfoModule,
     AnswerModule,
+    NewsModule,
   ],
   providers: [
     // 전역 필터
