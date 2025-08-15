@@ -11,6 +11,7 @@ import verification1 from "./verification1.png";
 import aiImage from "./landing_ai-removebg.png";
 import humanImage from "./landing_code-removebg-preview.png";
 import knowledge from "./isometric-icon-Knowledge-workers-un-by-bnbicons.com-removebg-preview.png";
+import robot from "./robot.png";
 
 export {
   google,
@@ -26,4 +27,5 @@ export {
   aiImage,
   humanImage,
   knowledge,
+  robot,
 };

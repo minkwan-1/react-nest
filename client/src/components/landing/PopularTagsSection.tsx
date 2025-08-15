@@ -3,16 +3,21 @@ import { AnimatedSection } from "@components/landing";
 
 const PopularTagsSection = () => {
   const tags = [
-    "React",
+    "JavaScript",
     "TypeScript",
-    "Next.js",
-    "MUI",
-    "LandingPage",
-    "Animation",
-    "Design",
-    "Frontend",
-    "Creative",
-    "Modern UI",
+    "React",
+    "Node.js",
+    "Python",
+    "Java",
+    "Spring",
+    "SQL",
+    "MongoDB",
+    "AWS",
+    "Docker",
+    "Kubernetes",
+    "iOS",
+    "Android",
+    "AI",
   ];
 
   return (
@@ -46,7 +51,7 @@ const PopularTagsSection = () => {
                 label={tag}
                 sx={{
                   fontSize: { xs: "0.875rem", md: "1rem" },
-                  p: 2.5,
+                  p: 1,
                   borderRadius: "50px",
                   fontWeight: "medium",
                   "&:hover": {

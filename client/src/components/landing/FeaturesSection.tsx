@@ -1,5 +1,5 @@
 import { Box, Typography, Container } from "@mui/material";
-import { aiImage, humanImage, knowledge } from "../../images/index";
+import { robot, humanImage, knowledge } from "../../images/index";
 import { Feature } from "./index";
 
 const FeaturesSection = () => {
@@ -17,7 +17,7 @@ const FeaturesSection = () => {
           Pullim의 주요 기능
         </Typography>
         <Feature
-          imageUrl={aiImage}
+          imageUrl={robot}
           title="AI의 즉각적인 답변"
           description="질문을 등록하는 순간, AI가 즉시 답변 초안을 생성해드립니다. 기다림 없이 문제 해결의 첫 걸음을 내딛으세요."
           imageSide="left"

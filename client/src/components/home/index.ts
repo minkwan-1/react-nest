@@ -10,6 +10,7 @@ import CardSubtitle from "./CardSubtitle";
 import CardActionsSection from "./CardActionsSection";
 import ThumbnailSection from "./ThumbnailSection";
 import HomeQuestionCard from "./HomeQuestionCard";
+import NewsSlider from "./NewsSlider";
 
 export {
   SectionDivider,
@@ -24,4 +25,5 @@ export {
   CardActionsSection,
   ThumbnailSection,
   HomeQuestionCard,
+  NewsSlider,
 };

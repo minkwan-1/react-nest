@@ -1,6 +1,7 @@
+// MainContent.tsx
 import { Box } from "@mui/material";
 import { useState, useRef } from "react";
-import { HomePageTitle, SearchBar } from "@components/home/index";
+import { HomePageTitle, SearchBar, NewsSlider } from "@components/home/index";
 import { ComponentWrapper } from "@components/layout/common";
 import { QuestionPagination, QuestionList } from "./main/index";
 import { useQuestions } from "./hooks/useQuestions";
@@ -32,6 +33,7 @@ const MainContent = () => {
   };
 
   console.log("페이지네이션 데이터: ", data);
+
   return (
     <Box
       sx={{
@@ -42,8 +44,11 @@ const MainContent = () => {
       }}
     >
       <ComponentWrapper sx={{ maxWidth: "1200px" }}>
+        <NewsSlider />
         <HomePageTitle />
+
         <SearchBar onSearchChange={handleSearchChange} />
+
         <QuestionList
           questions={data?.items || []}
           loading={isLoading}

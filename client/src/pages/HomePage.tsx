@@ -1,3 +1,4 @@
+// HomePage.tsx
 import { Box } from "@mui/material";
 import { PageContainer } from "@components/layout/common";
 import { MainContent } from "@components/home";
@@ -17,7 +18,9 @@ const HomePage = () => {
           position: "relative",
         }}
       >
-        <MainContent />
+        <Box sx={{ flex: 1, minWidth: 0 }}>
+          <MainContent />
+        </Box>
       </Box>
     </PageContainer>
   );

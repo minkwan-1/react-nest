@@ -15,8 +15,7 @@ import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 
 const HeroSection = () => {
   const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.3 });
-  console.log("ref는: ", ref);
-  console.log("inView는: ", inView);
+
   const theme = useTheme();
 
   const stats = [
