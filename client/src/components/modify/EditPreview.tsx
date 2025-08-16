@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import {
   Box,
   Paper,
@@ -9,36 +8,33 @@ import {
   Chip,
   IconButton,
   Avatar,
-  Skeleton,
-  useTheme,
 } from "@mui/material";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import CloseIcon from "@mui/icons-material/Close";
-import useFetchMyInfo from "@components/my-info/hooks/useFetchMyInfo";
-import hljs from "highlight.js";
 
-interface PreviewDialogProps {
+interface EditPreviewProps {
   isPreviewOpen: boolean;
   handlePreviewClose: () => void;
   title: string;
   content: string;
   tags: string[];
-  previewDate: Date | null;
-  userId: string | undefined;
+  createdDate: string | undefined;
+  author: string | undefined;
+  authorProfileImage: string | undefined;
 }
 
-const PreviewDialog: React.FC<PreviewDialogProps> = ({
+const EditPreview: React.FC<EditPreviewProps> = ({
   isPreviewOpen,
   handlePreviewClose,
   title,
   content,
   tags,
-  previewDate,
-  userId,
+  createdDate,
+  author,
+  authorProfileImage,
 }) => {
-  const theme = useTheme();
-  const formattedDate = previewDate
-    ? previewDate.toLocaleString("ko-KR", {
+  const formattedDate = createdDate
+    ? new Date(createdDate).toLocaleString("ko-KR", {
         year: "numeric",
         month: "long",
         day: "numeric",
@@ -47,29 +43,6 @@ const PreviewDialog: React.FC<PreviewDialogProps> = ({
         hour12: true,
       })
     : "";
-
-  const { data: myInfo, isLoading } = useFetchMyInfo(userId);
-
-  const getInitials = (name?: string) => {
-    if (!name) return "";
-    return name
-      .split(" ")
-      .map((n) => n[0])
-      .join("")
-      .toUpperCase();
-  };
-
-  useEffect(() => {
-    if (theme.palette.mode === "dark") {
-      import("highlight.js/styles/github-dark.css");
-    } else {
-      import("highlight.js/styles/github.css");
-    }
-
-    if (isPreviewOpen) {
-      hljs.highlightAll();
-    }
-  }, [isPreviewOpen, content, theme.palette.mode]);
 
   return (
     <Dialog open={isPreviewOpen} maxWidth="md" fullWidth>
@@ -161,6 +134,8 @@ const PreviewDialog: React.FC<PreviewDialogProps> = ({
                 padding: "1rem",
                 borderRadius: "8px",
                 overflowX: "auto",
+                backgroundColor: (theme) =>
+                  theme.palette.mode === "dark" ? "#0d1117" : "#f6f8fa",
               },
               "& .question-content code": {
                 fontFamily: "monospace",
@@ -215,48 +190,30 @@ const PreviewDialog: React.FC<PreviewDialogProps> = ({
                 minHeight: 80,
               }}
             >
-              {isLoading ? (
-                <>
-                  <Skeleton variant="circular" width={40} height={40} />
-                  <Box>
-                    <Skeleton
-                      variant="text"
-                      sx={{ fontSize: "1rem", width: 80 }}
-                    />
-                    <Skeleton
-                      variant="text"
-                      sx={{ fontSize: "0.8rem", width: 50 }}
-                    />
-                  </Box>
-                </>
-              ) : (
-                <>
-                  <Avatar
-                    sx={{
-                      width: 40,
-                      height: 40,
-                      mr: 1,
-                      bgcolor: "primary.main",
-                      fontSize: "14px",
-                      fontWeight: "bold",
-                    }}
-                    src={myInfo?.profileImageUrl}
+              <>
+                <Avatar
+                  sx={{
+                    width: 40,
+                    height: 40,
+                    mr: 1,
+                    bgcolor: "primary.main",
+                    fontSize: "14px",
+                    fontWeight: "bold",
+                  }}
+                  src={authorProfileImage}
+                ></Avatar>
+                <Box>
+                  <Typography variant="body1" sx={{ fontWeight: 600 }}>
+                    {author}
+                  </Typography>
+                  <Typography
+                    variant="caption"
+                    sx={{ color: "text.secondary", display: "block" }}
                   >
-                    {getInitials(myInfo?.nickname)}
-                  </Avatar>
-                  <Box>
-                    <Typography variant="body1" sx={{ fontWeight: 600 }}>
-                      {myInfo?.nickname}
-                    </Typography>
-                    <Typography
-                      variant="caption"
-                      sx={{ color: "text.secondary", display: "block" }}
-                    >
-                      작성자
-                    </Typography>
-                  </Box>
-                </>
-              )}
+                    작성자
+                  </Typography>
+                </Box>
+              </>
             </Paper>
           </Box>
         </Box>
@@ -265,4 +222,4 @@ const PreviewDialog: React.FC<PreviewDialogProps> = ({
   );
 };
 
-export default PreviewDialog;
+export default EditPreview;

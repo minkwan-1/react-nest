@@ -12,12 +12,15 @@ import {
   useModifyQuestionSubmit,
 } from "@components/modify/hooks/index";
 
+import useFetchMyInfo from "@components/my-info/hooks/useFetchMyInfo";
+
 const ModifyQuestionPage = () => {
   const mainColor = "#b8dae1";
   const { id } = useParams();
   const [userInfo] = useAtom(realUserInfo);
-
   const { question, loading } = useQuestionDetail(id);
+  const { data } = useFetchMyInfo(question?.userId);
+
   const { title, setTitle, content, setContent, tags, setTags, isFormValid } =
     useQuestionForm(question);
 
@@ -32,6 +35,13 @@ const ModifyQuestionPage = () => {
   );
 
   if (loading) return <LoadingScreen />;
+
+  const createdDate = question?.createdAt;
+
+  const author = data?.nickname;
+  const authorProfileImage = data?.profileImageUrl;
+
+  console.log(author);
 
   return (
     <PageContainer>
@@ -60,6 +70,9 @@ const ModifyQuestionPage = () => {
             setTags={setTags}
             isSubmitting={isSubmitting}
             isFormValid={isFormValid}
+            createdDate={createdDate}
+            author={author}
+            authorProfileImage={authorProfileImage}
           />
         </Box>
       </Container>

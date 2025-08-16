@@ -16,7 +16,7 @@ const ModifyQuestionSubmitButton = ({
         display: "flex",
         justifyContent: "flex-end",
         alignItems: "center",
-        mt: 4,
+
         flexDirection: { xs: "column", sm: "row" },
         gap: { xs: 2, sm: 0 },
       }}

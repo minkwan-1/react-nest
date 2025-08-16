@@ -8,6 +8,7 @@ import QuestionEditor from "./QuestionEditor";
 import ModifyQuestionSubmitButton from "./ModifyQuestionSubmitButton";
 import TagsField from "./TagsField";
 import QuestionForm from "./QuestionForm";
+import EditPreview from "./EditPreview";
 
 export {
   BackgroundElements,
@@ -20,4 +21,5 @@ export {
   ModifyQuestionSubmitButton,
   TagsField,
   QuestionForm,
+  EditPreview,
 };
