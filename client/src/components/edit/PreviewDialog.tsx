@@ -19,6 +19,7 @@ interface PreviewDialogProps {
   title: string;
   content: string;
   tags: string[];
+  previewDate: Date | null;
 }
 
 const PreviewDialog: React.FC<PreviewDialogProps> = ({
@@ -27,7 +28,18 @@ const PreviewDialog: React.FC<PreviewDialogProps> = ({
   title,
   content,
   tags,
+  previewDate,
 }) => {
+  const formattedDate = previewDate
+    ? previewDate.toLocaleString("ko-KR", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "numeric",
+        minute: "numeric",
+        hour12: true,
+      })
+    : "";
   return (
     <Dialog open={isPreviewOpen} maxWidth="md" fullWidth>
       <IconButton
@@ -81,7 +93,7 @@ const PreviewDialog: React.FC<PreviewDialogProps> = ({
                 <AccessTimeIcon fontSize="small" />
                 <Typography variant="body2">
                   {/* 실제 데이터로 교체 필요 */}
-                  2025년 8월 8일 오후 05:27
+                  {formattedDate}
                 </Typography>
               </Box>
             </Stack>

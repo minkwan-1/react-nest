@@ -22,7 +22,8 @@ const SearchBar = ({ onSearchChange }: SearchBarProps) => {
         value={searchTerm}
         onChange={handleChange}
         sx={{
-          width: 400,
+          width: "100%",
+          margin: "5px",
           "& .MuiOutlinedInput-root": {
             borderRadius: 10,
             boxShadow: "0 1px 3px rgba(0,0,0,0.1)",

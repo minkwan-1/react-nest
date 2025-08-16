@@ -31,7 +31,7 @@ export const QuestionForm: React.FC<QuestionFormProps> = ({
   isSubmitting = false,
   onSubmit,
 }) => {
-  const { isPreviewOpen, handlePreviewOpen, handlePreviewClose } =
+  const { isPreviewOpen, handlePreviewOpen, handlePreviewClose, previewDate } =
     usePreviewDialog();
 
   const isPreviewDisabled =
@@ -88,6 +88,7 @@ export const QuestionForm: React.FC<QuestionFormProps> = ({
         title={title}
         content={content}
         tags={tags}
+        previewDate={previewDate}
       />
     </>
   );

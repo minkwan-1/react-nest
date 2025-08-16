@@ -44,10 +44,11 @@ const MainContent = () => {
       }}
     >
       <ComponentWrapper sx={{ maxWidth: "1200px" }}>
-        <NewsSlider />
         <HomePageTitle />
 
         <SearchBar onSearchChange={handleSearchChange} />
+
+        <NewsSlider />
 
         <QuestionList
           questions={data?.items || []}
