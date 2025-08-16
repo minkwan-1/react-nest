@@ -8,10 +8,11 @@ import {
   Chip,
   IconButton,
   Avatar,
+  Skeleton,
 } from "@mui/material";
-
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import CloseIcon from "@mui/icons-material/Close";
+import useFetchMyInfo from "@components/my-info/hooks/useFetchMyInfo";
 
 interface PreviewDialogProps {
   isPreviewOpen: boolean;
@@ -20,6 +21,7 @@ interface PreviewDialogProps {
   content: string;
   tags: string[];
   previewDate: Date | null;
+  userId: string | undefined;
 }
 
 const PreviewDialog: React.FC<PreviewDialogProps> = ({
@@ -29,6 +31,7 @@ const PreviewDialog: React.FC<PreviewDialogProps> = ({
   content,
   tags,
   previewDate,
+  userId,
 }) => {
   const formattedDate = previewDate
     ? previewDate.toLocaleString("ko-KR", {
@@ -40,6 +43,18 @@ const PreviewDialog: React.FC<PreviewDialogProps> = ({
         hour12: true,
       })
     : "";
+
+  const { data: myInfo, isLoading } = useFetchMyInfo(userId);
+
+  const getInitials = (name?: string) => {
+    if (!name) return "";
+    return name
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
+      .toUpperCase();
+  };
+
   return (
     <Dialog open={isPreviewOpen} maxWidth="md" fullWidth>
       <IconButton
@@ -57,60 +72,47 @@ const PreviewDialog: React.FC<PreviewDialogProps> = ({
       <DialogContent dividers>
         <Box
           sx={{
-            flex: 1.5,
-            pr: { xs: "0", sm: "0", md: "2" },
-            overflowY: "auto",
-            height: "100%",
+            padding: "0 0 24px",
           }}
         >
-          <Box
+          <Typography
+            variant="h4"
+            component="h1"
             sx={{
-              padding: "0 0 24px",
+              fontWeight: 700,
+              mb: 2,
+              fontSize: { xs: "1.5rem", md: "2rem" },
             }}
           >
-            <Typography
-              variant="h4"
-              component="h1"
-              sx={{
-                fontWeight: 700,
+            {title}
+          </Typography>
 
-                mb: 2,
-                fontSize: { xs: "1.5rem", md: "2rem" },
-              }}
-            >
-              {title}
-            </Typography>
-
-            <Stack
-              direction="row"
-              spacing={3}
-              sx={{
-                flexWrap: "wrap",
-                gap: 1,
-              }}
-            >
-              <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-                <AccessTimeIcon fontSize="small" />
-                <Typography variant="body2">
-                  {/* 실제 데이터로 교체 필요 */}
-                  {formattedDate}
-                </Typography>
-              </Box>
-            </Stack>
-            <Box sx={{ mt: 2, display: "flex", flexWrap: "wrap", gap: 1 }}>
-              {tags.map((tag) => (
-                <Chip
-                  key={tag}
-                  label={tag}
-                  size="small"
-                  sx={{
-                    fontWeight: 500,
-                    fontSize: "0.75rem",
-                    borderRadius: "4px",
-                  }}
-                />
-              ))}
+          <Stack
+            direction="row"
+            spacing={3}
+            sx={{
+              flexWrap: "wrap",
+              gap: 1,
+            }}
+          >
+            <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+              <AccessTimeIcon fontSize="small" />
+              <Typography variant="body2">{formattedDate}</Typography>
             </Box>
+          </Stack>
+          <Box sx={{ mt: 2, display: "flex", flexWrap: "wrap", gap: 1 }}>
+            {tags.map((tag) => (
+              <Chip
+                key={tag}
+                label={tag}
+                size="small"
+                sx={{
+                  fontWeight: 500,
+                  fontSize: "0.75rem",
+                  borderRadius: "4px",
+                }}
+              />
+            ))}
           </Box>
         </Box>
         <Box sx={{ mt: 2 }}>
@@ -123,7 +125,6 @@ const PreviewDialog: React.FC<PreviewDialogProps> = ({
               bgcolor: "background.paper",
               border: "1px solid",
               borderColor: "divider",
-
               "& .question-content p": {
                 mb: 2,
                 color: "text.primary",
@@ -151,7 +152,6 @@ const PreviewDialog: React.FC<PreviewDialogProps> = ({
                 border: "1px solid",
                 borderColor: "divider",
               },
-
               "& .question-content img": {
                 maxWidth: "100%",
                 height: "auto",
@@ -182,33 +182,51 @@ const PreviewDialog: React.FC<PreviewDialogProps> = ({
                 display: "flex",
                 alignItems: "center",
                 gap: 2,
+                minHeight: 80,
               }}
             >
-              <Avatar
-                sx={{
-                  width: 40,
-                  height: 40,
-                  mr: 1,
-                  bgcolor: "b8dae1",
-                  fontSize: "14px",
-                  fontWeight: "bold",
-                }}
-              >
-                {/* 실제 데이터로 교체 필요 */}
-                K.W
-              </Avatar>
-              <Box>
-                <Typography variant="body1" sx={{ fontWeight: 600 }}>
-                  {/* 실제 데이터로 교체 필요 */}
-                  김철수
-                </Typography>
-                <Typography
-                  variant="caption"
-                  sx={{ color: "text.secondary", display: "block" }}
-                >
-                  작성자
-                </Typography>
-              </Box>
+              {isLoading ? (
+                <>
+                  <Skeleton variant="circular" width={40} height={40} />
+                  <Box>
+                    <Skeleton
+                      variant="text"
+                      sx={{ fontSize: "1rem", width: 80 }}
+                    />
+                    <Skeleton
+                      variant="text"
+                      sx={{ fontSize: "0.8rem", width: 50 }}
+                    />
+                  </Box>
+                </>
+              ) : (
+                <>
+                  <Avatar
+                    sx={{
+                      width: 40,
+                      height: 40,
+                      mr: 1,
+                      bgcolor: "primary.main",
+                      fontSize: "14px",
+                      fontWeight: "bold",
+                    }}
+                    src={myInfo?.profileImageUrl}
+                  >
+                    {getInitials(myInfo?.nickname)}
+                  </Avatar>
+                  <Box>
+                    <Typography variant="body1" sx={{ fontWeight: 600 }}>
+                      {myInfo?.nickname}
+                    </Typography>
+                    <Typography
+                      variant="caption"
+                      sx={{ color: "text.secondary", display: "block" }}
+                    >
+                      작성자
+                    </Typography>
+                  </Box>
+                </>
+              )}
             </Paper>
           </Box>
         </Box>
