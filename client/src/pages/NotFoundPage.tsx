@@ -5,7 +5,7 @@ import {
   NotFoundHeading,
   NotFoundMessage,
   GoHomeButton,
-} from "@components/not-found";
+} from "@domains/not-found";
 
 const NotFoundPage = () => {
   const navigate = useNavigate();

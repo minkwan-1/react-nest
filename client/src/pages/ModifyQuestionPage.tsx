@@ -3,16 +3,16 @@ import { useAtom } from "jotai";
 import { realUserInfo } from "@atom/auth";
 
 import { Box, Container } from "@mui/material";
-import { PageContainer } from "@components/layout/common";
-import { PageHeader, LoadingScreen, QuestionForm } from "@components/modify";
+import { PageContainer } from "@domains/layout/common";
+import { PageHeader, LoadingScreen, QuestionForm } from "@domains/modify";
 
 import {
   useQuestionDetail,
   useQuestionForm,
   useModifyQuestionSubmit,
-} from "@components/modify/hooks/index";
+} from "@domains/modify/hooks/index";
 
-import useFetchMyInfo from "@components/my-info/hooks/useFetchMyInfo";
+import useFetchMyInfo from "@domains/my-info/hooks/useFetchMyInfo";
 
 const ModifyQuestionPage = () => {
   const mainColor = "#b8dae1";
@@ -26,7 +26,7 @@ const ModifyQuestionPage = () => {
 
   const { handleSubmit, isSubmitting } = useModifyQuestionSubmit(
     id,
-    userInfo?.id,
+    userInfo?.user.id,
     {
       title,
       content,

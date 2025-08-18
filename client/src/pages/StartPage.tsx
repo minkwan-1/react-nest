@@ -1,5 +1,5 @@
 import { Box, useMediaQuery, useTheme } from "@mui/material";
-import { LeftSection, BackgroundImage } from "@components/start/index";
+import { LeftSection, BackgroundImage } from "@domains/auth/index";
 
 const StartPage = () => {
   const theme = useTheme();

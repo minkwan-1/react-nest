@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
-import { PageContainer, ComponentWrapper } from "../components/layout/common";
-import { PhoneVerificationContainer } from "@components/phone";
-import { useSyncUserInfo, useHandleSignup } from "@components/phone/hooks";
+import { PageContainer, ComponentWrapper } from "../domains/layout/common";
+import { PhoneVerificationContainer } from "@domains/phone";
+import { useSyncUserInfo, useHandleSignup } from "@domains/phone/hooks";
 
 const PhoneVerificationPage = () => {
   const [userInfo, setUserInfo] = useSyncUserInfo();

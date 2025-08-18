@@ -12,10 +12,10 @@ import {
   ModifyQuestionPage,
   MyInfoEditPage,
 } from "./pages";
-import AuthRedirectModal from "@components/common/modal/AuthRedirectModal";
-import CommonErrorModal from "@components/common/modal/CommonModal";
-import { GlobalActionButton } from "@components/home";
-import Commonsnackbar from "@components/common/snackbar/CommonSnackbar";
+import AuthRedirectModal from "@domains/common/modal/AuthRedirectModal";
+import CommonErrorModal from "@domains/common/modal/CommonModal";
+import { GlobalActionButton } from "@domains/home";
+import Commonsnackbar from "@domains/common/snackbar/CommonSnackbar";
 
 const App = () => {
   const location = useLocation();
@@ -54,3 +54,5 @@ const App = () => {
 };
 
 export default App;
+
+// userInfo (x) => 라우팅 처리, 전역 상태가 null, 유저가 있어도 무조건 팅김

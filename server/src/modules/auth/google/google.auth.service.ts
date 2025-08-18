@@ -92,6 +92,7 @@ export class GoogleAuthService {
         return { ...user, isExist: true };
       }
 
+      // 신규 GoogleUser 저장
       const {
         id,
         email,
@@ -102,7 +103,7 @@ export class GoogleAuthService {
         picture: profileImage,
       } = userData;
 
-      const newUser = {
+      const savedUser = await this.googleAuthRepository.saveUser({
         id,
         email,
         verifiedEmail,
@@ -112,10 +113,11 @@ export class GoogleAuthService {
         profileImage,
         isDefaultImage: false,
         connectedAt: new Date(),
-      };
+      });
 
-      return { ...newUser, isExist: false };
-    } catch {
+      return { ...savedUser, isExist: false };
+    } catch (err) {
+      console.log(err);
       throw new HttpException(
         '구글 사용자 확인 또는 추가 중 오류 발생',
         HttpStatus.INTERNAL_SERVER_ERROR,

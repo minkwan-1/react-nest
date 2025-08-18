@@ -1,4 +1,4 @@
-import { PageContainer, ComponentWrapper } from "@components/layout/common";
+import { PageContainer, ComponentWrapper } from "@domains/layout/common";
 import { Box, Fade } from "@mui/material";
 import {
   MyInfoHeader,
@@ -7,8 +7,8 @@ import {
   SocialMediaSection,
   SaveButton,
   LoadingComponent,
-} from "@components/my-info";
-import useMyInfoForm from "@components/my-info/hooks/useMyInfoForm";
+} from "@domains/my-info";
+import useMyInfoForm from "@domains/my-info/hooks/useMyInfoForm";
 
 const MyInfoEditPage = () => {
   const {

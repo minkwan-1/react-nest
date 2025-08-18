@@ -1,11 +1,11 @@
 import { Box } from "@mui/material";
-import { PageContainer } from "@components/layout/common";
+import { PageContainer } from "@domains/layout/common";
 import {
   HeroSection,
   FeaturesSection,
   PopularTagsSection,
   CTASection,
-} from "@components/landing";
+} from "@domains/landing";
 
 const LandingPage = () => {
   return (

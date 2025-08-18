@@ -32,6 +32,7 @@ export class PhoneVerificationRepository {
     console.log('findByPhoneNumber의 전화번호: ', phoneNumber);
     return await this.repo.findOne({
       where: { phoneNumber },
+      order: { expiresAt: 'DESC' },
     });
   }
 

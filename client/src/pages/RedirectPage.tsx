@@ -3,8 +3,8 @@ import { useSearchParams, useNavigate } from "react-router-dom";
 import { CircularProgress, Box } from "@mui/material";
 import { useAtom } from "jotai";
 import { signupUserInfo, realUserInfo } from "@atom/auth";
-import { usePostAuthorizationMutate } from "@api/auth/useAuthHooks";
-import { useOpenCommonModal } from "@components/common/modal/hook/useOpenCommonModal";
+import { usePostAuthorizationMutate } from "@domains/auth/api/useAuthHooks";
+import { useOpenCommonModal } from "@domains/common/modal/hook/useOpenCommonModal";
 
 const RedirectPage = () => {
   const [loading, setLoading] = useState(false);
@@ -38,6 +38,7 @@ const RedirectPage = () => {
       { code, provider },
       {
         onSuccess: async (res) => {
+          console.log("두 번째 데이터: ", res);
           const user = res?.user;
 
           if (!user) {
@@ -50,6 +51,7 @@ const RedirectPage = () => {
 
           // 사용자 존재 여부에 따라 라우팅
           if (!user.isExist) {
+            console.log("세 번째 데이터: ", { ...user, provider });
             setUserInfo({ ...user, provider });
             navigate("/phone");
           } else {

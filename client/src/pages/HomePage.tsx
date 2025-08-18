@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
-import { PageContainer } from "@components/layout/common";
-import { MainContent, SideContent } from "@components/home";
+import { PageContainer } from "@domains/layout/common";
+import { MainContent, SideContent } from "@domains/home";
 
 const HomePage = () => {
   return (

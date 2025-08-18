@@ -13,11 +13,8 @@ export default defineConfig({
     alias: {
       "@": path.resolve(__dirname, "./src"),
       "@atom": path.resolve(__dirname, "./src/atom"),
-      "@components": path.resolve(__dirname, "./src/components"),
-      "@components/ask-ai/*": path.resolve(
-        __dirname,
-        "src/components/ask-ai/*"
-      ),
+      "@domains": path.resolve(__dirname, "./src/domains"),
+      "@domains/ask-ai/*": path.resolve(__dirname, "src/domains/ask-ai/*"),
       "@mock": path.resolve(__dirname, "./src/mock"),
       "@api": path.resolve(__dirname, "./src/api"),
     },

@@ -4,7 +4,7 @@
     "paths": {
       "@*": ["./src/*"],
       "@atom": ["./src/atom"],
-      "@components": ["./src/components"]
+      "@domains": ["./src/domains"]
     },
 
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",

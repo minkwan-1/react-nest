@@ -25,6 +25,8 @@ export class AuthSerializer extends PassportSerializer {
       provider: user.provider,
     };
 
+    console.log('serializer 실행');
+
     done(null, sessionData);
   }
 
@@ -55,7 +57,7 @@ export class AuthSerializer extends PassportSerializer {
       }
 
       if (!user) return done(null, false);
-
+      console.log('deserializer 실행');
       done(null, user);
     } catch (error) {
       done(error);

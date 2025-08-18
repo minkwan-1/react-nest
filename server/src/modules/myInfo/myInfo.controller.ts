@@ -50,6 +50,7 @@ export class MyInfoController {
   // my info 찾기
   @Get()
   async getMyInfo(@Query('id') userId: string) {
+    console.log(userId);
     this.logger.log(`MyInfo 조회 요청 - userId: ${userId}`);
 
     if (!userId) {
@@ -59,8 +60,10 @@ export class MyInfoController {
 
     try {
       const myInfo = await this.myInfoService.find(userId);
+
+      console.log(myInfo);
       this.logger.log(`MyInfo 조회 성공 - userId: ${userId}`);
-      return { myInfo };
+      return myInfo;
     } catch (error) {
       this.logger.error(
         `MyInfo 조회 실패 - userId: ${userId}, 에러: ${error.message}`,

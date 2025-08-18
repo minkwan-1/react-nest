@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
-import { PageContainer } from "@components/layout/common";
-import { MainContent } from "@components/detail/index";
+import { PageContainer } from "@domains/layout/common";
+import { MainContent } from "@domains/detail/index";
 
 const QuestionDetailPage = () => {
   return (

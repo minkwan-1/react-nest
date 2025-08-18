@@ -38,6 +38,7 @@ export class SessionService {
 
   // [2] 세션 기반 사용자 조회 (로그인 유지 여부 확인)
   async findWithSession(req: Request): Promise<any> {
+    console.log(req.sessionID);
     const sessionId = req.sessionID;
     this.logger.log(`[2] 🔎 세션 ID로 사용자 조회 시도: ${sessionId}`);
 

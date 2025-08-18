@@ -7,9 +7,9 @@ import {
   DialogActions,
   Button,
 } from "@mui/material";
-import { PageContainer } from "../components/layout/common";
-import { QuestionForm } from "../components/edit/QuestionForm";
-import { PageHeader, useQuestionForm } from "@components/edit";
+import { PageContainer } from "../domains/layout/common";
+import { QuestionForm } from "../domains/edit/QuestionForm";
+import { PageHeader, useQuestionForm } from "@domains/edit";
 
 export default function QuestionEditPage() {
   const {

@@ -42,7 +42,9 @@ export class MyInfoService {
 
   // myInfo 찾기
   async find(userId: string): Promise<MyInfo | null> {
+    console.log(userId);
     const entry = await this.myInfoRepository.findOne({ where: { userId } });
+    console.log(userId);
     return entry;
   }
 }
