@@ -22,7 +22,6 @@ export class GoogleAuthController {
     private readonly sessionService: SessionService,
   ) {}
 
-  // [GET] 구글 로그인 URL 제공
   @Get('callback')
   @Redirect()
   async callback() {
@@ -30,7 +29,6 @@ export class GoogleAuthController {
     return { url };
   }
 
-  // [POST] 구글 로그인 콜백: 사용자 식별 및 세션 처리
   @Post('user')
   async handleGoogleAuth(
     @Body('code') code: string,
@@ -44,9 +42,19 @@ export class GoogleAuthController {
         tokens.access_token,
       );
       const user = await this.googleAuthService.findUser(userData);
-      // 로그인 처리
+
       if (user.isExist) {
         const dbUser = await this.usersService.findByAccountID(user.id);
+
+        if (!dbUser) {
+          // [핵심 변경] isExist 값을 false로 명시적으로 덮어써서 프론트엔드가 신규 가입으로 인식하도록 합니다.
+          const newUserPayload = { ...user, isExist: false };
+          return res.send({
+            message: '신규 유저 데이터',
+            user: newUserPayload,
+          });
+        }
+
         const mergedUser = { ...dbUser, provider };
 
         try {
@@ -65,7 +73,7 @@ export class GoogleAuthController {
           );
         }
       }
-      // user의 정보로 db를 뒤질 수 있나
+
       return res.send({
         message: '신규 유저 데이터',
         user,
@@ -79,7 +87,6 @@ export class GoogleAuthController {
     }
   }
 
-  // [POST] 사용자 정보 저장 (최초 회원가입 처리)
   @Post('user/update')
   async updateUser(
     @Body() userData: any,
@@ -87,7 +94,6 @@ export class GoogleAuthController {
     @Res() res: Response,
   ) {
     try {
-      // Users 테이블에 최종 사용자 정보 생성
       const finalUser = await this.usersService.create({
         email: userData.email,
         name: userData.name,
@@ -95,13 +101,12 @@ export class GoogleAuthController {
         phoneNumber: userData.phoneNumber,
       });
 
-      // 가입 후 즉시 로그인 처리
       const mergedUser = { ...finalUser, provider: userData.provider };
       await this.sessionService.loginWithSession(req, mergedUser);
 
       return res.send({
         message: '신규 가입 및 로그인 성공',
-        user: { ...mergedUser, isExist: true }, // isExist를 true로 설정
+        user: { ...mergedUser, isExist: true },
         sessionId: req.sessionID,
       });
     } catch (err) {

@@ -21,7 +21,6 @@ export class NaverAuthController {
     private readonly sessionService: SessionService,
   ) {}
 
-  // [GET] 네이버 로그인 URL 제공
   @Get('callback')
   @Redirect()
   async callback() {
@@ -29,7 +28,6 @@ export class NaverAuthController {
     return { url: naverAuthUrl };
   }
 
-  // [POST] 네이버 로그인 콜백: 사용자 식별 및 세션 처리
   @Post('user')
   async redirect(
     @Body('code') code: string,
@@ -38,15 +36,11 @@ export class NaverAuthController {
     @Req() req: Request,
     @Res() res: Response,
   ) {
-    console.log('state 확인: ', state);
-
     try {
       const tokens = await this.naverAuthService.getToken(code, state);
-
       const userData = await this.naverAuthService.getUserInfo(
         tokens.access_token,
       );
-
       const foundUser = await this.naverAuthService.findUser(userData);
 
       if (foundUser.isExist) {
@@ -54,8 +48,17 @@ export class NaverAuthController {
           foundUser.id,
         );
 
+        if (!viaNaverUser) {
+          // [핵심 변경] isExist 값을 false로 명시적으로 덮어써서 프론트엔드가 신규 가입으로 인식하도록 합니다.
+          const newUserPayload = { ...foundUser, isExist: false };
+          return res.send({
+            message: '신규 유저 데이터',
+            user: newUserPayload,
+          });
+        }
+
         const addedProviderViaNaverUser = { ...viaNaverUser, provider };
-        console.log('2', addedProviderViaNaverUser);
+
         try {
           await this.sessionService.loginWithSession(
             req,
@@ -75,6 +78,7 @@ export class NaverAuthController {
           );
         }
       }
+
       return res.send({
         message: '신규 유저 데이터',
         user: foundUser,
@@ -91,14 +95,12 @@ export class NaverAuthController {
     }
   }
 
-  // [POST] 사용자 정보 저장 (최초 회원가입 처리)
   @Post('user/update')
   async updateUser(
     @Body() userData,
     @Req() req: Request,
     @Res() res: Response,
   ) {
-    console.log('네이버 유저 데이터: ', userData);
     try {
       const finalUser = await this.usersService.create({
         email: userData.email,
@@ -107,11 +109,10 @@ export class NaverAuthController {
         phoneNumber: userData.phoneNumber,
       });
       const mergedUser = { ...finalUser, provider: userData.provider };
-      // await this.sessionService.loginWithSession(req, mergedUser);
 
       return res.send({
         message: '신규 가입 및 로그인 성공',
-        user: { ...mergedUser, isExist: true }, // isExist를 true로 설정
+        user: { ...mergedUser, isExist: true },
         sessionId: req.sessionID,
       });
     } catch (error) {
@@ -121,20 +122,5 @@ export class NaverAuthController {
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
-    // const finalNaverUser = await this.naverAuthService.createUser(userData);
-
-    // const parseFinalUser = {
-    //   email: userData.email,
-    //   name: userData.name,
-    //   accountID: userData.id,
-    //   phoneNumber: userData.phoneNumber,
-    // };
-
-    // const finalUser = await this.usersService.create(parseFinalUser);
-
-    // return {
-    //   finalNaverUser,
-    //   finalUser,
-    // };
   }
 }

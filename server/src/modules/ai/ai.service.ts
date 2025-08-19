@@ -4,6 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { AiAnswer } from './ai.entity';
 import { Question } from '../questions/questions.entity';
+import { JSDOM } from 'jsdom';
 
 @Injectable()
 export class AiService {
@@ -30,16 +31,49 @@ export class AiService {
     content: string,
     questionId: number,
   ): Promise<string> {
+    console.log('[generateAnswer] 호출됨', { title, content, questionId });
+
+    // HTML 제거
+    const plainContent =
+      new JSDOM(content).window.document.body.textContent || '';
+    const prompt = this.buildPrompt(title, plainContent);
+
+    console.log('[generateAnswer] 생성된 프롬프트:', prompt);
+
     try {
-      const prompt = this.buildPrompt(title, content);
-      const result = await this.model.generateContent(prompt);
-      const response = await result.response;
-      const aiAnswer = response.text();
+      let aiAnswer: string | undefined;
+
+      // 최대 3회 재시도
+      for (let attempt = 1; attempt <= 3; attempt++) {
+        console.log(`[generateAnswer] Gemini API 호출 시도 ${attempt}`);
+        const result = await this.model.generateContent(prompt);
+        console.log(
+          '[generateAnswer] raw result:',
+          JSON.stringify(result, null, 2),
+        );
+
+        // 안전하게 추출
+        const candidate = result.response?.candidates?.[0];
+        if (candidate) {
+          if (candidate.content?.parts?.length) {
+            aiAnswer = candidate.content.parts[0].text;
+          } else if (candidate.content?.text) {
+            aiAnswer = candidate.content.text;
+          }
+        }
+
+        console.log('[generateAnswer] 추출된 AI 답변:', aiAnswer);
+
+        if (aiAnswer && aiAnswer.trim() !== '') break;
+
+        console.warn('[generateAnswer] AI 응답이 비어 있음, 재시도...');
+      }
 
       if (!aiAnswer || aiAnswer.trim() === '') {
         throw new Error('AI로부터 답변을 받지 못했습니다.');
       }
 
+      // DB 저장
       const savedAnswer = this.aiAnswerRepository.create({
         questionId,
         title,
@@ -47,21 +81,25 @@ export class AiService {
       });
       await this.aiAnswerRepository.save(savedAnswer);
 
+      console.log('[generateAnswer] 최종 AI 답변 저장 완료');
       return aiAnswer.trim();
-    } catch (error) {
-      console.error('Gemini API 호출 실패:', error);
+    } catch (error: any) {
+      console.error('[generateAnswer] Gemini API 호출 실패', error);
+
       if (error.message?.includes('API_KEY')) {
         throw new HttpException(
           'API 키 설정에 문제가 있습니다.',
           HttpStatus.UNAUTHORIZED,
         );
       }
+
       if (error.message?.includes('quota')) {
         throw new HttpException(
           'API 할당량을 초과했습니다.',
           HttpStatus.TOO_MANY_REQUESTS,
         );
       }
+
       throw new HttpException(
         'AI 서비스 연결에 실패했습니다.',
         HttpStatus.SERVICE_UNAVAILABLE,

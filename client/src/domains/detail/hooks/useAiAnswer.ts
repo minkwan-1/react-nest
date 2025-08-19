@@ -16,6 +16,7 @@ export const useAiAnswer = (): UseAiAnswerReturn => {
 
     try {
       const aiAnswerData = await apiService.ai.getAiAnswer(questionId);
+
       setAiAnswer(aiAnswerData);
     } catch (error) {
       const errorMessage =

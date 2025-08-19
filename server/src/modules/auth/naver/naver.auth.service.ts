@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import axios from 'axios';
-import { randomBytes } from 'crypto';
+// import { randomBytes } from 'crypto';
 import { NaverAuthRepository } from './naver.auth.repository';
 import { NaverUser } from './naver.auth.entity';
 import { HttpException } from '@nestjs/common';
@@ -18,7 +18,7 @@ export class NaverAuthService {
 
   // [1] 네이버 인증 URL 생성
   getNaverAuthUrl(): string {
-    const state = randomBytes(16).toString('hex');
+    const state = 'dfsfsadfsafasdfasdfsd';
 
     try {
       return `https://nid.naver.com/oauth2.0/authorize?client_id=${this.naverClientId}&redirect_uri=${this.naverCallbackUrl}&response_type=code&state=${state}&prompt=login`;
@@ -31,6 +31,8 @@ export class NaverAuthService {
   async getToken(code: string, state: string): Promise<any> {
     const tokenUrl = 'https://nid.naver.com/oauth2.0/token';
 
+    console.log(code, state);
+
     try {
       const response = await axios.post(tokenUrl, null, {
         params: {
@@ -42,6 +44,8 @@ export class NaverAuthService {
           state,
         },
       });
+
+      console.log(response.data);
       return response.data;
     } catch (error) {
       console.log(error);
