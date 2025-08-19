@@ -86,13 +86,6 @@ export class GoogleAuthController {
     @Req() req: Request,
     @Res() res: Response,
   ) {
-    console.log(
-      '최종 가입 직전 유저 정보: ',
-      userData.email,
-      userData.name,
-      userData.id,
-      userData.phoneNumber,
-    );
     try {
       // Users 테이블에 최종 사용자 정보 생성
       const finalUser = await this.usersService.create({

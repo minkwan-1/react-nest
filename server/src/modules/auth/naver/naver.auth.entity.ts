@@ -23,12 +23,12 @@ export class NaverUser {
   @Column({ nullable: true })
   name?: string;
 
-  @CreateDateColumn({
-    name: 'connected_at',
-    type: 'timestamptz',
-    nullable: true,
-  })
-  connectedAt: Date;
+  // @CreateDateColumn({
+  //   name: 'connected_at',
+  //   type: 'timestamptz',
+  //   nullable: true,
+  // })
+  // connectedAt: Date;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;

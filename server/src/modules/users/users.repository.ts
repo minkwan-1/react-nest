@@ -21,12 +21,12 @@ export class UsersRepository {
     const { email, name, phoneNumber, accountID } = createUserDto;
 
     // 1. GoogleUser 존재 확인
-    const googleAccount = await this.findGoogleUserById(accountID);
-    if (!googleAccount) {
-      throw new ConflictException(
-        '연결할 Google 계정 정보를 찾을 수 없습니다. 인증을 다시 시도해주세요.',
-      );
-    }
+    // const googleAccount = await this.findGoogleUserById(accountID);
+    // if (!googleAccount) {
+    //   throw new ConflictException(
+    //     '연결할 Google 계정 정보를 찾을 수 없습니다. 인증을 다시 시도해주세요.',
+    //   );
+    // }
 
     try {
       // 2. User 생성
@@ -34,7 +34,7 @@ export class UsersRepository {
         email,
         name,
         phoneNumber,
-        googleAccount, // ✅ 엔티티 자체를 넣어야 함
+        accountID, // ✅ 엔티티 자체를 넣어야 함
       });
 
       return await this.repository.save(user); // ✅ 단일 User 반환
@@ -53,9 +53,9 @@ export class UsersRepository {
   async findOneByAccountID(accountID: string): Promise<User | null> {
     return this.repository.findOne({
       where: {
-        googleAccount: { id: accountID },
+        accountID,
       },
-      relations: ['googleAccount'],
+      // relations: ['googleAccount'],
     });
   }
 

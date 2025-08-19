@@ -5,15 +5,15 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   OneToMany,
-  OneToOne,
-  JoinColumn,
-  Unique,
+  // OneToOne,
+  // JoinColumn,
+  // Unique,
 } from 'typeorm';
 import { Question } from 'src/modules/questions/questions.entity';
-import { GoogleUser } from 'src/modules/auth/google/google.auth.entity';
+// import { GoogleUser } from 'src/modules/auth/google/google.auth.entity';
 
 @Entity('users')
-@Unique(['googleAccount'])
+// @Unique(['googleAccount'])
 export class User {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -24,9 +24,9 @@ export class User {
   @Column()
   name: string;
 
-  @OneToOne(() => GoogleUser)
-  @JoinColumn({ name: 'accountID', referencedColumnName: 'id' })
-  googleAccount: GoogleUser;
+  // @OneToOne(() => GoogleUser)
+  // @JoinColumn({ name: 'accountID', referencedColumnName: 'id' })
+  // googleAccount: GoogleUser;
 
   @Column({ nullable: true })
   phoneNumber: string;
@@ -39,4 +39,7 @@ export class User {
 
   @OneToMany(() => Question, (question) => question.user)
   questions: Question[];
+
+  @Column()
+  accountID: string;
 }

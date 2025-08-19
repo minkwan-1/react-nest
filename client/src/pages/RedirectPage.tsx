@@ -12,68 +12,57 @@ const RedirectPage = () => {
   const navigate = useNavigate();
   const code = query.get("code");
   const provider = query.get("provider");
+  const state = query.get("state");
 
   const [, setUserInfo] = useAtom(signupUserInfo);
   const [, setRealUserInfo] = useAtom(realUserInfo);
   const { mutate: authorizationMutate } = usePostAuthorizationMutate();
   const { openModal } = useOpenCommonModal();
-  // const { mutateAsync: signinAsyncMutate } = useSigninMutate();
 
   useEffect(() => {
-    // 유효성 검사
     if (!provider || !code) {
-      console.log("유효하지 않은 요청: 인가 코드 없음");
       navigate("/error", {
         state: { message: "인가 코드가 제공되지 않았습니다." },
       });
       return;
     }
 
-    // 중복 요청 방지
     if (loading) return;
     setLoading(true);
 
-    // 인가 코드 전달 및 사용자 정보 설정
     authorizationMutate(
-      { code, provider },
+      { code, provider, state },
       {
         onSuccess: async (res) => {
-          console.log("두 번째 데이터: ", res);
           const user = res?.user;
 
+          console.log(user);
+
           if (!user) {
-            console.log("사용자 정보 없음");
             navigate("/error", {
               state: { message: "사용자 정보를 가져오지 못했습니다." },
             });
             return;
           }
 
-          // 사용자 존재 여부에 따라 라우팅
           if (!user.isExist) {
-            console.log("세 번째 데이터: ", { ...user, provider });
             setUserInfo({ ...user, provider });
             navigate("/phone");
           } else {
-            // const result = await signinAsyncMutate({ ...user });
             setRealUserInfo({ ...user });
             navigate("/home");
           }
-
-          console.log("인가 성공");
         },
-        onError: (err) => {
-          console.error("인가 요청 실패:", err);
+        onError: (err: Error) => {
           openModal({
             isOpen: true,
             type: "error",
             title: "오류",
-            info: "서버로부터 토큰을 받아오지 못했습니다.",
+            info: err.message,
             navigateTo: "/start",
           });
         },
         onSettled: () => {
-          console.log("인가 요청 완료");
           setLoading(false);
         },
       }

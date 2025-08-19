@@ -68,9 +68,10 @@ export class NaverAuthService {
 
   // [4] 기존 사용자 조회 또는 신규 사용자 데이터 반환
   async findUser(userData: any): Promise<FindUserType> {
+    console.log(userData.id);
     try {
       const user = await this.naverAuthRepository.findUser({ id: userData.id });
-
+      console.log('기존 네이버 유저 조회: ', user);
       if (user) {
         return { ...user, isExist: true };
       }
@@ -88,7 +89,9 @@ export class NaverAuthService {
         updatedAt: new Date(),
       };
 
-      return { ...newUser, isExist: false };
+      const savedUser = await this.naverAuthRepository.saveUser(newUser);
+
+      return { ...savedUser, isExist: false };
     } catch {
       throw new HttpException(
         '네이버 사용자 확인 또는 추가 중 오류 발생',

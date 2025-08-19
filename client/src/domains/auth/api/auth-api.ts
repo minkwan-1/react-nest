@@ -8,30 +8,45 @@ export interface SignupUserInfo {
   provider: string;
 }
 
+// payload에 대한 타입을 명확하게 정의
+type AuthorizationPayload = {
+  code: string;
+  provider: string;
+  state?: string; // state는 선택적 프로퍼티
+};
+
 export const postAuthorizationCode = async ({
   code,
   provider,
+  state,
 }: {
   code: string;
   provider: string;
+  state: string | null;
 }) => {
   try {
+    // any 대신 정의된 AuthorizationPayload 타입을 사용
+    const payload: AuthorizationPayload = {
+      code,
+      provider,
+    };
+
+    if (provider === "naver" && state) {
+      payload.state = state;
+    }
+
     const response = await axiosInstance.post(
       `auth/${provider}/user`,
-      {
-        code,
-        provider,
-      },
+      payload,
       {
         withCredentials: true,
       }
     );
-    console.log("첫 번째 데이터: ", response.data);
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {
       throw new Error(
-        error.response.data.message || "회원가입 중 오류가 발생했습니다."
+        error.response.data.message || "인가 코드 처리 중 오류가 발생했습니다."
       );
     }
     throw new Error("서버와 통신 중 오류가 발생했습니다.");
@@ -39,9 +54,8 @@ export const postAuthorizationCode = async ({
 };
 
 export const signup = async (userInfo: SignupUserInfo) => {
+  console.log(userInfo.provider);
   try {
-    console.log("최종 회원가입 시 userInfo: ", userInfo);
-
     let endpoint = "";
     switch (userInfo.provider) {
       case "google":
@@ -50,13 +64,12 @@ export const signup = async (userInfo: SignupUserInfo) => {
       case "naver":
         endpoint = `auth/naver/user/update`;
         break;
-
-        break;
       default:
         throw new Error("지원하지 않는 소셜 로그인 제공자입니다.");
     }
-
+    console.log(endpoint, userInfo);
     const response = await axiosInstance.post(endpoint, userInfo);
+    console.log(response);
     return { success: true, data: response.data };
   } catch (error) {
     console.error("Signup error:", error);
@@ -74,21 +87,14 @@ export const signup = async (userInfo: SignupUserInfo) => {
 export const fetchUserInfo = async () => {
   try {
     const response = await axiosInstance.get("auth/me");
-
-    console.log("@@@@@@@@@@@@@@@@@:", response.data);
     return response.data;
   } catch (error) {
     console.log(error);
-    // if (axios.isAxiosError(error) && error.response?.status === 401) {
-    //   return null;
-    // }
-
     throw new Error("사용자 정보를 가져오는 데 실패했습니다.");
   }
 };
 
 export const logoutUser = async () => {
   const response = await axiosInstance.post("auth/logout");
-
   return response.data;
 };

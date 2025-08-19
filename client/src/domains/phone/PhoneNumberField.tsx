@@ -23,6 +23,7 @@ import { useMutation } from "@tanstack/react-query";
 import { requestVerificationCodeAPI } from "./api/requestVerificationCodeAPI";
 import { useSetAtom } from "jotai";
 import { authRedirectModalAtom } from "@atom/modalAtoms";
+import { useNavigate } from "react-router-dom";
 
 type PhoneNumberFieldProps = {
   onNext: () => void;
@@ -37,6 +38,7 @@ const PhoneNumberField = ({
 }: PhoneNumberFieldProps) => {
   const theme = useTheme();
   const keyColor = "#b8dae1";
+  const navigate = useNavigate();
 
   const [phoneNumber, setPhoneNumber] = useState("");
   const [isFocused, setIsFocused] = useState(false);
@@ -49,7 +51,6 @@ const PhoneNumberField = ({
 
   const show = useSetAtom(authRedirectModalAtom);
 
-  // 'showAuthRedirectModal'을 'show'로 수정
   useEffect(() => {
     if (!userInfo) {
       show(true);
@@ -59,13 +60,21 @@ const PhoneNumberField = ({
   const { mutate: requestCode, isPending: isSending } = useMutation({
     mutationFn: requestVerificationCodeAPI,
     onSuccess: (data) => {
-      setModal({
-        open: true,
-        type: "success",
-        title: "인증 코드 요청 완료",
-        message: `${phoneNumber}로 인증 코드가 전송되었습니다.`,
-      });
-      console.log("인증 코드 전송 성공:", data);
+      if (
+        data?.message ===
+        "이미 가입된 휴대폰 번호입니다. 다른 로그인 방법을 이용해주세요."
+      ) {
+        alert(data.message);
+        navigate("/start");
+      } else {
+        setModal({
+          open: true,
+          type: "success",
+          title: "인증 코드 요청 완료",
+          message: `${phoneNumber}로 인증 코드가 전송되었습니다.`,
+        });
+        console.log("인증 코드 전송 성공:", data);
+      }
     },
     onError: (error) => {
       setModal({
@@ -90,17 +99,8 @@ const PhoneNumberField = ({
       setUserInfo((prev) => {
         if (prev) {
           return { ...prev, phoneNumber: phone };
-        } else {
-          return {
-            id: "",
-            email: "",
-            name: "",
-            phoneNumber: phone,
-            createdAt: "",
-            updatedAt: "",
-            provider: "",
-          };
         }
+        return prev;
       });
     },
     [setUserInfo]
@@ -134,13 +134,10 @@ const PhoneNumberField = ({
       console.log("유효한 전화번호를 입력해주세요.");
       return;
     }
-    setUserInfo(
-      (prev) =>
-        ({
-          ...(prev ?? {}),
-          phoneNumber: phoneNumber.trim(),
-        } as signupUserInfo)
-    );
+    setUserInfo((prev) => {
+      if (!prev) return prev;
+      return { ...prev, phoneNumber: phoneNumber.trim() };
+    });
 
     requestCode(phoneNumber);
   };
@@ -281,7 +278,6 @@ const PhoneNumberField = ({
         </Paper>
       </motion.div>
 
-      {/* 인증 요청 결과(성공/실패)를 알려주는 모달창 */}
       <Dialog
         open={modal.open}
         onClose={() => setModal({ ...modal, open: false })}

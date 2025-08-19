@@ -38,6 +38,8 @@ export class NaverAuthController {
     @Req() req: Request,
     @Res() res: Response,
   ) {
+    console.log('state 확인: ', state);
+
     try {
       const tokens = await this.naverAuthService.getToken(code, state);
 
@@ -46,13 +48,12 @@ export class NaverAuthController {
       );
 
       const foundUser = await this.naverAuthService.findUser(userData);
-      console.log('회원가입 시 네이버 유저 정보: ', foundUser);
 
       if (foundUser.isExist) {
         const viaNaverUser = await this.usersService.findByAccountID(
           foundUser.id,
         );
-        console.log('1', viaNaverUser);
+
         const addedProviderViaNaverUser = { ...viaNaverUser, provider };
         console.log('2', addedProviderViaNaverUser);
         try {
@@ -73,16 +74,14 @@ export class NaverAuthController {
             HttpStatus.INTERNAL_SERVER_ERROR,
           );
         }
-        return;
-      } else {
-        res.send({
-          message: '신규 유저 데이터',
-          user: foundUser,
-          accessToken: tokens.access_token,
-          refreshToken: tokens.refresh_token,
-          expiresIn: tokens.expires_in,
-        });
       }
+      return res.send({
+        message: '신규 유저 데이터',
+        user: foundUser,
+        accessToken: tokens.access_token,
+        refreshToken: tokens.refresh_token,
+        expiresIn: tokens.expires_in,
+      });
     } catch (error) {
       console.error('인증 처리 중 오류:', error);
       throw new HttpException(
@@ -94,21 +93,48 @@ export class NaverAuthController {
 
   // [POST] 사용자 정보 저장 (최초 회원가입 처리)
   @Post('user/update')
-  async updateUser(@Body() userData) {
-    const finalNaverUser = await this.naverAuthService.createUser(userData);
+  async updateUser(
+    @Body() userData,
+    @Req() req: Request,
+    @Res() res: Response,
+  ) {
+    console.log('네이버 유저 데이터: ', userData);
+    try {
+      const finalUser = await this.usersService.create({
+        email: userData.email,
+        name: userData.name,
+        accountID: userData.id,
+        phoneNumber: userData.phoneNumber,
+      });
+      const mergedUser = { ...finalUser, provider: userData.provider };
+      // await this.sessionService.loginWithSession(req, mergedUser);
 
-    const parseFinalUser = {
-      email: userData.email,
-      name: userData.name,
-      accountID: userData.id,
-      phoneNumber: userData.phoneNumber,
-    };
+      return res.send({
+        message: '신규 가입 및 로그인 성공',
+        user: { ...mergedUser, isExist: true }, // isExist를 true로 설정
+        sessionId: req.sessionID,
+      });
+    } catch (error) {
+      console.log(error);
+      throw new HttpException(
+        '회원가입 처리 중 오류가 발생했습니다.',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+    // const finalNaverUser = await this.naverAuthService.createUser(userData);
 
-    const finalUser = await this.usersService.create(parseFinalUser);
+    // const parseFinalUser = {
+    //   email: userData.email,
+    //   name: userData.name,
+    //   accountID: userData.id,
+    //   phoneNumber: userData.phoneNumber,
+    // };
 
-    return {
-      finalNaverUser,
-      finalUser,
-    };
+    // const finalUser = await this.usersService.create(parseFinalUser);
+
+    // return {
+    //   finalNaverUser,
+    //   finalUser,
+    // };
   }
 }
