@@ -6,12 +6,11 @@ import {
   CircularProgress,
   Chip,
 } from "@mui/material";
-
 import { useQuery } from "@tanstack/react-query";
 import { useState, useEffect, useRef } from "react";
 import axios from "axios";
+import { useSwipeable } from "react-swipeable";
 
-// 뉴스 데이터 타입
 interface NewsItem {
   title: string;
   summary: string;
@@ -21,7 +20,6 @@ interface NewsItem {
   pubDate?: string;
 }
 
-// API 응답 타입
 interface NewsApiResponse {
   title: string;
   summary: string;
@@ -31,25 +29,19 @@ interface NewsApiResponse {
   pubDate?: string;
 }
 
-// 날짜 포맷팅 함수
 const formatDate = (dateString?: string) => {
   if (!dateString) return "";
-  try {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("ko-KR", {
-      month: "short",
-      day: "numeric",
-    });
-  } catch {
-    return "";
-  }
+  const date = new Date(dateString);
+  if (isNaN(date.getTime())) return "";
+  return date.toLocaleDateString("ko-KR", { month: "short", day: "numeric" });
 };
 
 const NewsSlider = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPlaying] = useState(true);
   const [isHovered, setIsHovered] = useState(false);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const resumeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const { data, isLoading, isError } = useQuery<NewsItem[]>({
     queryKey: ["news"],
@@ -57,7 +49,7 @@ const NewsSlider = () => {
       const res = await axios.get<NewsApiResponse[]>(
         "http://localhost:3000/news"
       );
-      return res.data.map((item: NewsApiResponse) => ({
+      return res.data.map((item) => ({
         ...item,
         source: item.source || "IT 뉴스",
         pubDate: item.pubDate || new Date().toISOString(),
@@ -65,38 +57,60 @@ const NewsSlider = () => {
     },
   });
 
-  // 자동 슬라이딩 (호버 상태가 아닐 때만)
   useEffect(() => {
     if (!isPlaying || !data || data.length <= 1 || isHovered) return;
-
     intervalRef.current = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % data.length);
-    }, 3000); // 4초마다 슬라이드
-
+    }, 3000);
     return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
+      if (intervalRef.current) clearInterval(intervalRef.current);
     };
   }, [isPlaying, data, isHovered]);
 
+  const goNext = () => {
+    if (!data) return;
+    setCurrentIndex((prev) => (prev + 1) % data.length);
+  };
+
+  const goPrev = () => {
+    if (!data) return;
+    setCurrentIndex((prev) => (prev === 0 ? data.length - 1 : prev - 1));
+  };
+
   const handleTitleClick = (link: string) => {
-    if (link) {
-      window.open(link, "_blank", "noopener,noreferrer");
-    }
+    if (link) window.open(link, "_blank", "noopener,noreferrer");
   };
 
-  const handleDotClick = (index: number) => {
-    setCurrentIndex(index);
-  };
+  const handleDotClick = (index: number) => setCurrentIndex(index);
+  const handleTitleMouseEnter = () => setIsHovered(true);
+  const handleTitleMouseLeave = () => setIsHovered(false);
 
-  const handleTitleMouseEnter = () => {
+  const pauseAndResume = () => {
     setIsHovered(true);
+    if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current);
+    resumeTimerRef.current = setTimeout(() => setIsHovered(false), 1500);
   };
 
-  const handleTitleMouseLeave = () => {
-    setIsHovered(false);
-  };
+  const swipeHandlers = useSwipeable({
+    onSwipedLeft: () => {
+      goNext();
+      pauseAndResume();
+    },
+    onSwipedRight: () => {
+      goPrev();
+      pauseAndResume();
+    },
+    onSwiping: () => setIsHovered(true),
+    onSwiped: () => pauseAndResume(),
+    trackMouse: true,
+    touchEventOptions: { passive: false },
+  });
+
+  useEffect(() => {
+    return () => {
+      if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current);
+    };
+  }, []);
 
   if (isLoading) {
     return (
@@ -118,15 +132,17 @@ const NewsSlider = () => {
 
   return (
     <Box
+      {...swipeHandlers}
       sx={{
         position: "relative",
         mb: 3,
         borderRadius: 3,
         overflow: "hidden",
         boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+        touchAction: "pan-y",
+        userSelect: "none",
       }}
     >
-      {/* 메인 슬라이더 */}
       <Card
         sx={{
           position: "relative",
@@ -137,15 +153,11 @@ const NewsSlider = () => {
           color: "white",
         }}
       >
-        {/* 배경 이미지 */}
         {currentNews.image && (
           <Box
             sx={{
               position: "absolute",
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
+              inset: 0,
               backgroundImage: `url(${currentNews.image})`,
               backgroundSize: "cover",
               backgroundPosition: "center",
@@ -155,21 +167,16 @@ const NewsSlider = () => {
           />
         )}
 
-        {/* 그라데이션 오버레이 */}
         <Box
           sx={{
             position: "absolute",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
+            inset: 0,
             background:
               "linear-gradient(45deg, rgba(0,0,0,0.7), rgba(0,0,0,0.3))",
             zIndex: 2,
           }}
         />
 
-        {/* 컨텐츠 */}
         <CardContent
           sx={{
             position: "relative",
@@ -181,7 +188,6 @@ const NewsSlider = () => {
             p: 4,
           }}
         >
-          {/* 뉴스 라벨 */}
           <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 2 }}>
             <Chip
               label="HOT NEWS"
@@ -197,10 +203,7 @@ const NewsSlider = () => {
                 label={currentNews.source}
                 size="small"
                 variant="outlined"
-                sx={{
-                  borderColor: "rgba(255,255,255,0.5)",
-                  color: "white",
-                }}
+                sx={{ borderColor: "rgba(255,255,255,0.5)", color: "white" }}
               />
             )}
             <Typography
@@ -211,7 +214,6 @@ const NewsSlider = () => {
             </Typography>
           </Box>
 
-          {/* 제목 - 클릭 가능하고 호버 시 슬라이딩 멈춤 */}
           <Typography
             variant="h5"
             onClick={() => handleTitleClick(currentNews.originallink)}
@@ -238,7 +240,6 @@ const NewsSlider = () => {
             {currentNews.title}
           </Typography>
 
-          {/* 요약 */}
           <Typography
             variant="body1"
             sx={{
@@ -257,7 +258,6 @@ const NewsSlider = () => {
         </CardContent>
       </Card>
 
-      {/* 인디케이터 도트 */}
       <Box
         sx={{
           position: "absolute",
@@ -281,9 +281,7 @@ const NewsSlider = () => {
                 index === currentIndex ? "white" : "rgba(255,255,255,0.4)",
               cursor: "pointer",
               transition: "all 0.3s ease",
-              "&:hover": {
-                backgroundColor: "rgba(255,255,255,0.8)",
-              },
+              "&:hover": { backgroundColor: "rgba(255,255,255,0.8)" },
             }}
           />
         ))}
