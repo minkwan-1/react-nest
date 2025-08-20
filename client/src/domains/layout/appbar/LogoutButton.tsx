@@ -1,5 +1,4 @@
 import { useState } from "react";
-
 import {
   Button,
   Dialog,
@@ -9,23 +8,15 @@ import {
   DialogTitle,
   useTheme,
 } from "@mui/material";
-
 import { useLogoutUser } from "@domains/auth/api/useAuthHooks";
 
 const LogoutButton = () => {
   const theme = useTheme();
-
   const [open, setOpen] = useState(false);
-
   const logoutMutation = useLogoutUser();
 
-  const handleButtonClick = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
+  const handleButtonClick = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   return (
     <>
@@ -35,8 +26,9 @@ const LogoutButton = () => {
           color: "inherit",
           borderColor: "inherit",
           borderRadius: 50,
-          px: 3,
-          py: 1,
+          px: { xs: 2, sm: 3 },
+          py: { xs: 0.8, sm: 1 },
+          fontSize: { xs: "0.8rem", sm: "0.9rem", md: "1rem" },
           textTransform: "none",
           fontWeight: 500,
           ...theme.applyStyles("light", {
@@ -69,9 +61,7 @@ const LogoutButton = () => {
             fontSize: "1.25rem",
             textAlign: "center",
             mt: 1,
-            ...theme.applyStyles("dark", {
-              color: "#f0f0f0",
-            }),
+            ...theme.applyStyles("dark", { color: "#f0f0f0" }),
           }}
         >
           정말 로그아웃 하시겠어요?
@@ -86,9 +76,7 @@ const LogoutButton = () => {
               px: 2,
               lineHeight: 1.5,
               userSelect: "none",
-              ...theme.applyStyles("dark", {
-                color: "#f0f0f0",
-              }),
+              ...theme.applyStyles("dark", { color: "#f0f0f0" }),
             }}
           >
             로그아웃하면 앱 이용이 종료돼요.
@@ -106,8 +94,9 @@ const LogoutButton = () => {
               color: "inherit",
               borderColor: "inherit",
               borderRadius: 50,
-              px: 3,
-              py: 1,
+              px: { xs: 2, sm: 3 },
+              py: { xs: 0.8, sm: 1 },
+              fontSize: { xs: "0.7rem", sm: "0.8rem", md: "0.9rem" },
               textTransform: "none",
               fontWeight: 500,
               ...theme.applyStyles("light", {
@@ -143,8 +132,9 @@ const LogoutButton = () => {
               color: "inherit",
               borderColor: "inherit",
               borderRadius: 50,
-              px: 3,
-              py: 1,
+              px: { xs: 2, sm: 3 },
+              py: { xs: 0.8, sm: 1 },
+              fontSize: { xs: "0.7rem", sm: "0.8rem", md: "0.9rem" },
               textTransform: "none",
               ...theme.applyStyles("light", {
                 borderColor: "#00000025",

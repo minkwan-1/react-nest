@@ -7,7 +7,7 @@ import {
   ThemeProviderWrapper,
   TanstackQueryProvider,
 } from "./providers/index.ts";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+// import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 createRoot(document.getElementById("root")!).render(
   // <StrictMode>
@@ -16,7 +16,7 @@ createRoot(document.getElementById("root")!).render(
       <ThemeProviderWrapper>
         <App />
       </ThemeProviderWrapper>
-      <ReactQueryDevtools initialIsOpen={false} />
+      {/* <ReactQueryDevtools initialIsOpen={false} /> */}
     </TanstackQueryProvider>
   </RouterProvider>
   // </StrictMode>

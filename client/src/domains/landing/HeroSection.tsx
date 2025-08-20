@@ -87,8 +87,7 @@ const HeroSection = () => {
             <Box
               key={index}
               sx={{
-                width: { xs: "100%", sm: "calc(50% - 16px)", md: "30%" },
-                minWidth: "280px",
+                width: { xs: "100%", sm: "100%", md: "30%" },
               }}
             >
               <AnimatedSection timeout={800 + index * 500}>
