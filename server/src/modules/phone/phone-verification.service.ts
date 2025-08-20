@@ -13,21 +13,16 @@ export class PhoneVerificationService {
     private readonly phoneVerificationRepository: PhoneVerificationRepository,
   ) {}
 
-  // [1] 인증 코드 생성
   private generateVerificationCode(): string {
     const code = Math.floor(100000 + Math.random() * 900000).toString();
     console.log('[generateVerificationCode] 생성된 코드:', code);
     return code;
   }
 
-  // [2] 인증 코드 전송
   async sendVerificationCode(
     toPhoneNumber: string,
   ): Promise<{ message: string; sid?: string }> {
-    console.log('[sendVerificationCode] 수신된 전화번호:', toPhoneNumber);
-
     if (!toPhoneNumber) {
-      console.warn('[sendVerificationCode] 전화번호 누락됨');
       return { message: '전화번호가 필요합니다.' };
     }
 
@@ -66,14 +61,10 @@ export class PhoneVerificationService {
     }
   }
 
-  // [3] 인증 코드 확인
   async verifyCode(
     phoneNumber: string,
     verificationCode: string,
   ): Promise<{ message: string; status?: 'error' | 'success' }> {
-    console.log('[verifyCode] 요청 수신 - 전화번호:', phoneNumber);
-    console.log('[verifyCode] 입력된 인증 코드:', verificationCode);
-
     if (!phoneNumber || !verificationCode) {
       console.warn('[verifyCode] 전화번호 또는 코드 누락');
       return { message: '전화번호와 인증 코드가 필요합니다.' };
@@ -82,8 +73,6 @@ export class PhoneVerificationService {
     try {
       const storedVerification =
         await this.phoneVerificationRepository.findByPhoneNumber(phoneNumber);
-
-      console.log('[verifyCode] DB 조회 결과:', storedVerification);
 
       if (!storedVerification) {
         console.warn('[verifyCode] 인증 정보 없음');

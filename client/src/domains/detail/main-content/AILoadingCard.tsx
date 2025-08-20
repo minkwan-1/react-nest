@@ -3,6 +3,7 @@ import { Card, CardContent, CircularProgress, Typography } from "@mui/material";
 const AILoadingCard = () => {
   return (
     <Card
+      variant="outlined"
       sx={{
         mb: 4,
 

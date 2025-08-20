@@ -2,12 +2,6 @@ import { createContext, ReactNode } from "react";
 
 export const ThemeContext = createContext("light");
 
-// const useThemeContextValue = ()=>{
-//     const value = useContext(ThemeContext)
-//     return value
-// }
-// const theme = useContext(ThemeContext);
-
 interface ContextProviderProps {
   children: ReactNode;
 }

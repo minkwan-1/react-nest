@@ -14,7 +14,6 @@ export class AuthSerializer extends PassportSerializer {
     super();
   }
 
-  // [1] Serializer
   serializeUser(user: any, done: (err: any, id?: any) => void) {
     if (!user || !user.id) {
       return done(new Error('Invalid user object'));
@@ -25,12 +24,9 @@ export class AuthSerializer extends PassportSerializer {
       provider: user.provider,
     };
 
-    console.log('serializer 실행');
-
     done(null, sessionData);
   }
 
-  // [2] Deserializer
   async deserializeUser(
     payload: { id: string; provider: string },
     done: (err: any, user?: any) => void,
@@ -57,7 +53,7 @@ export class AuthSerializer extends PassportSerializer {
       }
 
       if (!user) return done(null, false);
-      console.log('deserializer 실행');
+
       done(null, user);
     } catch (error) {
       done(error);

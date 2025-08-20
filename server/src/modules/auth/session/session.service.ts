@@ -6,7 +6,6 @@ import { Request, Response } from 'express';
 export class SessionService {
   constructor(private sessionRepository: SessionRepository) {}
 
-  // [1] 로그인 처리 및 세션 저장
   async loginWithSession(req: Request, user: any): Promise<void> {
     try {
       await new Promise<void>((resolve, reject) => {
@@ -33,7 +32,6 @@ export class SessionService {
     }
   }
 
-  // [2] 세션 기반 사용자 조회 (로그인 유지 여부 확인)
   async findWithSession(req: Request): Promise<any> {
     const sessionId = req.sessionID;
 
@@ -66,7 +64,6 @@ export class SessionService {
     };
   }
 
-  // [3] 로그아웃 처리: 세션 DB 삭제, Passport 로그아웃, 세션 파괴
   async logoutWithSession(req: Request, res: Response): Promise<void> {
     const sessionId = req.sessionID;
 

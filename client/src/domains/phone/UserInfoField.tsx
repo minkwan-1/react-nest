@@ -1,4 +1,4 @@
-import { Box, Typography, Paper, Avatar } from "@mui/material";
+import { Box, Typography, Paper } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
 import EmailIcon from "@mui/icons-material/Email";
 import { SetStateAction } from "jotai";
@@ -13,7 +13,6 @@ const UserInfoField = ({ userInfo }: UserInfoFieldProps) => {
   // 유저 이름과 이메일 정보 가져오기 (없을 경우 기본값 설정)
   const name = userInfo?.name || "이름 정보 없음";
   const email = userInfo?.email || "이메일 정보 없음";
-  const nameInitial = name ? name.charAt(0).toUpperCase() : "?";
 
   return (
     // 전체 회원 정보 카드 UI 컨테이너
@@ -56,21 +55,6 @@ const UserInfoField = ({ userInfo }: UserInfoFieldProps) => {
           flexDirection: { xs: "column", sm: "row" },
         }}
       >
-        {/* 프로필 아바타 */}
-        <Avatar
-          sx={{
-            width: 80,
-            height: 80,
-            bgcolor: "#ffffff",
-            color: "#b8dae1",
-            border: `2px solid #b8dae1`,
-            fontSize: 32,
-            fontWeight: "bold",
-          }}
-        >
-          {nameInitial}
-        </Avatar>
-
         {/* 이름과 이메일 정보 */}
         <Box sx={{ width: "100%" }}>
           {/* 이름 영역 */}

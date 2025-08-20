@@ -92,7 +92,6 @@ export class GoogleAuthService {
         return { ...user, isExist: true };
       }
 
-      // 신규 GoogleUser 저장
       const {
         id,
         email,

@@ -10,7 +10,6 @@ export class PhoneVerificationRepository {
     private readonly repo: Repository<PhoneVerification>,
   ) {}
 
-  // 전화번호 인증 정보 저장
   async savePhoneVerificationInfo(
     phoneNumber: string,
     code: string,

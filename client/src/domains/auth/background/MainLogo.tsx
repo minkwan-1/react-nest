@@ -42,12 +42,7 @@ const MainLogo = ({ keyColor }: MainLogoProps) => {
         sx={{
           fontSize: 50,
           animation: `${pulsate} 4s ease-in-out infinite 1s`,
-          ...theme.applyStyles("light", {
-            color: keyColor,
-          }),
-          ...theme.applyStyles("dark", {
-            color: keyColor,
-          }),
+          color: "#b8dae1",
         }}
       />
     </Box>

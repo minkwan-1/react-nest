@@ -1,4 +1,4 @@
-import { Box, useTheme } from "@mui/material";
+import { Box } from "@mui/material";
 import CodeIcon from "@mui/icons-material/Code";
 import ChatIcon from "@mui/icons-material/Chat";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
@@ -10,20 +10,13 @@ interface FeatureListProps {
 }
 
 const FeatureList = ({ keyColor }: FeatureListProps) => {
-  const theme = useTheme();
-
   return (
     <Box sx={{ textAlign: "left", mb: 6 }}>
       <FeatureItem
         icon={
           <HelpOutlineIcon
             sx={{
-              ...theme.applyStyles("light", {
-                color: keyColor,
-              }),
-              ...theme.applyStyles("dark", {
-                color: keyColor,
-              }),
+              color: "#b8dae1",
             }}
           />
         }
@@ -37,12 +30,7 @@ const FeatureList = ({ keyColor }: FeatureListProps) => {
         icon={
           <CodeIcon
             sx={{
-              ...theme.applyStyles("light", {
-                color: keyColor,
-              }),
-              ...theme.applyStyles("dark", {
-                color: keyColor,
-              }),
+              color: keyColor,
             }}
           />
         }
@@ -56,12 +44,7 @@ const FeatureList = ({ keyColor }: FeatureListProps) => {
         icon={
           <ChatIcon
             sx={{
-              ...theme.applyStyles("light", {
-                color: keyColor,
-              }),
-              ...theme.applyStyles("dark", {
-                color: keyColor,
-              }),
+              color: keyColor,
             }}
           />
         }

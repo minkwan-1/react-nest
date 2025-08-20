@@ -1,10 +1,7 @@
-// components/sign-up/BenefitsList.tsx
-import { Box, Typography, useTheme } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 
 const BenefitsList = () => {
-  const theme = useTheme();
-
   const benefits = [
     "간편한 로그인으로 빠르게 서비스를 이용하실 수 있습니다.",
     "소셜 계정 연동으로 아이디와 비밀번호를 기억할 필요가 없습니다.",
@@ -18,12 +15,6 @@ const BenefitsList = () => {
         sx={{
           mb: 2,
           fontWeight: 500,
-          ...theme.applyStyles("light", {
-            color: "#555",
-          }),
-          ...theme.applyStyles("dark", {
-            color: "#b0b0b0",
-          }),
         }}
       >
         소셜 계정으로 Pullim 시작
@@ -42,27 +33,10 @@ const BenefitsList = () => {
             fontSize="small"
             sx={{
               mr: 1.5,
-              ...theme.applyStyles("light", {
-                color: "#b8dae1",
-              }),
-              ...theme.applyStyles("dark", {
-                color: "#b8dae1",
-              }),
+              color: "#b8dae1",
             }}
           />
-          <Typography
-            variant="body2"
-            sx={{
-              ...theme.applyStyles("light", {
-                color: "#333",
-              }),
-              ...theme.applyStyles("dark", {
-                color: "#e0e0e0",
-              }),
-            }}
-          >
-            {benefit}
-          </Typography>
+          <Typography variant="body2">{benefit}</Typography>
         </Box>
       ))}
     </Box>

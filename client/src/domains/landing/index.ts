@@ -4,6 +4,7 @@ import Feature from "./Feature";
 import FeaturesSection from "./FeaturesSection";
 import PopularTagsSection from "./PopularTagsSection";
 import CTASection from "./CTASection";
+import AdditionalBlurCircle from "./AdditionalBlurCircle";
 
 export {
   AnimatedSection,
@@ -12,4 +13,5 @@ export {
   FeaturesSection,
   PopularTagsSection,
   CTASection,
+  AdditionalBlurCircle,
 };

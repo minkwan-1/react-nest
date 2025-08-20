@@ -20,8 +20,6 @@ const SignInSocialButtons = () => {
           mb: 1,
           fontWeight: "bold",
           fontSize: { xs: "1.6em", sm: "2rem" },
-          ...theme.applyStyles("light", { color: "text.primary" }),
-          ...theme.applyStyles("dark", { color: "#f5f5f5" }),
         }}
       >
         소셜 계정으로 Pullim 시작하기
@@ -31,14 +29,11 @@ const SignInSocialButtons = () => {
         sx={{
           mb: 4,
           fontWeight: 300,
-          ...theme.applyStyles("light", { color: "text.secondary" }),
-          ...theme.applyStyles("dark", { color: "#b0b0b0" }),
         }}
       >
         소셜 계정으로 빠르게 Pullim을 이용해 보세요
       </Typography>
 
-      {/* Google 로그인 버튼 */}
       <Button
         onClick={() => handleOAuthLogin("google")}
         variant="outlined"
@@ -74,7 +69,6 @@ const SignInSocialButtons = () => {
         구글로 시작하기
       </Button>
 
-      {/* Naver 로그인 버튼 */}
       <Button
         onClick={() => handleOAuthLogin("naver")}
         variant="contained"
@@ -107,13 +101,10 @@ const SignInSocialButtons = () => {
         네이버로 시작하기
       </Button>
 
-      {/* 구분선 */}
       <Box sx={{ display: "flex", alignItems: "center", my: 3 }}>
         <Divider
           sx={{
             flex: 1,
-            ...theme.applyStyles("light", { borderColor: "#00000008" }),
-            ...theme.applyStyles("dark", { borderColor: "#ffffff15" }),
           }}
         />
       </Box>

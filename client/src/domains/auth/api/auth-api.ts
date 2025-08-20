@@ -25,7 +25,6 @@ export const postAuthorizationCode = async ({
   state: string | null;
 }) => {
   try {
-    // any 대신 정의된 AuthorizationPayload 타입을 사용
     const payload: AuthorizationPayload = {
       code,
       provider,
@@ -54,7 +53,6 @@ export const postAuthorizationCode = async ({
 };
 
 export const signup = async (userInfo: SignupUserInfo) => {
-  console.log(userInfo.provider);
   try {
     let endpoint = "";
     switch (userInfo.provider) {

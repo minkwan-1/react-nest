@@ -33,7 +33,6 @@ export class PhoneVerificationController {
     private readonly usersService: UsersService,
   ) {}
 
-  // [POST] 인증 코드 전송 요청
   @Post('send-code')
   async sendSms(
     @Body() body: SendCodeDto,
@@ -45,12 +44,9 @@ export class PhoneVerificationController {
       formattedPhoneNumber = formattedPhoneNumber.substring(3);
     }
 
-    console.log('DB 조회용으로 변환된 번호: ', formattedPhoneNumber);
-
     const existingUser =
       await this.usersService.findByPhoneNumber(formattedPhoneNumber);
 
-    console.log('다른 프로바이더로 가입한 유저 정보: ', existingUser);
     if (existingUser) {
       return {
         message:

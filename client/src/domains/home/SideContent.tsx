@@ -91,6 +91,7 @@ const SideContent = () => {
 
       <Box
         sx={{
+          padding: "10px 0px",
           flex: 1,
           overflowY: "auto",
           display: "flex",
@@ -132,6 +133,7 @@ const SideContent = () => {
           !isError &&
           data?.map((news, index) => (
             <Card
+              variant="outlined"
               key={index}
               sx={{
                 display: "flex",

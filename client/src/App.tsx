@@ -1,4 +1,4 @@
-import { Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import {
   HomePage,
   MyPage,
@@ -16,16 +16,10 @@ import AuthRedirectModal from "@domains/common/modal/AuthRedirectModal";
 import CommonErrorModal from "@domains/common/modal/CommonModal";
 import { GlobalActionButton } from "@domains/home";
 import Commonsnackbar from "@domains/common/snackbar/CommonSnackbar";
+import { useShouldHide } from "./hooks/common/useShouldHide";
 
 const App = () => {
-  const location = useLocation();
-
-  const hideOnExactPaths = ["/", "/start", "/phone", "/redirect", "/edit"];
-
-  const shouldHide =
-    hideOnExactPaths.includes(location.pathname) ||
-    location.pathname.startsWith("/modify/");
-
+  const shouldHide = useShouldHide();
   return (
     <>
       <Routes>
@@ -54,5 +48,3 @@ const App = () => {
 };
 
 export default App;
-
-// userInfo (x) => 라우팅 처리, 전역 상태가 null, 유저가 있어도 무조건 팅김

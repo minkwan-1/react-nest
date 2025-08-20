@@ -26,7 +26,7 @@ const HomePage = () => {
           sx={{
             display: { xs: "none", md: "flex" },
 
-            flex: 1.5,
+            flex: 1.7,
             minHeight: 0,
           }}
         >

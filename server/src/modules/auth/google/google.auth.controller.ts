@@ -47,7 +47,6 @@ export class GoogleAuthController {
         const dbUser = await this.usersService.findByAccountID(user.id);
 
         if (!dbUser) {
-          // [핵심 변경] isExist 값을 false로 명시적으로 덮어써서 프론트엔드가 신규 가입으로 인식하도록 합니다.
           const newUserPayload = { ...user, isExist: false };
           return res.send({
             message: '신규 유저 데이터',

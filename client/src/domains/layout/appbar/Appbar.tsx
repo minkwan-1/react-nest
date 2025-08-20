@@ -22,12 +22,8 @@ function Appbar({ sx }: AppbarProps) {
 
   const { data, isSuccess, isError } = useFetchMeQuery();
 
-  console.log("!!!!!!!!!!!!!!!!!", useFetchMeQuery().data);
-  console.log("!!!!!!!!!!!!!!!!!", realUser);
-
   useEffect(() => {
     if (isSuccess) {
-      console.log("실행됨: ", data);
       setRealUser(data);
     }
     if (isError) {
