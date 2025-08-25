@@ -13,7 +13,7 @@ const ComponentWrapper = ({
   return (
     <Box
       sx={{
-        maxWidth: "800px",
+        maxWidth: "1200px",
         margin: "0 auto",
         flexGrow: 1,
         ...sx,

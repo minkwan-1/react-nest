@@ -1,5 +1,4 @@
-// hooks/useAiAnswer.ts
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 import { Answer, UseAiAnswerReturn } from "../types";
 import { apiService } from "../services/apiService";
 
@@ -8,26 +7,59 @@ export const useAiAnswer = (): UseAiAnswerReturn => {
   const [aiLoading, setAiLoading] = useState(false);
   const [aiError, setAiError] = useState<string | null>(null);
 
+  const streamRef = useRef<(() => void) | null>(null);
+  console.log("1번 streamRef: ", streamRef);
   const fetchAiAnswer = useCallback(async (questionId: number) => {
     if (!questionId) return;
 
+    if (streamRef.current) {
+      streamRef.current();
+    }
+
     setAiLoading(true);
     setAiError(null);
+    setAiAnswer(null);
 
-    try {
-      const aiAnswerData = await apiService.ai.getAiAnswer(questionId);
+    const closeStream = apiService.ai.streamAiAnswer({
+      questionId,
+      onData: (chunk) => {
+        setAiLoading((currentLoading) => {
+          if (currentLoading) {
+            return false;
+          }
+          return currentLoading;
+        });
 
-      setAiAnswer(aiAnswerData);
-    } catch (error) {
-      const errorMessage =
-        error instanceof Error
-          ? error.message
-          : "AI 답변을 불러오는 중 오류가 발생했습니다.";
-      console.error("AI 답변 로딩 실패:", errorMessage);
-      setAiError(errorMessage);
-    } finally {
-      setAiLoading(false);
-    }
+        setAiAnswer((prev) => {
+          if (!prev) {
+            const now = new Date().toISOString();
+            return {
+              id: "ai-answer-streaming",
+              questionId: questionId.toString(),
+              userId: "ai-assistant",
+              content: chunk,
+              createdAt: now,
+              updatedAt: now,
+              isAiAnswer: true,
+            };
+          }
+          return {
+            ...prev,
+            content: prev.content + chunk,
+          };
+        });
+      },
+      onComplete: (fullText) => {
+        console.log("스트리밍 최종 완료:", fullText);
+      },
+      onError: (error) => {
+        setAiError(error.message);
+
+        setAiLoading(false);
+      },
+    });
+
+    streamRef.current = closeStream;
   }, []);
 
   return {

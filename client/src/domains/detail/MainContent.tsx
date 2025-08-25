@@ -1,5 +1,7 @@
 import { useEffect } from "react";
+
 import { Box } from "@mui/material";
+
 import "react-quill/dist/quill.snow.css";
 
 import {
@@ -22,6 +24,8 @@ import {
 
 const MainContent = () => {
   const { id, question, loading, user } = useQuestionDetail();
+
+  console.log(user);
 
   const { answers, answersLoading, answersError, fetchAnswers } =
     useAnswers(id);

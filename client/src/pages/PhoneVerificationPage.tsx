@@ -9,7 +9,7 @@ const PhoneVerificationPage = () => {
 
   return (
     <PageContainer>
-      <ComponentWrapper sx={{ maxWidth: "600px" }}>
+      <ComponentWrapper sx={{ maxWidth: "800px" }}>
         <Box sx={{ padding: 4 }}>
           <PhoneVerificationContainer
             userInfo={userInfo}

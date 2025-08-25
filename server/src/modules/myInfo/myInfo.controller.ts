@@ -1,6 +1,16 @@
-import { Body, Controller, Get, Post, Query, Logger } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Query,
+  Logger,
+  UseGuards,
+} from '@nestjs/common';
 import { MyInfoService } from './myInfo.service';
+import { AuthenticatedGuard } from '../auth/guard/authenticated.guard';
 
+@UseGuards(AuthenticatedGuard)
 @Controller('my-info')
 export class MyInfoController {
   private readonly logger = new Logger(MyInfoController.name);

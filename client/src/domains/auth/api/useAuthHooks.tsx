@@ -32,15 +32,18 @@ export const useFetchMeQuery = () =>
     retry: false,
   });
 
-export const useLogoutUser = () => {
+export const useLogoutUser = (router = true) => {
   const navigate = useNavigate();
+
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: logoutUser,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["auth", "me"] });
-      navigate("/");
+      if (router) {
+        navigate("/");
+      }
     },
     onError: (err) => {
       console.error("로그아웃 실패:", err);

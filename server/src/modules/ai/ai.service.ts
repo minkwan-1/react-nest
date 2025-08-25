@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { AiAnswer } from './ai.entity';
 import { Question } from '../questions/questions.entity';
 import { JSDOM } from 'jsdom';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class AiService {
@@ -14,7 +15,6 @@ export class AiService {
   constructor(
     @InjectRepository(AiAnswer)
     private readonly aiAnswerRepository: Repository<AiAnswer>,
-
     @InjectRepository(Question)
     private readonly questionRepository: Repository<Question>,
   ) {
@@ -23,100 +23,79 @@ export class AiService {
       throw new Error('GEMINI_API_KEY 환경변수가 설정되지 않았습니다.');
     }
     this.genAI = new GoogleGenerativeAI(apiKey);
-    this.model = this.genAI.getGenerativeModel({ model: 'gemini-2.5-pro' });
+    this.model = this.genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
   }
 
-  async generateAnswer(
+  generateAnswerStream(
     title: string,
     content: string,
     questionId: number,
-  ): Promise<string> {
-    console.log('[generateAnswer] 호출됨', { title, content, questionId });
-
-    // HTML 제거
+  ): Observable<string> {
     const plainContent =
       new JSDOM(content).window.document.body.textContent || '';
     const prompt = this.buildPrompt(title, plainContent);
 
-    console.log('[generateAnswer] 생성된 프롬프트:', prompt);
+    return new Observable((subscriber) => {
+      const runStream = async () => {
+        try {
+          const result = await this.model.generateContentStream(prompt);
 
-    try {
-      let aiAnswer: string | undefined;
-
-      // 최대 3회 재시도
-      for (let attempt = 1; attempt <= 3; attempt++) {
-        console.log(`[generateAnswer] Gemini API 호출 시도 ${attempt}`);
-        const result = await this.model.generateContent(prompt);
-        console.log(
-          '[generateAnswer] raw result:',
-          JSON.stringify(result, null, 2),
-        );
-
-        // 안전하게 추출
-        const candidate = result.response?.candidates?.[0];
-        if (candidate) {
-          if (candidate.content?.parts?.length) {
-            aiAnswer = candidate.content.parts[0].text;
-          } else if (candidate.content?.text) {
-            aiAnswer = candidate.content.text;
+          let fullAnswer = '';
+          for await (const chunk of result.stream) {
+            const chunkText = chunk.text();
+            fullAnswer += chunkText;
+            subscriber.next(chunkText);
           }
+
+          if (fullAnswer.trim()) {
+            await this.saveAnswer(questionId, title, fullAnswer.trim());
+          }
+
+          subscriber.complete();
+        } catch (error: any) {
+          subscriber.error(this.handleApiError(error));
         }
+      };
 
-        console.log('[generateAnswer] 추출된 AI 답변:', aiAnswer);
+      runStream();
+    });
+  }
 
-        if (aiAnswer && aiAnswer.trim() !== '') break;
+  private async saveAnswer(questionId: number, title: string, content: string) {
+    let answer = await this.findByQuestionId(questionId);
+    if (answer) {
+      answer.content = content;
+    } else {
+      answer = this.aiAnswerRepository.create({ questionId, title, content });
+    }
+    await this.aiAnswerRepository.save(answer);
+  }
 
-        console.warn('[generateAnswer] AI 응답이 비어 있음, 재시도...');
-      }
-
-      if (!aiAnswer || aiAnswer.trim() === '') {
-        throw new Error('AI로부터 답변을 받지 못했습니다.');
-      }
-
-      // DB 저장
-      const savedAnswer = this.aiAnswerRepository.create({
-        questionId,
-        title,
-        content: aiAnswer.trim(),
-      });
-      await this.aiAnswerRepository.save(savedAnswer);
-
-      console.log('[generateAnswer] 최종 AI 답변 저장 완료');
-      return aiAnswer.trim();
-    } catch (error: any) {
-      console.error('[generateAnswer] Gemini API 호출 실패', error);
-
-      if (error.message?.includes('API_KEY')) {
-        throw new HttpException(
-          'API 키 설정에 문제가 있습니다.',
-          HttpStatus.UNAUTHORIZED,
-        );
-      }
-
-      if (error.message?.includes('quota')) {
-        throw new HttpException(
-          'API 할당량을 초과했습니다.',
-          HttpStatus.TOO_MANY_REQUESTS,
-        );
-      }
-
-      throw new HttpException(
-        'AI 서비스 연결에 실패했습니다.',
-        HttpStatus.SERVICE_UNAVAILABLE,
+  private handleApiError(error: any): HttpException {
+    if (error.message?.includes('API_KEY')) {
+      return new HttpException(
+        'API 키 설정에 문제가 있습니다.',
+        HttpStatus.UNAUTHORIZED,
       );
     }
+    if (error.message?.includes('quota')) {
+      return new HttpException(
+        'API 할당량을 초과했습니다.',
+        HttpStatus.TOO_MANY_REQUESTS,
+      );
+    }
+    return new HttpException(
+      'AI 서비스 연결에 실패했습니다.',
+      HttpStatus.SERVICE_UNAVAILABLE,
+    );
   }
 
   async findByQuestionId(questionId: number): Promise<AiAnswer | null> {
-    return this.aiAnswerRepository.findOne({
-      where: { questionId },
-    });
+    return this.aiAnswerRepository.findOne({ where: { questionId } });
   }
 
   async findQuestionById(questionId: number): Promise<Question | null> {
-    return this.questionRepository.findOne({
-      where: { id: questionId },
-    });
+    return this.questionRepository.findOne({ where: { id: questionId } });
   }
 
   private buildPrompt(title: string, content: string): string {
@@ -135,6 +114,7 @@ ${content}
 3. 가능한 한 실용적이고 실행 가능한 솔루션을 제시해주세요
 4. 답변은 한국어로 작성해주세요
 5. 마크다운 형식을 사용해서 읽기 쉽게 구조화해주세요
+6. 글자 수는 1000자 이내로 제한해주세요
 
 답변:`;
   }

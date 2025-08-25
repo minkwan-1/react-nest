@@ -5,6 +5,7 @@
       //하위 디렉터리용 상대경로 매핑
       "atom/*": ["atom/*"],
       "domains/*": ["domains/*"]
+      // "pages/*": ["pages/*"]
     },
 
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",

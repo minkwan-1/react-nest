@@ -17,6 +17,7 @@ import CommonErrorModal from "@domains/common/modal/CommonModal";
 import { GlobalActionButton } from "@domains/home";
 import Commonsnackbar from "@domains/common/snackbar/CommonSnackbar";
 import { useShouldHide } from "./hooks/common/useShouldHide";
+import { AuthenticatedWrapper } from "../src/providers";
 
 const App = () => {
   const shouldHide = useShouldHide();
@@ -24,15 +25,36 @@ const App = () => {
     <>
       <Routes>
         <Route path="/" element={<LandingPage />} />
-        <Route path="/home" element={<HomePage />} />
-        <Route path="/my" element={<MyPage />} />
-        <Route path="/my/edit" element={<MyInfoEditPage />} />
-        <Route path="/edit" element={<QuestionEditPage />} />
-
-        <Route path="/questions/:id" element={<QuestionDetailPage />} />
-        <Route path="/modify/:id" element={<ModifyQuestionPage />} />
-
         <Route path="/start" element={<StartPage />} />
+        <Route path="/home" element={<HomePage />} />
+
+        <Route path="/edit" element={<QuestionEditPage />} />
+        <Route
+          path="/my"
+          element={
+            <AuthenticatedWrapper>
+              <MyPage />
+            </AuthenticatedWrapper>
+          }
+        />
+        <Route
+          path="/my/edit"
+          element={
+            <AuthenticatedWrapper>
+              <MyInfoEditPage />
+            </AuthenticatedWrapper>
+          }
+        />
+        <Route
+          path="/modify/:id"
+          element={
+            <AuthenticatedWrapper>
+              <ModifyQuestionPage />
+            </AuthenticatedWrapper>
+          }
+        />
+        <Route path="/questions/:id" element={<QuestionDetailPage />} />
+
         <Route path="*" element={<NotFoundPage />} />
         <Route path="/redirect" element={<RedirectPage />} />
         <Route path="/phone" element={<PhoneVerificationPage />} />

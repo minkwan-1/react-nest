@@ -10,6 +10,7 @@ import RedirectPage from "./RedirectPage";
 import StartPage from "./StartPage";
 import ModifyQuestionPage from "./ModifyQuestionPage";
 import MyInfoEditPage from "./MyInfoEditPage";
+import SessionExpiredPage from "./SessionExpiredPage";
 
 export {
   HomePage,
@@ -23,4 +24,5 @@ export {
   StartPage,
   ModifyQuestionPage,
   MyInfoEditPage,
+  SessionExpiredPage,
 };

@@ -12,7 +12,6 @@ import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
-// 뉴스 데이터 타입
 interface NewsItem {
   title: string;
   summary: string;
@@ -22,7 +21,6 @@ interface NewsItem {
   pubDate?: string;
 }
 
-// API 응답 타입
 interface NewsApiResponse {
   title: string;
   summary: string;
@@ -32,7 +30,6 @@ interface NewsApiResponse {
   pubDate?: string;
 }
 
-// 날짜 포맷팅 함수
 const formatDate = (dateString?: string) => {
   if (!dateString) return "";
   try {
@@ -78,6 +75,7 @@ const SideContent = () => {
         minHeight: 0,
       }}
     >
+      {/* 컴포넌트 분리 추천: SectionHeader 또는 NewsHeader */}
       <Typography
         sx={{
           fontSize: "28px",
@@ -117,21 +115,25 @@ const SideContent = () => {
           },
         }}
       >
+        {/* 컴포넌트 분리 추천: LoadingSpinner */}
         {isLoading && (
           <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
             <CircularProgress />
           </Box>
         )}
 
+        {/* 컴포넌트 분리 추천: ErrorMessage */}
         {isError && (
           <Typography color="error" sx={{ mt: 2, px: 1 }}>
             뉴스 데이터를 불러오는 중 오류가 발생했습니다.
           </Typography>
         )}
 
+        {/* 컴포넌트 분리 추천: NewsList */}
         {!isLoading &&
           !isError &&
           data?.map((news, index) => (
+            /* 컴포넌트 분리 추천: NewsCard */
             <Card
               variant="outlined"
               key={index}
@@ -149,6 +151,7 @@ const SideContent = () => {
                 minHeight: "120px",
               }}
             >
+              {/* 컴포넌트 분리 추천: NewsImage */}
               {news.image && (
                 <CardMedia
                   component="img"
@@ -171,6 +174,7 @@ const SideContent = () => {
                   minWidth: 0,
                 }}
               >
+                {/* 컴포넌트 분리 추천: NewsContent */}
                 <CardContent
                   sx={{
                     flex: "1 0 auto",
@@ -179,6 +183,7 @@ const SideContent = () => {
                     minWidth: 0,
                   }}
                 >
+                  {/* 컴포넌트 분리 추천: NewsTitle */}
                   <Typography
                     component="div"
                     variant="h6"
@@ -199,6 +204,7 @@ const SideContent = () => {
                     {news.title}
                   </Typography>
 
+                  {/* 컴포넌트 분리 추천: NewsSummary */}
                   <Typography
                     variant="body2"
                     color="text.secondary"
@@ -217,6 +223,7 @@ const SideContent = () => {
                   </Typography>
                 </CardContent>
 
+                {/* 컴포넌트 분리 추천: NewsFooter */}
                 <Box
                   sx={{
                     display: "flex",
@@ -226,6 +233,7 @@ const SideContent = () => {
                     gap: 1,
                   }}
                 >
+                  {/* 컴포넌트 분리 추천: NewsMetadata */}
                   <Box
                     sx={{
                       display: "flex",
@@ -235,6 +243,7 @@ const SideContent = () => {
                       flex: 1,
                     }}
                   >
+                    {/* 컴포넌트 분리 추천: SourceChip */}
                     {news.source && (
                       <Chip
                         label={news.source}
@@ -246,6 +255,7 @@ const SideContent = () => {
                         }}
                       />
                     )}
+                    {/* 컴포넌트 분리 추천: DateDisplay */}
                     <Typography
                       variant="caption"
                       color="text.disabled"
@@ -259,6 +269,7 @@ const SideContent = () => {
                     </Typography>
                   </Box>
 
+                  {/* 컴포넌트 분리 추천: ReadMoreButton */}
                   <Button
                     size="small"
                     variant="outlined"

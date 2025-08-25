@@ -1,4 +1,6 @@
-import { API_URL } from "@api/axiosConfig";
+// src/services/apiService.ts
+
+// import { API_URL } from "@api/axiosConfig";
 import {
   Answer,
   Question,
@@ -10,7 +12,7 @@ import {
 } from "../types";
 
 // 기본 API 설정
-const API_BASE_URL = "http://localhost:3000";
+const API_BASE_URL = "http://localhost:3000"; // 실제 API 서버 주소로 사용됩니다.
 
 // 공통 에러 처리 함수
 const handleApiError = (error: unknown, fallbackMessage: string): string => {
@@ -26,6 +28,7 @@ const apiRequest = async <T>(
   options?: RequestInit
 ): Promise<T> => {
   const response = await fetch(url, {
+    credentials: "include",
     headers: {
       "Content-Type": "application/json",
       ...options?.headers,
@@ -103,11 +106,56 @@ export const answerService = {
 
 // AI 답변 관련 API
 export const aiService = {
-  // AI 답변 요청
+  // [신규] AI 답변 스트리밍 요청 함수
+  streamAiAnswer: ({
+    questionId,
+    onData,
+    onComplete,
+    onError,
+  }: {
+    questionId: number;
+    onData: (chunk: string) => void;
+    onComplete: (fullText: string) => void;
+    onError: (error: Error) => void;
+  }): (() => void) => {
+    const eventSource = new EventSource(
+      `${API_BASE_URL}/api/ask-ai/stream/${questionId}`
+    );
+
+    console.log(eventSource);
+
+    let fullAnswer = "";
+
+    eventSource.onmessage = (event) => {
+      const chunk = event.data;
+      console.log("청크 확인: ", chunk);
+      fullAnswer += chunk;
+      onData(chunk);
+    };
+
+    eventSource.onerror = (error) => {
+      console.error("EventSource failed:", error);
+      // 서버가 정상적으로 연결을 닫아도 onerror가 호출됩니다.
+      // 실제 에러와 정상 종료를 구분하려면 서버에서 별도 시그널을 보내는 것이 좋습니다.
+      onError(
+        new Error("스트리밍 중 오류가 발생했거나 연결이 종료되었습니다.")
+      );
+      onComplete(fullAnswer);
+      eventSource.close();
+    };
+
+    // 연결을 수동으로 닫는 함수를 반환합니다.
+    return () => {
+      eventSource.close();
+    };
+  },
+
+  // AI 답변 요청 (기존 단일 요청 방식, 필요시 사용)
   getAiAnswer: async (questionId: number): Promise<Answer> => {
     try {
       const response = await apiRequest<ApiResponse<AiAnswerResponse>>(
-        `${API_URL}api/ask-ai/${questionId}` // ✅ id 기반 API 호출
+        // API_URL을 API_BASE_URL로 통일했습니다. 환경에 맞게 수정해주세요.
+        `${API_BASE_URL}/api/ask-ai/${questionId}`
       );
 
       return {
@@ -126,8 +174,9 @@ export const aiService = {
     }
   },
 
-  // AI 답변 재생성
+  // AI 답변 재생성 (기존 단일 요청 방식, 필요시 사용)
   regenerateAiAnswer: async (question: Question): Promise<Answer> => {
+    // 이 함수도 스트리밍으로 변경하려면 streamAiAnswer와 유사한 로직이 필요합니다.
     try {
       const queryParams = new URLSearchParams({
         title: question.title,

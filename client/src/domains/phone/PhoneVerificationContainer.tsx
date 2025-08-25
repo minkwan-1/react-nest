@@ -104,7 +104,7 @@ function PhoneVerificationContainer(props: PhoneVerificationContainerProps) {
   };
 
   return (
-    <Container maxWidth="sm">
+    <Container>
       <Box sx={{ py: 4 }}>
         {/* 현재 단계 표시용 스텝 인디케이터 */}
         <StepIndicator step={stepIndex + 1} totalSteps={steps.length} />

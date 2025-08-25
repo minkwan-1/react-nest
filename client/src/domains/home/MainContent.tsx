@@ -1,4 +1,3 @@
-// MainContent.tsx
 import { Box } from "@mui/material";
 import { useState, useRef } from "react";
 import { HomePageTitle, SearchBar, NewsSlider } from "@domains/home/index";
@@ -32,8 +31,6 @@ const MainContent = () => {
     setCurrentPage(value);
   };
 
-  console.log("페이지네이션 데이터: ", data);
-
   return (
     <Box
       sx={{
@@ -43,7 +40,7 @@ const MainContent = () => {
         height: "100%",
       }}
     >
-      <ComponentWrapper sx={{ maxWidth: "1200px" }}>
+      <ComponentWrapper>
         <HomePageTitle />
 
         <SearchBar onSearchChange={handleSearchChange} />

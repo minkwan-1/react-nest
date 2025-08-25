@@ -13,14 +13,17 @@ import {
   Query,
   DefaultValuePipe,
   NotFoundException,
+  UseGuards,
 } from '@nestjs/common';
 import { Question } from './questions.entity';
 import { QuestionsService } from './questions.service';
+import { AuthenticatedGuard } from '../auth/guard/authenticated.guard';
 
 @Controller('questions')
 export class QuestionsController {
   constructor(private readonly questionsService: QuestionsService) {}
 
+  @UseGuards(AuthenticatedGuard)
   @Post()
   async create(
     @Body('title') title: string,
@@ -38,6 +41,7 @@ export class QuestionsController {
     return this.questionsService.findAllByUser(userId);
   }
 
+  @UseGuards(AuthenticatedGuard)
   @Delete('delete/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
   async delete(
@@ -50,12 +54,14 @@ export class QuestionsController {
   @Get(':id')
   async findOne(@Param('id', ParseIntPipe) id: number): Promise<Question> {
     const question = await this.questionsService.findOne(id);
+
     if (!question) {
       throw new NotFoundException(`Question with ID ${id} not found.`);
     }
     return question;
   }
 
+  @UseGuards(AuthenticatedGuard)
   @Put('modify/:id')
   async update(
     @Param('id', ParseIntPipe) questionId: number,

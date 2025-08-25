@@ -1,5 +1,5 @@
 import { Box, Typography } from "@mui/material";
-import { AILoadingCard, AIErrorAlert, AnswerLoadingOrEmpty } from "./index";
+import { AILoadingCard, AnswerLoadingOrEmpty } from "./index";
 
 type Answer = {
   id: string;
@@ -24,7 +24,6 @@ type AnswerListProps = {
 const AnswerList = ({
   aiAnswer,
   aiLoading,
-  aiError,
   answersLoading,
   answersError,
   answers,
@@ -49,7 +48,7 @@ const AnswerList = ({
       {aiLoading && <AILoadingCard />}
 
       {/* AIErrorAlert */}
-      {aiError && <AIErrorAlert aiError={aiError} />}
+      {/* {aiError && <AIErrorAlert aiError={aiError} />} */}
 
       {/* AnswerLoadingOrEmpty */}
       <AnswerLoadingOrEmpty
