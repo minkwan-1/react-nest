@@ -1,7 +1,13 @@
+// myInfo.service.ts
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MyInfo } from './myInfo.entity';
 import { Repository } from 'typeorm';
+
+export interface PublicMyInfo {
+  nickname: string;
+  profileImageUrl?: string;
+}
 
 @Injectable()
 export class MyInfoService {
@@ -10,7 +16,6 @@ export class MyInfoService {
     private readonly myInfoRepository: Repository<MyInfo>,
   ) {}
 
-  // myInfo 등록 처리
   async upsert(
     userId: string,
     nickname: string,
@@ -26,7 +31,6 @@ export class MyInfoService {
       if (profileImageUrl !== undefined) {
         existing.profileImageUrl = profileImageUrl;
       }
-
       await this.myInfoRepository.save(existing);
     } else {
       const newMyInfo = {
@@ -35,16 +39,22 @@ export class MyInfoService {
         socialLinks,
         profileImageUrl: profileImageUrl || null,
       };
-
       await this.myInfoRepository.save({ userId, ...newMyInfo });
     }
   }
 
-  // myInfo 찾기
   async find(userId: string): Promise<MyInfo | null> {
-    console.log(userId);
     const entry = await this.myInfoRepository.findOne({ where: { userId } });
-    console.log(userId);
     return entry;
+  }
+
+  async findPublicInfo(userId: string): Promise<PublicMyInfo | null> {
+    const entry = await this.myInfoRepository.findOne({ where: { userId } });
+    if (!entry) return null;
+    const publicMyInfo: PublicMyInfo = {
+      nickname: entry.nickname,
+      profileImageUrl: entry.profileImageUrl,
+    };
+    return publicMyInfo;
   }
 }

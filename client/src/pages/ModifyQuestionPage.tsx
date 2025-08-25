@@ -12,7 +12,7 @@ import {
   useModifyQuestionSubmit,
 } from "@domains/modify/hooks/index";
 
-import useFetchMyInfo from "@domains/my-info/hooks/useFetchMyInfo";
+import { useFetchMyInfo } from "@domains/my-info/hooks/useFetchMyInfo";
 
 const ModifyQuestionPage = () => {
   const mainColor = "#b8dae1";

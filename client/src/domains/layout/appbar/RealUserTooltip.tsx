@@ -1,6 +1,6 @@
 import { Tooltip, Avatar } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import useFetchMyInfo from "@domains/my-info/hooks/useFetchMyInfo";
+import { useFetchMyInfo } from "@domains/my-info/hooks/useFetchMyInfo";
 import { useAtom } from "jotai";
 import { realUserInfo } from "@atom/auth";
 // import { useFetchMeQuery } from "@domains/auth/api/useAuthHooks";

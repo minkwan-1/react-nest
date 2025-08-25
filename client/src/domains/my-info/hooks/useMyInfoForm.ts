@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useAtom } from "jotai";
 import { realUserInfo } from "@atom/auth";
-import useFetchMyInfo from "./useFetchMyInfo";
+import { useFetchMyInfo } from "./useFetchMyInfo";
 import { useNavigate } from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { saveMyInfo, uploadProfileImage } from "../api/saveMyInfoAPI";

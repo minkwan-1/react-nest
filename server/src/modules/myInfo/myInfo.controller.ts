@@ -1,3 +1,4 @@
+// myInfo.controller.ts
 import {
   Body,
   Controller,
@@ -10,14 +11,13 @@ import {
 import { MyInfoService } from './myInfo.service';
 import { AuthenticatedGuard } from '../auth/guard/authenticated.guard';
 
-@UseGuards(AuthenticatedGuard)
 @Controller('my-info')
 export class MyInfoController {
   private readonly logger = new Logger(MyInfoController.name);
 
   constructor(private readonly myInfoService: MyInfoService) {}
 
-  // my info 등록 처리
+  @UseGuards(AuthenticatedGuard)
   @Post()
   async upsertMyInfo(
     @Body()
@@ -30,7 +30,6 @@ export class MyInfoController {
     },
   ) {
     const { userId, nickname, interests, socialLinks, profileImageUrl } = body;
-
     this.logger.log(
       `업데이트 요청 - userId: ${userId}, nickname: ${nickname}, interests: ${JSON.stringify(
         interests,
@@ -57,21 +56,14 @@ export class MyInfoController {
     }
   }
 
-  // my info 찾기
+  @UseGuards(AuthenticatedGuard)
   @Get()
   async getMyInfo(@Query('id') userId: string) {
-    console.log(userId);
     this.logger.log(`MyInfo 조회 요청 - userId: ${userId}`);
-
-    if (!userId) {
-      this.logger.warn(`userId가 전달되지 않음`);
-      return { myInfo: '' };
-    }
+    if (!userId) return { myInfo: '' };
 
     try {
       const myInfo = await this.myInfoService.find(userId);
-
-      console.log(myInfo);
       this.logger.log(`MyInfo 조회 성공 - userId: ${userId}`);
       return myInfo;
     } catch (error) {
@@ -79,6 +71,19 @@ export class MyInfoController {
         `MyInfo 조회 실패 - userId: ${userId}, 에러: ${error.message}`,
       );
       throw error;
+    }
+  }
+
+  @Get('public')
+  async getPublicMyInfo(@Query('id') userId: string) {
+    console.log(userId);
+    if (!userId) return null;
+    try {
+      const publicMyInfo = await this.myInfoService.findPublicInfo(userId);
+      return publicMyInfo;
+    } catch (error) {
+      console.error(error);
+      return null;
     }
   }
 }

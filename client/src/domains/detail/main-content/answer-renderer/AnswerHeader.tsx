@@ -3,10 +3,10 @@ import { getAvatarColor } from "@domains/detail/utils/styleUtils";
 import { formatDate } from "@domains/detail/utils/formatUtils";
 import { themeColors } from "../../utils/styleUtils";
 import { AnswerHeaderProps } from "@domains/detail/types";
-import useFetchMyInfo from "@domains/my-info/hooks/useFetchMyInfo";
+import { useFetchMyPublicInfo } from "@domains/my-info/hooks/useFetchMyInfo";
 
 const AnswerHeader = ({ answer }: AnswerHeaderProps) => {
-  const { data: myInfo } = useFetchMyInfo(answer?.userId);
+  const { data: myInfo } = useFetchMyPublicInfo(answer?.userId);
 
   console.log("질문 정보: ", answer);
 

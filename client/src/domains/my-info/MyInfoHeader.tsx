@@ -1,7 +1,7 @@
 import { realUserInfo } from "@atom/auth";
 import { Box, Paper, Typography } from "@mui/material";
 import { useAtom } from "jotai";
-import useFetchMyInfo from "./hooks/useFetchMyInfo";
+import { useFetchMyInfo } from "./hooks/useFetchMyInfo";
 
 const MyInfoHeader = () => {
   const [userInfo] = useAtom(realUserInfo);

@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import CloseIcon from "@mui/icons-material/Close";
-import useFetchMyInfo from "@domains/my-info/hooks/useFetchMyInfo";
+import { useFetchMyInfo } from "@domains/my-info/hooks/useFetchMyInfo";
 import hljs from "highlight.js";
 
 interface PreviewDialogProps {

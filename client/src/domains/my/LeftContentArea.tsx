@@ -13,7 +13,7 @@ import MyInfo from "./MyInfo";
 import { useNavigate } from "react-router-dom";
 import { useAtom } from "jotai";
 import { realUserInfo } from "@atom/auth";
-import useFetchMyInfo from "../my-info/hooks/useFetchMyInfo";
+import { useFetchMyInfo } from "@domains/my-info/hooks/useFetchMyInfo";
 
 const LeftContentArea = () => {
   const navigate = useNavigate();

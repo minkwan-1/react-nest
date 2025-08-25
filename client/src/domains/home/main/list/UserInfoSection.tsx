@@ -1,6 +1,6 @@
 import { Box, Typography, Avatar, useTheme } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
-import useFetchMyInfo from "@domains/my-info/hooks/useFetchMyInfo";
+import { useFetchMyPublicInfo } from "@domains/my-info/hooks/useFetchMyInfo";
 
 interface UserInfoSectionProps {
   createdAt: string | Date;
@@ -15,7 +15,9 @@ const formatDate = (dateInput: string | Date) => {
 const UserInfoSection = ({ createdAt, userId }: UserInfoSectionProps) => {
   const theme = useTheme();
 
-  const { data: myInfo } = useFetchMyInfo(userId);
+  const { data: myInfo } = useFetchMyPublicInfo(userId);
+
+  console.log(myInfo);
 
   return (
     <Box

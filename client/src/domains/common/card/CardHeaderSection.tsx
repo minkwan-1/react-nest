@@ -1,6 +1,6 @@
 import { Box, Avatar, Typography } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
-import useFetchMyInfo from "@domains/my-info/hooks/useFetchMyInfo";
+import { useFetchMyInfo } from "@domains/my-info/hooks/useFetchMyInfo";
 
 interface User {
   id: number | string;
