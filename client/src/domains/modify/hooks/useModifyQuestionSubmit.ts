@@ -24,12 +24,19 @@ export const useModifyQuestionSubmit = (
       });
       queryClient.invalidateQueries({ queryKey: ["questions"] });
 
-      alert("질문이 성공적으로 수정되었습니다!");
-      navigate(`/questions/${variables.questionId}`);
+      openModal({
+        isOpen: true,
+        type: "info",
+        title: "성공",
+        info: "질문이 성공적으로 수정되었습니다.",
+        onConfirm: () => navigate(`/questions/${variables.questionId}`),
+      });
+
+      // navigate(`/questions/${variables.questionId}`);
     },
     onError: (err) => {
       console.error(err);
-      // alert("질문 수정 중 오류가 발생했습니다.");
+
       openModal({
         isOpen: true,
         type: "error",

@@ -25,8 +25,6 @@ import {
 const MainContent = () => {
   const { id, question, loading, user } = useQuestionDetail();
 
-  console.log(user);
-
   const { answers, answersLoading, answersError, fetchAnswers } =
     useAnswers(id);
 
@@ -48,6 +46,9 @@ const MainContent = () => {
       fetchAiAnswer(question.id);
     }
   }, [question, loading, fetchAiAnswer]);
+
+  console.log("AI 답변: ", aiAnswer);
+  console.log("일반 사용자 답변: ", answers);
 
   return (
     <Box

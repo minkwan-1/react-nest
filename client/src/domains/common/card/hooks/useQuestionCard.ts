@@ -54,7 +54,7 @@ export const useQuestionCard = ({
   const handleDeleteClick = useCallback(() => {
     openModal({
       isOpen: true,
-      type: "confirm",
+      type: "info",
       title: "질문 삭제",
       info: "정말 이 질문을 삭제하시겠습니까?",
       onConfirm: () => {

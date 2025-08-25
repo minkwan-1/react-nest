@@ -8,7 +8,7 @@ export const useAiAnswer = (): UseAiAnswerReturn => {
   const [aiError, setAiError] = useState<string | null>(null);
 
   const streamRef = useRef<(() => void) | null>(null);
-  console.log("1번 streamRef: ", streamRef);
+
   const fetchAiAnswer = useCallback(async (questionId: number) => {
     if (!questionId) return;
 
@@ -23,12 +23,7 @@ export const useAiAnswer = (): UseAiAnswerReturn => {
     const closeStream = apiService.ai.streamAiAnswer({
       questionId,
       onData: (chunk) => {
-        setAiLoading((currentLoading) => {
-          if (currentLoading) {
-            return false;
-          }
-          return currentLoading;
-        });
+        setAiLoading(false);
 
         setAiAnswer((prev) => {
           if (!prev) {
@@ -49,12 +44,17 @@ export const useAiAnswer = (): UseAiAnswerReturn => {
           };
         });
       },
-      onComplete: (fullText) => {
-        console.log("스트리밍 최종 완료:", fullText);
+      onComplete: (finalAnswer) => {
+        console.log("스트리밍 최종 완료, 상태 업데이트:", finalAnswer);
+        setAiAnswer({
+          ...finalAnswer,
+          isAiAnswer: true,
+        });
+        setAiLoading(false);
+        streamRef.current = null;
       },
       onError: (error) => {
         setAiError(error.message);
-
         setAiLoading(false);
       },
     });

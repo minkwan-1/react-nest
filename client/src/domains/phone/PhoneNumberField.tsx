@@ -24,6 +24,7 @@ import { requestVerificationCodeAPI } from "./api/requestVerificationCodeAPI";
 import { useSetAtom } from "jotai";
 import { authRedirectModalAtom } from "@atom/modalAtoms";
 import { useNavigate } from "react-router-dom";
+import { useOpenCommonModal } from "@domains/common/modal/hook/useOpenCommonModal";
 
 type PhoneNumberFieldProps = {
   onNext: () => void;
@@ -49,6 +50,8 @@ const PhoneNumberField = ({
     message: "",
   });
 
+  const { openModal } = useOpenCommonModal();
+
   const show = useSetAtom(authRedirectModalAtom);
 
   useEffect(() => {
@@ -64,8 +67,13 @@ const PhoneNumberField = ({
         data?.message ===
         "이미 가입된 휴대폰 번호입니다. 다른 로그인 방법을 이용해주세요."
       ) {
-        alert(data.message);
-        navigate("/start");
+        openModal({
+          isOpen: true,
+          type: "error",
+          title: "기존 가입자",
+          info: "이미 가입된 휴대폰 번호입니다. 다른 로그인 방법을 이용해주세요.",
+          onConfirm: () => navigate(`/start`),
+        });
       } else {
         setModal({
           open: true,

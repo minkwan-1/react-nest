@@ -18,6 +18,7 @@ export const useAnswers = (
 
     try {
       const data = await apiService.answer.fetchAnswersByQuestionId(questionId);
+
       setAnswers(data);
     } catch (error) {
       const errorMessage =

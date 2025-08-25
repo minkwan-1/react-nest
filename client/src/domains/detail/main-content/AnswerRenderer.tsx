@@ -15,6 +15,7 @@ export const AnswerRenderer = ({ aiAnswer, answers }: AnswerRendererProps) => {
     // 일반 사용자 답변들 추가
     allAnswers.push(...answers);
 
+    console.log(allAnswers);
     return allAnswers.map((answer) => (
       <AnswerCard key={answer.id} answer={answer} />
     ));

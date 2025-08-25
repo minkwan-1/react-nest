@@ -53,7 +53,7 @@ const useMyInfoForm = () => {
     onSuccess: () => {
       // ✅ 정보 저장 성공 시, myInfo 쿼리를 무효화하여 최신 정보로 갱신
       queryClient.invalidateQueries({ queryKey: ["myInfo", userId] });
-      // alert(myInfo ? "정보가 수정되었습니다." : "정보가 저장되었습니다.");
+
       navigate("/my");
     },
     onError: (error) => {

@@ -1,4 +1,4 @@
-import { useLocation } from "react-router-dom";
+import { useLocation, matchPath } from "react-router-dom";
 
 export const useShouldHide = () => {
   const location = useLocation();
@@ -7,7 +7,8 @@ export const useShouldHide = () => {
 
   const shouldHide =
     hideOnExactPaths.includes(location.pathname) ||
-    location.pathname.startsWith("/modify/");
+    location.pathname.startsWith("/modify/") ||
+    matchPath("*", location.pathname) !== null;
 
   return shouldHide;
 };

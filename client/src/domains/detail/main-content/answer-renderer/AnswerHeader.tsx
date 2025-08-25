@@ -9,7 +9,7 @@ const AnswerHeader = ({ answer }: AnswerHeaderProps) => {
   const { data: myInfo } = useFetchMyPublicInfo(answer?.userId);
 
   console.log("질문 정보: ", answer);
-
+  console.log(answer.createdAt);
   const userProfileImage =
     !answer.isAiAnswer && myInfo?.profileImageUrl
       ? myInfo.profileImageUrl
@@ -50,6 +50,7 @@ const AnswerHeader = ({ answer }: AnswerHeaderProps) => {
         >
           {userName}
         </Typography>
+
         <Typography
           variant="caption"
           sx={{
