@@ -8,6 +8,8 @@ import useFetchMyInfo from "@domains/my-info/hooks/useFetchMyInfo";
 const AnswerHeader = ({ answer }: AnswerHeaderProps) => {
   const { data: myInfo } = useFetchMyInfo(answer?.userId);
 
+  console.log("질문 정보: ", answer);
+
   const userProfileImage =
     !answer.isAiAnswer && myInfo?.profileImageUrl
       ? myInfo.profileImageUrl

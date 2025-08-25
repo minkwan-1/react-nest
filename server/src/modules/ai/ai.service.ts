@@ -1,3 +1,5 @@
+// src/ai/ai.service.ts
+
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -5,7 +7,7 @@ import { Repository } from 'typeorm';
 import { AiAnswer } from './ai.entity';
 import { Question } from '../questions/questions.entity';
 import { JSDOM } from 'jsdom';
-import { Observable } from 'rxjs';
+import { Observable } from 'rxjs'; // Observable 임포트
 
 @Injectable()
 export class AiService {
@@ -23,9 +25,13 @@ export class AiService {
       throw new Error('GEMINI_API_KEY 환경변수가 설정되지 않았습니다.');
     }
     this.genAI = new GoogleGenerativeAI(apiKey);
+    // 요청하신 대로 모델은 변경하지 않습니다.
     this.model = this.genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
   }
 
+  /**
+   * [신규] 스트리밍 방식으로 AI 답변을 생성하고 반환하는 메서드
+   */
   generateAnswerStream(
     title: string,
     content: string,
@@ -53,6 +59,7 @@ export class AiService {
 
           subscriber.complete();
         } catch (error: any) {
+          console.error('[generateAnswerStream] Gemini API 호출 실패', error);
           subscriber.error(this.handleApiError(error));
         }
       };
@@ -61,7 +68,53 @@ export class AiService {
     });
   }
 
-  private async saveAnswer(questionId: number, title: string, content: string) {
+  /**
+   * [기존] 전체 텍스트를 한 번에 생성하는 메서드
+   */
+  async generateAnswer(
+    title: string,
+    content: string,
+    questionId: number,
+  ): Promise<string> {
+    console.log('[generateAnswer] 호출됨', { title, content, questionId });
+
+    const plainContent =
+      new JSDOM(content).window.document.body.textContent || '';
+    const prompt = this.buildPrompt(title, plainContent);
+
+    try {
+      let aiAnswer: string | undefined;
+
+      for (let attempt = 1; attempt <= 3; attempt++) {
+        console.log(`[generateAnswer] Gemini API 호출 시도 ${attempt}`);
+        const result = await this.model.generateContent(prompt);
+        const response = result.response;
+        // 최신 SDK에서는 response.text() 메서드를 사용합니다.
+        aiAnswer = response.text();
+
+        if (aiAnswer && aiAnswer.trim() !== '') break;
+        console.warn('[generateAnswer] AI 응답이 비어 있음, 재시도...');
+      }
+
+      if (!aiAnswer || aiAnswer.trim() === '') {
+        throw new Error('AI로부터 답변을 받지 못했습니다.');
+      }
+
+      await this.saveAnswer(questionId, title, aiAnswer.trim());
+      return aiAnswer.trim();
+    } catch (error: any) {
+      console.error('[generateAnswer] Gemini API 호출 실패', error);
+      throw this.handleApiError(error);
+    }
+  }
+
+  // DB 저장 로직 (공통)
+  private async saveAnswer(
+    questionId: number,
+    title: string,
+    content: string,
+  ): Promise<void> {
+    // 기존 답변이 있으면 업데이트, 없으면 새로 생성
     let answer = await this.findByQuestionId(questionId);
     if (answer) {
       answer.content = content;
@@ -69,8 +122,10 @@ export class AiService {
       answer = this.aiAnswerRepository.create({ questionId, title, content });
     }
     await this.aiAnswerRepository.save(answer);
+    console.log('[saveAnswer] AI 답변 저장/업데이트 완료');
   }
 
+  // API 에러 처리 (공통)
   private handleApiError(error: any): HttpException {
     if (error.message?.includes('API_KEY')) {
       return new HttpException(
@@ -90,6 +145,7 @@ export class AiService {
     );
   }
 
+  // --- 기존 유틸리티 메서드 ---
   async findByQuestionId(questionId: number): Promise<AiAnswer | null> {
     return this.aiAnswerRepository.findOne({ where: { questionId } });
   }

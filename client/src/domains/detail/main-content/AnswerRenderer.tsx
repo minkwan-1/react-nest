@@ -5,6 +5,8 @@ export const AnswerRenderer = ({ aiAnswer, answers }: AnswerRendererProps) => {
   const renderAnswers = () => {
     const allAnswers = [];
 
+    console.log(aiAnswer);
+
     // AI 답변이 있으면 첫 번째로 추가
     if (aiAnswer) {
       allAnswers.push(aiAnswer);

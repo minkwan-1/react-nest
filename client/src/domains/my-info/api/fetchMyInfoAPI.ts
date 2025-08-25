@@ -1,6 +1,7 @@
 import { axiosInstance } from "@api/axiosConfig";
 
 export const fetchMyInfoAPI = async (userId: string) => {
+  console.log(userId);
   await new Promise((resolve) => setTimeout(resolve, 1500));
 
   try {
