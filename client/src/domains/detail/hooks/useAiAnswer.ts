@@ -1,13 +1,13 @@
 import { useState, useCallback, useRef } from "react";
 import { Answer, UseAiAnswerReturn } from "../types";
-import { apiService } from "../services/apiService";
+import { useStreamAiAnswerMutate } from "@domains/ask-ai/api/useStreamAiAnswerMutate";
 
 export const useAiAnswer = (): UseAiAnswerReturn => {
   const [aiAnswer, setAiAnswer] = useState<Answer | null>(null);
   const [aiLoading, setAiLoading] = useState(false);
   const [aiError, setAiError] = useState<string | null>(null);
-
   const streamRef = useRef<(() => void) | null>(null);
+  const { mutate: startStream } = useStreamAiAnswerMutate();
 
   const fetchAiAnswer = useCallback(async (questionId: number) => {
     if (!questionId) return;
@@ -20,7 +20,7 @@ export const useAiAnswer = (): UseAiAnswerReturn => {
     setAiError(null);
     setAiAnswer(null);
 
-    const closeStream = apiService.ai.streamAiAnswer({
+    startStream({
       questionId,
       onData: (chunk) => {
         setAiLoading(false);
@@ -58,8 +58,6 @@ export const useAiAnswer = (): UseAiAnswerReturn => {
         setAiLoading(false);
       },
     });
-
-    streamRef.current = closeStream;
   }, []);
 
   return {
