@@ -14,8 +14,6 @@ const OwnerActionButtons = ({ questionId }: OwnerActionButtonsProps) => {
     if (window.confirm("정말로 삭제하시겠습니까?")) {
       try {
         console.log("삭제:", questionId);
-        // TODO: Add actual API call for deletion
-        // await fetch(`http://localhost:3000/questions/${questionId}`, { method: 'DELETE' });
       } catch (error) {
         console.error("삭제 실패:", error);
       }

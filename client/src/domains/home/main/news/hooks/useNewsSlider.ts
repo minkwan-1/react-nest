@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useSwipeable } from "react-swipeable";
-import axios from "axios";
+import { axiosInstance } from "@api/axiosConfig";
 
 interface NewsItem {
   title: string;
@@ -31,9 +31,7 @@ const useNewsSlider = () => {
   const { data, isLoading, isError } = useQuery<NewsItem[]>({
     queryKey: ["news"],
     queryFn: async () => {
-      const res = await axios.get<NewsApiResponse[]>(
-        "http://localhost:3000/news"
-      );
+      const res = await axiosInstance.get<NewsApiResponse[]>("/news");
       return res.data.map((item) => ({
         ...item,
         source: item.source || "IT 뉴스",
@@ -104,12 +102,10 @@ const useNewsSlider = () => {
   return {
     currentIndex,
     isHovered,
-
     data,
     isLoading,
     isError,
     currentNews: data ? data[currentIndex] : null,
-
     goNext,
     goPrev,
     handleTitleClick,

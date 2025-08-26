@@ -17,11 +17,12 @@ import AuthRedirectModal from "@domains/common/modal/AuthRedirectModal";
 import CommonErrorModal from "@domains/common/modal/CommonModal";
 import { GlobalActionButton } from "@domains/home";
 import Commonsnackbar from "@domains/common/snackbar/CommonSnackbar";
-import { useShouldHide } from "./hooks/common/useShouldHide";
+import { useShouldShow } from "./hooks/common/useShouldShow";
 import { AuthenticatedWrapper } from "../src/providers";
 
 const App = () => {
-  const shouldHide = useShouldHide();
+  const shouldShow = useShouldShow();
+
   return (
     <>
       <Routes>
@@ -62,7 +63,7 @@ const App = () => {
         <Route path="/un" element={<UnauthorizedPage />} />
       </Routes>
 
-      {!shouldHide && <GlobalActionButton />}
+      {shouldShow && <GlobalActionButton />}
 
       <AuthRedirectModal />
       <CommonErrorModal />
