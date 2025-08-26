@@ -2,14 +2,13 @@ import { Box } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import {
   CircleDecoration,
-  NotFoundHeading,
-  NotFoundMessage,
+  UnauthorizedHeading,
+  UnauthorizedMessage,
   GoHomeButton,
-} from "@domains/not-found";
+} from "@domains/unauthorized/index";
 
-const NotFoundPage = () => {
+const UnauthorizedPage = () => {
   const navigate = useNavigate();
-
   const mainColor = "#b8dae1";
   const accentColor = "#7fb8c4";
 
@@ -43,8 +42,8 @@ const NotFoundPage = () => {
       />
 
       <Box sx={{ position: "relative", zIndex: 1 }}>
-        <NotFoundHeading mainColor={mainColor} accentColor={accentColor} />
-        <NotFoundMessage />
+        <UnauthorizedHeading mainColor={mainColor} accentColor={accentColor} />
+        <UnauthorizedMessage />
         <GoHomeButton
           mainColor={mainColor}
           accentColor={accentColor}
@@ -55,4 +54,4 @@ const NotFoundPage = () => {
   );
 };
 
-export default NotFoundPage;
+export default UnauthorizedPage;

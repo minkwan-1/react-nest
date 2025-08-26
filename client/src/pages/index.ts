@@ -11,6 +11,7 @@ import StartPage from "./StartPage";
 import ModifyQuestionPage from "./ModifyQuestionPage";
 import MyInfoEditPage from "./MyInfoEditPage";
 import SessionExpiredPage from "./SessionExpiredPage";
+import UnauthorizedPage from "./UnauthorizedPage";
 
 export {
   HomePage,
@@ -25,4 +26,5 @@ export {
   ModifyQuestionPage,
   MyInfoEditPage,
   SessionExpiredPage,
+  UnauthorizedPage,
 };

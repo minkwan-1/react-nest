@@ -11,6 +11,7 @@ import {
   StartPage,
   ModifyQuestionPage,
   MyInfoEditPage,
+  UnauthorizedPage,
 } from "./pages";
 import AuthRedirectModal from "@domains/common/modal/AuthRedirectModal";
 import CommonErrorModal from "@domains/common/modal/CommonModal";
@@ -58,6 +59,7 @@ const App = () => {
         <Route path="*" element={<NotFoundPage />} />
         <Route path="/redirect" element={<RedirectPage />} />
         <Route path="/phone" element={<PhoneVerificationPage />} />
+        <Route path="/un" element={<UnauthorizedPage />} />
       </Routes>
 
       {!shouldHide && <GlobalActionButton />}
