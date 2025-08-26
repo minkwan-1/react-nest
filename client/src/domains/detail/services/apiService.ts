@@ -1,4 +1,4 @@
-import { Answer, SubmitAnswerRequest, FetchAnswersResponse } from "../types";
+import { Answer, SubmitAnswerRequest } from "../types";
 
 const API_BASE_URL = "http://localhost:3000";
 
@@ -34,18 +34,6 @@ const apiRequest = async <T>(
 };
 
 export const answerService = {
-  fetchAnswersByQuestionId: async (questionId: string): Promise<Answer[]> => {
-    try {
-      return await apiRequest<FetchAnswersResponse>(
-        `${API_BASE_URL}/answers/question/${questionId}`
-      );
-    } catch (error) {
-      throw new Error(
-        handleApiError(error, "답변을 불러오는 중 오류가 발생했습니다.")
-      );
-    }
-  },
-
   submitAnswer: async (answerData: SubmitAnswerRequest): Promise<Answer> => {
     try {
       return await apiRequest<Answer>(`${API_BASE_URL}/answers`, {
