@@ -4,6 +4,7 @@ import { AnswerCardProps } from "@domains/detail/types";
 import { AnswerBadge, AnswerHeader, AnswerContent } from "./index";
 
 const AnswerCard = ({ answer }: AnswerCardProps) => {
+  // 재작업
   return (
     <Card
       sx={{
