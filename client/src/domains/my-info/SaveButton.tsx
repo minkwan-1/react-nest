@@ -3,7 +3,6 @@ import { Grow, Box, Button, useTheme } from "@mui/material";
 const darkKeyColor = "#2a4a4f";
 const gradientBg = "linear-gradient(135deg, #b8dae1 0%, #9bc5cc 100%)";
 
-// MyInfo 타입 정의
 interface MyInfoType {
   id: string;
   userId: string;
@@ -14,7 +13,6 @@ interface MyInfoType {
   updatedAt: string;
 }
 
-// Props 타입 정의
 interface SaveButtonProps {
   handleSave: () => void;
   myInfo: MyInfoType | null | undefined;

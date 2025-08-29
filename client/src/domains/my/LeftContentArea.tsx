@@ -19,7 +19,7 @@ const LeftContentArea = () => {
   const navigate = useNavigate();
   const [userInfo] = useAtom(realUserInfo);
   const { data: myInfo, isPending } = useFetchMyInfo(userInfo?.user.id);
-  console.log("$$$$$$$$$$$$$$$$$$", myInfo);
+
   const socialLink = myInfo?.socialLinks;
 
   const containerStyles = {
@@ -32,7 +32,6 @@ const LeftContentArea = () => {
     textAlign: "center",
     borderRadius: 2,
     position: "relative",
-    // border: `1px solid #D3D3D3`,
   };
 
   if (isPending) {

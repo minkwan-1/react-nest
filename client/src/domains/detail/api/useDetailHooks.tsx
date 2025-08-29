@@ -21,6 +21,7 @@ export const useSubmitAnswer = () => {
   return useMutation<Answer, Error, SubmitAnswerRequest>({
     mutationFn: submitAnswer,
     onSuccess: (data, variables) => {
+      console.log(data);
       queryClient.invalidateQueries({
         queryKey: ["answers", variables.questionId],
       });

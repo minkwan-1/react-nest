@@ -1,5 +1,3 @@
-// types/index.ts
-
 export type User = {
   id: string;
   email: string;
@@ -37,7 +35,6 @@ export type AiAnswerResponse = {
   generatedAt: string;
 };
 
-// API 관련 타입들
 export type SubmitAnswerRequest = {
   questionId: string;
   content: string;
@@ -46,7 +43,6 @@ export type SubmitAnswerRequest = {
 
 export type FetchAnswersResponse = Answer[];
 
-// 훅 관련 타입들
 export type UseQuestionDetailReturn = {
   id: string | undefined;
   question: Question | null;
@@ -64,7 +60,7 @@ export type UseAiAnswerReturn = {
   aiAnswer: Answer | null;
   aiLoading: boolean;
   aiError: string | null;
-  fetchAiAnswer: (questionId: number) => Promise<void>; // ✅ 기존: (question: Question) => Promise<void>
+  fetchAiAnswer: (questionId: number) => Promise<void>;
 };
 
 export type UseAnswerSubmitReturn = {
@@ -77,7 +73,6 @@ export type UseAnswerSubmitReturn = {
   handleCloseSnackbar: () => void;
 };
 
-// 컴포넌트 Props 타입들
 export type AnswerRendererProps = {
   aiAnswer: Answer | null;
   answers: Answer[];
@@ -99,7 +94,6 @@ export type AnswerContentProps = {
   answer: Answer;
 };
 
-// 테마 관련 타입들
 export type ThemeColors = {
   primary: string;
   primaryLight: string;

@@ -8,7 +8,6 @@ import { realUserInfo } from "@atom/auth";
 import { questionsAtom } from "@atom/question";
 import { axiosInstance } from "@api/axiosConfig";
 
-// 질문 생성 API
 const createQuestion = async ({
   title,
   content,
@@ -25,6 +24,7 @@ const createQuestion = async ({
   const response = await axiosInstance.post("questions", {
     title,
     content: processedContent,
+
     tags,
     userId,
   });
@@ -54,7 +54,6 @@ export const useQuestionForm = () => {
   const { mutate: submitQuestion, isPending: isSubmitting } = useMutation({
     mutationFn: createQuestion,
     onSuccess: async (createdQuestion) => {
-      // 질문 목록 관련 쿼리를 무효화하여 다른 페이지에서 최신 목록을 볼 수 있도록 합니다.
       queryClient.invalidateQueries({ queryKey: ["questions"] });
       setQuestions((prev) => [...prev, createdQuestion]);
 

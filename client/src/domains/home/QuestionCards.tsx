@@ -20,8 +20,8 @@ interface Question {
   author: string;
   date: string;
   title: string;
-  content: string; // HTML 문자열
-  likes?: number; // API에 없으면 optional
+  content: string;
+  likes?: number;
   thumbnail: string;
 }
 
@@ -59,7 +59,6 @@ const QuestionCards = ({ question }: QuestionCardsProps) => {
       }}
     >
       <CardContent sx={{ p: 3 }}>
-        {/* 프로필 섹션 */}
         <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
           {loading ? (
             <Skeleton variant="circular" width={28} height={28} />
@@ -102,7 +101,6 @@ const QuestionCards = ({ question }: QuestionCardsProps) => {
           )}
         </Box>
 
-        {/* 질문 제목 & 내용 (content는 HTML) */}
         <Box sx={{ display: "flex", justifyContent: "space-between", gap: 3 }}>
           <Box sx={{ flex: 1 }}>
             {loading ? (
@@ -142,7 +140,6 @@ const QuestionCards = ({ question }: QuestionCardsProps) => {
               </>
             )}
 
-            {/* 답변, 좋아요, 북마크 */}
             <Box sx={{ display: "flex", alignItems: "center" }}>
               {loading ? (
                 <Skeleton width={80} height={32} />
@@ -203,7 +200,6 @@ const QuestionCards = ({ question }: QuestionCardsProps) => {
             </Box>
           </Box>
 
-          {/* 썸네일 */}
           <Box sx={{ flexShrink: 0, display: { xs: "none", sm: "block" } }}>
             <Box
               sx={{

@@ -51,7 +51,6 @@ export function QuestionCard({
   return (
     <Card sx={{ mb: 2 }}>
       <CardContent sx={{ display: "flex", alignItems: "flex-start" }}>
-        {/* Vote Section */}
         <Box sx={{ textAlign: "center", mr: 3 }}>
           <Button
             size="small"
@@ -69,7 +68,7 @@ export function QuestionCard({
             <ArrowDropDown />
           </Button>
         </Box>
-        {/* Content Section */}
+
         <Box sx={{ flex: 1 }}>
           <Box
             onClick={navigateToQuestion}

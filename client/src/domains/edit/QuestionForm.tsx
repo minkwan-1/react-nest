@@ -9,8 +9,6 @@ import {
 } from ".";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { usePreviewDialog } from "./hooks/usePreviewDialog";
-import { useAtom } from "jotai";
-import { realUserInfo } from "@atom/auth";
 
 interface QuestionFormProps {
   title: string;
@@ -38,9 +36,6 @@ export const QuestionForm: React.FC<QuestionFormProps> = ({
 
   const isPreviewDisabled =
     !title.trim() || !content.trim() || tags.length === 0;
-
-  const [userData] = useAtom(realUserInfo);
-  const userId = userData?.user.id;
 
   return (
     <>
@@ -94,7 +89,6 @@ export const QuestionForm: React.FC<QuestionFormProps> = ({
         content={content}
         tags={tags}
         previewDate={previewDate}
-        userId={userId}
       />
     </>
   );

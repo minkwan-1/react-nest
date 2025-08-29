@@ -15,12 +15,6 @@ const AuthRedirectModal = () => {
   const [isOpen, setIsOpen] = useAtom(authRedirectModalAtom);
   const navigate = useNavigate();
 
-  // 모달을 닫기만 하는 핸들러
-  // const handleClose = () => {
-  //   setIsOpen(false);
-  // };
-
-  // 모달을 닫고 페이지를 이동하는 핸들러
   const handleCloseAndRedirect = () => {
     setIsOpen(false);
     navigate("/start");
@@ -30,6 +24,7 @@ const AuthRedirectModal = () => {
     <Dialog
       open={isOpen}
       onClose={(event, reason) => {
+        console.log(event);
         if (reason && reason === "backdropClick") {
           return;
         }
@@ -60,27 +55,6 @@ const AuthRedirectModal = () => {
       </DialogContent>
 
       <DialogActions sx={{ justifyContent: "center", p: 0, pt: 3, gap: 1.5 }}>
-        {/* 취소 버튼 추가 */}
-        {/* <Button
-          onClick={handleClose}
-          variant="outlined"
-          sx={{
-            px: 5,
-            py: 1.2,
-            borderRadius: 2,
-            textTransform: "none",
-            fontWeight: 600,
-            color: "text.secondary",
-            borderColor: "grey.400",
-            "&:hover": {
-              borderColor: "grey.600",
-              bgcolor: "action.hover",
-            },
-          }}
-        >
-          취소
-        </Button> */}
-        {/* 확인 버튼 */}
         <Button
           onClick={handleCloseAndRedirect}
           variant="contained"

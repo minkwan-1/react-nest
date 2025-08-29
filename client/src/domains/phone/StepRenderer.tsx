@@ -8,7 +8,7 @@ interface StepRendererProps {
   isSignupLoading: boolean;
   showMessage: (
     msg: string,
-    type: "success" | "error" | "warning", // warning 타입 추가
+    type: "success" | "error" | "warning",
     isExistingUser?: boolean,
     isSignupComplete?: boolean
   ) => void;
@@ -17,7 +17,11 @@ interface StepRendererProps {
   handleExistingUser: () => void;
   handleVerificationSuccess: () => void;
   handleResendCode: () => void;
-  handleSignupComplete: () => void;
+  handleSignupComplete: () => Promise<{
+    success: boolean;
+    data: unknown | null;
+    message?: string;
+  }>;
 }
 
 export const StepRenderer: React.FC<StepRendererProps> = ({
@@ -33,35 +37,33 @@ export const StepRenderer: React.FC<StepRendererProps> = ({
   handleResendCode,
   handleSignupComplete,
 }) => {
-  // 기존 유저 처리 함수
-
   const handleExistingUserDetected = () => {
     showMessage(
       "이미 가입된 휴대폰 번호입니다. 로그인 페이지로 이동합니다.",
       "warning",
-      true // ✅ isExistingUser
+      true
     );
-    handleExistingUser(); // ✅ 실제 처리는 이 함수가 함
+    handleExistingUser();
   };
 
   switch (currentStep) {
     case 1:
       return (
         <PhoneNumberField
-          onSuccess={(msg) => showMessage(msg, "success")}
-          onError={(msg) => showMessage(msg, "error")}
+          onSuccess={(msg: string) => showMessage(msg, "success")}
+          onError={(msg: string) => showMessage(msg, "error")}
           onPhoneNumberChange={handlePhoneNumberChange}
-          onCodeSent={handleCodeSent}
-          onExistingUser={handleExistingUserDetected} // 수정된 핸들러 사용
+          onNext={handleCodeSent}
+          onExistingUser={handleExistingUserDetected}
         />
       );
     case 2:
       return (
         <VerificationInput
           phoneNumber={phoneNumber}
-          onSuccess={(msg) => showMessage(msg, "success")}
-          onError={(msg) => showMessage(msg, "error")}
-          onVerified={handleVerificationSuccess}
+          onSuccess={(msg: string) => showMessage(msg, "success")}
+          onError={(msg: string) => showMessage(msg, "error")}
+          onNext={handleVerificationSuccess}
           onResendCode={handleResendCode}
         />
       );
@@ -69,8 +71,8 @@ export const StepRenderer: React.FC<StepRendererProps> = ({
       return (
         <SignupButton
           onClick={handleSignupComplete}
-          onSuccess={(msg) => showMessage(msg, "success", false, true)}
-          onError={(msg) => showMessage(msg, "error")}
+          onSuccess={(msg: string) => showMessage(msg, "success", false, true)}
+          onError={(msg: string) => showMessage(msg, "error")}
           isLoading={isSignupLoading}
           disabled={!isVerified}
         />

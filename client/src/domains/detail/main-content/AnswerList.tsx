@@ -44,13 +44,8 @@ const AnswerList = ({
         💬 답변 목록 ({(aiAnswer ? 1 : 0) + answers.length})
       </Typography>
 
-      {/* AILoadingCard */}
       {aiLoading && <AILoadingCard />}
 
-      {/* AIErrorAlert */}
-      {/* {aiError && <AIErrorAlert aiError={aiError} />} */}
-
-      {/* AnswerLoadingOrEmpty */}
       <AnswerLoadingOrEmpty
         answersLoading={answersLoading}
         answersError={answersError}

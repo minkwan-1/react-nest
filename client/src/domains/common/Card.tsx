@@ -1,11 +1,4 @@
-import {
-  Box,
-  Card,
-  CardContent,
-  Typography,
-  // useTheme,
-  Skeleton,
-} from "@mui/material";
+import { Box, Card, CardContent, Typography, Skeleton } from "@mui/material";
 import {
   CardHeaderSection,
   CardContentSection,
@@ -41,21 +34,15 @@ interface QuestionCardProps {
   isLoading?: boolean;
 }
 
-// 스켈레톤 카드 컴포넌트
 const QuestionCardSkeleton = () => {
-  // const theme = useTheme();
-
   return (
     <Card
       sx={{
         borderRadius: 2,
         boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
-        // backgroundColor: theme.palette.mode === "light" ? "#ffffff" : "#333333",
-        // border: theme.palette.mode === "light" ? "1px solid #F0F0F0" : "none",
       }}
     >
       <CardContent sx={{ p: 3 }}>
-        {/* Header Skeleton */}
         <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
           <Skeleton
             variant="circular"
@@ -70,12 +57,9 @@ const QuestionCardSkeleton = () => {
         </Box>
 
         <Box sx={{ display: "flex", justifyContent: "space-between", gap: 3 }}>
-          {/* Content Skeleton */}
           <Box sx={{ flex: 1 }}>
-            {/* Title Skeleton */}
             <Skeleton variant="text" width="80%" height={28} sx={{ mb: 1 }} />
 
-            {/* Content Skeleton */}
             <Skeleton
               variant="text"
               width="100%"
@@ -84,7 +68,6 @@ const QuestionCardSkeleton = () => {
             />
             <Skeleton variant="text" width="70%" height={20} sx={{ mb: 2.5 }} />
 
-            {/* Actions Skeleton */}
             <Box sx={{ display: "flex", gap: 1 }}>
               <Skeleton
                 variant="rounded"
@@ -101,7 +84,6 @@ const QuestionCardSkeleton = () => {
             </Box>
           </Box>
 
-          {/* Thumbnail Skeleton */}
           <Skeleton
             variant="rounded"
             width={120}
@@ -123,8 +105,6 @@ const QuestionCard = ({
   questionUserId,
   isLoading = false,
 }: QuestionCardProps) => {
-  // const theme = useTheme();
-
   const { handleTitleClick, handleAnswerClick, handleDeleteClick } =
     useQuestionCard({
       questionId: question.id,
@@ -149,19 +129,13 @@ const QuestionCard = ({
         "&:hover": {
           boxShadow: "0 5px 15px rgba(0,0,0,0.1)",
           transform: "translateY(-2px)",
-          // backgroundColor:
-          //   theme.palette.mode === "light" ? "#F5F5F5" : "#4F4F4F",
         },
-        // backgroundColor: theme.palette.mode === "light" ? "#ffffff" : "#333333",
-        // border: theme.palette.mode === "light" ? "1px solid #F0F0F0" : "none",
       }}
     >
       <CardContent sx={{ p: 3 }}>
-        {/* Header */}
         <CardHeaderSection user={user} question={question} />
 
         <Box sx={{ display: "flex", justifyContent: "space-between", gap: 3 }}>
-          {/* Content */}
           <Box sx={{ flex: 1 }}>
             <CardContentSection
               question={question}
@@ -171,7 +145,6 @@ const QuestionCard = ({
             <Typography
               variant="body2"
               sx={{
-                // color: theme.palette.text.secondary,
                 mb: showActions ? 2.5 : 0,
                 display: "-webkit-box",
                 WebkitLineClamp: 2,
@@ -185,7 +158,6 @@ const QuestionCard = ({
               {getExcerpt(question.content, 100)}
             </Typography>
 
-            {/* Actions */}
             {showActions && (
               <CardActionsSection
                 onCardClick={onCardClick}
@@ -198,7 +170,6 @@ const QuestionCard = ({
             )}
           </Box>
 
-          {/* Thumbnail */}
           <ThumbnailSection
             thumbnail={question.thumbnail}
             content={question.content}

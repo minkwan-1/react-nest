@@ -28,23 +28,17 @@ const HomeQuestionCard = () => {
       }}
     >
       <CardContent sx={{ p: 3 }}>
-        {/* Header */}
         <CardHeaderSection />
 
         <Box sx={{ display: "flex", justifyContent: "space-between", gap: 3 }}>
-          {/* Content */}
           <Box sx={{ flex: 1 }}>
             <CardContentSection />
 
-            {/* subtitle */}
             <CardSubtitle />
-
-            {/* Actions */}
 
             <CardActionsSection />
           </Box>
 
-          {/* Thumbnail */}
           <ThumbnailSection />
         </Box>
       </CardContent>

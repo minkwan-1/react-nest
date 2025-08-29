@@ -19,7 +19,6 @@ export const useFetchMyInfo = (
   return useQuery<MyInfoType | null>({
     queryKey: ["myInfo", userId],
     queryFn: () => fetchMyInfoAPI(userId!),
-    // enabled: !!userId,
   });
 };
 
@@ -29,6 +28,5 @@ export const useFetchMyPublicInfo = (
   return useQuery<MyInfoType | null>({
     queryKey: ["myPublicInfo", userId],
     queryFn: () => fetchMyPublicInfoAPI(userId!),
-    // enabled: !!userId,
   });
 };

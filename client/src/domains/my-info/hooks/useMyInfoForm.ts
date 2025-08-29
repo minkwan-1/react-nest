@@ -13,18 +13,15 @@ const useMyInfoForm = () => {
   const userId = userInfo?.user.id;
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  console.log("gdgdgdgdgdgdgdgd", userInfo);
-  // 1. 프로필 정보 조회(useQuery)
+
   const { data: myInfo, isPending: isInfoLoading } = useFetchMyInfo(userId);
 
-  // 폼 상태 정의
   const [nickname, setNickname] = useState("");
   const [interests, setInterests] = useState<string[]>([]);
   const [interestInput, setInterestInput] = useState("");
   const [socialLinks, setSocialLinks] = useState<string[]>([""]);
   const [profileImageUrl, setProfileImageUrl] = useState("");
 
-  // 2. useQuery의 데이터로 폼 상태 초기화
   useEffect(() => {
     if (myInfo) {
       setNickname(myInfo.nickname || "");
@@ -34,12 +31,10 @@ const useMyInfoForm = () => {
     }
   }, [myInfo]);
 
-  // 3. 이미지 업로드용 useMutation
   const { mutate: uploadImage, isPending: isUploading } = useMutation({
     mutationFn: uploadProfileImage,
     onSuccess: (uploadedUrl) => {
       setProfileImageUrl(uploadedUrl);
-      console.log("S3 업로드 URL:", uploadedUrl);
     },
     onError: (error) => {
       console.error("프로필 이미지 업로드 실패:", error);
@@ -47,11 +42,9 @@ const useMyInfoForm = () => {
     },
   });
 
-  // 4. 정보 저장용 useMutation
   const { mutate: saveForm, isPending: isSaving } = useMutation({
     mutationFn: saveMyInfo,
     onSuccess: () => {
-      // ✅ 정보 저장 성공 시, myInfo 쿼리를 무효화하여 최신 정보로 갱신
       queryClient.invalidateQueries({ queryKey: ["myInfo", userId] });
 
       navigate("/my");
@@ -62,7 +55,6 @@ const useMyInfoForm = () => {
     },
   });
 
-  // 핸들러들
   const handleAddInterest = () => {
     if (interestInput.trim()) {
       setInterests([...interests, interestInput.trim()]);
@@ -74,7 +66,6 @@ const useMyInfoForm = () => {
     setInterests(interests.filter((i) => i !== interestToDelete));
   };
 
-  // 소셜 링크 관련 핸들러들
   const handleSocialLinkChange = (index: number, value: string) => {
     const updated = [...socialLinks];
     updated[index] = value;
@@ -92,14 +83,11 @@ const useMyInfoForm = () => {
     }
   };
 
-  // 프로필 이미지 Base64 업로드 및 처리 핸들러
   const handleProfileImageUpload = (base64Image: string) => {
     uploadImage(base64Image);
   };
 
-  // 저장 핸들러
   const handleSave = () => {
-    console.log("클릭됨");
     if (!userId) return;
     const payload = {
       userId,

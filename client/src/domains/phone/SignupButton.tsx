@@ -24,19 +24,19 @@ interface SignupButtonProps {
   onSuccess?: (message: string) => void;
   onError?: (message: string) => void;
   disabled?: boolean;
+  isLoading?: boolean;
 }
-
-// signup button disabled부터 작업
 
 const SignupButton: React.FC<SignupButtonProps> = ({
   onClick,
-  // onSuccess,
+  onSuccess,
   onError,
-  // disabled = false,
+  disabled,
+  isLoading,
 }) => {
   const theme = useTheme();
   const keyColor = "#b8dae1";
-  const [isLoading, setIsLoading] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
   const [modal, setModal] = useState({
     open: false,
     type: "success" as "success" | "error",
@@ -46,9 +46,7 @@ const SignupButton: React.FC<SignupButtonProps> = ({
   const navigate = useNavigate();
 
   const handleSignup = async () => {
-    // if (disabled) return;
-
-    setIsLoading(true);
+    setIsProcessing(true);
 
     try {
       let result: {
@@ -61,35 +59,35 @@ const SignupButton: React.FC<SignupButtonProps> = ({
         result = await onClick();
       }
 
-      // void인 경우 성공으로 간주, false인 경우만 실패로 처리
       if ((result.success as boolean) === true) {
-        // 성공 시 축하 메시지 표시
-        // if (onSuccess) {
-        //   onSuccess(
-        //     "회원가입이 완료되었습니다!\n\n풀림(Pullim)에 오신 것을 환영합니다. 이제 자유롭게 질문하고, 답변하며 함께 성장해 보세요!\n잠시 후 로그인 페이지로 이동합니다."
-        //   );
-        // }
+        const successMessage =
+          result.message ||
+          "회원가입이 완료되었습니다!\n\n풀림(Pullim)에 오신 것을 환영합니다. 이제 자유롭게 질문하고, 답변하며 함께 성장해 보세요!";
         setModal({
           open: true,
           type: "success",
           title: "회원가입 성공",
-          message:
-            "회원가입이 완료되었습니다!\n\n풀림(Pullim)에 오신 것을 환영합니다. 이제 자유롭게 질문하고, 답변하며 함께 성장해 보세요!",
+          message: successMessage,
         });
+        if (onSuccess) {
+          onSuccess(successMessage);
+        }
       }
     } catch (error) {
       console.error("Signup error:", error);
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "회원가입 중 오류가 발생했습니다.";
       if (onError) {
-        const errorMessage =
-          error instanceof Error
-            ? error.message
-            : "회원가입 중 오류가 발생했습니다.";
         onError(errorMessage);
       }
     } finally {
-      setIsLoading(false);
+      setIsProcessing(false);
     }
   };
+
+  const finalIsLoading = isLoading || isProcessing;
 
   return (
     <>
@@ -121,8 +119,8 @@ const SignupButton: React.FC<SignupButtonProps> = ({
         <Button
           variant="contained"
           onClick={handleSignup}
+          disabled={disabled || finalIsLoading}
           fullWidth
-          // disabled={isLoading || disabled}
           sx={{
             mt: 2,
             height: "50px",
@@ -142,9 +140,9 @@ const SignupButton: React.FC<SignupButtonProps> = ({
             },
             transition: "all 0.3s",
           }}
-          endIcon={isLoading ? undefined : <HowToRegIcon />}
+          endIcon={finalIsLoading ? undefined : <HowToRegIcon />}
         >
-          {isLoading ? (
+          {finalIsLoading ? (
             <CircularProgress size={24} color="inherit" />
           ) : (
             "회원가입 완료하기"
@@ -177,8 +175,10 @@ const SignupButton: React.FC<SignupButtonProps> = ({
           </DialogTitle>
 
           <DialogContent sx={{ textAlign: "center", py: 1 }}>
-            <Typography variant="body2" color="text.secondary">
-              {modal.message}
+            <Typography variant="body2" color="text.secondary" component="div">
+              {modal.message.split("\n").map((line, index) => (
+                <div key={index}>{line}</div>
+              ))}
             </Typography>
           </DialogContent>
 

@@ -3,6 +3,8 @@ import { useParams } from "react-router-dom";
 import { useAtom } from "jotai";
 import { questionsAtom } from "@atom/question";
 import { useFetchMyPublicInfo } from "@domains/my-info/hooks/useFetchMyInfo";
+import { useEffect, useRef } from "react";
+import hljs from "highlight.js";
 
 const generateAvatarText = (name: string) => name.charAt(0).toUpperCase();
 
@@ -25,12 +27,46 @@ type Question = {
 const DetailQuestionContent = () => {
   const { id } = useParams();
   const [questions] = useAtom(questionsAtom);
+  const contentRef = useRef<HTMLDivElement>(null);
 
   const question = questions?.find(
     (q: Question) => q.id === parseInt(id || "0")
   );
 
   const { data } = useFetchMyPublicInfo(question?.user.id);
+
+  const applyHighlighting = () => {
+    const container = contentRef.current;
+    if (!container) return;
+
+    container.querySelectorAll("pre code").forEach((block) => {
+      block.className = block.className.replace(/hljs[^ ]*/g, "");
+    });
+
+    container.querySelectorAll("pre.ql-syntax").forEach((pre) => {
+      if (!pre.querySelector("code")) {
+        const code = document.createElement("code");
+        code.className = "language-javascript";
+        code.textContent = pre.textContent || "";
+        pre.textContent = "";
+        pre.appendChild(code);
+      }
+    });
+
+    container.querySelectorAll("pre code").forEach((block) => {
+      hljs.highlightElement(block as HTMLElement);
+    });
+  };
+
+  useEffect(() => {
+    if (question?.content) {
+      const timer = setTimeout(() => {
+        applyHighlighting();
+      }, 0);
+
+      return () => clearTimeout(timer);
+    }
+  }, [question?.content]);
 
   if (!question) {
     return <Typography>질문을 찾을 수 없습니다.</Typography>;
@@ -48,45 +84,16 @@ const DetailQuestionContent = () => {
           border: "1px solid",
           borderColor: "divider",
 
-          "& .question-content p": {
-            mb: 2,
-            color: "text.primary",
-            lineHeight: 1.7,
-          },
-          "& .question-content ul, & .question-content ol": {
-            pl: 3,
-            mb: 2,
-            "& li": {
-              mb: 1,
-            },
-          },
-          "& .question-content strong": {
-            color: "primary.dark",
-            fontWeight: 600,
-          },
-          "& .question-content code": {
-            fontFamily: "monospace",
-            backgroundColor: (theme) =>
-              theme.palette.mode === "dark" ? "grey.800" : "grey.100",
-            padding: "2px 6px",
-            borderRadius: "4px",
-            fontSize: "0.9em",
-            color: "text.secondary",
-            border: "1px solid",
-            borderColor: "divider",
-          },
-
-          "& .question-content img": {
-            maxWidth: "100%",
-            height: "auto",
+          "& pre code": {
+            backgroundColor: "#1e1e1e",
+            color: "#dcdcdc",
+            padding: "1rem",
             borderRadius: "8px",
-            my: 1,
-            border: "1px solid",
-            borderColor: "divider",
           },
         }}
       >
         <div
+          ref={contentRef}
           className="question-content"
           dangerouslySetInnerHTML={{ __html: question.content }}
         />

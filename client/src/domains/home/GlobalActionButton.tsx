@@ -7,7 +7,6 @@ import { authRedirectModalAtom } from "@atom/modalAtoms";
 const GlobalActionButton = () => {
   const navigate = useNavigate();
   const [userInfo] = useAtom(realUserInfo);
-  console.log(userInfo);
   const showAuthRedirectModal = useSetAtom(authRedirectModalAtom);
 
   const handleClick = () => {

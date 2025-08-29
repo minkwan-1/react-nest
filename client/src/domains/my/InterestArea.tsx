@@ -5,8 +5,6 @@ interface InterestAreaProps {
 }
 
 const InterestArea: React.FC<InterestAreaProps> = ({ interests }) => {
-  // const theme = useTheme();
-
   const koreanContent = {
     interests: "관심 분야",
   };
@@ -61,10 +59,8 @@ const InterestArea: React.FC<InterestAreaProps> = ({ interests }) => {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            // border: `2px dashed ${theme.palette.divider}`,
             borderRadius: 2,
             p: 3,
-            // color: theme.palette.text.secondary,
           }}
         >
           <Typography variant="body2" fontWeight={500}>

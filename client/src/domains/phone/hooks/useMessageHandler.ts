@@ -1,4 +1,3 @@
-// src/hooks/useMessageHandler.ts
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -30,7 +29,6 @@ export const useMessageHandler = () => {
   const closeMessage = () => {
     setMessageState((prev) => ({ ...prev, open: false }));
 
-    // ✅ warning type도 sign-in으로 이동
     if (
       messageState.isExistingUser ||
       messageState.isSignupComplete ||

@@ -19,6 +19,7 @@ import { GlobalActionButton } from "@domains/home";
 import Commonsnackbar from "@domains/common/snackbar/CommonSnackbar";
 import { useShouldShow } from "./hooks/common/useShouldShow";
 import { AuthenticatedWrapper } from "../src/providers";
+import "highlight.js/styles/atom-one-dark.css";
 
 const App = () => {
   const shouldShow = useShouldShow();
@@ -60,7 +61,7 @@ const App = () => {
         <Route path="*" element={<NotFoundPage />} />
         <Route path="/redirect" element={<RedirectPage />} />
         <Route path="/phone" element={<PhoneVerificationPage />} />
-        <Route path="/un" element={<UnauthorizedPage />} />
+        <Route path="/unauthorized" element={<UnauthorizedPage />} />
       </Routes>
 
       {shouldShow && <GlobalActionButton />}

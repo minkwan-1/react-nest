@@ -7,10 +7,11 @@ import {
   Stack,
   Chip,
   IconButton,
-  Avatar,
 } from "@mui/material";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import CloseIcon from "@mui/icons-material/Close";
+import { useEffect, useRef } from "react";
+import hljs from "highlight.js";
 
 interface EditPreviewProps {
   isPreviewOpen: boolean;
@@ -30,9 +31,71 @@ const EditPreview: React.FC<EditPreviewProps> = ({
   content,
   tags,
   createdDate,
-  author,
-  authorProfileImage,
 }) => {
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  const applyHighlighting = () => {
+    const container = contentRef.current;
+    if (!container) return;
+
+    container.querySelectorAll("pre.ql-syntax").forEach((pre) => {
+      console.log("Processing ql-syntax pre element");
+
+      const tempDiv = document.createElement("div");
+      tempDiv.innerHTML = pre.innerHTML;
+      const cleanText = tempDiv.textContent || tempDiv.innerText || "";
+
+      pre.innerHTML = "";
+      pre.className = "";
+
+      const code = document.createElement("code");
+      code.className = "language-javascript";
+      code.textContent = cleanText;
+      pre.appendChild(code);
+    });
+
+    container.querySelectorAll("pre").forEach((pre) => {
+      if (!pre.querySelector("code")) {
+        const content = pre.textContent || "";
+        pre.innerHTML = "";
+        const code = document.createElement("code");
+        code.className = "language-javascript";
+        code.textContent = content;
+        pre.appendChild(code);
+      }
+    });
+
+    container.querySelectorAll("pre code").forEach((block) => {
+      block.className = block.className.replace(/hljs[^ ]*/g, "").trim();
+      if (!block.className.includes("language-")) {
+        block.className = "language-javascript";
+      }
+    });
+
+    container.querySelectorAll("pre code").forEach((block, index) => {
+      console.log(
+        `Highlighting block ${index}:`,
+        block.textContent?.slice(0, 50)
+      );
+      try {
+        hljs.highlightElement(block as HTMLElement);
+        console.log(`Block ${index} highlighted successfully`);
+      } catch (error) {
+        console.error(`Error highlighting block ${index}:`, error);
+      }
+    });
+  };
+
+  useEffect(() => {
+    if (isPreviewOpen && content) {
+      const timer = setTimeout(() => {
+        applyHighlighting();
+      }, 200);
+
+      return () => clearTimeout(timer);
+    }
+  }, [content, isPreviewOpen]);
+
   const formattedDate = createdDate
     ? new Date(createdDate).toLocaleString("ko-KR", {
         year: "numeric",
@@ -45,7 +108,16 @@ const EditPreview: React.FC<EditPreviewProps> = ({
     : "";
 
   return (
-    <Dialog open={isPreviewOpen} maxWidth="md" fullWidth>
+    <Dialog
+      open={isPreviewOpen}
+      maxWidth="md"
+      fullWidth
+      onTransitionEnd={() => {
+        if (isPreviewOpen) {
+          applyHighlighting();
+        }
+      }}
+    >
       <IconButton
         aria-label="close"
         onClick={handlePreviewClose}
@@ -130,33 +202,6 @@ const EditPreview: React.FC<EditPreviewProps> = ({
                 color: "primary.dark",
                 fontWeight: 600,
               },
-              "& .question-content pre": {
-                padding: "1rem",
-                borderRadius: "8px",
-                overflowX: "auto",
-                backgroundColor: (theme) =>
-                  theme.palette.mode === "dark" ? "#0d1117" : "#f6f8fa",
-              },
-              "& .question-content code": {
-                fontFamily: "monospace",
-                backgroundColor: "transparent",
-                padding: 0,
-                borderRadius: 0,
-                fontSize: "0.9em",
-                color: "inherit",
-                border: "none",
-              },
-              "& .question-content pre code": {
-                backgroundColor: "transparent",
-              },
-              "& .question-content p > code, & .question-content li > code": {
-                backgroundColor: (theme) =>
-                  theme.palette.mode === "dark" ? "grey.800" : "grey.100",
-                padding: "2px 6px",
-                borderRadius: "4px",
-                border: "1px solid",
-                borderColor: "divider",
-              },
               "& .question-content img": {
                 maxWidth: "100%",
                 height: "auto",
@@ -165,57 +210,25 @@ const EditPreview: React.FC<EditPreviewProps> = ({
                 border: "1px solid",
                 borderColor: "divider",
               },
+
+              "& pre code": {
+                backgroundColor: "#1e1e1e",
+                color: "#dcdcdc",
+                display: "block",
+                overflowX: "auto",
+                padding: "1rem",
+                borderRadius: "8px",
+              },
             }}
           >
             <div
+              ref={contentRef}
               className="question-content"
               dangerouslySetInnerHTML={{
                 __html: content,
               }}
             />
           </Paper>
-
-          <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
-            <Paper
-              elevation={0}
-              sx={{
-                p: 2,
-                backgroundColor: "background.default",
-                borderRadius: 2,
-                border: "1px solid",
-                borderColor: "divider",
-                display: "flex",
-                alignItems: "center",
-                gap: 2,
-                minHeight: 80,
-              }}
-            >
-              <>
-                <Avatar
-                  sx={{
-                    width: 40,
-                    height: 40,
-                    mr: 1,
-                    bgcolor: "primary.main",
-                    fontSize: "14px",
-                    fontWeight: "bold",
-                  }}
-                  src={authorProfileImage}
-                ></Avatar>
-                <Box>
-                  <Typography variant="body1" sx={{ fontWeight: 600 }}>
-                    {author}
-                  </Typography>
-                  <Typography
-                    variant="caption"
-                    sx={{ color: "text.secondary", display: "block" }}
-                  >
-                    작성자
-                  </Typography>
-                </Box>
-              </>
-            </Paper>
-          </Box>
         </Box>
       </DialogContent>
     </Dialog>

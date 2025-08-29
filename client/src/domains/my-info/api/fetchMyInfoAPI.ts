@@ -8,7 +8,6 @@ export const fetchMyInfoAPI = async (userId: string) => {
     const response = await axiosInstance.get("my-info", {
       params: { id: userId },
     });
-    console.log("fetchMyInfoAPI response:", response.data);
 
     return response.data;
   } catch (error) {
@@ -18,14 +17,12 @@ export const fetchMyInfoAPI = async (userId: string) => {
 };
 
 export const fetchMyPublicInfoAPI = async (userId: string) => {
-  console.log(userId);
   await new Promise((resolve) => setTimeout(resolve, 1500));
 
   try {
     const response = await axiosInstance.get("my-info/public", {
       params: { id: userId },
     });
-    console.log("fetchMyInfoAPI response:", response.data);
 
     return response.data;
   } catch (error) {

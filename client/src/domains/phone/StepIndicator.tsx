@@ -15,7 +15,6 @@ const StepIndicator = ({ step, totalSteps }: StepIndicatorProps) => {
 
   return (
     <Box sx={{ mb: 4 }}>
-      {/* 상단 이미지 */}
       <Box
         component="img"
         src={verification1}
@@ -35,14 +34,11 @@ const StepIndicator = ({ step, totalSteps }: StepIndicatorProps) => {
         }}
       />
 
-      {/* 단계 표시 및 단계별 제목 */}
       <Box sx={{ textAlign: "center", mb: 3 }}>
-        {/* 현재 단계 표시 */}
         <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
           {step}/{totalSteps} 단계
         </Typography>
 
-        {/* 단계별 설명 텍스트 */}
         <Typography
           variant="body1"
           color="text.secondary"
@@ -52,7 +48,6 @@ const StepIndicator = ({ step, totalSteps }: StepIndicatorProps) => {
         </Typography>
       </Box>
 
-      {/* 하단 점 형태의 단계 인디케이터 */}
       <Box
         sx={{
           display: "flex",
@@ -76,7 +71,6 @@ const StepIndicator = ({ step, totalSteps }: StepIndicatorProps) => {
         ))}
       </Box>
 
-      {/* 하단 구분선 */}
       <Box
         sx={{
           borderBottom: "1px solid",

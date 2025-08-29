@@ -40,15 +40,11 @@ const MainContent = () => {
     handleCloseSnackbar,
   } = useAnswerSubmit(id, user?.id, fetchAnswers);
 
-  // question이 로드된 후 AI 답변 가져오기
   useEffect(() => {
     if (question && !loading) {
       fetchAiAnswer(question.id);
     }
   }, [question, loading, fetchAiAnswer]);
-
-  console.log("AI 답변: ", aiAnswer);
-  console.log("일반 사용자 답변: ", answers);
 
   return (
     <Box

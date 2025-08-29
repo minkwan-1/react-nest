@@ -26,9 +26,7 @@ interface CardActionsSectionProps {
 
 const CardActionsSection = ({
   question,
-  //   handleAnswerClick,
   questionUserId,
-  // userId,
   onCardClick,
   handleDeleteClick,
 }: CardActionsSectionProps) => {

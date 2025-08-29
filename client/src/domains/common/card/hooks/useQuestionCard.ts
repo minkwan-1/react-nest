@@ -21,7 +21,7 @@ export const useQuestionCard = ({
   onAnswerClick,
 }: UseQuestionCardProps) => {
   const { openModal } = useOpenCommonModal();
-  // const navigate = useNavigate();
+
   const queryClient = useQueryClient();
 
   const deleteMutation = useMutation({

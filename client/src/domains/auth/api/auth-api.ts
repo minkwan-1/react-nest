@@ -8,11 +8,10 @@ export interface SignupUserInfo {
   provider: string;
 }
 
-// payload에 대한 타입을 명확하게 정의
 type AuthorizationPayload = {
   code: string;
   provider: string;
-  state?: string; // state는 선택적 프로퍼티
+  state?: string;
 };
 
 export const postAuthorizationCode = async ({
@@ -65,12 +64,11 @@ export const signup = async (userInfo: SignupUserInfo) => {
       default:
         throw new Error("지원하지 않는 소셜 로그인 제공자입니다.");
     }
-    console.log(endpoint, userInfo);
+
     const response = await axiosInstance.post(endpoint, userInfo);
-    console.log(response);
+
     return { success: true, data: response.data };
   } catch (error) {
-    console.error("Signup error:", error);
     return {
       success: false,
       data: null,
@@ -87,8 +85,7 @@ export const fetchUserInfo = async () => {
     const response = await axiosInstance.get("auth/me");
     return response.data;
   } catch (error) {
-    console.log(error);
-    throw new Error("사용자 정보를 가져오는 데 실패했습니다.");
+    throw new Error(`사용자 정보를 가져오는 데 실패했습니다: ${error}`);
   }
 };
 

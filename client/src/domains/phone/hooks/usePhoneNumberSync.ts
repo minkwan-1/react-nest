@@ -1,4 +1,3 @@
-// src/hooks/usePhoneNumberSync.ts
 import { useState } from "react";
 import { signupUserInfo } from "@atom/auth";
 import { SetStateAction } from "jotai";

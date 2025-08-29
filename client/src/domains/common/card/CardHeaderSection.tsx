@@ -22,12 +22,10 @@ interface CardHeaderSectionProps {
 }
 
 const CardHeaderSection = ({ user, question }: CardHeaderSectionProps) => {
-  // user.id를 string으로 변환하여 전달
   const userId = user?.id ? String(user.id) : undefined;
 
   const { data: myInfo } = useFetchMyInfo(userId);
 
-  // 날짜 포맷팅 함수
   const formatDate = (dateInput: string | Date | undefined) => {
     if (!dateInput) return new Date().toLocaleDateString("ko-KR");
     const date =
@@ -60,7 +58,6 @@ const CardHeaderSection = ({ user, question }: CardHeaderSectionProps) => {
         variant="body2"
         sx={{
           fontWeight: 500,
-          // color: theme.palette.text.primary,
         }}
       >
         {myInfo?.nickname || user.name}

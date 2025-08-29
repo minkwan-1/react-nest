@@ -1,6 +1,5 @@
 import { keyframes } from "@mui/material";
 
-// 다양한 둥둥 떠다니는 애니메이션 정의
 export const float1 = keyframes`
   0% { transform: translateY(0px) translateX(0px); }
   50% { transform: translateY(-15px) translateX(5px); }

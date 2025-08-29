@@ -33,6 +33,8 @@ interface VerificationInputProps {
 
 const VerificationInput = ({
   phoneNumber,
+  onSuccess,
+  onError,
   onResendCode,
   onNext,
 }: VerificationInputProps) => {
@@ -51,22 +53,25 @@ const VerificationInput = ({
   const { mutate: submitVerification, isPending: isVerifying } = useMutation({
     mutationFn: verifyCode,
     onSuccess: (data) => {
-      console.log("🎉 인증 성공!");
+      const successMessage = data.message || "전화번호가 인증되었습니다.";
       setModal({
         open: true,
         type: "success",
         title: "인증 성공",
-        message: data.message || "전화번호가 인증되었습니다.",
+        message: successMessage,
       });
+      onSuccess(successMessage);
     },
     onError: (error) => {
       console.error("🚨 인증 요청 중 오류 발생:", error);
+      const errorMessage = error.message || "인증에 실패했습니다.";
       setModal({
         open: true,
         type: "error",
         title: "인증 실패",
-        message: error.message,
+        message: errorMessage,
       });
+      onError(errorMessage);
     },
   });
 
@@ -100,7 +105,6 @@ const VerificationInput = ({
   const handleVerifyCode = () => {
     console.log("🔐 인증 코드 확인 요청 시작");
     if (!verificationCode || !phoneNumber || timeLeft === 0) {
-      console.warn("⚠️ 인증 요청 사전 조건 미충족");
       return;
     }
     submitVerification({ phoneNumber, verificationCode });

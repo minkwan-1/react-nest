@@ -3,13 +3,11 @@ import { useNavigate } from "react-router-dom";
 import { useFetchMyInfo } from "@domains/my-info/hooks/useFetchMyInfo";
 import { useAtom } from "jotai";
 import { realUserInfo } from "@atom/auth";
-// import { useFetchMeQuery } from "@domains/auth/api/useAuthHooks";
 
 const RealUserTooltip = () => {
   const navigate = useNavigate();
 
   const [realUser] = useAtom(realUserInfo);
-  // const { data: realUser } = useFetchMeQuery();
 
   const { data: myInfo } = useFetchMyInfo(realUser?.user?.id);
 

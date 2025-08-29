@@ -10,12 +10,10 @@ export interface UserInfoFieldProps {
 }
 
 const UserInfoField = ({ userInfo }: UserInfoFieldProps) => {
-  // 유저 이름과 이메일 정보 가져오기 (없을 경우 기본값 설정)
   const name = userInfo?.name || "이름 정보 없음";
   const email = userInfo?.email || "이메일 정보 없음";
 
   return (
-    // 전체 회원 정보 카드 UI 컨테이너
     <Paper
       elevation={0}
       sx={{
@@ -26,7 +24,6 @@ const UserInfoField = ({ userInfo }: UserInfoFieldProps) => {
         borderColor: "divider",
       }}
     >
-      {/* 상단 섹션: 타이틀 영역 */}
       <Box
         sx={{
           py: 1.5,
@@ -45,7 +42,6 @@ const UserInfoField = ({ userInfo }: UserInfoFieldProps) => {
         </Typography>
       </Box>
 
-      {/* 하단 섹션: 아바타 + 이름/이메일 정보 */}
       <Box
         sx={{
           p: 3,
@@ -55,9 +51,7 @@ const UserInfoField = ({ userInfo }: UserInfoFieldProps) => {
           flexDirection: { xs: "column", sm: "row" },
         }}
       >
-        {/* 이름과 이메일 정보 */}
         <Box sx={{ width: "100%" }}>
-          {/* 이름 영역 */}
           <Box sx={{ mb: 2 }}>
             <Box sx={{ display: "flex", alignItems: "center", mb: 0.5 }}>
               <PersonIcon
@@ -73,7 +67,6 @@ const UserInfoField = ({ userInfo }: UserInfoFieldProps) => {
             </Typography>
           </Box>
 
-          {/* 이메일 영역 */}
           <Box>
             <Box sx={{ display: "flex", alignItems: "center", mb: 0.5 }}>
               <EmailIcon

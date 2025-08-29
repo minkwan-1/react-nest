@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   TextField,
@@ -17,31 +17,34 @@ import PhoneIcon from "@mui/icons-material/Phone";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ErrorIcon from "@mui/icons-material/Error";
 import { motion } from "framer-motion";
-import type { signupUserInfo } from "@atom/auth";
-import { SetStateAction } from "jotai";
 import { useMutation } from "@tanstack/react-query";
 import { requestVerificationCodeAPI } from "./api/requestVerificationCodeAPI";
-import { useSetAtom } from "jotai";
-import { authRedirectModalAtom } from "@atom/modalAtoms";
-import { useNavigate } from "react-router-dom";
-import { useOpenCommonModal } from "@domains/common/modal/hook/useOpenCommonModal";
+import type { signupUserInfo } from "@atom/auth";
+import { SetStateAction } from "jotai";
 
 type PhoneNumberFieldProps = {
+  onSuccess?: (message: string) => void;
+  onError?: (message: string) => void;
+  onPhoneNumberChange?: (value: string) => void;
   onNext: () => void;
-  userInfo: signupUserInfo | null;
-  setUserInfo: (userInfo: SetStateAction<signupUserInfo | null>) => void;
+  onExistingUser?: () => void;
+  userInfo?: signupUserInfo | null;
+  setUserInfo?: (userInfo: SetStateAction<signupUserInfo | null>) => void;
 };
 
 const PhoneNumberField = ({
+  onSuccess,
+  onError,
+  onPhoneNumberChange,
   onNext,
+  onExistingUser,
   userInfo,
   setUserInfo,
 }: PhoneNumberFieldProps) => {
   const theme = useTheme();
   const keyColor = "#b8dae1";
-  const navigate = useNavigate();
 
-  const [phoneNumber, setPhoneNumber] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState(userInfo?.phoneNumber || "");
   const [isFocused, setIsFocused] = useState(false);
   const [modal, setModal] = useState({
     open: false,
@@ -50,16 +53,6 @@ const PhoneNumberField = ({
     message: "",
   });
 
-  const { openModal } = useOpenCommonModal();
-
-  const show = useSetAtom(authRedirectModalAtom);
-
-  useEffect(() => {
-    if (!userInfo) {
-      show(true);
-    }
-  }, [userInfo, show]);
-
   const { mutate: requestCode, isPending: isSending } = useMutation({
     mutationFn: requestVerificationCodeAPI,
     onSuccess: (data) => {
@@ -67,31 +60,29 @@ const PhoneNumberField = ({
         data?.message ===
         "이미 가입된 휴대폰 번호입니다. 다른 로그인 방법을 이용해주세요."
       ) {
-        openModal({
-          isOpen: true,
-          type: "error",
-          title: "기존 가입자",
-          info: "이미 가입된 휴대폰 번호입니다. 다른 로그인 방법을 이용해주세요.",
-          onConfirm: () => navigate(`/start`),
-        });
+        onExistingUser?.();
       } else {
+        const successMessage =
+          data?.message || `${phoneNumber}로 인증 코드가 전송되었습니다.`;
         setModal({
           open: true,
           type: "success",
           title: "인증 코드 요청 완료",
-          message: `${phoneNumber}로 인증 코드가 전송되었습니다.`,
+          message: successMessage,
         });
-        console.log("인증 코드 전송 성공:", data);
+        onSuccess?.(successMessage);
       }
     },
     onError: (error) => {
+      const errorMessage =
+        error.message || "인증 코드 전송에 실패했습니다. 다시 시도해주세요.";
       setModal({
         open: true,
         type: "error",
         title: "인증 코드 전송 실패",
-        message: "인증 코드 전송에 실패했습니다. 다시 시도해주세요.",
+        message: errorMessage,
       });
-      console.log("휴대전화번호 전송 인증 에러:", error);
+      onError?.(errorMessage);
     },
   });
 
@@ -101,18 +92,12 @@ const PhoneNumberField = ({
     }
   }, [userInfo?.phoneNumber]);
 
-  const handlePhoneNumberChange = useCallback(
-    (phone: string) => {
-      setPhoneNumber(phone);
-      setUserInfo((prev) => {
-        if (prev) {
-          return { ...prev, phoneNumber: phone };
-        }
-        return prev;
-      });
-    },
-    [setUserInfo]
-  );
+  const handlePhoneInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setPhoneNumber(value);
+    onPhoneNumberChange?.(value);
+    setUserInfo?.((prev) => (prev ? { ...prev, phoneNumber: value } : prev));
+  };
 
   const isValidPhoneNumber = (number: string) => {
     const trimmed = number.replace(/\s+/g, "");
@@ -122,31 +107,11 @@ const PhoneNumberField = ({
 
   const isValidFormat = phoneNumber ? isValidPhoneNumber(phoneNumber) : true;
 
-  useEffect(() => {
-    handlePhoneNumberChange(phoneNumber);
-  }, [phoneNumber, handlePhoneNumberChange]);
-
-  const debounce = <T extends unknown[]>(
-    func: (...args: T) => void,
-    delay: number
-  ) => {
-    let timer: NodeJS.Timeout;
-    return (...args: T) => {
-      clearTimeout(timer);
-      timer = setTimeout(() => func(...args), delay);
-    };
-  };
-
   const sendCode = () => {
     if (!phoneNumber.trim() || !isValidPhoneNumber(phoneNumber)) {
-      console.log("유효한 전화번호를 입력해주세요.");
+      onError?.("유효한 전화번호를 입력해주세요.");
       return;
     }
-    setUserInfo((prev) => {
-      if (!prev) return prev;
-      return { ...prev, phoneNumber: phoneNumber.trim() };
-    });
-
     requestCode(phoneNumber);
   };
 
@@ -155,17 +120,8 @@ const PhoneNumberField = ({
     onNext();
   };
 
-  const debouncedSendCode = useCallback(debounce(sendCode, 300), [
-    phoneNumber,
-    setUserInfo,
-  ]);
-
   const isDarkMode = theme.palette.mode === "dark";
   const borderColor = isDarkMode ? `${keyColor}40` : `${keyColor}30`;
-
-  if (!userInfo) {
-    return null;
-  }
 
   return (
     <>
@@ -198,7 +154,7 @@ const PhoneNumberField = ({
               label="휴대폰 번호"
               placeholder="01012345678"
               value={phoneNumber}
-              onChange={(e) => setPhoneNumber(e.target.value)}
+              onChange={handlePhoneInputChange}
               onFocus={() => setIsFocused(true)}
               onBlur={() => setIsFocused(false)}
               margin="normal"
@@ -243,7 +199,7 @@ const PhoneNumberField = ({
 
             <Button
               variant="contained"
-              onClick={debouncedSendCode}
+              onClick={sendCode}
               disabled={isSending || !phoneNumber.trim() || !isValidFormat}
               fullWidth
               sx={{

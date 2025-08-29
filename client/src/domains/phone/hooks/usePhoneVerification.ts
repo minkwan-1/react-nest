@@ -38,10 +38,9 @@ export const usePhoneVerification = ({
     isSignupComplete: false,
   });
 
-  // src/hooks/usePhoneVerification.ts
   const showMessage = (
     message: string,
-    type: MessageType, // "warning" 포함됨
+    type: MessageType,
     isExistingUser = false,
     isSignupComplete = false
   ) => {
@@ -57,7 +56,6 @@ export const usePhoneVerification = ({
   const closeMessage = () => {
     setMessageState((prev) => ({ ...prev, open: false }));
 
-    // ✅ warning도 조건 포함
     if (
       messageState.isExistingUser ||
       messageState.isSignupComplete ||

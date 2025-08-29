@@ -28,6 +28,7 @@ const MainContent = () => {
     event: React.ChangeEvent<unknown>,
     value: number
   ) => {
+    console.log(event);
     setCurrentPage(value);
   };
 

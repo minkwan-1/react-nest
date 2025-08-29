@@ -1,4 +1,3 @@
-// components/AnswerLoadingOrEmpty.tsx
 import React from "react";
 import { Box, Card, CircularProgress, Typography, Alert } from "@mui/material";
 

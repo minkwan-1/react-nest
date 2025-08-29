@@ -24,7 +24,7 @@ const FeatureItem = ({
         display: "flex",
         alignItems: "center",
         mb: 3,
-        transform: "translateZ(0)", // 성능 최적화
+        transform: "translateZ(0)",
         "&:hover .icon-container": {
           transform: "translateY(-5px)",
           boxShadow: `0 8px 16px ${keyColor}30`,

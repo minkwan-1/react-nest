@@ -24,7 +24,6 @@ function Appbar({ sx }: AppbarProps) {
 
   useEffect(() => {
     if (isSuccess) {
-      console.log("auth/me 쿼리 실행됨: ", isSuccess);
       setRealUser(data);
     }
     if (isError) {

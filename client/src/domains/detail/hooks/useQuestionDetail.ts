@@ -1,4 +1,3 @@
-// hooks/useQuestionDetail.ts
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useAtom } from "jotai";
@@ -12,10 +11,8 @@ export const useQuestionDetail = (): UseQuestionDetailReturn => {
   const [questions] = useAtom(questionsAtom);
   const [loading, setLoading] = useState(true);
   const [userInfo] = useAtom(realUserInfo);
-  console.log(userInfo);
-  const user = userInfo?.user || null;
 
-  console.log("id는?: ", id);
+  const user = userInfo?.user || null;
 
   useEffect(() => {
     if (!id || !questions || questions.length === 0) {

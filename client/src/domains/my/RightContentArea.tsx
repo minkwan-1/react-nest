@@ -27,7 +27,6 @@ const RightContentArea = () => {
   }, []);
 
   const handleCardClick = (questionId: number | string) => {
-    console.log("Card clicked:", questionId);
     navigate(`/questions/${questionId}`);
   };
 
@@ -41,7 +40,6 @@ const RightContentArea = () => {
         flex: 1,
         p: 0,
         borderRadius: 2,
-        // border: "1px solid red",
         overflowY: "scroll",
       }}
     >

@@ -1,5 +1,3 @@
-// utils/styleUtils.ts
-
 export const themeColors = {
   primary: "#b8dae1",
   primaryLight: "#f0f7f8",
@@ -24,13 +22,13 @@ export const themeColors = {
   ai: {
     primary: "#85c1cc",
     light: "#f2f8f9",
-    dark: "#2b3e45", // ✅ dark mode 대응
+    dark: "#2b3e45",
     border: "#b8dae1",
   },
   user: {
     primary: "#a8d1db",
     light: "#f4f9fa",
-    dark: "#2c3d43", // ✅ dark mode 대응
+    dark: "#2c3d43",
     border: "#c5e2e8",
   },
 };

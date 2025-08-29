@@ -10,7 +10,6 @@ const DecorativeElements = ({ keyColor }: DecorativeElementsProps) => {
 
   return (
     <>
-      {/* 대형 장식용 원들 */}
       <Box
         sx={{
           position: "absolute",
@@ -47,7 +46,6 @@ const DecorativeElements = ({ keyColor }: DecorativeElementsProps) => {
         }}
       />
 
-      {/* 작은 장식 점들 */}
       <Box
         sx={{
           position: "absolute",

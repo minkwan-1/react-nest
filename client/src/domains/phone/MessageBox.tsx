@@ -65,7 +65,7 @@ const MessageBox = ({
     info: <InfoOutlinedIcon sx={{ fontSize: 48 }} />,
     success: <CheckCircleOutlineIcon sx={{ fontSize: 48 }} />,
     error: <ErrorOutlineIcon sx={{ fontSize: 48 }} />,
-    warning: <InfoOutlinedIcon sx={{ fontSize: 48 }} />, // 적절한 warning 아이콘 사용 가능
+    warning: <InfoOutlinedIcon sx={{ fontSize: 48 }} />,
   };
 
   const titles = {

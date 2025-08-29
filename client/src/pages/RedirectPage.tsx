@@ -36,8 +36,6 @@ const RedirectPage = () => {
         onSuccess: async (res) => {
           const user = res?.user;
 
-          console.log(user);
-
           if (!user) {
             navigate("/error", {
               state: { message: "사용자 정보를 가져오지 못했습니다." },

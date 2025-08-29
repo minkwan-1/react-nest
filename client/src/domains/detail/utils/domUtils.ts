@@ -1,4 +1,3 @@
-// utils/domUtils.ts
 import { ThemeColors } from "../types";
 
 export const applyCodeBlockStyling = (themeColors: ThemeColors) => {

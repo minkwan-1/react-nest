@@ -15,10 +15,6 @@ export const useAnswerSubmit = (
     useSubmitAnswer();
 
   const handleSubmitAnswer = useCallback(async () => {
-    console.log(userAnswer);
-    console.log(questionId);
-    console.log(userId);
-
     if (!userAnswer.trim() || !questionId || !userId) {
       setSubmitError("답변 내용을 입력해주세요.");
       return;

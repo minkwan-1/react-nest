@@ -12,11 +12,11 @@ import { AiAnswer } from 'src/modules/ai/ai.entity';
 
 export const typeORMConfig: TypeOrmModuleOptions = {
   type: 'postgres',
-  host: 'localhost',
-  port: 5432,
-  username: 'postgres',
-  password: 'postgres',
-  database: 'react-nest',
+  host: process.env.DB_HOST,
+  port: parseInt(process.env.DB_PORT),
+  username: process.env.DB_USERNAME,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
   entities: [
     Question,
     GoogleUser,
@@ -29,5 +29,8 @@ export const typeORMConfig: TypeOrmModuleOptions = {
     Answer,
     AiAnswer,
   ],
-  synchronize: true, // 개발 환경에서만 true (프로덕션에서는 false로 설정)
+  synchronize: process.env.NODE_ENV !== 'production',
+  ssl: {
+    rejectUnauthorized: false,
+  },
 };

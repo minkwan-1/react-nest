@@ -92,7 +92,6 @@ const DetailQuestionTitle = () => {
         </Box>
       </Stack>
 
-      {/* 👇 태그 표시 */}
       <Box sx={{ mt: 2, display: "flex", flexWrap: "wrap", gap: 1 }}>
         {question.tags.map((tag, index) => (
           <Chip
