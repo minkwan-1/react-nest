@@ -124,7 +124,6 @@ export class GoogleAuthService {
     }
   }
 
-  // [5] 신규 사용자 저장
   async createUser(userData: any) {
     return await this.googleAuthRepository.saveUser(userData);
   }

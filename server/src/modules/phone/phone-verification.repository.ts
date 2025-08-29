@@ -24,23 +24,19 @@ export class PhoneVerificationRepository {
     return await this.repo.save(verification);
   }
 
-  // 전화번호로 인증 정보 찾기
   async findByPhoneNumber(
     phoneNumber: string,
   ): Promise<PhoneVerification | null> {
-    console.log('findByPhoneNumber의 전화번호: ', phoneNumber);
     return await this.repo.findOne({
       where: { phoneNumber },
       order: { expiresAt: 'DESC' },
     });
   }
 
-  // 전화번호로 인증 정보 삭제
   async deleteByPhoneNumber(phoneNumber: string): Promise<void> {
     await this.repo.delete({ phoneNumber });
   }
 
-  // 인증 완료 처리
   async markAsVerified(phoneNumber: string): Promise<void> {
     const verification = await this.findByPhoneNumber(phoneNumber);
     if (verification) {

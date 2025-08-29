@@ -15,7 +15,6 @@ export class PhoneVerificationService {
 
   private generateVerificationCode(): string {
     const code = Math.floor(100000 + Math.random() * 900000).toString();
-    console.log('[generateVerificationCode] 생성된 코드:', code);
     return code;
   }
 
@@ -30,7 +29,6 @@ export class PhoneVerificationService {
       const verificationCode = this.generateVerificationCode();
       const expiresAt = new Date();
       expiresAt.setMinutes(expiresAt.getMinutes() + 10);
-      console.log('[sendVerificationCode] 유효기간 설정:', expiresAt);
 
       const savedVerification =
         await this.phoneVerificationRepository.savePhoneVerificationInfo(
@@ -49,8 +47,6 @@ export class PhoneVerificationService {
         body: `인증 코드: ${verificationCode}. 이 코드는 10분 후에 만료됩니다.`,
       });
 
-      console.log('[sendVerificationCode] Twilio 전송 완료:', message.sid);
-
       return {
         message: '인증 코드가 성공적으로 전송되었습니다!',
         sid: message.sid,
@@ -66,7 +62,6 @@ export class PhoneVerificationService {
     verificationCode: string,
   ): Promise<{ message: string; status?: 'error' | 'success' }> {
     if (!phoneNumber || !verificationCode) {
-      console.warn('[verifyCode] 전화번호 또는 코드 누락');
       return { message: '전화번호와 인증 코드가 필요합니다.' };
     }
 
@@ -75,7 +70,6 @@ export class PhoneVerificationService {
         await this.phoneVerificationRepository.findByPhoneNumber(phoneNumber);
 
       if (!storedVerification) {
-        console.warn('[verifyCode] 인증 정보 없음');
         return {
           message: '인증 코드를 찾을 수 없습니다. 새 코드를 요청해 주세요.',
           status: 'error',
@@ -83,7 +77,6 @@ export class PhoneVerificationService {
       }
 
       if (new Date() > storedVerification.expiresAt) {
-        console.warn('[verifyCode] 인증 코드 만료됨');
         await this.phoneVerificationRepository.deleteByPhoneNumber(phoneNumber);
         return {
           message: '인증 코드가 만료되었습니다. 새 코드를 요청해 주세요.',
@@ -92,7 +85,6 @@ export class PhoneVerificationService {
       }
 
       if (verificationCode !== storedVerification.code) {
-        console.warn('[verifyCode] 코드 불일치');
         return {
           message: '유효하지 않은 인증 코드입니다. 다시 시도해 주세요.',
           status: 'error',
@@ -100,10 +92,6 @@ export class PhoneVerificationService {
       }
 
       await this.phoneVerificationRepository.markAsVerified(phoneNumber);
-      console.log('[verifyCode] 인증 완료됨 - 사용자:', {
-        ...storedVerification,
-        verified: true,
-      });
 
       return {
         message: '전화번호 인증 및 사용자 등록이 완료되었습니다!',

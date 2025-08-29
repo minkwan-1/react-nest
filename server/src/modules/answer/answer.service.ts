@@ -1,5 +1,4 @@
-// answer.service.ts
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Answer } from './answer.entity';
@@ -25,5 +24,15 @@ export class AnswerService {
       where: { questionId },
       order: { createdAt: 'ASC' },
     });
+  }
+
+  async deleteAnswer(answerId: string): Promise<void> {
+    const result = await this.answerRepository.delete({
+      id: answerId,
+    });
+
+    if (result.affected === 0) {
+      throw new NotFoundException(`Answer with ID ${answerId} not found.`);
+    }
   }
 }

@@ -19,9 +19,9 @@ export class SelfIntroController {
     if (!userId) {
       return { selfIntro: '' };
     }
-    console.log('유저 아이디:', userId);
+
     const content = await this.selfIntroService.find(userId);
-    console.log('조회된 소개:', content);
+
     return { selfIntro: content };
   }
 }

@@ -10,9 +10,8 @@ export class AuthController {
 
   @Get('me')
   async getMe(@Req() req: Request) {
-    console.log((req as any).isAuthenticated());
     const user = await this.sessionService.findWithSession(req);
-    console.log('유저: ', user);
+
     return user;
   }
 

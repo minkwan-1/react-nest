@@ -3,12 +3,8 @@ import { AppModule } from './app.module';
 import * as dotenv from 'dotenv';
 import * as cookieParser from 'cookie-parser';
 import * as session from 'express-session';
-
 import * as passport from 'passport';
 
-console.log(passport);
-
-// .env 파일 로드
 dotenv.config();
 
 async function bootstrap() {
@@ -17,7 +13,6 @@ async function bootstrap() {
   const { CORS_ORIGIN, FRONTEND_URL, SESSION_SECRET, CSP_SCRIPT_SRC, PORT } =
     process.env;
 
-  // CORS
   app.enableCors({
     origin: CORS_ORIGIN || FRONTEND_URL || 'http://localhost:5173',
     methods: 'GET,POST,PUT,DELETE',
@@ -25,10 +20,8 @@ async function bootstrap() {
     credentials: true,
   });
 
-  // cookie
   app.use(cookieParser());
 
-  // session
   app.use(
     session({
       secret: SESSION_SECRET,
@@ -42,17 +35,10 @@ async function bootstrap() {
     }),
   );
 
-  // passport
   app.use(passport.initialize());
-
-  console.log(
-    'serializeUser 함수 내용:',
-    passport._sm._serializeUser.toString(),
-  );
 
   app.use(passport.session());
 
-  // CSP
   app.use((req, res, next) => {
     res.setHeader(
       'Content-Security-Policy',
@@ -61,7 +47,6 @@ async function bootstrap() {
     next();
   });
 
-  // PORT
   await app.listen(PORT || 3000);
 }
 

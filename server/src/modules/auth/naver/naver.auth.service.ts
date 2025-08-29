@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import axios from 'axios';
-// import { randomBytes } from 'crypto';
 import { NaverAuthRepository } from './naver.auth.repository';
 import { NaverUser } from './naver.auth.entity';
 import { HttpException } from '@nestjs/common';
@@ -16,7 +15,6 @@ export class NaverAuthService {
 
   constructor(private readonly naverAuthRepository: NaverAuthRepository) {}
 
-  // [1] 네이버 인증 URL 생성
   getNaverAuthUrl(): string {
     const state = 'dfsfsadfsafasdfasdfsd';
 
@@ -27,11 +25,8 @@ export class NaverAuthService {
     }
   }
 
-  // [2] 인가 코드로 액세스 토큰 요청
   async getToken(code: string, state: string): Promise<any> {
     const tokenUrl = 'https://nid.naver.com/oauth2.0/token';
-
-    console.log(code, state);
 
     try {
       const response = await axios.post(tokenUrl, null, {
@@ -45,7 +40,6 @@ export class NaverAuthService {
         },
       });
 
-      console.log(response.data);
       return response.data;
     } catch (error) {
       console.log(error);
@@ -53,7 +47,6 @@ export class NaverAuthService {
     }
   }
 
-  // [3] 액세스 토큰으로 구글 사용자 정보 조회
   async getUserInfo(accessToken: string): Promise<any> {
     const userInfoUrl = 'https://openapi.naver.com/v1/nid/me';
 
@@ -70,12 +63,10 @@ export class NaverAuthService {
     }
   }
 
-  // [4] 기존 사용자 조회 또는 신규 사용자 데이터 반환
   async findUser(userData: any): Promise<FindUserType> {
-    console.log(userData.id);
     try {
       const user = await this.naverAuthRepository.findUser({ id: userData.id });
-      console.log('기존 네이버 유저 조회: ', user);
+
       if (user) {
         return { ...user, isExist: true };
       }
@@ -104,7 +95,6 @@ export class NaverAuthService {
     }
   }
 
-  // [5] 신규 사용자 저장
   async createUser(userData: any) {
     return await this.naverAuthRepository.saveUser(userData);
   }

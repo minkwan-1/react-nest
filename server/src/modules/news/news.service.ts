@@ -1,4 +1,3 @@
-// src/news/news.service.ts
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import axios from 'axios';
@@ -17,10 +16,10 @@ export class NewsService {
     try {
       const response = await axios.get(apiUrl, {
         params: {
-          query: query, // 검색어 (예: 'IT', '인공지능')
-          display: 10, // 한번에 표시할 검색 결과 개수
+          query: query,
+          display: 10,
           start: 1,
-          sort: 'sim', // sim: 정확도순, date: 날짜순
+          sort: 'sim',
         },
         headers: {
           'X-Naver-Client-Id': clientId,
@@ -28,7 +27,6 @@ export class NewsService {
         },
       });
 
-      // HTML 태그 제거 및 따옴표 정리
       const sanitizedItems = response.data.items.map((item) => ({
         ...item,
         title: item.title.replace(/(<([^>]+)>|&quot;)/gi, ''),

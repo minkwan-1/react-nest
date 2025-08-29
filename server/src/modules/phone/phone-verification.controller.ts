@@ -66,7 +66,6 @@ export class PhoneVerificationController {
     }
   }
 
-  // [POST] 인증 코드 검증 요청
   @Post('verify-code')
   async verifyCode(@Body() body: VerifyCodeDto): Promise<{ message: string }> {
     const { phoneNumber, verificationCode } = body;

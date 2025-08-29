@@ -1,4 +1,14 @@
-import { Controller, Post, Get, Body, Param, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Get,
+  Body,
+  Param,
+  UseGuards,
+  Delete,
+  HttpCode,
+  HttpStatus,
+} from '@nestjs/common';
 import { AnswerService } from './answer.service';
 import { AuthenticatedGuard } from '../auth/guard/authenticated.guard';
 
@@ -17,5 +27,12 @@ export class AnswerController {
   @Get('question/:questionId')
   async getAnswersByQuestionId(@Param('questionId') questionId: string) {
     return await this.answerService.getAnswersByQuestionId(questionId);
+  }
+
+  @UseGuards(AuthenticatedGuard)
+  @Delete('delete/:id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async delete(@Param('id') answerId: string): Promise<void> {
+    return this.answerService.deleteAnswer(answerId);
   }
 }

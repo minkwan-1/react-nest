@@ -10,8 +10,6 @@ import {
 import { AiService } from './ai.service';
 import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
-// import { AiAnswerResponse } from '../types';
-// import { Question } from '../questions/questions.entity';
 
 interface MessageEvent {
   data: string | object;
@@ -25,8 +23,6 @@ export class AiController {
   async streamAskAiById(
     @Param('questionId') questionId: string,
   ): Promise<Observable<MessageEvent>> {
-    console.log('AI 스트리밍 요청 수신됨 (id 기반)');
-
     const id = Number(questionId);
     if (isNaN(id)) {
       throw new HttpException(
@@ -38,7 +34,6 @@ export class AiController {
     const existing = await this.aiService.findByQuestionId(id);
 
     if (existing) {
-      console.log('캐시된 답변 존재, 전체 객체를 전송합니다.');
       return new Observable<MessageEvent>((subscriber) => {
         subscriber.next({
           data: JSON.stringify({ type: 'COMPLETE', payload: existing }),
@@ -73,8 +68,6 @@ export class AiController {
       );
     }
 
-    console.log('AI 요청 수신됨 (title/content 기반)');
-
     try {
       const questionIdNum = Number(questionId);
       const existing = await this.aiService.findByQuestionId(questionIdNum);
@@ -105,8 +98,6 @@ export class AiController {
 
   @Get('ask-ai/:questionId')
   async askAiById(@Param('questionId') questionId: string) {
-    console.log('AI 요청 수신됨 (id 기반)');
-
     const id = Number(questionId);
     if (isNaN(id)) {
       throw new HttpException(

@@ -17,27 +17,17 @@ export class UsersRepository {
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<User> {
-    console.log(createUserDto);
     const { email, name, phoneNumber, accountID } = createUserDto;
 
-    // 1. GoogleUser 존재 확인
-    // const googleAccount = await this.findGoogleUserById(accountID);
-    // if (!googleAccount) {
-    //   throw new ConflictException(
-    //     '연결할 Google 계정 정보를 찾을 수 없습니다. 인증을 다시 시도해주세요.',
-    //   );
-    // }
-
     try {
-      // 2. User 생성
       const user = this.repository.create({
         email,
         name,
         phoneNumber,
-        accountID, // ✅ 엔티티 자체를 넣어야 함
+        accountID,
       });
 
-      return await this.repository.save(user); // ✅ 단일 User 반환
+      return await this.repository.save(user);
     } catch (error) {
       if (error.code === '23505') {
         throw new ConflictException('이미 가입된 Google 계정입니다.');
@@ -55,7 +45,6 @@ export class UsersRepository {
       where: {
         accountID,
       },
-      // relations: ['googleAccount'],
     });
   }
 

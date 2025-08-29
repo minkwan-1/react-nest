@@ -10,7 +10,6 @@ export class SessionRepository {
     private readonly sessionRepository: Repository<UserSession>,
   ) {}
 
-  // [1] 로그인 시 세션 정보를 DB에 저장하거나 업데이트
   async saveSession(
     sessionId: string,
     userId: string,
@@ -51,7 +50,6 @@ export class SessionRepository {
     }
   }
 
-  // [2] 세션 ID로 세션 정보 조회
   async findBySessionId(sessionId: string): Promise<UserSession | null> {
     return await this.sessionRepository.findOne({
       where: { sessionId },

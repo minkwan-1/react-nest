@@ -72,8 +72,6 @@ export class AiService {
     content: string,
     questionId: number,
   ): Promise<string> {
-    console.log('[generateAnswer] 호출됨', { title, content, questionId });
-
     const plainContent =
       new JSDOM(content).window.document.body.textContent || '';
     const prompt = this.buildPrompt(title, plainContent);
@@ -82,7 +80,6 @@ export class AiService {
       let aiAnswer: string | undefined;
 
       for (let attempt = 1; attempt <= 3; attempt++) {
-        console.log(`[generateAnswer] Gemini API 호출 시도 ${attempt}`);
         const result = await this.model.generateContent(prompt);
         const response = result.response;
         aiAnswer = response.text();
@@ -115,7 +112,7 @@ export class AiService {
       answer = this.aiAnswerRepository.create({ questionId, title, content });
     }
     const savedAnswer = await this.aiAnswerRepository.save(answer);
-    console.log('[saveAnswer] AI 답변 저장/업데이트 완료');
+
     return savedAnswer;
   }
 
