@@ -21,4 +21,10 @@ export class GoogleAuthRepository {
 
     return await this.googleUserRepository.save(user);
   }
+
+  async updateUser(userData: GoogleUser): Promise<GoogleUser> {
+    await this.googleUserRepository.update(userData.id, { isExist: true });
+
+    return { ...userData, isExist: true };
+  }
 }

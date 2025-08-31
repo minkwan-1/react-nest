@@ -38,6 +38,7 @@ export class PhoneVerificationController {
     @Body() body: SendCodeDto,
   ): Promise<{ message: string; sid?: string }> {
     const { toPhoneNumber } = body;
+    console.log('전화번호: ', toPhoneNumber);
 
     let formattedPhoneNumber = toPhoneNumber;
     if (formattedPhoneNumber.startsWith('+82')) {

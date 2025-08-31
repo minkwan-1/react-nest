@@ -6,6 +6,7 @@ export const useHandleSignup = () => {
   const [userInfo] = useAtom(signupUserInfo);
   const { mutateAsync: signupAsyncMutate } = useSignupMutate();
 
+  console.log(userInfo);
   const handleCompleteSignup = async () => {
     if (!userInfo) throw new Error("유저 정보가 없습니다.");
     if (!userInfo.phoneNumber)

@@ -21,13 +21,15 @@ import { useMutation } from "@tanstack/react-query";
 import { requestVerificationCodeAPI } from "./api/requestVerificationCodeAPI";
 import type { signupUserInfo } from "@atom/auth";
 import { SetStateAction } from "jotai";
+import { useOpenCommonModal } from "@domains/common/modal/hook/useOpenCommonModal";
+import { useNavigate } from "react-router-dom";
 
 type PhoneNumberFieldProps = {
   onSuccess?: (message: string) => void;
   onError?: (message: string) => void;
   onPhoneNumberChange?: (value: string) => void;
   onNext: () => void;
-  onExistingUser?: () => void;
+
   userInfo?: signupUserInfo | null;
   setUserInfo?: (userInfo: SetStateAction<signupUserInfo | null>) => void;
 };
@@ -37,15 +39,16 @@ const PhoneNumberField = ({
   onError,
   onPhoneNumberChange,
   onNext,
-  onExistingUser,
+
   userInfo,
   setUserInfo,
 }: PhoneNumberFieldProps) => {
   const theme = useTheme();
   const keyColor = "#b8dae1";
-
+  const navigate = useNavigate();
   const [phoneNumber, setPhoneNumber] = useState(userInfo?.phoneNumber || "");
   const [isFocused, setIsFocused] = useState(false);
+  const { openModal } = useOpenCommonModal();
   const [modal, setModal] = useState({
     open: false,
     type: "success" as "success" | "error",
@@ -56,11 +59,17 @@ const PhoneNumberField = ({
   const { mutate: requestCode, isPending: isSending } = useMutation({
     mutationFn: requestVerificationCodeAPI,
     onSuccess: (data) => {
-      if (
-        data?.message ===
-        "이미 가입된 휴대폰 번호입니다. 다른 로그인 방법을 이용해주세요."
-      ) {
-        onExistingUser?.();
+      console.log(data);
+      if (data?.message.includes("이미")) {
+        openModal({
+          isOpen: true,
+          type: "info",
+          title: "이미 존재하는 사용자",
+          info: "이미 가입된 휴대폰 번호입니다. 다른 로그인 방법을 이용해주세요.",
+          onConfirm: () => {
+            navigate("/start");
+          },
+        });
       } else {
         const successMessage =
           data?.message || `${phoneNumber}로 인증 코드가 전송되었습니다.`;

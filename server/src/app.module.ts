@@ -1,8 +1,10 @@
+// src/app.module.ts
+
 import { Module } from '@nestjs/common';
 import { APP_FILTER } from '@nestjs/core';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { typeORMConfig } from './configs/typeorm.config';
+import { TypeOrmConfigService } from './configs/typeorm.config'; // 수정한 설정 서비스를 import
 import { AuthModule } from './modules/auth/auth.module';
 import { PhoneVerificationModule } from './modules/phone/phone-verification.module';
 import { UsersModule } from './modules/users/users.module';
@@ -18,7 +20,11 @@ import { HttpExceptionFilter } from './filters/http-exceptions.filter';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
-    TypeOrmModule.forRoot(typeORMConfig),
+
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      useClass: TypeOrmConfigService,
+    }),
 
     AuthModule,
     PhoneVerificationModule,

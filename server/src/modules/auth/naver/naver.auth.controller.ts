@@ -107,6 +107,11 @@ export class NaverAuthController {
         accountID: userData.id,
         phoneNumber: userData.phoneNumber,
       });
+
+      if (userData.provider === 'naver') {
+        await this.naverAuthService.updateUser(userData);
+      }
+
       const mergedUser = { ...finalUser, provider: userData.provider };
 
       return res.send({

@@ -28,4 +28,10 @@ export class NaverUser {
 
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
+
+  @Column({ default: false })
+  isExist: boolean;
+
+  @Column({ nullable: true })
+  provider: string;
 }

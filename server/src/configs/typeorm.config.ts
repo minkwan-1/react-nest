@@ -1,4 +1,10 @@
-import { TypeOrmModuleOptions } from '@nestjs/typeorm';
+// src/configs/typeorm.config.ts
+
+import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from '@nestjs/typeorm';
+
+// --- 엔티티들을 모두 import 합니다 ---
 import { Question } from 'src/modules/questions/questions.entity';
 import { GoogleUser } from 'src/modules/auth/google/google.auth.entity';
 import { NaverUser } from 'src/modules/auth/naver/naver.auth.entity';
@@ -10,27 +16,36 @@ import { MyInfo } from 'src/modules/myInfo/myInfo.entity';
 import { Answer } from 'src/modules/answer/answer.entity';
 import { AiAnswer } from 'src/modules/ai/ai.entity';
 
-export const typeORMConfig: TypeOrmModuleOptions = {
-  type: 'postgres',
-  host: process.env.DB_HOST,
-  port: parseInt(process.env.DB_PORT),
-  username: process.env.DB_USERNAME,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
-  entities: [
-    Question,
-    GoogleUser,
-    NaverUser,
-    PhoneVerification,
-    User,
-    UserSession,
-    SelfIntro,
-    MyInfo,
-    Answer,
-    AiAnswer,
-  ],
-  synchronize: process.env.NODE_ENV !== 'production',
-  ssl: {
-    rejectUnauthorized: false,
-  },
-};
+@Injectable()
+export class TypeOrmConfigService implements TypeOrmOptionsFactory {
+  constructor(private readonly configService: ConfigService) {}
+
+  createTypeOrmOptions(): TypeOrmModuleOptions {
+    return {
+      type: 'postgres',
+      host: this.configService.get<string>('DB_HOST'),
+      port: parseInt(this.configService.get<string>('DB_PORT')),
+      username: this.configService.get<string>('DB_USERNAME'),
+      password: this.configService.get<string>('DB_PASSWORD'),
+      database: this.configService.get<string>('DB_NAME'),
+      entities: [
+        Question,
+        GoogleUser,
+        NaverUser,
+        PhoneVerification,
+        User,
+        UserSession,
+        SelfIntro,
+        MyInfo,
+        Answer,
+        AiAnswer,
+      ],
+      synchronize: true,
+      logging: true,
+      ssl:
+        process.env.NODE_ENV === 'production'
+          ? { rejectUnauthorized: false }
+          : false,
+    };
+  }
+}

@@ -31,4 +31,7 @@ export class GoogleUser {
 
   @Column({ default: false })
   isExist: boolean;
+
+  @Column({ nullable: true })
+  provider: string;
 }

@@ -89,7 +89,7 @@ export class GoogleAuthService {
       });
 
       if (user) {
-        return { ...user, isExist: true };
+        return user;
       }
 
       const {
@@ -112,9 +112,10 @@ export class GoogleAuthService {
         profileImage,
         isDefaultImage: false,
         connectedAt: new Date(),
+        isExist: false,
       });
 
-      return { ...savedUser, isExist: false };
+      return { ...savedUser };
     } catch (err) {
       console.log(err);
       throw new HttpException(
@@ -126,5 +127,10 @@ export class GoogleAuthService {
 
   async createUser(userData: any) {
     return await this.googleAuthRepository.saveUser(userData);
+  }
+
+  async updateUser(userData: any) {
+    const updatedUser = { ...userData, isExist: true };
+    return await this.googleAuthRepository.updateUser(updatedUser);
   }
 }

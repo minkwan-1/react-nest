@@ -92,6 +92,7 @@ export class GoogleAuthController {
     @Req() req: Request,
     @Res() res: Response,
   ) {
+    console.log('구글 프로바이더', userData);
     try {
       const finalUser = await this.usersService.create({
         email: userData.email,
@@ -100,6 +101,9 @@ export class GoogleAuthController {
         phoneNumber: userData.phoneNumber,
       });
 
+      if (userData.provider === 'google') {
+        await this.googleAuthService.updateUser(userData);
+      }
       const mergedUser = { ...finalUser, provider: userData.provider };
       await this.sessionService.loginWithSession(req, mergedUser);
 

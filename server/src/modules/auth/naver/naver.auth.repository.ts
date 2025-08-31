@@ -20,4 +20,10 @@ export class NaverAuthRepository {
     const user = this.naverUserRepository.create(userData);
     return await this.naverUserRepository.save(user);
   }
+
+  async updateUser(userData: NaverUser): Promise<NaverUser> {
+    await this.naverUserRepository.update(userData.id, { isExist: true });
+
+    return { ...userData, isExist: true };
+  }
 }

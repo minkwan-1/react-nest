@@ -15,7 +15,7 @@ export const streamAiAnswer = ({
 }: StreamAiAnswerProps): Promise<void> => {
   return new Promise((resolve, reject) => {
     const eventSource = new EventSource(
-      `http://15.164.222.0:3000/api/ask-ai/stream/${questionId}`
+      `http://localhost:3000/api/ask-ai/stream/${questionId}`
     );
 
     eventSource.onmessage = (event) => {

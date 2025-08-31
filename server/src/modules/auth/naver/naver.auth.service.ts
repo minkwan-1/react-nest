@@ -5,7 +5,7 @@ import { NaverUser } from './naver.auth.entity';
 import { HttpException } from '@nestjs/common';
 import { HttpStatus } from '@nestjs/common';
 
-type FindUserType = NaverUser & { isExist: boolean };
+type FindUserType = NaverUser;
 
 @Injectable()
 export class NaverAuthService {
@@ -68,7 +68,7 @@ export class NaverAuthService {
       const user = await this.naverAuthRepository.findUser({ id: userData.id });
 
       if (user) {
-        return { ...user, isExist: true };
+        return user;
       }
 
       const { id, email, nickname, profileImage, name } = userData;
@@ -82,11 +82,12 @@ export class NaverAuthService {
         connectedAt: new Date(),
         createdAt: new Date(),
         updatedAt: new Date(),
+        isExist: false,
       };
 
       const savedUser = await this.naverAuthRepository.saveUser(newUser);
 
-      return { ...savedUser, isExist: false };
+      return savedUser;
     } catch {
       throw new HttpException(
         '네이버 사용자 확인 또는 추가 중 오류 발생',
@@ -97,5 +98,10 @@ export class NaverAuthService {
 
   async createUser(userData: any) {
     return await this.naverAuthRepository.saveUser(userData);
+  }
+
+  async updateUser(userData: any) {
+    const updatedUser = { ...userData, isExist: true };
+    return await this.naverAuthRepository.updateUser(updatedUser);
   }
 }
