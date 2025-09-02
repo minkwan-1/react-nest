@@ -32,19 +32,19 @@ export const StepRenderer: React.FC<StepRendererProps> = ({
   showMessage,
   handlePhoneNumberChange,
   handleCodeSent,
-  handleExistingUser,
+  // handleExistingUser,
   handleVerificationSuccess,
   handleResendCode,
   handleSignupComplete,
 }) => {
-  const handleExistingUserDetected = () => {
-    showMessage(
-      "이미 가입된 휴대폰 번호입니다. 로그인 페이지로 이동합니다.",
-      "warning",
-      true
-    );
-    handleExistingUser();
-  };
+  // const handleExistingUserDetected = () => {
+  //   showMessage(
+  //     "이미 가입된 휴대폰 번호입니다. 로그인 페이지로 이동합니다.",
+  //     "warning",
+  //     true
+  //   );
+  //   handleExistingUser();
+  // };
 
   switch (currentStep) {
     case 1:
@@ -54,7 +54,7 @@ export const StepRenderer: React.FC<StepRendererProps> = ({
           onError={(msg: string) => showMessage(msg, "error")}
           onPhoneNumberChange={handlePhoneNumberChange}
           onNext={handleCodeSent}
-          onExistingUser={handleExistingUserDetected}
+          // onExistingUser={handleExistingUserDetected}
         />
       );
     case 2:

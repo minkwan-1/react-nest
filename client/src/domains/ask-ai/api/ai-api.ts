@@ -1,4 +1,5 @@
 import { Answer } from "@domains/detail/types";
+import { API_URL } from "@api/axiosConfig";
 
 export interface StreamAiAnswerProps {
   questionId: number;
@@ -15,7 +16,7 @@ export const streamAiAnswer = ({
 }: StreamAiAnswerProps): Promise<void> => {
   return new Promise((resolve, reject) => {
     const eventSource = new EventSource(
-      `http://localhost:3000/api/ask-ai/stream/${questionId}`
+      `${API_URL}api/ask-ai/stream/${questionId}`
     );
 
     eventSource.onmessage = (event) => {

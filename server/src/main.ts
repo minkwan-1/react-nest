@@ -47,7 +47,7 @@ async function bootstrap() {
     next();
   });
 
-  await app.listen(PORT || 3000);
+  await app.listen(PORT || 80);
 }
 
 bootstrap();
