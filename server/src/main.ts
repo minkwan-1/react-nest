@@ -49,7 +49,7 @@ async function bootstrap() {
   });
   */ // <-- 여기까지 주석 끝
 
-  await app.listen(PORT || 80);
+  await app.listen(PORT || 3000);
 }
 
 bootstrap();
