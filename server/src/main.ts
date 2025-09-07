@@ -2,9 +2,9 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as dotenv from 'dotenv';
 
-// import * as cookieParser from 'cookie-parser';
-// import * as session from 'express-session';      // <-- 주석 처리
-// import * as passport from 'passport';            // <-- 주석 처리
+import * as cookieParser from 'cookie-parser';
+import * as session from 'express-session';
+import * as passport from 'passport';
 
 dotenv.config();
 
@@ -12,22 +12,22 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   // CORS_ORIGIN, FRONTEND_URL,
-  const { PORT } = process.env;
+  const { CORS_ORIGIN, FRONTEND_URL, PORT, SESSION_SECRET, CSP_SCRIPT_SRC } =
+    process.env;
 
   const expressApp = app.getHttpAdapter().getInstance();
   expressApp.get('/', (req, res) => {
     res.send('서버 연결 성공');
   });
-  // app.enableCors({
-  //   origin: CORS_ORIGIN || FRONTEND_URL || 'http://localhost:5173',
-  //   methods: 'GET,POST,PUT,DELETE',
-  //   allowedHeaders: 'Content-Type, Authorization',
-  //   credentials: true,
-  // });
+  app.enableCors({
+    origin: CORS_ORIGIN || FRONTEND_URL || 'http://localhost:5173',
+    methods: 'GET,POST,PUT,DELETE',
+    allowedHeaders: 'Content-Type, Authorization',
+    credentials: true,
+  });
 
-  // app.use(cookieParser());
+  app.use(cookieParser());
 
-  /* <-- 여기서부터 주석 시작
   app.use(
     session({
       secret: SESSION_SECRET,
@@ -52,7 +52,6 @@ async function bootstrap() {
     );
     next();
   });
-  */ // <-- 여기까지 주석 끝
 
   await app.listen(PORT, () => {
     console.log('80번 포트에 연결됨!');
