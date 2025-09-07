@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as dotenv from 'dotenv';
-import * as cookieParser from 'cookie-parser';
+// import * as cookieParser from 'cookie-parser';
 // import * as session from 'express-session';      // <-- 주석 처리
 // import * as passport from 'passport';            // <-- 주석 처리
 
@@ -10,17 +10,17 @@ dotenv.config();
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  // SESSION_SECRET, CSP_SCRIPT_SRC,
-  const { CORS_ORIGIN, FRONTEND_URL, PORT } = process.env;
+  // CORS_ORIGIN, FRONTEND_URL,
+  const { PORT } = process.env;
 
-  app.enableCors({
-    origin: CORS_ORIGIN || FRONTEND_URL || 'http://localhost:5173',
-    methods: 'GET,POST,PUT,DELETE',
-    allowedHeaders: 'Content-Type, Authorization',
-    credentials: true,
-  });
+  // app.enableCors({
+  //   origin: CORS_ORIGIN || FRONTEND_URL || 'http://localhost:5173',
+  //   methods: 'GET,POST,PUT,DELETE',
+  //   allowedHeaders: 'Content-Type, Authorization',
+  //   credentials: true,
+  // });
 
-  app.use(cookieParser()); // <-- 이것은 남겨둡니다.
+  // app.use(cookieParser());
 
   /* <-- 여기서부터 주석 시작
   app.use(
