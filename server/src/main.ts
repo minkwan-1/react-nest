@@ -49,7 +49,9 @@ async function bootstrap() {
   });
   */ // <-- 여기까지 주석 끝
 
-  await app.listen(PORT || 3000);
+  await app.listen(PORT, () => {
+    console.log('80번 포트에 연결됨!');
+  });
 }
 
 bootstrap();
