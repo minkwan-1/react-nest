@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as dotenv from 'dotenv';
+
 // import * as cookieParser from 'cookie-parser';
 // import * as session from 'express-session';      // <-- 주석 처리
 // import * as passport from 'passport';            // <-- 주석 처리
@@ -13,6 +14,10 @@ async function bootstrap() {
   // CORS_ORIGIN, FRONTEND_URL,
   const { PORT } = process.env;
 
+  const expressApp = app.getHttpAdapter().getInstance();
+  expressApp.get('/', (req, res) => {
+    res.send('서버 연결 성공');
+  });
   // app.enableCors({
   //   origin: CORS_ORIGIN || FRONTEND_URL || 'http://localhost:5173',
   //   methods: 'GET,POST,PUT,DELETE',
