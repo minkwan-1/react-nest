@@ -8,21 +8,32 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Github Repository 파일 불러오기
+      # 1️⃣ 레포지토리 파일 가져오기
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: AWS Resource에 접근할 수 있게 AWS credentials 설정
+      # 2️⃣ AWS Credentials 설정
+      - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-region: ap-northeast-2
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
-      - name: S3 기존 파일들 전체 삭제 후 새로 업로드
+      # 3️⃣ 프로젝트 빌드
+      - name: Build Project
         run: |
-          aws s3 rm s3://pullim-web-page --recursive
-          aws s3 cp ./ s3://pullim-web-page/ --recursive
+          yarn install
+          yarn build
 
-      - name: Cloudfront 캐시 무효화
-        run: aws cloudfront create-invalidation --distribution-id E3AZW2BIBWDGLN --paths "/*"
+      # 4️⃣ S3에 업로드 (dist 폴더 기준)
+      - name: Upload to S3
+        run: |
+          aws s3 sync ./dist/ s3://pullim-web-page --delete
+
+      # 5️⃣ CloudFront 캐시 무효화
+      - name: Invalidate CloudFront Cache
+        run: |
+          aws cloudfront create-invalidation --distribution-id E3AZW2BIBWDGLN --paths "/*"
