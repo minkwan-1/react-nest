@@ -35,7 +35,7 @@ function AppbarLogo({ sx }: AppbarLogoProps) {
           }),
         }}
       >
-        Pullim
+        Pullim!
       </Typography>
     </Box>
   );
