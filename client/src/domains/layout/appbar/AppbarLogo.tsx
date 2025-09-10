@@ -22,6 +22,7 @@ function AppbarLogo({ sx }: AppbarLogoProps) {
     >
       <Code size={24} className="text-primary" style={{ color: "#b8dae1" }} />
 
+      {/* 다시 */}
       <Typography
         variant="h6"
         sx={{
