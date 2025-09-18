@@ -10,11 +10,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1️⃣ 레포지토리 체크아웃
+      # (1) 레포지토리 체크아웃
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      # 2️⃣ AWS Credentials 설정
+      # (2) AWS Credentials 설정
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -22,26 +22,26 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
-      # ✨ (추가) .env.production 파일 생성
+      # (3) .env.production 파일 생성
       - name: Create .env.production file
         run: |
           echo "${{ secrets.DOTENV_PROD }}" > .env.production
         working-directory: ./client
 
-      # 3️⃣ 프로젝트 빌드 (client 폴더 기준)
+      # (4) 프로젝트 빌드 (client 폴더 기준)
       - name: Build Project
         run: |
           yarn install
           yarn build
         working-directory: ./client
 
-      # 4️⃣ S3에 업로드 (dist 폴더 기준)
+      # (5) S3에 업로드 (dist 폴더 기준)
       - name: Upload to S3
         run: |
           aws s3 sync ./dist/ s3://pullim-web-page --delete
         working-directory: ./client
 
-      # 5️⃣ CloudFront 캐시 무효화
+      # (6) CloudFront 캐시 무효화
       - name: Invalidate CloudFront Cache
         run: |
           aws cloudfront create-invalidation --distribution-id E3AZW2BIBWDGLN --paths "/*"

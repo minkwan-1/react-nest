@@ -1,0 +1,13 @@
+version: 1
+reviews:
+  profile: "balanced"
+  path_includes:
+    - "src/**/*.ts"
+    - "src/**/*.tsx"
+  path_excludes:
+    - "node_modules/**"
+    - "dist/**"
+    - "build/**"
+comments:
+  max_comments: 20
+  auto_approve: false
