@@ -26,22 +26,6 @@ const App = () => {
 
   return (
     <>
-      <button
-        style={{
-          padding: "10px",
-          margin: "20px",
-          background: "red",
-          color: "white",
-          border: "none",
-          cursor: "pointer",
-        }}
-        onClick={() => {
-          throw new Error("this is my first error!");
-        }}
-      >
-        break the world
-      </button>
-      ;
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/start" element={<StartPage />} />
