@@ -25,4 +25,4 @@ jobs:
             sudo yarn
             sudo yarn build
             sudo pm2 kill
-            sudo pm2 start dist/main.js --name "pullim-server"
+            sudo pm2 start dist/src/main.js --name "pullim-server"
