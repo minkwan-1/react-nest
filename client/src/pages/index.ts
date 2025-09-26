@@ -11,6 +11,7 @@ import ModifyQuestionPage from "./ModifyQuestionPage";
 import MyInfoEditPage from "./MyInfoEditPage";
 import SessionExpiredPage from "./SessionExpiredPage";
 import UnauthorizedPage from "./UnauthorizedPage";
+import NaverInspectionPanel from "./NaverInspectionPanel";
 
 export {
   HomePage,
@@ -26,4 +27,5 @@ export {
   MyInfoEditPage,
   SessionExpiredPage,
   UnauthorizedPage,
+  NaverInspectionPanel,
 };

@@ -12,6 +12,7 @@ import {
   ModifyQuestionPage,
   MyInfoEditPage,
   UnauthorizedPage,
+  NaverInspectionPanel,
 } from "./pages";
 import AuthRedirectModal from "@domains/common/modal/AuthRedirectModal";
 import CommonErrorModal from "@domains/common/modal/CommonModal";
@@ -32,6 +33,7 @@ const App = () => {
         <Route path="/home" element={<HomePage />} />
 
         <Route path="/edit" element={<QuestionEditPage />} />
+        <Route path="/naver-inspection" element={<NaverInspectionPanel />} />
         <Route
           path="/my"
           element={

@@ -42,10 +42,10 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
       ],
       synchronize: true,
       logging: true,
-      ssl:
-        process.env.NODE_ENV === 'production'
-          ? { rejectUnauthorized: false }
-          : false,
+      // ssl:
+      //   process.env.NODE_ENV === 'production'
+      //     ? { rejectUnauthorized: false }
+      //     : false,
     };
   }
 }

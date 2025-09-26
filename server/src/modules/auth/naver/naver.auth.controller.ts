@@ -37,12 +37,15 @@ export class NaverAuthController {
     @Res() res: Response,
   ) {
     try {
+      console.log({ code, state });
       const tokens = await this.naverAuthService.getToken(code, state);
       const userData = await this.naverAuthService.getUserInfo(
         tokens.access_token,
       );
+      console.log('네이버가 주는 데이터 확인: ', userData);
       const foundUser = await this.naverAuthService.findUser(userData);
 
+      console.log(foundUser);
       if (foundUser.isExist) {
         const viaNaverUser = await this.usersService.findByAccountID(
           foundUser.id,
@@ -66,7 +69,11 @@ export class NaverAuthController {
 
           res.send({
             message: '기존 유저 데이터',
-            user: { ...addedProviderViaNaverUser, isExist: true },
+            user: {
+              ...addedProviderViaNaverUser,
+              isExist: true,
+              naverInspection: userData,
+            },
             sessionId: req.sessionID,
           });
         } catch (sessionError) {

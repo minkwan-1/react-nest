@@ -23,7 +23,7 @@ export class AiService {
       throw new Error('GEMINI_API_KEY 환경변수가 설정되지 않았습니다.');
     }
     this.genAI = new GoogleGenerativeAI(apiKey);
-    this.model = this.genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+    this.model = this.genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
   }
 
   generateAnswerStream(
@@ -36,6 +36,7 @@ export class AiService {
     const prompt = this.buildPrompt(title, plainContent);
 
     return new Observable((subscriber) => {
+      console.log('subscriber 확인: ', subscriber);
       const runStream = async () => {
         try {
           const result = await this.model.generateContentStream(prompt);

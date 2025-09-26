@@ -11,6 +11,7 @@ export class AuthController {
   @Get('me')
   async getMe(@Req() req: Request) {
     const user = await this.sessionService.findWithSession(req);
+    console.log(user);
 
     return user;
   }

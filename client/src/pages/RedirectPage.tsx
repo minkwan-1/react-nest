@@ -5,6 +5,7 @@ import { useAtom } from "jotai";
 import { signupUserInfo, realUserInfo } from "@atom/auth";
 import { usePostAuthorizationMutate } from "@domains/auth/api/useAuthHooks";
 import { useOpenCommonModal } from "@domains/common/modal/hook/useOpenCommonModal";
+import { naverInspectionAtom } from "@atom/inspectionAtom";
 
 const RedirectPage = () => {
   const [loading, setLoading] = useState(false);
@@ -18,6 +19,7 @@ const RedirectPage = () => {
   const [, setRealUserInfo] = useAtom(realUserInfo);
   const { mutate: authorizationMutate } = usePostAuthorizationMutate();
   const { openModal } = useOpenCommonModal();
+  const [, setNaverInspection] = useAtom(naverInspectionAtom);
 
   useEffect(() => {
     if (!provider || !code) {
@@ -35,6 +37,17 @@ const RedirectPage = () => {
       {
         onSuccess: async (res) => {
           const user = res?.user;
+          const naverInspection = res?.user.naverInspection;
+          console.log(user);
+          console.log(naverInspection);
+          if (naverInspection) {
+            setNaverInspection({
+              email: naverInspection.email,
+              name: naverInspection.name,
+              nickname: naverInspection.nickname,
+              profileUrl: naverInspection.profile_image,
+            });
+          }
 
           if (!user) {
             navigate("/error", {
