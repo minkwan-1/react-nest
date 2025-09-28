@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 
 import { Box } from "@mui/material";
-
+import { axiosInstance } from "@api/axiosConfig";
 import "react-quill/dist/quill.snow.css";
 
 import {
@@ -21,14 +21,29 @@ import {
   QuestionNotFound,
   AnswerRenderer,
 } from "./main-content";
+import { useQuery } from "@tanstack/react-query";
+import { useParams } from "react-router-dom";
 
 const MainContent = () => {
-  const { id, question, loading, user } = useQuestionDetail();
+  const { id } = useParams();
+
+  const { loading, user } = useQuestionDetail();
 
   const { answers, answersLoading, answersError, fetchAnswers } =
     useAnswers(id);
 
   const { aiAnswer, aiLoading, aiError, fetchAiAnswer } = useAiAnswer();
+
+  const fetchQuestionById = async (questionId: string) => {
+    const response = await axiosInstance.get(`questions/detail/${questionId}`);
+
+    return response.data;
+  };
+
+  const { data: question } = useQuery({
+    queryKey: ["questions"],
+    queryFn: () => fetchQuestionById(id as string),
+  });
 
   const {
     userAnswer,

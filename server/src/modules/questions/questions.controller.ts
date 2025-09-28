@@ -61,6 +61,19 @@ export class QuestionsController {
     return question;
   }
 
+  // home에서 detail
+  @Get('detail/:id')
+  async findQuestionById(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<Question> {
+    const question = await this.questionsService.findQuestion(id);
+
+    if (!question) {
+      throw new NotFoundException(`Question with ID ${id} not found.`);
+    }
+    return question;
+  }
+
   @UseGuards(AuthenticatedGuard)
   @Put('modify/:id')
   async update(

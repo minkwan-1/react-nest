@@ -21,6 +21,7 @@ export const streamAiAnswer = ({
 
     eventSource.onmessage = (event) => {
       try {
+        console.log("프론트엔드 이벤트 확인: ", event);
         const parsedData = JSON.parse(event.data);
 
         if (parsedData.type === "DATA") {

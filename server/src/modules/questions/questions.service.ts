@@ -52,6 +52,12 @@ export class QuestionsService {
     });
   }
 
+  async findQuestion(id: number): Promise<Question> {
+    return this.questionsRepository.findOne({
+      where: { id },
+    });
+  }
+
   async update(
     questionId: number,
     title: string,

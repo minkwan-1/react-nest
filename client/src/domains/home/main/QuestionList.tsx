@@ -56,7 +56,7 @@ const QuestionList = ({ questions, loading }: QuestionListProps) => {
 
   return (
     <Box sx={{ mt: 2, display: "flex", flexDirection: "column", gap: 2 }}>
-      {questions.map((question) => {
+      {questions?.map((question) => {
         const thumbnailSrc =
           question.thumbnail || extractImageFromContent(question.content);
 
