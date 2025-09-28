@@ -40,7 +40,7 @@ const MainContent = () => {
     return response.data;
   };
 
-  const { data: question } = useQuery({
+  const { data: question, isLoading } = useQuery({
     queryKey: ["questions"],
     queryFn: () => fetchQuestionById(id as string),
   });
@@ -57,7 +57,7 @@ const MainContent = () => {
 
   useEffect(() => {
     if (question && !loading) {
-      fetchAiAnswer(question.id);
+      fetchAiAnswer(question?.id);
     }
   }, [question, loading, fetchAiAnswer]);
 
@@ -70,13 +70,13 @@ const MainContent = () => {
         height: "100%",
       }}
     >
-      {loading ? (
+      {isLoading ? (
         <LoadingFallback />
       ) : !question ? (
         <QuestionNotFound />
       ) : (
         <>
-          <DetailQuestionTitle />
+          <DetailQuestionTitle question={question} />
           <DetailQuestionContent question={question} />
 
           <AnswerEditor

@@ -96,7 +96,7 @@ const DetailQuestionContent = ({ question }: any) => {
         <div
           ref={contentRef}
           className="question-content"
-          dangerouslySetInnerHTML={{ __html: question.content }}
+          dangerouslySetInnerHTML={{ __html: question?.content }}
         />
       </Paper>
 

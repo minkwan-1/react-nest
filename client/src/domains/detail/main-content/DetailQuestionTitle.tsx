@@ -1,7 +1,5 @@
 import { Box, Typography, Stack, Chip } from "@mui/material";
-import { useParams } from "react-router-dom";
-import { useAtom } from "jotai";
-import { questionsAtom } from "@atom/question";
+
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 
 const themeColors = {
@@ -19,30 +17,8 @@ const themeColors = {
   },
 };
 
-type Question = {
-  id: number;
-  title: string;
-  content: string;
-  tags: string[];
-  createdAt: string;
-  user: {
-    id: string;
-    email: string;
-    name: string;
-    phoneNumber: string;
-    createdAt: string;
-  };
-  userId: string;
-};
-
-const DetailQuestionTitle = () => {
-  const { id } = useParams();
-  const [questions] = useAtom(questionsAtom);
-
-  const question = questions?.find(
-    (q: Question) => q.id === parseInt(id || "0")
-  );
-
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const DetailQuestionTitle = ({ question }: any) => {
   const formatDate = (dateString: string) => {
     const options: Intl.DateTimeFormatOptions = {
       year: "numeric",
@@ -74,7 +50,6 @@ const DetailQuestionTitle = () => {
       >
         {question.title}
       </Typography>
-
       <Stack
         direction="row"
         spacing={3}
@@ -93,7 +68,8 @@ const DetailQuestionTitle = () => {
       </Stack>
 
       <Box sx={{ mt: 2, display: "flex", flexWrap: "wrap", gap: 1 }}>
-        {question.tags.map((tag, index) => (
+        {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+        {question?.tags?.map((tag: string, index: number) => (
           <Chip
             key={index}
             label={tag}
