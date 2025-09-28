@@ -1,37 +1,48 @@
 import { Box, Paper, Avatar, Typography } from "@mui/material";
 import { useParams } from "react-router-dom";
-import { useAtom } from "jotai";
-import { questionsAtom } from "@atom/question";
+import { useQuery } from "@tanstack/react-query";
 import { useFetchMyPublicInfo } from "@domains/my-info/hooks/useFetchMyInfo";
 import { useEffect, useRef } from "react";
 import hljs from "highlight.js";
+import { axiosInstance } from "@api/axiosConfig";
 
 const generateAvatarText = (name: string) => name.charAt(0).toUpperCase();
 
-type Question = {
-  id: number;
-  title: string;
-  content: string;
-  tags: string[];
-  createdAt: string;
-  user: {
-    id: string;
-    email: string;
-    name: string;
-    phoneNumber: string;
-    createdAt: string;
-  };
-  userId: string;
-};
+// type Question = {
+//   id: number;
+//   title: string;
+//   content: string;
+//   tags: string[];
+//   createdAt: string;
+//   user: {
+//     id: string;
+//     email: string;
+//     name: string;
+//     phoneNumber: string;
+//     createdAt: string;
+//   };
+//   userId: string;
+// };
 
 const DetailQuestionContent = () => {
   const { id } = useParams();
-  const [questions] = useAtom(questionsAtom);
+
+  const fetchQuestionById = async (questionId: string) => {
+    const response = await axiosInstance.get(`questions/detail/${questionId}`);
+
+    return response.data;
+  };
+
+  const { data: question } = useQuery({
+    queryKey: ["questions"],
+    queryFn: () => fetchQuestionById(id as string),
+  });
+  // const [questions] = useAtom(questionsAtom);
   const contentRef = useRef<HTMLDivElement>(null);
 
-  const question = questions?.find(
-    (q: Question) => q.id === parseInt(id || "0")
-  );
+  // const question = questions?.find(
+  //   (q: Question) => q.id === parseInt(id || "0")
+  // );
 
   const { data } = useFetchMyPublicInfo(question?.user.id);
 
