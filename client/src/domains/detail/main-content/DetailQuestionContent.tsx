@@ -30,11 +30,12 @@ const DetailQuestionContent = ({ question }: any) => {
   // const [questions] = useAtom(questionsAtom);
   const contentRef = useRef<HTMLDivElement>(null);
 
+  console.log(question);
   // const question = questions?.find(
   //   (q: Question) => q.id === parseInt(id || "0")
   // );
 
-  const { data } = useFetchMyPublicInfo(question?.user.id);
+  const { data } = useFetchMyPublicInfo(question?.userId);
 
   const applyHighlighting = () => {
     const container = contentRef.current;
