@@ -1,10 +1,10 @@
 import { Box, Paper, Avatar, Typography } from "@mui/material";
-import { useParams } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+// import { useParams } from "react-router-dom";
+// import { useAtom } from "jotai";
+// import { questionsAtom } from "@atom/question";
 import { useFetchMyPublicInfo } from "@domains/my-info/hooks/useFetchMyInfo";
 import { useEffect, useRef } from "react";
 import hljs from "highlight.js";
-import { axiosInstance } from "@api/axiosConfig";
 
 const generateAvatarText = (name: string) => name.charAt(0).toUpperCase();
 
@@ -24,19 +24,9 @@ const generateAvatarText = (name: string) => name.charAt(0).toUpperCase();
 //   userId: string;
 // };
 
-const DetailQuestionContent = () => {
-  const { id } = useParams();
-
-  const fetchQuestionById = async (questionId: string) => {
-    const response = await axiosInstance.get(`questions/detail/${questionId}`);
-
-    return response.data;
-  };
-
-  const { data: question } = useQuery({
-    queryKey: ["questions"],
-    queryFn: () => fetchQuestionById(id as string),
-  });
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const DetailQuestionContent = ({ question }: any) => {
+  // const { id } = useParams();
   // const [questions] = useAtom(questionsAtom);
   const contentRef = useRef<HTMLDivElement>(null);
 

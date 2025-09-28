@@ -77,7 +77,7 @@ const MainContent = () => {
       ) : (
         <>
           <DetailQuestionTitle />
-          <DetailQuestionContent />
+          <DetailQuestionContent question={question} />
 
           <AnswerEditor
             submitError={submitError}
