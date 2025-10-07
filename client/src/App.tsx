@@ -22,7 +22,7 @@ import { useShouldShow } from "./hooks/common/useShouldShow";
 import { AuthenticatedWrapper } from "../src/providers";
 import "highlight.js/styles/atom-one-dark.css";
 
-// test
+// IAM 설정 후 배포 테스트
 const App = () => {
   const shouldShow = useShouldShow();
 
