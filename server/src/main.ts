@@ -33,10 +33,12 @@ async function bootstrap() {
       secret: SESSION_SECRET,
       resave: false,
       saveUninitialized: false,
+      // domains
+
       cookie: {
         maxAge: 1000 * 60 * 60 * 24,
-        httpOnly: false,
-        secure: false,
+        httpOnly: true,
+        secure: true,
       },
     }),
   );
