@@ -22,7 +22,6 @@ import { useShouldShow } from "./hooks/common/useShouldShow";
 import { AuthenticatedWrapper } from "../src/providers";
 import "highlight.js/styles/atom-one-dark.css";
 
-// IAM 권한 인라인 추가
 const App = () => {
   const shouldShow = useShouldShow();
 
