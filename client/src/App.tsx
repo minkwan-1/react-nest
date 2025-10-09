@@ -22,7 +22,7 @@ import { useShouldShow } from "./hooks/common/useShouldShow";
 import { AuthenticatedWrapper } from "../src/providers";
 import "highlight.js/styles/atom-one-dark.css";
 
-// 123
+// 최종 복구 확인
 const App = () => {
   const shouldShow = useShouldShow();
 
