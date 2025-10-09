@@ -23,6 +23,7 @@ export const postAuthorizationCode = async ({
   provider: string;
   state: string | null;
 }) => {
+  console.log("점검 로그: ", { code, provider });
   try {
     const payload: AuthorizationPayload = {
       code,
