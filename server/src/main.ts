@@ -11,7 +11,6 @@ dotenv.config();
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  // CORS_ORIGIN, FRONTEND_URL,
   const { CORS_ORIGIN, FRONTEND_URL, PORT, SESSION_SECRET, CSP_SCRIPT_SRC } =
     process.env;
 
