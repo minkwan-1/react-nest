@@ -81,6 +81,7 @@ export const signup = async (userInfo: SignupUserInfo) => {
   }
 };
 
+// 배포 점검
 export const fetchUserInfo = async () => {
   try {
     const response = await axiosInstance.get("auth/me");
